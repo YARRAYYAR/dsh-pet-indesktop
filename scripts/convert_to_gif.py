@@ -34,8 +34,9 @@ def convert_one(src: Path, dst: Path) -> bool:
         '-c:v', 'libvpx-vp9', '-i', str(src),
         '-vf', 'fps=24,split[s0][s1];'
                '[s0]palettegen=reserve_transparent=1:stats_mode=diff[p];'
-               '[s1][p]paletteuse=alpha_threshold=128',
-        '-loop', '0', str(dst),
+               '[s1][p]paletteuse=alpha_threshold=128:'
+               'dither=sierra2_4a:diff_mode=rectangle',
+        '-gifflags', '+transdiff', '-loop', '0', str(dst),
     ]
     r = subprocess.run(cmd, capture_output=True)
     if r.returncode != 0:

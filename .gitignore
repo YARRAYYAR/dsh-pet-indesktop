@@ -2,24 +2,33 @@
 __pycache__/
 *.py[cod]
 .pytest_cache/
+.venv/
+.pyinstaller/
 
 # 运行时产物
 tmp_appdata/
 tests/_tmp_*/
+backups/
 
 # 素材：只提交 assets/characters（角色动画），其他 assets 内容不入库
 assets/*
 !assets/characters/
 !assets/characters/**
+!assets/app-icon.png
+!assets/app-icon.icns
 assets/thumb/
 assets/videos/
 assets/animations/
 assets/prompt/
 
+# macOS Qt 运行时插件别名（用于当前 PySide6 wheel 的插件发现兼容）
+qt-plugins/
+
 # PyInstaller 构建产物
 build/
 dist/
 *.spec
+releases/
 
 # 本地开发文档（不随仓库发布）
 LOG.md

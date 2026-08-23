@@ -16,13 +16,14 @@ import sys
 import time
 from pathlib import Path
 
-from PySide6.QtCore import QTimer
+from PySide6.QtCore import QCoreApplication, QTimer
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QMenu, QMessageBox, QSystemTrayIcon
 
 from . import autostart as autostart_mod
 from . import catalog
 from .config import Config
+from .hotkeys import GlobalHotkeys
 from .library import MovieLibrary
 from .window import PetWindow
 
@@ -39,6 +40,27 @@ def _setup_logging(config: Config) -> None:
 
 def _show_startup_error(title: str, message: str) -> None:
     QMessageBox.critical(None, title, message)
+
+
+def _resource_path(*parts: str) -> Path:
+    """返回源码运行与 PyInstaller 运行都可用的资源路径。"""
+    if getattr(sys, 'frozen', False):
+        root = Path(getattr(sys, '_MEIPASS', Path(sys.executable).resolve().parent))
+    else:
+        root = Path(__file__).resolve().parent.parent
+    return root.joinpath(*parts)
+
+
+def _configure_qt_plugins() -> None:
+    """注册随应用分发的 Qt 插件目录，避免 macOS 找不到平台插件。"""
+    plugin_root = _resource_path('qt-plugins')
+    if plugin_root.is_dir():
+        QCoreApplication.addLibraryPath(str(plugin_root))
+
+
+def _application_icon() -> QIcon:
+    icon_path = _resource_path('assets', 'app-icon.png')
+    return QIcon(str(icon_path)) if icon_path.is_file() else QIcon()
 
 
 def _cleanup_stale_runtime_dirs() -> None:
@@ -80,15 +102,26 @@ class PetApp:
         self.config = config
         self.win: PetWindow | None = None
         self.tray: QSystemTrayIcon | None = None
+        self._quit_bound = False
+        self.hotkeys = GlobalHotkeys(self._handle_hotkey)
 
     # ------------------------------------------------------------ 启动
     def start(self) -> None:
         character_id = str(self.config.get('character', catalog.DEFAULT_CHARACTER))
         logging.info('当前形象: %s', character_id)
+        if not self._quit_bound:
+            self.app.aboutToQuit.connect(self.shutdown)
+            self._quit_bound = True
+        self.hotkeys.start()
         self._create_ui(character_id)
 
     def _create_library(self, character_id: str) -> MovieLibrary:
-        lib = MovieLibrary(character_id=character_id)
+        scale = float(self.config.get('scale', catalog.DEFAULT_SCALE))
+        lib = MovieLibrary(
+            character_id=character_id,
+            decode_size=catalog.decode_size_for_scale(scale),
+            soft_edges=bool(self.config.get('soft_edges', True)),
+        )
         logging.info('素材加载完成：%s %d 段动画', character_id, len(lib.names()))
         return lib
 
@@ -107,13 +140,13 @@ class PetApp:
         self.tray = tray
 
         if old_win is not None:
+            old_win.shutdown()
             old_win.hide()
             old_tray.hide() if old_tray is not None else None
             QTimer.singleShot(0, old_win.deleteLater)
             if old_tray is not None:
                 QTimer.singleShot(0, old_tray.deleteLater)
 
-        self.app.aboutToQuit.connect(win._save_position)
 
     # ------------------------------------------------------------ 角色切换
     def switch_character(self, character_id: str) -> None:
@@ -150,26 +183,60 @@ class PetApp:
         self.tray = tray
 
         old_win.hide()
+        old_win.shutdown()
         if old_tray is not None:
             old_tray.hide()
         QTimer.singleShot(0, old_win.deleteLater)
         if old_tray is not None:
             QTimer.singleShot(0, old_tray.deleteLater)
 
-        self.app.aboutToQuit.connect(win._save_position)
+
+    def shutdown(self) -> None:
+        """应用唯一退出入口；避免每次热切换重复连接 aboutToQuit。"""
+        if self.tray is not None:
+            self.tray.hide()
+        if self.win is not None:
+            self.win._save_position()
+            self.win.shutdown()
+        self.hotkeys.stop()
+
+    def _toggle_visible(self) -> None:
+        if self.win is None:
+            return
+        if self.win.isVisible():
+            self.win.suspend_animation()
+            self.win.hide()
+        else:
+            self.win.show()
+            self.win.resume_animation()
+
+    def _handle_hotkey(self, action: str) -> None:
+        win = self.win
+        if win is None:
+            return
+        if action == 'toggle_visible':
+            self._toggle_visible()
+        elif action == 'toggle_pause':
+            win.toggle_pause()
+        elif action == 'random_action':
+            win.play_random_action()
+        elif action == 'toggle_mouse_through':
+            win.set_mouse_through(not win.mouse_through)
+        elif action == 'duck_sound':
+            win.trigger_duck_sound()
 
     # ------------------------------------------------------------ 托盘
     def _build_tray(self, win: PetWindow) -> QSystemTrayIcon:
         tray = QSystemTrayIcon(QIcon(win.icon_pixmap()))
 
-        def toggle_visible() -> None:
-            if win.isVisible():
-                win.hide()
-            else:
-                win.show()
-
         menu = QMenu()
-        menu.addAction('显示 / 隐藏', toggle_visible)
+        menu.addAction('显示 / 隐藏', self._toggle_visible)
+        pause = menu.addAction('暂停 / 继续')
+        pause.setCheckable(True)
+        pause.setChecked(win._paused)
+        pause.toggled.connect(win.set_paused)
+        win.pausedChanged.connect(pause.setChecked)
+        menu.addAction('随机动作', win.play_random_action)
 
         m_char = menu.addMenu('切换角色')
         current = str(self.config.get('character', catalog.DEFAULT_CHARACTER))
@@ -178,6 +245,44 @@ class PetApp:
             act.setCheckable(True)
             act.setChecked(cid == current)
             act.triggered.connect(lambda checked=False, cid=cid: self.switch_character(cid))
+
+        display = menu.addMenu('画面调整')
+        soft_edges = display.addAction('清理透明底噪（Alpha=1）')
+        soft_edges.setCheckable(True)
+        soft_edges.setChecked(win.soft_edges)
+        soft_edges.toggled.connect(win.set_soft_edges)
+        win.softEdgesChanged.connect(soft_edges.setChecked)
+
+        interaction = menu.addMenu('互动反馈')
+        duck_sound = interaction.addAction('尖叫鸭音效')
+        duck_sound.setCheckable(True)
+        duck_sound.setChecked(win.duck_sound_enabled)
+        duck_sound.toggled.connect(win.set_duck_sound)
+        win.duckSoundChanged.connect(duck_sound.setChecked)
+        greetings = interaction.addAction('偶尔主动打招呼')
+        greetings.setCheckable(True)
+        greetings.setChecked(win.proactive_greetings)
+        greetings.toggled.connect(win.set_proactive_greetings)
+        win.proactiveGreetingsChanged.connect(greetings.setChecked)
+
+        win.add_action_menu(menu)
+        win.add_personality_menu(menu)
+
+        shortcuts = menu.addMenu('全局快捷键')
+        shortcut_prefix = '⌃⌥⌘'
+        shortcut_rows = (
+            ('H', '显示 / 隐藏'),
+            ('P', '暂停 / 继续'),
+            ('R', '随机动作'),
+            ('M', '鼠标穿透'),
+            ('D', '尖叫鸭'),
+        )
+        for key, label in shortcut_rows:
+            item = shortcuts.addAction(f'{shortcut_prefix}{key}  {label}')
+            item.setEnabled(False)
+        status = '已启用' if self.hotkeys.enabled else '不可用（仍可使用菜单）'
+        status_item = shortcuts.addAction(f'状态：{status}')
+        status_item.setEnabled(False)
 
         mouse_through = menu.addAction('鼠标穿透')
         mouse_through.setCheckable(True)
@@ -197,7 +302,7 @@ class PetApp:
         tray.setContextMenu(menu)
         tray.setToolTip('dsh-pet 独立桌宠')
         tray.activated.connect(
-            lambda reason: toggle_visible()
+            lambda reason: self._toggle_visible()
             if reason == QSystemTrayIcon.ActivationReason.DoubleClick
             else None
         )
@@ -206,7 +311,9 @@ class PetApp:
 
 
 def main(argv: list[str] | None = None) -> int:
+    _configure_qt_plugins()
     app = QApplication(argv if argv is not None else sys.argv)
+    app.setWindowIcon(_application_icon())
     app.setApplicationName('dsh-pet-standalone')
     app.setQuitOnLastWindowClosed(False)
 

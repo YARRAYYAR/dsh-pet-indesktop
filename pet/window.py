@@ -19,14 +19,19 @@ import random
 import sys
 import time
 
-from PySide6.QtCore import QElapsedTimer, QPoint, Qt, QTimer
-from PySide6.QtGui import QBitmap, QImage, QPainter, QPixmap
+from PySide6.QtCore import QElapsedTimer, QPoint, Qt, QTimer, Signal
+from PySide6.QtGui import QBitmap, QCursor, QImage, QPainter, QPixmap
 from PySide6.QtWidgets import QApplication, QMenu, QWidget
 
 from . import autostart as autostart_mod
 from . import catalog
+from .action_dialog import ActionSetDialog
 from .config import Config
+from .interaction import classify_tap_burst, cursor_facing, edge_contacts
 from .library import MovieLibrary
+from .performance import LoadGovernor, system_load_ratio
+from .sound import DuckScream
+from .webm_clip import frame_canvas_image
 
 
 def _mac_set_window_level(view_id: int, level: int) -> bool:
@@ -35,7 +40,12 @@ def _mac_set_window_level(view_id: int, level: int) -> bool:
     Qt 的 WindowStaysOnTopHint 在 macOS 上对无边框 Tool 窗口/运行时切换不可靠，
     这里用 objc runtime 直接调 [NSWindow setLevel:] 强制生效（ctypes 零依赖）。
     """
-    if sys.platform != 'darwin':
+    app = QApplication.instance()
+    if (
+        sys.platform != 'darwin'
+        or app is None
+        or app.platformName().lower() != 'cocoa'
+    ):
         return False
     try:
         import ctypes
@@ -72,11 +82,23 @@ def _mac_set_window_level(view_id: int, level: int) -> bool:
 class PetWindow(QWidget):
     """桌宠窗口本体。"""
 
+    softEdgesChanged = Signal(bool)
+    duckSoundChanged = Signal(bool)
+    proactiveGreetingsChanged = Signal(bool)
+    playlistChanged = Signal(str)
+    personalityChanged = Signal(str)
+    pausedChanged = Signal(bool)
+
     def __init__(self, lib: MovieLibrary, config: Config) -> None:
         super().__init__()
         self.lib = lib
+        # 让窗口成为媒体库的生命周期所有者；角色切换/退出时不留下孤立 reader。
+        if lib.parent() is None:
+            lib.setParent(self)
         self.cfg = config
         self.on_switch_character = None  # 由 app 注入，用于运行时切换角色
+        self.soft_edges: bool = bool(config.get('soft_edges', True))
+        self.lib.set_soft_edges(self.soft_edges)
 
         # 根据当前形象实际拥有的动画动态计算分类，支持不同角色动作不一致
         self.cats = catalog.build_categories(lib.names(), getattr(lib, 'manifest', None), getattr(lib, 'folder_map', None), getattr(lib, 'folder_files', None))
@@ -88,6 +110,20 @@ class PetWindow(QWidget):
         self.clicks = self.cats['clicks']
         self.drag = self.cats['drag']
         self.acts = self.cats['acts']
+        available = set(lib.names())
+        self.favorites = [
+            name for name in self._config_names('favorites') if name in available
+        ]
+        self.playlist = [
+            name for name in self._config_names('playlist') if name in available
+        ]
+        self.playlist_mode = str(config.get('playlist_mode', 'off'))
+        if self.playlist_mode not in ('off', 'loop', 'random'):
+            self.playlist_mode = 'off'
+        self._playlist_index = -1
+        self.personality = self._normalize_personality(
+            config.get('personality', 'lively')
+        )
 
         # 预载拖拽动画首帧，避免第一次进入拖拽状态时同步解码卡顿
         if self.drag:
@@ -96,6 +132,12 @@ class PetWindow(QWidget):
         self.playback_speed: float = float(config.get('playback_speed', 1.0))
         self.mouse_through: bool = bool(config.get('mouse_through', False))
         self.drag_physics: bool = bool(config.get('drag_physics', False))
+        self.duck_sound_enabled: bool = bool(config.get('duck_sound', True))
+        self.proactive_greetings: bool = bool(
+            config.get('proactive_greetings', True)
+        )
+        self._duck_sound = DuckScream(config.dir)
+        self._duck_sound.enabled = self.duck_sound_enabled
 
         # ---- 窗口属性：无边框 + 透明 + 不进任务栏；置顶可配置 ----
         flags = Qt.WindowType.FramelessWindowHint | Qt.WindowType.Tool
@@ -116,14 +158,31 @@ class PetWindow(QWidget):
         self.scale: float = float(config.get('scale', catalog.DEFAULT_SCALE))
         self.no_move: bool = bool(config.get('no_move', False))  # 不移动：禁用自动移动
         self.movie = None
+        self._bound_movie = None
+        self._bound_movie_name: str | None = None
         self._frame_pixmap: QPixmap | None = None
+        self._frame_logical_size = (0, 0)
+        self._frame_logical_rect = (0, 0, 0, 0)
+        self._mask_frame_counter = 0
         self._ended_fired = False
+        self._shutting_down = False
+        self._suspended = False
+        self._paused = False
 
         # ---- 交互状态 ----
         self._press_global: QPoint | None = None
         self._grab_offset: QPoint | None = None  # 按下时 鼠标全局坐标 - 窗口左上角
         self._dragging = False
         self._just_dragged = False               # 抑制拖拽结束后的幽灵点击
+        self._long_press_fired = False
+        self._tap_count = 0
+
+        self._long_press_timer = QTimer(self)
+        self._long_press_timer.setSingleShot(True)
+        self._long_press_timer.timeout.connect(self._on_long_press)
+        self._tap_timer = QTimer(self)
+        self._tap_timer.setSingleShot(True)
+        self._tap_timer.timeout.connect(self._flush_tap_burst)
 
         # ---- 移动驱动 ----
         self._move_plan: dict | None = None
@@ -140,6 +199,16 @@ class PetWindow(QWidget):
         self._squash_duration_ms = 220
         self._squash_progress = 1.0
 
+        # ---- 自适应省资源：系统持续繁忙时降低动作/解码频率 ----
+        self._load_governor = LoadGovernor()
+        self._resource_constrained = False
+        self._resource_timer = QTimer(self)
+        self._resource_timer.setInterval(catalog.LOAD_SAMPLE_MS)
+        self._resource_timer.timeout.connect(self._check_system_load)
+        self._idle_pause_timer = QTimer(self)
+        self._idle_pause_timer.setSingleShot(True)
+        self._idle_pause_timer.timeout.connect(self._resume_busy_idle)
+
         # ---- 拖动物理 ----
         self._physics_timer = QTimer(self)
         self._physics_timer.setInterval(16)
@@ -151,17 +220,35 @@ class PetWindow(QWidget):
         self._last_global: QPoint | None = None
         self._last_move_time = 0.0
 
+        # ---- 鼠标靠近与主动问候 ----
+        self._cursor_timer = QTimer(self)
+        self._cursor_timer.setInterval(catalog.CURSOR_POLL_MS)
+        self._cursor_timer.timeout.connect(self._on_cursor_tick)
+        self._greeting_timer = QTimer(self)
+        self._greeting_timer.setSingleShot(True)
+        self._greeting_timer.timeout.connect(self._on_greeting_timer)
+
         # ---- 尺寸与初始状态 ----
         self._apply_scale()
-        for name, movie in lib.movies().items():
-            # 默认参数捕获 name，避免闭包晚绑定
-            movie.frameChanged.connect(lambda n, name=name: self._on_frame(name, n))
         self._restore_position()
         self._switch(self.idle)
+        self._resource_timer.start()
+        self._check_system_load()
+        self._cursor_timer.start()
+        self._schedule_next_greeting()
+
+    def _config_names(self, key: str) -> list[str]:
+        """读取配置中的动作名列表，过滤异常值并保持原顺序。"""
+        value = self.cfg.get(key, [])
+        return [name for name in value if isinstance(name, str)] if isinstance(value, list) else []
+
+    @staticmethod
+    def _normalize_personality(value: str) -> str:
+        return value if value in catalog.PERSONALITY_PRESETS else 'lively'
 
     # ================================================================ 尺寸
     def _apply_scale(self) -> None:
-        """按缩放计算窗口尺寸：宽度 220×scale，高度 (124+落地偏移)×scale。"""
+        """按逻辑画布缩放窗口；素材分辨率不会改变桌宠大小。"""
         self._w = max(1, int(round(catalog.CANVAS_W * self.scale)))
         self._h = max(1, int(round((catalog.CANVAS_H + catalog.PAD) * self.scale)))
         self.setFixedSize(self._w, self._h)
@@ -172,9 +259,10 @@ class PetWindow(QWidget):
             return
         old_bottom = self.geometry().bottom()
         self.scale = scale
+        self.lib.set_decode_size(*catalog.decode_size_for_scale(scale))
         self._apply_scale()
         self.move(self.x(), old_bottom - self._h + 1)
-        self._rebuild_frame()
+        self._switch(self.anim)
         self.update()
         self._save_position()
 
@@ -261,23 +349,60 @@ class PetWindow(QWidget):
                 self._switch(self._pick(self.idles))  # 打断进行中的移动
 
     # ================================================================ 播放
+    def _bind_movie(self, name: str, movie) -> None:
+        """只绑定当前播放器；LRU 重建同名动作时也会重新绑定。"""
+        if movie is self._bound_movie:
+            self._bound_movie_name = name
+            return
+        self._unbind_movie()
+        movie.frameChanged.connect(self._on_frame)
+        movie.finished.connect(self._on_movie_finished)
+        movie.errorOccurred.connect(self._on_movie_error)
+        self._bound_movie = movie
+        self._bound_movie_name = name
+
+    def _unbind_movie(self) -> None:
+        movie = self._bound_movie
+        if movie is not None:
+            for signal, slot in (
+                (movie.frameChanged, self._on_frame),
+                (movie.finished, self._on_movie_finished),
+                (movie.errorOccurred, self._on_movie_error),
+            ):
+                try:
+                    signal.disconnect(slot)
+                except (RuntimeError, TypeError):
+                    pass
+        self._bound_movie = None
+        self._bound_movie_name = None
+
     def _switch(self, name: str) -> None:
         """切换到指定动画（链式模型：全部一次性播放）。"""
+        self._idle_pause_timer.stop()
         self._cancel_move()
+        previous = self.movie
+        movie = self.lib.activate(name)
+        if previous is not None and previous is not movie:
+            previous.stop()
+        self._bind_movie(name, movie)
         self.anim = name
-        movie = self.lib.movie(name)
+        if name in self.playlist:
+            self._playlist_index = self.playlist.index(name)
         self.movie = movie
         movie.stop()
         movie.jumpToFrame(0)
         if hasattr(movie, 'set_playback_speed'):
-            movie.set_playback_speed(self.playback_speed)
+            movie.set_playback_speed(self._effective_playback_speed(name))
         self._ended_fired = False
-        self._rebuild_frame()
-        movie.start()
+        self._mask_frame_counter = 0
+        self._rebuild_frame(force_mask=True)
+        if not self._suspended and not self._paused:
+            movie.start()
 
-    def _on_frame(self, name: str, n: int) -> None:
+    def _on_frame(self, n: int) -> None:
         """媒体帧推进回调：重建画面；最后一帧触发播完处理。"""
-        if name != self.anim or self.movie is None:
+        name = self._bound_movie_name
+        if name != self.anim or self.movie is None or self.sender() is not self.movie:
             return
         self._rebuild_frame()
         self.update()
@@ -286,23 +411,55 @@ class PetWindow(QWidget):
             self.movie.stop()  # 停在最后一帧，等 _on_anim_ended 切走
             self._on_anim_ended(name)
 
-    def _rebuild_frame(self) -> None:
-        """重建当前帧：缩放 + 朝向镜像 + 生成窗口 mask。"""
+    def _on_movie_finished(self) -> None:
+        name = self._bound_movie_name
+        if (
+            name != self.anim
+            or self.movie is None
+            or self.sender() is not self.movie
+            or self._ended_fired
+        ):
+            return
+        self._ended_fired = True
+        self._on_anim_ended(name)
+
+    def _on_movie_error(self, message: str) -> None:
+        logging.error('动画解码失败 %s: %s', self._bound_movie_name, message)
+
+    def _rebuild_frame(self, *, force_mask: bool = False) -> None:
+        """按固定逻辑画布生成 Retina pixmap，并同步窗口 mask。
+
+        裁边图只作为解码优化；显示时还原到稳定画布，避免每帧透明边界
+        变化带来尺寸/位置抖动。
+        """
         if self.movie is None:
             return
-        pm = self.movie.currentPixmap()
-        if pm.isNull():
+        frame = self.movie.currentFrame()
+        if frame is None or frame.image.isNull():
             return
-        img = pm.toImage()
+        img = frame_canvas_image(frame)
         if self.facing == 'right':
             img = img.mirrored(True, False)
         w_c = max(1, int(round(catalog.CANVAS_W * self.scale)))
         h_c = max(1, int(round(catalog.CANVAS_H * self.scale)))
-        img = img.scaled(w_c, h_c,
+        dpr = min(catalog.RENDER_DPR_CAP, max(1.0, float(self.devicePixelRatioF())))
+        pixel_w = max(1, int(round(w_c * dpr)))
+        pixel_h = max(1, int(round(h_c * dpr)))
+        img = img.scaled(pixel_w, pixel_h,
                          Qt.AspectRatioMode.IgnoreAspectRatio,
                          Qt.TransformationMode.SmoothTransformation)
-        self._frame_pixmap = QPixmap.fromImage(img)
-        self._sync_mask()
+        pixmap = QPixmap.fromImage(img)
+        pixmap.setDevicePixelRatio(dpr)
+        self._frame_pixmap = pixmap
+        self._frame_logical_size = (w_c, h_c)
+        self._frame_logical_rect = (0, 0, w_c, h_c)
+        self._mask_frame_counter += 1
+        mask_interval = (
+            catalog.BUSY_MASK_FRAME_INTERVAL if self._resource_constrained else 1
+        )
+        if force_mask or self._mask_frame_counter >= mask_interval:
+            self._sync_mask()
+            self._mask_frame_counter = 0
 
     def _sync_mask(self) -> None:
         """按当前帧 alpha 设置窗口 mask：透明区域鼠标穿透到下层窗口。"""
@@ -311,7 +468,8 @@ class PetWindow(QWidget):
         p = QPainter(canvas)
         p.translate(0, int(round(catalog.PAD * self.scale)))
         if self._frame_pixmap is not None:
-            p.drawPixmap(0, 0, self._frame_pixmap)
+            x, y, _, _ = self._frame_logical_rect
+            p.drawPixmap(x, y, self._frame_pixmap)
         p.end()
         self.setMask(QBitmap.fromImage(canvas.createAlphaMask()))
 
@@ -323,15 +481,22 @@ class PetWindow(QWidget):
                 # Q 弹：垂直变矮 + 水平微微变宽，脚底保持不动
                 sy = 1.0 - 0.15 * math.sin(math.pi * self._squash_progress)
                 sx = 1.0 + 0.10 * math.sin(math.pi * self._squash_progress)
-                w = max(1, int(round(self._frame_pixmap.width() * sx)))
-                h = max(1, int(round(self._frame_pixmap.height() * sy)))
-                x = (self._w - w) // 2
-                y = self._h - h
+                canvas_w, canvas_h = self._frame_logical_size
+                crop_x, crop_y, crop_w, crop_h = self._frame_logical_rect
+                scaled_canvas_w = canvas_w * sx
+                scaled_canvas_h = canvas_h * sy
+                base_x = (self._w - scaled_canvas_w) / 2.0
+                base_y = self._h - scaled_canvas_h
+                x = int(round(base_x + crop_x * sx))
+                y = int(round(base_y + crop_y * sy))
+                w = max(1, int(round(crop_w * sx)))
+                h = max(1, int(round(crop_h * sy)))
                 painter.drawPixmap(x, y, w, h, self._frame_pixmap)
             else:
                 # 落地对齐：整帧下移 PAD×scale，让人物脚底踩在窗口底线
                 painter.translate(0, int(round(catalog.PAD * self.scale)))
-                painter.drawPixmap(0, 0, self._frame_pixmap)
+                x, y, _, _ = self._frame_logical_rect
+                painter.drawPixmap(x, y, self._frame_pixmap)
         painter.end()
 
     def _start_squash(self) -> None:
@@ -352,12 +517,32 @@ class PetWindow(QWidget):
 
     def icon_pixmap(self, size: int = 64) -> QPixmap:
         """托盘图标：取当前帧（无则待机首帧）缩放。"""
-        pm = self._frame_pixmap
-        if pm is None and self.idle:
-            pm = self.lib.movie(self.idle).currentPixmap()
-        return pm.scaled(size, size,
-                         Qt.AspectRatioMode.KeepAspectRatio,
-                         Qt.TransformationMode.SmoothTransformation)
+        if self._frame_pixmap is not None:
+            canvas_w, canvas_h = self._frame_logical_size
+            image = QImage(canvas_w, canvas_h, QImage.Format.Format_ARGB32)
+            image.fill(Qt.GlobalColor.transparent)
+            painter = QPainter(image)
+            x, y, _, _ = self._frame_logical_rect
+            painter.drawPixmap(x, y, self._frame_pixmap)
+            painter.end()
+        else:
+            frame = self.lib.movie(self.idle).currentFrame()
+            image = QImage(
+                frame.canvas_width,
+                frame.canvas_height,
+                QImage.Format.Format_ARGB32,
+            )
+            image.fill(Qt.GlobalColor.transparent)
+            painter = QPainter(image)
+            painter.drawImage(frame.x, frame.y, frame.image)
+            painter.end()
+        image = image.scaled(
+            size,
+            size,
+            Qt.AspectRatioMode.KeepAspectRatio,
+            Qt.TransformationMode.SmoothTransformation,
+        )
+        return QPixmap.fromImage(image)
 
     # ================================================================ 动画链
     def _on_anim_ended(self, name: str) -> None:
@@ -370,30 +555,51 @@ class PetWindow(QWidget):
         if name in self.turns:
             # 转向动画播完 → 翻转朝向
             self.facing = 'right' if self.facing == 'left' else 'left'
+        if self.playlist_mode != 'off' and name in self.playlist:
+            self._play_next_playlist()
+            return
         if name == self.drag or name in self.clicks:
             # 交互打断的动画播完 → 待机缓冲（一次性），待机播完再进链
             if self.idles:
                 self._switch(self._pick(self.idles))
             return
+        if self._resource_constrained and name in self.idles:
+            # 保留最后一帧短暂停顿，不启动解码器；交互会通过 _switch 立即取消等待。
+            self._idle_pause_timer.start(catalog.BUSY_IDLE_PAUSE_MS)
+            return
         self._pick_next()
 
     def _pick_next(self) -> None:
-        """动画链：30% 待机 / 10% 转向 / 40% 动作 / 20% 移动（空间不够回退动作）。
-
-        「不移动」模式下跳过移动分支，其概率并入动作 → 30% 待机 / 10% 转向 / 60% 动作。
-        """
+        """按播放列表或当前性格模式选择下一个动画。"""
+        if self.playlist_mode != 'off' and self.playlist:
+            self._play_next_playlist()
+            return
         roll = random.random()
-        if roll < catalog.P_IDLE:
+        if self._resource_constrained:
+            if roll < catalog.BUSY_IDLE_PROBABILITY and self.idles:
+                self._switch(self._pick(self.idles, exclude=self.anim))
+            elif roll < catalog.BUSY_TURN_PROBABILITY and self.turns:
+                self._switch(self._pick(self.turns, exclude=self.anim))
+            else:
+                self._switch(self._pick(self.acts, exclude=self.anim))
+            return
+        profile = catalog.PERSONALITY_PRESETS[self.personality]
+        idle_edge = float(profile['idle'])
+        turn_edge = idle_edge + float(profile['turn'])
+        acts_edge = turn_edge + float(profile['acts'])
+        if self.no_move:
+            acts_edge += float(profile['move'])
+        if roll < idle_edge:
             if self.idles:
                 self._switch(self._pick(self.idles, exclude=self.anim))
             else:
                 self._switch(self._pick(self.acts, exclude=self.anim))
-        elif roll < catalog.P_TURN:
+        elif roll < turn_edge:
             if self.turns:
                 self._switch(self._pick(self.turns, exclude=self.anim))
             else:
                 self._switch(self._pick(self.acts, exclude=self.anim))
-        elif roll < catalog.P_ACTS:
+        elif roll < acts_edge:
             self._switch(self._pick(self.acts, exclude=self.anim))
         else:
             if self.no_move or not self._try_move():
@@ -403,6 +609,198 @@ class PetWindow(QWidget):
     def _pick(pool: list[str], exclude: str | None = None) -> str:
         entries = [n for n in pool if n != exclude] or pool
         return random.choice(entries)
+
+    def _save_action_names(self, key: str, names: list[str]) -> None:
+        self.cfg.set(key, list(names))
+        self.cfg.save()
+
+    def _edit_action_set(self, key: str, title: str) -> None:
+        current = list(self.favorites if key == 'favorites' else self.playlist)
+        dialog = ActionSetDialog(title, list(self.lib.names()), current, self)
+        if dialog.exec() != dialog.DialogCode.Accepted:
+            return
+        selected = [name for name in dialog.selected_names() if name in self.lib.names()]
+        if key == 'favorites':
+            self.favorites = selected
+        else:
+            self.playlist = selected
+            self._playlist_index = -1
+            if not self.playlist and self.playlist_mode != 'off':
+                self.playlist_mode = 'off'
+                self.cfg.set('playlist_mode', 'off')
+                self.playlistChanged.emit('off')
+        self._save_action_names(key, selected)
+        if key == 'playlist' and self.playlist_mode != 'off':
+            self._cancel_move()
+            self._play_next_playlist()
+
+    def _toggle_current_favorite(self) -> None:
+        if self.anim in self.favorites:
+            self.favorites.remove(self.anim)
+        else:
+            self.favorites.append(self.anim)
+        self._save_action_names('favorites', self.favorites)
+
+    def _set_playlist_from_favorites(self) -> None:
+        self.playlist = list(self.favorites)
+        self._playlist_index = -1
+        self._save_action_names('playlist', self.playlist)
+        if self.playlist_mode != 'off':
+            self._play_next_playlist()
+
+    def _play_next_playlist(self) -> None:
+        if not self.playlist:
+            self.set_playlist_mode('off')
+            return
+        if self.playlist_mode == 'random':
+            name = self._pick(self.playlist, exclude=self.anim)
+        else:
+            self._playlist_index = (self._playlist_index + 1) % len(self.playlist)
+            name = self.playlist[self._playlist_index]
+        self._switch(name)
+
+    def set_playlist_mode(self, mode: str) -> None:
+        if mode not in ('off', 'loop', 'random'):
+            return
+        if mode != 'off' and not self.playlist:
+            return
+        self.playlist_mode = mode
+        self.cfg.set('playlist_mode', mode)
+        self.cfg.save()
+        self.playlistChanged.emit(mode)
+        if mode != 'off':
+            self._cancel_move()
+            self._play_next_playlist()
+
+    def add_action_menu(self, parent_menu: QMenu) -> QMenu:
+        """给桌宠右键菜单和状态栏菜单共用动作管理入口。"""
+        menu = parent_menu.addMenu('动作管理')
+        menu.aboutToShow.connect(lambda menu=menu: self._populate_action_menu(menu))
+        self._populate_action_menu(menu)
+        return menu
+
+    def _populate_action_menu(self, menu: QMenu) -> None:
+        menu.clear()
+        current_label = (
+            '取消收藏当前动作' if self.anim in self.favorites else '收藏当前动作'
+        )
+        menu.addAction(current_label, self._toggle_current_favorite)
+        menu.addAction(
+            '编辑收藏夹…',
+            lambda: self._edit_action_set('favorites', '编辑收藏夹'),
+        )
+        menu.addAction(
+            '编辑播放列表…',
+            lambda: self._edit_action_set('playlist', '编辑播放列表'),
+        )
+
+        favorites = menu.addMenu('收藏夹')
+        if self.favorites:
+            for name in self.favorites:
+                favorites.addAction(name, lambda checked=False, name=name: self._switch(name))
+        else:
+            empty = favorites.addAction('暂无收藏')
+            empty.setEnabled(False)
+
+        playlist = menu.addMenu('播放列表')
+        if self.favorites:
+            playlist.addAction('用收藏夹覆盖播放列表', self._set_playlist_from_favorites)
+        if self.playlist:
+            playlist.addAction(f'当前列表：{len(self.playlist)} 段').setEnabled(False)
+        else:
+            empty = playlist.addAction('暂无动作，请先编辑列表')
+            empty.setEnabled(False)
+        for mode, label in (
+            ('off', '关闭播放列表'),
+            ('loop', '循环播放'),
+            ('random', '随机播放'),
+        ):
+            action = playlist.addAction(label)
+            action.setCheckable(True)
+            action.setChecked(self.playlist_mode == mode)
+            action.setEnabled(mode == 'off' or bool(self.playlist))
+            action.triggered.connect(lambda checked=False, mode=mode: self.set_playlist_mode(mode))
+
+    def set_personality(self, personality: str) -> None:
+        personality = self._normalize_personality(personality)
+        if personality == self.personality:
+            return
+        self.personality = personality
+        self.cfg.set('personality', personality)
+        self.cfg.save()
+        self._schedule_next_greeting()
+        self.personalityChanged.emit(personality)
+
+    def add_personality_menu(self, parent_menu: QMenu) -> QMenu:
+        menu = parent_menu.addMenu('性格模式')
+        for key, profile in catalog.PERSONALITY_PRESETS.items():
+            action = menu.addAction(str(profile['label']))
+            action.setCheckable(True)
+            action.setChecked(self.personality == key)
+            action.triggered.connect(
+                lambda checked=False, key=key: self.set_personality(key)
+            )
+        return menu
+
+    def _special_animation(self, preferred: str, fallback: list[str]) -> str | None:
+        """优先使用有明确语义的动作，没有时回退到当前角色已有动作。"""
+        if preferred in self.lib.names():
+            return preferred
+        pool = [name for name in fallback if name in self.lib.names()]
+        return self._pick(pool, exclude=self.anim) if pool else None
+
+    def _schedule_next_greeting(self) -> None:
+        self._greeting_timer.stop()
+        if (
+            not self.proactive_greetings
+            or self._suspended
+            or self._paused
+            or self._shutting_down
+        ):
+            return
+        profile = catalog.PERSONALITY_PRESETS[self.personality]
+        delay = random.randint(
+            int(profile['greeting_min_ms']),
+            int(profile['greeting_max_ms']),
+        )
+        self._greeting_timer.start(delay)
+
+    def _on_greeting_timer(self) -> None:
+        if (
+            self.proactive_greetings
+            and not self._suspended
+            and not self._paused
+            and not self._shutting_down
+            and not self._dragging
+            and self._move_plan is None
+            and random.random() <= float(
+                catalog.PERSONALITY_PRESETS[self.personality]['greeting_chance']
+            )
+        ):
+            name = self._special_animation(
+                '点击回应-元气挥手', self.clicks or self.acts
+            )
+            if name:
+                self._switch(name)
+        self._schedule_next_greeting()
+
+    def _on_cursor_tick(self) -> None:
+        """鼠标进入反应半径时镜像当前帧，让角色自然看向鼠标。"""
+        if self._suspended or self._paused or self._shutting_down or self._dragging:
+            return
+        center = (self.x() + self._w / 2.0, self.y() + self._h / 2.0)
+        cursor = QCursor.pos()
+        target = cursor_facing(
+            center,
+            (float(cursor.x()), float(cursor.y())),
+            catalog.CURSOR_REACTION_RADIUS,
+            catalog.CURSOR_DEAD_ZONE,
+        )
+        if target is None or target == self.facing:
+            return
+        self.facing = target
+        self._rebuild_frame(force_mask=True)
+        self.update()
 
     # ================================================================ 移动
     def _try_move(self, name: str | None = None) -> bool:
@@ -482,6 +880,8 @@ class PetWindow(QWidget):
             self._press_global = event.globalPosition().toPoint()
             self._grab_offset = self._press_global - self.pos()
             self._dragging = False
+            self._long_press_fired = False
+            self._long_press_timer.start(catalog.LONG_PRESS_MS)
             self._cancel_move()  # 按下即打断移动
             self._last_global = self._press_global
             self._last_move_time = time.monotonic()
@@ -501,6 +901,7 @@ class PetWindow(QWidget):
             if math.hypot(delta.x(), delta.y()) < catalog.DRAG_THRESHOLD * self.scale:
                 return  # 未超阈值：仍是点击候选
             self._dragging = True
+            self._long_press_timer.stop()
             if self.drag:
                 self._switch(self.drag)  # 进入拖拽：播放悬空反馈动画
             if self.drag_physics:
@@ -539,6 +940,7 @@ class PetWindow(QWidget):
             super().mouseReleaseEvent(event)
             return
         was_dragging = self._dragging
+        self._long_press_timer.stop()
         g = event.globalPosition().toPoint()
         dist = 0.0
         if self._press_global is not None:
@@ -554,29 +956,111 @@ class PetWindow(QWidget):
             else:
                 if self._grab_offset is not None:
                     self.move(g - self._grab_offset)  # 停在松手处
+            edge_bounced = self._trigger_edge_feedback()
+            if not edge_bounced and not self.drag_physics:
                 self._save_position()
-            if self.idles:
+            if self.idles and not edge_bounced:
                 self._switch(self._pick(self.idles))  # 回待机缓冲
-        elif dist < catalog.DRAG_THRESHOLD * self.scale:
-            self._on_click()
+        elif dist < catalog.DRAG_THRESHOLD * self.scale and not self._long_press_fired:
+            self._queue_tap()
         self._dragging = False
         self._press_global = None
         self._grab_offset = None
+        self._long_press_fired = False
         event.accept()
 
     def _clear_just_dragged(self) -> None:
         self._just_dragged = False
 
-    def _on_click(self) -> None:
-        """真点击 → 随机一个点击回应动画，并重置当前动画（可连续点击打断）。"""
-        if self._just_dragged:
+    def _on_long_press(self) -> None:
+        if self._press_global is None or self._dragging or self._suspended:
             return
-        if not self.clicks:
-            return
-        # 点击可以打断当前动画（包括正在播放的点击回应），实现连续 Q 弹
+        self._long_press_fired = True
+        self._tap_timer.stop()
+        self._tap_count = 0
         self._cancel_move()
         self._start_squash()
-        self._switch(self._pick(self.clicks))
+        name = self._special_animation('被吓一跳', self.acts or self.clicks)
+        if name:
+            self._switch(name)
+        self._duck_sound.play()
+
+    def _queue_tap(self) -> None:
+        """延迟一个短窗口，区分单击、双击和快速连续点击。"""
+        self._tap_count += 1
+        self._tap_timer.start(catalog.TAP_BURST_WINDOW_MS)
+
+    def _flush_tap_burst(self) -> None:
+        count = self._tap_count
+        self._tap_count = 0
+        action = classify_tap_burst(count)
+        if action == 'single':
+            self._on_click()
+        elif action == 'double':
+            self._on_double_click()
+        else:
+            self._on_rapid_click(count)
+
+    def _play_click_response(self, pool: list[str]) -> None:
+        if not pool:
+            return
+        self._cancel_move()
+        self._start_squash()
+        self._switch(self._pick(pool, exclude=self.anim))
+
+    def _on_click(self) -> None:
+        """单击：播放一个普通点击回应。"""
+        if self._just_dragged:
+            return
+        self._play_click_response(self.clicks)
+
+    def _on_double_click(self) -> None:
+        """双击：播放更强的回应，并触发尖叫鸭。"""
+        self._play_click_response(self.clicks or self.acts)
+        self._duck_sound.play()
+
+    def _on_rapid_click(self, count: int) -> None:
+        """快速连续点击：切到随机动作，次数越多越像被连续戳醒。"""
+        self._play_click_response(self.acts or self.clicks)
+        self._duck_sound.play()
+
+    def _trigger_edge_feedback(self) -> bool:
+        """拖到屏幕边缘时做一次短暂压扁，并用物理反弹离开边缘。"""
+        scr = self._screen_available()
+        avail = scr.availableGeometry()
+        contacts = edge_contacts(
+            (float(self.x()), float(self.y()), float(self._w), float(self._h)),
+            (
+                float(avail.left()),
+                float(avail.top()),
+                float(avail.width()),
+                float(avail.height()),
+            ),
+            catalog.EDGE_FEEDBACK_MARGIN,
+        )
+        if not contacts:
+            return False
+
+        if 'left' in contacts:
+            self.facing = 'right'
+            self._phys_vel[0] = max(abs(self._phys_vel[0]), catalog.EDGE_BOUNCE_SPEED)
+        elif 'right' in contacts:
+            self.facing = 'left'
+            self._phys_vel[0] = -max(abs(self._phys_vel[0]), catalog.EDGE_BOUNCE_SPEED)
+        if 'top' in contacts:
+            self._phys_vel[1] = max(abs(self._phys_vel[1]), catalog.EDGE_BOUNCE_SPEED)
+        elif 'bottom' in contacts:
+            self._phys_vel[1] = -max(abs(self._phys_vel[1]), catalog.EDGE_BOUNCE_SPEED)
+
+        self._phys_pos = [float(self.x()), float(self.y())]
+        self._physics_mode = 'throw'
+        self._physics_timer.start()
+        self._start_squash()
+        self._rebuild_frame(force_mask=True)
+        name = self._special_animation('被吓一跳', self.acts or self.clicks)
+        if name:
+            self._switch(name)
+        return True
 
     def contextMenuEvent(self, event) -> None:  # noqa: N802
         if not self._is_in_interactive_area(event.pos()):
@@ -604,6 +1088,9 @@ class PetWindow(QWidget):
         for n in self.acts:
             m_acts.addAction(n, lambda n=n: self._switch(n))
 
+        self.add_action_menu(menu)
+        self.add_personality_menu(menu)
+
         m_speed = menu.addMenu('播放速率')
         for i in range(10, 21):
             v = i / 10.0
@@ -616,6 +1103,22 @@ class PetWindow(QWidget):
         drag_physics_act.setCheckable(True)
         drag_physics_act.setChecked(self.drag_physics)
         drag_physics_act.toggled.connect(self.set_drag_physics)
+
+        interaction = menu.addMenu('互动反馈')
+        duck_sound = interaction.addAction('尖叫鸭音效')
+        duck_sound.setCheckable(True)
+        duck_sound.setChecked(self.duck_sound_enabled)
+        duck_sound.toggled.connect(self.set_duck_sound)
+        greetings = interaction.addAction('偶尔主动打招呼')
+        greetings.setCheckable(True)
+        greetings.setChecked(self.proactive_greetings)
+        greetings.toggled.connect(self.set_proactive_greetings)
+
+        m_display = menu.addMenu('画面调整')
+        soft_edges_act = m_display.addAction('清理透明底噪（Alpha=1）')
+        soft_edges_act.setCheckable(True)
+        soft_edges_act.setChecked(self.soft_edges)
+        soft_edges_act.toggled.connect(self.set_soft_edges)
 
         m_char = menu.addMenu('切换角色')
         current = str(self.cfg.get('character', catalog.DEFAULT_CHARACTER))
@@ -669,7 +1172,130 @@ class PetWindow(QWidget):
         self.cfg.set('playback_speed', self.playback_speed)
         self.cfg.save()
         if self.movie is not None and hasattr(self.movie, 'set_playback_speed'):
-            self.movie.set_playback_speed(self.playback_speed)
+            self.movie.set_playback_speed(self._effective_playback_speed(self.anim))
+
+    def set_soft_edges(self, enabled: bool) -> None:
+        """切换 Alpha=1 底噪清理并持久化；重建当前播放器以即时生效。"""
+        enabled = bool(enabled)
+        if enabled == self.soft_edges:
+            return
+        self.soft_edges = enabled
+        self.cfg.set('soft_edges', enabled)
+        self.cfg.save()
+
+        current = self.anim
+        self._unbind_movie()
+        if self.movie is not None:
+            self.movie.stop()
+            self.movie = None
+        self.lib.set_soft_edges(enabled)
+        if not self._suspended and not self._shutting_down:
+            self._switch(current if current in self.lib.names() else self.idle)
+        self.softEdgesChanged.emit(enabled)
+
+    def _effective_playback_speed(self, name: str) -> float:
+        if self._resource_constrained and name in self.idles:
+            return self.playback_speed * catalog.BUSY_IDLE_SPEED_FACTOR
+        return self.playback_speed
+
+    def _check_system_load(self) -> None:
+        ratio = system_load_ratio()
+        if not self._load_governor.observe(ratio):
+            return
+        self._resource_constrained = self._load_governor.constrained
+        logging.info(
+            '资源模式=%s load_ratio=%.2f',
+            '省资源' if self._resource_constrained else '正常',
+            ratio,
+        )
+        interaction_active = self.anim in self.clicks or self.anim == self.drag
+        if (
+            self._resource_constrained
+            and not self._dragging
+            and not interaction_active
+            and self.idles
+        ):
+            self._switch(self._pick(self.idles))
+        elif self.movie is not None and hasattr(self.movie, 'set_playback_speed'):
+            self.movie.set_playback_speed(self._effective_playback_speed(self.anim))
+        if not self._resource_constrained and self._frame_pixmap is not None:
+            self._sync_mask()
+
+    def _resume_busy_idle(self) -> None:
+        if self._resource_constrained and self.idles and not self._dragging:
+            self._switch(self._pick(self.idles, exclude=self.anim))
+        else:
+            self._pick_next()
+
+    def set_paused(self, on: bool) -> None:
+        """暂停/继续可见动画，不隐藏窗口，也不释放素材库。"""
+        on = bool(on)
+        if on == self._paused or self._suspended or self._shutting_down:
+            return
+        self._paused = on
+        if on:
+            self._cancel_move()
+            self._long_press_timer.stop()
+            self._tap_timer.stop()
+            self._cursor_timer.stop()
+            self._greeting_timer.stop()
+            self._resource_timer.stop()
+            self._physics_timer.stop()
+            if self.movie is not None:
+                self.movie.stop()
+        else:
+            self._cursor_timer.start()
+            self._schedule_next_greeting()
+            self._resource_timer.start()
+            if self.movie is not None:
+                self.movie.start()
+            else:
+                self._switch(self.anim if self.anim in self.lib.names() else self.idle)
+        self.pausedChanged.emit(self._paused)
+
+    def toggle_pause(self) -> None:
+        self.set_paused(not self._paused)
+
+    def play_random_action(self) -> None:
+        pool = self.acts or self.clicks or self.idles
+        if pool:
+            self._cancel_move()
+            self._switch(self._pick(pool, exclude=self.anim))
+
+    def trigger_duck_sound(self) -> None:
+        self._duck_sound.play()
+
+    def suspend_animation(self) -> None:
+        """托盘隐藏时停止解码与高频计时器，保留当前画面和动作名。"""
+        if self._suspended or self._shutting_down:
+            return
+        self._suspended = True
+        self._long_press_timer.stop()
+        self._tap_timer.stop()
+        self._cursor_timer.stop()
+        self._greeting_timer.stop()
+        self._cancel_move()
+        self._squash_timer.stop()
+        self._physics_timer.stop()
+        self._idle_pause_timer.stop()
+        self._resource_timer.stop()
+        self._unbind_movie()
+        if self.movie is not None:
+            self.movie.stop()
+            self.movie = None
+        self.lib.close()
+
+    def resume_animation(self) -> None:
+        """从托盘重新显示时恢复当前动作并重新启用负载采样。"""
+        if not self._suspended or self._shutting_down:
+            return
+        self._suspended = False
+        if not self._paused:
+            self._cursor_timer.start()
+            self._schedule_next_greeting()
+            self._resource_timer.start()
+            self._check_system_load()
+        self._switch(self.anim if self.anim in self.lib.names() else self.idle)
 
     def set_mouse_through(self, on: bool) -> None:
         """鼠标穿透：开启后桌宠不接收鼠标事件，点击会穿透到下层。"""
@@ -686,6 +1312,27 @@ class PetWindow(QWidget):
         self.cfg.save()
         if not self.drag_physics:
             self._stop_physics()
+
+    def set_duck_sound(self, on: bool) -> None:
+        """尖叫鸭音效开关。"""
+        self.duck_sound_enabled = bool(on)
+        self._duck_sound.enabled = self.duck_sound_enabled
+        self.cfg.set('duck_sound', self.duck_sound_enabled)
+        self.cfg.save()
+        if not self.duck_sound_enabled:
+            self._duck_sound.close()
+        self.duckSoundChanged.emit(self.duck_sound_enabled)
+
+    def set_proactive_greetings(self, on: bool) -> None:
+        """偶尔主动挥手问候开关。"""
+        self.proactive_greetings = bool(on)
+        self.cfg.set('proactive_greetings', self.proactive_greetings)
+        self.cfg.save()
+        if self.proactive_greetings:
+            self._schedule_next_greeting()
+        else:
+            self._greeting_timer.stop()
+        self.proactiveGreetingsChanged.emit(self.proactive_greetings)
 
     def _stop_physics(self) -> None:
         self._physics_timer.stop()
@@ -763,6 +1410,31 @@ class PetWindow(QWidget):
         self._save_position()
         QApplication.instance().quit()
 
+    def shutdown(self) -> None:
+        """停止窗口计时器和媒体 reader，可安全重复调用。"""
+        if self._shutting_down:
+            return
+        self._shutting_down = True
+        for timer in (
+            self._move_timer,
+            self._squash_timer,
+            self._physics_timer,
+            self._resource_timer,
+            self._idle_pause_timer,
+            self._long_press_timer,
+            self._tap_timer,
+            self._cursor_timer,
+            self._greeting_timer,
+        ):
+            timer.stop()
+        self._unbind_movie()
+        if self.movie is not None:
+            self.movie.stop()
+            self.movie = None
+        self.lib.close()
+        self._duck_sound.close()
+
     def closeEvent(self, event) -> None:  # noqa: N802
         self._save_position()
+        self.shutdown()
         super().closeEvent(event)

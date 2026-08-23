@@ -9,21 +9,54 @@
 | ------------------------------- | ----------------------------------- | --------------------------------------------------------------------- |
 | Windows（WebM 版）             | `dsh-pet-standalone-webm.exe`       | 包体小、画质高；首次启动解压较慢，播放加速效果不明显                  |
 | Windows（GIF 版）               | `dsh-pet-standalone-gif.exe`        | 启动快、播放加速效果好；缺点是包体较大                                |
-| macOS（Apple Silicon / M 系列） | `dsh-pet-indesktop-macos-arm64.zip` | 解压得 `dsh-pet-indesktop.app`，首次打开需放行（见下方「macOS」章节） |
+| macOS（Apple Silicon / M 系列） | `DSH-Pet-macos-arm64-1440p-master-adaptive.zip` | 解压得 `DSH-Pet.app`，首次打开需放行（见下方「macOS」章节） |
 | macOS（Intel）                  | —                                   | 暂无安装包，请按「macOS」章节源码运行                                 |
 
 > 文件名以 Release 页面实际发布为准。
+
+## 本地 macOS 成品
+
+当前签名后的 Apple Silicon 成品安装在 `/Applications/DSH-Pet.app`，压缩包位于
+`releases/DSH-Pet-macos-arm64-1440p-master-adaptive.zip`。2560×1440 母版素材包为
+`releases/dsh-pet-superres-1440p-transparent-webm-91-actions.zip`。应用使用白鲸 +
+深蓝渐变圆角图标，双击 `.app` 即可运行。
+
+透明视频默认清理 VP9 常见的 Alpha=1 底噪，不改动真实半透明边缘；可在桌宠右键菜单或 macOS
+状态栏菜单的「画面调整 → 清理透明底噪（Alpha=1）」中随时关闭，设置会自动保存。
+
+高画质素材链包含完整 91 段 2560×1440 透明 WebM（24fps），由原作 640×360
+Alpha 素材使用 Real-ESRGAN AnimeVideo-v3 4×超分生成。2560×1440 作为母版
+独立保留；App 使用由母版 Lanczos 下采样的 1280×720 透明运行代理，默认 462px
+档再按 Retina 需求解码到 922×520。屏幕可见细节不减少，同时避免每帧解码完整
+1440p。原始素材与旧 1080p 版本也保存在独立备份目录，不会被覆盖。
+
+超分素材可用下列命令做逐文件复核（只验证，不生成）：
+
+```sh
+./.venv/bin/python tools/superres_webm_assets.py \
+  --input-root backups/shenshen-webm-original-640-91 \
+  --output-root backups/shenshen-webm-superres-1440-master-91 \
+  --scale 4 --verify-only
+```
+
+运行代理复核：
+
+```sh
+./.venv/bin/python tools/build_runtime_webm_assets.py \
+  --input-root backups/shenshen-webm-superres-1440-master-91 \
+  --output-root assets/characters/shenshen/videos --verify-only
+```
 
 > **声明与致谢**：本项目改自、源于 [dsh-pet](https://github.com/PC2005-cloud/dsh-pet)。
 > 桌宠的动画素材、动画链行为模型、交互设计均来自原项目，特此声明并感谢原作者的贡献。
 
 把 [dsh-pet](https://github.com/PC2005-cloud/dsh-pet) 插件里的桌宠，改造成一个
 **跨平台的独立桌面宠物**软件（支持 **Windows** 与 **macOS**）—— 不依赖 DSH 运行时，
-用 Python + PySide6 实现，双击即跑，复用原项目 51 段高清动画（640×360，24fps）。
+用 Python + PySide6 实现，双击即跑，内置 91 段母版派生的 1280×720 透明运行动画（24fps）。
 
 当前提供两个 Windows 版本：
 
-- **WebM 版**：直接解码 640×360 透明 webm，画质高、包体小，但启动较慢、播放加速效果不明显。
+- **WebM 版**：使用 2560×1440 母版派生的透明运行代理，并按实际显示尺寸有界解码。
 - **GIF 版**：使用 GIF/QMovie 播放，启动快、播放加速效果好，缺点是包体较大。
 
 两个版本都支持多角色、外部扩展、切换角色、播放速率、鼠标穿透、拖动物理等功能。
@@ -34,7 +67,7 @@ Windows 用户见下方「快速开始 / 打包为 exe」，macOS 用户见「ma
 
 | 版本     | 启动速度 | 播放加速效果 | 包体大小 | 适用场景                         |
 | -------- | -------- | ------------ | -------- | -------------------------------- |
-| WebM 版  | 较慢     | 不明显       | 约 110MB | 追求小体积、高清画质             |
+| WebM 版  | 较快     | 不明显       | App 约 460MB / ZIP 约 381MB | 追求高画质、透明边缘 |
 | GIF 版   | 快       | 明显         | 约 450MB | 追求启动快、播放加速效果明显     |
 
 > ⚠️ **注意**：GIF 版当前**不建议切换到 webm 素材角色**，切换后可能出现卡死。
@@ -42,6 +75,12 @@ Windows 用户见下方「快速开始 / 打包为 exe」，macOS 用户见「ma
 
 ## 近期优化
 
+- 2560×1440 透明超分母版 + 1280×720 运行代理，默认档仅解码到 922×520
+- 解码队列限制为 2 帧并采用背压，不丢帧、不让 ffmpeg 提前解完整段动画
+- 媒体库先建立轻量动作索引，播放器按需创建；启动只预热移动动作，新增角色/动作无需改播放器层
+- 系统持续高负载时降低待机速度、主动动作频率和命中 mask 刷新率；画面帧率不变
+- 从托盘隐藏桌宠时暂停媒体解码，重新显示时自动恢复
+- 性能策略、素材事实来源和媒体清理拆分，角色切换/退出统一停止后台 reader
 - 支持 GIF / WebM 混合素材，GIF 版也能切换并播放 webm 角色
 - 多开桌宠时不再互相清理缓存导致卡住
 - 拖拽切换动画不再卡顿
@@ -60,7 +99,7 @@ Windows 用户见下方「快速开始 / 打包为 exe」，macOS 用户见「ma
 
 ## 特性
 
-- **webm 高清播放**：直接运行时解码 640×360 透明 webm（VP9 + 8-bit alpha），保留半透明边缘
+- **高画质透明播放**：内置 1440p 母版派生的 VP9 Alpha 运行代理，保留透明边缘
 - **动画链**：每个动画播完按概率选下一个 —— 30% 待机 / 10% 转向 / 40% 随机动作 / 20% 移动，永不停止
 - **多形象支持**：支持用户通过外部目录添加自定义角色
 - **角色热切换**：右键桌宠或托盘菜单可随时切换形象，无需重启
@@ -68,7 +107,11 @@ Windows 用户见下方「快速开始 / 打包为 exe」，macOS 用户见「ma
 - **左右朝向**：转向动画播完翻转朝向，所有动画支持水平镜像
 - **点击回应**：点击宠物随机播放当前角色配置的回应动画（链上非待机动画播放中不打断）
 - **点击 Q 弹**：点击时立即产生“变矮再复原”的挤压回弹反馈；连续点击可打断当前动画并重复触发 Q 弹
+- **多级点击回应**：单击、双击、长按、快速连续点击会分流到不同回应动作；双击/长按/连点可触发尖叫鸭音效
+- **鼠标靠近反馈**：光标进入角色附近时，角色会自动朝向鼠标
+- **主动问候**：默认每隔一段时间随机播放一次挥手问候，可从「互动反馈」关闭
 - **拖拽**：按住拖动超过 5px 判定为拖拽，宠物播放"悬空反馈"动画跟手，松手停在原地
+- **边缘反馈**：拖到屏幕边缘会短暂压扁并反弹离开；当前角色没有独立“趴下”素材，因此先用 Q 弹代替
 - **透明穿透**：窗口逐帧按人物 alpha 生成 mask，透明区域鼠标直接穿透到下层窗口
 - **右键菜单**：手动播放待机/转向/移动/点击回应/随机动作、切换角色、回到右下角、窗口置顶、不移动、开机自启、4 档大小、退出
 - **系统托盘**：显示/隐藏、切换角色、开机自启、退出；位置/朝向/大小/置顶自动持久化
@@ -76,6 +119,9 @@ Windows 用户见下方「快速开始 / 打包为 exe」，macOS 用户见「ma
 - **播放速率调节**：右键菜单可调 1.0x ~ 2.0x 动画播放速度
 - **鼠标穿透**：托盘菜单可开启鼠标穿透，开启后鼠标点击会穿透桌宠到下层窗口
 - **拖动物理**：可开关的拖拽物理效果，松手会抛出、带重力与反弹衰减；拖拽过程中有惯性/离心感
+- **动作收藏夹 / 播放列表**：91 段动画可收藏、编辑播放列表，并选择循环或随机播放
+- **性格模式**：安静、活泼、调皮会改变待机、动作、移动和主动问候概率
+- **全局快捷键**：`⌃⌥⌘H/P/R/M/D` 分别控制显示隐藏、暂停、随机动作、鼠标穿透和尖叫鸭
 
 ## 自定义角色教程
 
@@ -146,7 +192,7 @@ macOS:   ~/Library/Application Support/dsh-pet-standalone/characters/<角色ID>/
 3. 你可以：
    - 直接复制这些 webm 作为基础形象；
    - 或参考它们的动作分类，生成自己角色的同尺寸透明 webm；
-   - 或使用 ffmpeg / 图像生成工具制作新的透明动画，只要输出 640×360 透明 webm 即可。
+   - 或使用 ffmpeg / 图像生成工具制作新的透明动画，建议至少覆盖你的最大显示尺寸。
 
 4. 将制作好的 webm 按分类放入对应子目录：
 
@@ -173,8 +219,11 @@ videos/
 
 ### 鼠标交互
 
-- **点击**：单击宠物本体，随机播放当前角色配置的回应动画之一，并触发 Q 弹挤压回弹效果。
-  连续点击可以打断当前动画，反复触发 Q 弹，手感更跟手。
+- **单击**：随机播放一个点击回应动画，并触发 Q 弹挤压回弹效果。
+- **双击**：播放更强的点击回应，并按「互动反馈 → 尖叫鸭音效」设置播放尖叫鸭。
+- **长按**：按住约 0.52 秒触发被吓一跳/随机动作回应；拖动超过 5px 后会转为拖拽。
+- **快速连续点击**：三次及以上连续点击会切换到随机动作回应，并播放尖叫鸭。
+- **鼠标靠近**：鼠标进入角色附近约 280px 内时，角色会看向鼠标。
 - **拖拽**：按住拖动超过 5px 判定为拖拽，宠物播放「悬空反馈」动画跟手，松手停在原地
 - **穿透**：只有宠物本体（不透明区域）可点，其余透明区域鼠标直接穿透到下层窗口
 
@@ -187,6 +236,10 @@ videos/
   - 松手后桌宠会被抛出；
   - 碰到屏幕边缘会反弹并逐渐衰减；
   - 落地后受摩擦力影响会慢慢停下。
+- **互动反馈**：右键桌宠或状态栏图标 →「互动反馈」，可开关「尖叫鸭音效」和「偶尔主动打招呼」。脚步声、休息声暂未加入。
+- **动作收藏夹 / 播放列表**：右键桌宠或状态栏图标 →「动作管理」，可以编辑收藏夹和播放列表，再选择「循环播放」或「随机播放」。
+- **性格模式**：右键桌宠或状态栏图标 →「性格模式」，可选「安静 / 活泼 / 调皮」。
+- **全局快捷键**：默认使用 `⌃⌥⌘` 加 `H/P/R/M/D`；如果系统没有成功注册全局监听，状态栏仍可正常使用全部菜单功能。
 
 ### 右键菜单（右键点击宠物本体）
 
@@ -241,7 +294,7 @@ videos/
 ### 技术栈
 
 - **Python 3.10+ / PySide6**（Qt for Python，LGPL 许可）
-- **imageio-ffmpeg** 运行时解码 640×360 透明 webm（VP9 alpha，RGBA 帧）
+- **imageio-ffmpeg** 解码 1280×720 VP9 Alpha 运行代理，并按当前显示档位输出有界 RGBA
 
 ### 动画链状态机（1:1 移植原插件 `client.js`）
 
@@ -264,8 +317,9 @@ videos/
 
 ### 素材播放（webm 主路线）
 
-本项目直接运行时解码上游 640×360 透明 **webm**（VP9 + 8-bit alpha），
-使用 `imageio-ffmpeg` 自带的静态 ffmpeg 输出 RGBA 帧，保留半透明边缘。
+本项目保存 2560×1440 透明 **webm** 母版（VP9 + 8-bit alpha），App 播放其
+1280×720 透明运行代理，并由 `imageio-ffmpeg` 在解码进程内按当前显示档位缩放。
+逻辑画布固定为 640×360，因此素材分辨率不会改变桌宠大小或移动参数。
 
 关键实现：
 
@@ -276,11 +330,12 @@ videos/
       pix_fmt="rgba",
       bits_per_pixel=32,
       input_params=["-c:v", "libvpx-vp9"],
+      output_params=["-vf", "scale=...:flags=lanczos"],
   )
   ```
   `-c:v libvpx-vp9` 必须放在输入之前，否则原生 vp9 解码器会丢弃 alpha。
 - 播放架构：
-  - 后台 reader 线程只负责把 RGBA 帧放入有界队列。
+  - 后台 reader 线程只负责把 RGBA 帧放入 2 帧有界队列；队列满时背压解码器。
   - 主线程 `QTimer` 按视频 fps 逐帧从队列取帧。
   - 每次只取最早的一帧，**不跳帧、不追帧**，避免动画快进。
   - 所有 `QImage/QPixmap` 和窗口 mask 更新都在主线程完成。
@@ -371,7 +426,7 @@ pip install PySide6 imageio-ffmpeg
 ### 2. 准备素材
 
 请从上游 [dsh-pet](https://github.com/PC2005-cloud/dsh-pet) 仓库获取
-`dsh-pet/assets/thumb/*.webm`（51 个 640×360 透明 webm），按分类放到本项目的
+`dsh-pet/assets/thumb/*.webm`（91 个 640×360 透明 webm），按分类放到本项目的
 `assets/characters/shenshen/videos/` 下对应子目录：
 
 ```text
@@ -468,8 +523,9 @@ python -m pet
 ```
 ├── pet/                 # 核心代码
 │   ├── catalog.py       # 动画目录、多形象常量、分类、几何/概率常量
-│   ├── library.py       # 素材库：按角色加载 webm
+│   ├── library.py       # 素材索引 + WebM/GIF 播放器按需加载
 │   ├── webm_clip.py     # imageio-ffmpeg 解码 webm 的播放器
+│   ├── performance.py   # 系统负载采样与省资源模式迟滞策略
 │   ├── window.py        # 桌宠窗口：状态机 + 动画链 + 移动驱动 + 交互
 │   ├── config.py        # 配置持久化（跨平台：APPDATA / Application Support / .config）
 │   ├── autostart.py     # 开机自启（跨平台：Windows 注册表 / macOS LaunchAgents）
@@ -477,6 +533,7 @@ python -m pet
 ├── assets/characters/   # 多形象动画（每个角色一个子目录）
 │   └── <character_id>/videos/*.webm
 ├── packaging/           # PyInstaller 打包入口
+├── tools/               # 超分、透明 WebM 运行代理生成与逐文件验收
 ├── .github/workflows/   # GitHub Actions（macOS 自动打包）
 ├── tests/               # 冒烟测试 / 诊断工具
 ├── run.bat              # Windows 一键启动
@@ -485,8 +542,12 @@ python -m pet
 
 ## 已知说明
 
-**webm 直解**：与 web 端一致播放 640×360 透明 webm（VP9 视频，8-bit alpha），
-保留半透明边缘和原始色彩。不再打包体积庞大的 GIF 素材。
+**媒体分层**：`MovieLibrary` 先建立 `MediaSource` 轻量索引，窗口首次切换到动作时才创建
+播放器；退出和角色切换由窗口统一关闭媒体库，避免后台 reader 残留。
+
+**webm 有界解码**：内置 1440p 母版派生的 1280×720 VP9 Alpha 运行代理；
+默认 462px 档解码到 922×520，最大 640px 档才使用完整代理，覆盖 2× Retina。
+GIF 只作为单独导出包，不放进应用。
 
 ## 开发经验与教训
 
@@ -505,7 +566,7 @@ python -m pet
   （`codesign --force --deep --sign -`）后，「右键打开 / 系统设置放行」可用；彻底免
   拦截需 Apple 开发者账号公证（$99/年）。放行方法见上文「macOS」章节。
 - **打包前先关掉正在运行的桌宠进程**：Windows 打包时若旧 exe 进程存活，PyInstaller
-  覆盖产物会报 `PermissionError: 拒绝访问`；webm 版 exe 约 110MB，但仍需结束进程后重试。
+  覆盖产物会报 `PermissionError: 拒绝访问`；webm 版 exe 约 340MB，但仍需结束进程后重试。
 
 ### macOS 平台特性
 
@@ -571,13 +632,13 @@ python -m pet
 
 把 [dsh-pet](https://github.com/PC2005-cloud/dsh-pet) 插件里的桌宠，改造成一个
 **跨平台的独立桌面宠物**软件（支持 **Windows** 与 **macOS**）—— 不依赖 DSH 运行时，
-用 Python + PySide6 实现，双击即跑，复用原项目 51 段高清动画（640×360，24fps）。
+用 Python + PySide6 实现，双击即跑，内置 91 段原作 640×360 手工透明动画（24fps）。
 
 Windows 用户见下方「快速开始 / 打包为 exe」，macOS 用户见「macOS」章节。
 
 ## 特性
 
-- **webm 高清播放**：直接运行时解码 640×360 透明 webm（VP9 + 8-bit alpha），保留半透明边缘
+- **webm 原作播放**：直接运行时解码 640×360 透明 webm（VP9 + 8-bit alpha），默认显示无需放大
 - **动画链**：每个动画播完按概率选下一个 —— 30% 待机 / 10% 转向 / 40% 随机动作 / 20% 移动，永不停止
 - **多形象支持**：内置多个角色，并支持用户通过外部目录添加自定义角色
 - **角色热切换**：右键桌宠或托盘菜单可随时切换形象，无需重启
@@ -677,8 +738,8 @@ Windows 用户见下方「快速开始 / 打包为 exe」，macOS 用户见「ma
 
 ### 素材转码（webm → GIF）
 
-原项目的高清资源是 640×360 透明 **webm**（VP9 + 8-bit alpha）。为了让桌宠
-运行时零依赖，本项目把 webm 一次性预转码为同分辨率的透明 **GIF**，用 QMovie 播放。
+原项目的播放资源是 640×360 透明 **webm**（VP9 + 8-bit alpha）；原始 1280×720
+MP4 是非透明素材。本项目可把 WebM 另行导出为同尺寸透明 **GIF**，但应用默认仍使用 WebM。
 `scripts/convert.py` 的关键点是 `-c:v libvpx-vp9` 必须放在 `-i` 之前 ——
 ffmpeg 原生 vp9 解码器会丢弃 alpha（原项目 DESIGN.md 踩坑记录第 3 条，已实测复现）。
 
@@ -694,7 +755,7 @@ pip install PySide6
 
 素材体积较大（GIF 392MB，未随仓库分发）。请从上游
 [dsh-pet](https://github.com/PC2005-cloud/dsh-pet) 仓库获取
-`dsh-pet/assets/thumb/*.webm`（51 个 640×360 透明 webm），放到本项目的
+`dsh-pet/assets/thumb/*.webm`（91 个 640×360 透明 webm），放到本项目的
 `assets/videos/` 目录，然后转码：
 
 ```sh
@@ -772,13 +833,13 @@ python -m pet
 
 ```
 ├── pet/                 # 核心代码
-│   ├── catalog.py       # 51 段动画目录、分类、几何/概率常量
+│   ├── catalog.py       # 91 段动画目录、分类、几何/概率常量
 │   ├── library.py       # QMovie 素材库（速度补偿）
 │   ├── window.py        # 桌宠窗口：状态机 + 动画链 + 移动驱动 + 交互
 │   ├── config.py        # 配置持久化（跨平台：APPDATA / Application Support / .config）
 │   ├── autostart.py     # 开机自启（跨平台：Windows 注册表 / macOS LaunchAgents）
 │   └── app.py           # 入口 + 系统托盘
-├── scripts/convert.py   # 素材转码：webm → 640×360 透明 GIF
+├── scripts/convert.py   # 素材转码：webm → 透明 GIF
 ├── packaging/           # PyInstaller 打包入口
 ├── .github/workflows/   # GitHub Actions（macOS 自动打包）
 ├── tests/               # 冒烟测试 / 帧率实测 / 诊断工具

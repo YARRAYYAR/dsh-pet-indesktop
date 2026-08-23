@@ -45,6 +45,13 @@ class Config:
             'playback_speed': 1.0,       # 动画播放速率
             'mouse_through': False,        # 鼠标穿透
             'drag_physics': False,         # 拖动物理效果
+            'soft_edges': True,             # 兼容旧配置：清理精确 Alpha=1 底噪
+            'duck_sound': True,             # 双击/长按/连续点击时播放尖叫鸭
+            'proactive_greetings': True,    # 偶尔主动播放挥手问候
+            'favorites': [],                # 用户收藏的动画名
+            'playlist': [],                 # 播放列表动画名
+            'playlist_mode': 'off',         # off / loop / random
+            'personality': 'lively',        # quiet / lively / mischievous
         }
         self._load()
 
