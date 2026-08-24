@@ -96,7 +96,7 @@ def build() -> Path:
     )
     code = ParagraphStyle(
         "CodeZH", parent=styles["Code"], fontName=font_name, fontSize=5.3,
-        leading=6.5, leftIndent=0, rightIndent=0, spaceBefore=0, spaceAfter=0,
+        leading=6.4, leftIndent=0, rightIndent=0, spaceBefore=0, spaceAfter=0,
         textColor=colors.HexColor("#1F2933"), backColor=colors.HexColor("#F7FAFC"),
     )
     toc_cell = ParagraphStyle(
