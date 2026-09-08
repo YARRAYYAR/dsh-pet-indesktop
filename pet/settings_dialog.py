@@ -41,6 +41,28 @@ class SettingsDialog(QDialog):
         self.size.setSuffix(' px')
         self.size.setValue(round(catalog.CANVAS_W * pet.scale))
         layout.addRow('桌宠画布宽度', self.size)
+        self.size_slider = QSlider(Qt.Orientation.Horizontal)
+        self.size_slider.setRange(160, 1280)
+        self.size_slider.setValue(self.size.value())
+        self.size_slider.setStyleSheet('''
+            QSlider::groove:horizontal { height: 24px; background: #e7e7e7; border-radius: 12px; }
+            QSlider::sub-page:horizontal { background: #1677ed; border-radius: 12px; }
+            QSlider::handle:horizontal { background: white; width: 28px; margin: -3px 0;
+                border: 1px solid #c8c8c8; border-radius: 14px; }
+        ''')
+        self.size_slider.setMinimumHeight(38)
+        self.size_slider.valueChanged.connect(self.size.setValue)
+        self.size.valueChanged.connect(self.size_slider.setValue)
+        layout.addRow('', self.size_slider)
+        self.frequency = QSpinBox()
+        self.frequency.setRange(0, 3600)
+        self.frequency.setSpecialValueText('跟随当前模式')
+        self.frequency.setSuffix(' 秒')
+        self.frequency.setValue(pet.action_interval_seconds)
+        layout.addRow('动作出现间隔', self.frequency)
+        hint = QLabel('0 = 跟随模式；自定义为两次动作开始的最小间隔。\n当前动画播完再切换，等待期间播放待机。')
+        hint.setWordWrap(True)
+        layout.addRow('', hint)
         self.delay = QSpinBox()
         self.delay.setRange(0, 60)
         self.delay.setSuffix(' 秒')
@@ -87,6 +109,7 @@ class SettingsDialog(QDialog):
         self.personality.setCurrentIndex(self.personality.findData('lively'))
         self.size.setValue(round(catalog.CANVAS_W * catalog.DEFAULT_SCALE))
         self.delay.setValue(0)
+        self.frequency.setValue(0)
 
     def save(self) -> None:
         self.pet.set_sound_enabled(self.sound.isChecked())
@@ -94,4 +117,5 @@ class SettingsDialog(QDialog):
         self.pet.set_personality(self.personality.currentData())
         self.pet.change_scale(self.size.value() / catalog.CANVAS_W)
         self.pet.set_action_switch_delay(self.delay.value() * 1000)
+        self.pet.set_action_interval(self.frequency.value())
         self.accept()

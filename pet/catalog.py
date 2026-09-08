@@ -85,6 +85,11 @@ EDGE_BOUNCE_SPEED = 300.0
 
 # 行为预设：概率总和为 1；问候时间用毫秒，避免在窗口层散落魔法数字。
 PERSONALITY_PRESETS = {
+    'random': {
+        'label': '原版随机', 'idle': 0.30, 'turn': 0.10, 'acts': 0.40,
+        'move': 0.20, 'greeting_min_ms': 45_000, 'greeting_max_ms': 90_000,
+        'greeting_chance': 0.85, 'action_focus': 0.0,
+    },
     'cool': {
         'label': '高冷',
         'idle': 0.82,
@@ -161,6 +166,7 @@ PERSONALITY_TAG_WEIGHTS = {
     'gentle': {'gentle': 6, 'social': 3, 'calm': 2},
 }
 PERSONALITY_DESCRIPTIONS = {
+    'random': '所有随机动作等概率选择，允许连续重复，不受性格偏好影响。',
     'cool': '更多待机，偏爱安静动作，很少主动问候。',
     'quiet': '安静陪伴，偏爱休息、思考和轻柔动作。',
     'lively': '动作丰富，喜欢跳舞、运动和主动问候。',
@@ -187,6 +193,8 @@ def personality_action_candidates(personality: str, names, metadata=None) -> lis
 
 def personality_frequent_actions(personality: str, names, metadata=None) -> list[str]:
     """取符合度候选的前 40%，作为切换性格后的高频动作池。"""
+    if personality == 'random':
+        return []
     candidates = personality_action_candidates(personality, names, metadata)
     if not candidates:
         return []

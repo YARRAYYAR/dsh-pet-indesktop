@@ -65,7 +65,7 @@ def test_duck_sound_generates_small_wav(tmp_path):
 
 def test_personality_presets_and_global_hotkeys_are_stable():
     assert set(catalog.PERSONALITY_PRESETS) == {
-        'cool', 'quiet', 'lively', 'mischievous', 'gentle'
+        'random', 'cool', 'quiet', 'lively', 'mischievous', 'gentle'
     }
     for profile in catalog.PERSONALITY_PRESETS.values():
         assert abs(
@@ -83,6 +83,9 @@ def test_personality_presets_and_global_hotkeys_are_stable():
 
 def test_personality_high_frequency_actions_use_top_40_percent():
     for personality in catalog.PERSONALITY_PRESETS:
+        if personality == 'random':
+            assert catalog.personality_frequent_actions(personality, catalog.ACTS) == []
+            continue
         candidates = catalog.personality_action_candidates(
             personality, catalog.ACTS
         )

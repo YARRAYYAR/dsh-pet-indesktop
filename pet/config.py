@@ -59,6 +59,7 @@ class Config:
             'playlist_mode': 'off',         # off / loop / random
             'personality': 'lively',        # cool / quiet / lively / mischievous / gentle
             'action_switch_delay_ms': 0,    # 动作结束后的切换等待，0=立即
+            'action_interval_seconds': 0,   # 0=跟随模式；否则自动动作最小开始间隔
         }
         self._load()
 
@@ -103,6 +104,11 @@ class Config:
         except (KeyError, TypeError, ValueError):
             delay = 0
         self.data['action_switch_delay_ms'] = max(0, min(60_000, delay))
+        try:
+            interval = int(self.data['action_interval_seconds'])
+        except (TypeError, ValueError, OverflowError):
+            interval = 0
+        self.data['action_interval_seconds'] = max(0, min(3600, interval))
         try:
             volume = int(self.data['volume'])
         except (TypeError, ValueError, OverflowError):

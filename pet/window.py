@@ -150,6 +150,8 @@ class PetWindow(QWidget):
         self._duck_sound.enabled = self.sound_enabled
         self._duck_sound.volume = int(config.get('volume', 80))
         self._recent_actions = []
+        self.action_interval_seconds = int(config.get('action_interval_seconds', 0))
+        self._last_action_started = time.monotonic()
         manifest = getattr(lib, 'manifest', None) or {}
         self._action_tags = manifest.get('action_tags', {})
         self._personality_frequent_acts = catalog.personality_frequent_actions(
@@ -473,6 +475,8 @@ class PetWindow(QWidget):
             previous.stop()
         self._bind_movie(name, movie)
         self.anim = name
+        if name in self.acts:
+            self._last_action_started = time.monotonic()
         if name in self.playlist:
             self._playlist_index = self.playlist.index(name)
         self.movie = movie
@@ -714,6 +718,14 @@ class PetWindow(QWidget):
         if self.playlist_mode != 'off' and self.playlist:
             self._play_next_playlist()
             return
+        if self.action_interval_seconds and self.acts and self.idles:
+            elapsed = time.monotonic() - self._last_action_started
+            if elapsed < self.action_interval_seconds:
+                self._switch(self._pick(self.idles))
+                return
+            if not self._resource_constrained:
+                self._switch(self._pick_personality_action())
+                return
         roll = random.random()
         if self._resource_constrained:
             if roll < catalog.BUSY_IDLE_PROBABILITY and self.idles:
@@ -774,6 +786,8 @@ class PetWindow(QWidget):
 
     def _pick_personality_action(self, exclude: str | None = None) -> str | None:
         """按当前性格提高前 40% 高匹配动作的出现频率。"""
+        if self.personality == 'random' and self.acts:
+            return self._pick(self.acts)
         if not self.acts:
             return self._pick_available(self.acts, exclude=exclude)
         frequent = self._personality_frequent_acts
@@ -942,6 +956,11 @@ class PetWindow(QWidget):
         self.cfg.save()
         if self._duck_sound.volume == 0:
             self._duck_sound.close()
+
+    def set_action_interval(self, seconds: int) -> None:
+        self.action_interval_seconds = max(0, min(3600, int(seconds)))
+        self.cfg.set('action_interval_seconds', self.action_interval_seconds)
+        self.cfg.save()
 
     def _special_animation(self, preferred: str, fallback: list[str]) -> str | None:
         """优先使用有明确语义的动作，没有时回退到当前角色已有动作。"""

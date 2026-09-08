@@ -140,6 +140,11 @@ class MediaRuntimeTests(unittest.TestCase):
                 dialog = SettingsDialog(window)
                 dialog.volume.setValue(24)
                 dialog.size.setValue(640)
+                self.assertEqual(dialog.size_slider.value(), 640)
+                dialog.size_slider.setValue(800)
+                self.assertEqual(dialog.size.value(), 800)
+                dialog.size.setValue(640)
+                dialog.frequency.setValue(30)
                 dialog.delay.setValue(7)
                 dialog.personality.setCurrentIndex(dialog.personality.findData('cool'))
                 dialog.save()
@@ -147,6 +152,7 @@ class MediaRuntimeTests(unittest.TestCase):
                 self.assertEqual(loaded.get('volume'), 24)
                 self.assertEqual(loaded.get('personality'), 'cool')
                 self.assertEqual(loaded.get('action_switch_delay_ms'), 7000)
+                self.assertEqual(loaded.get('action_interval_seconds'), 30)
                 self.assertEqual(window.scale, 1.0)
                 dialog = SettingsDialog(window)
                 dialog.reset_fields()
@@ -154,6 +160,24 @@ class MediaRuntimeTests(unittest.TestCase):
                 dialog.save()
                 self.assertEqual(window._duck_sound.volume, 80)
                 self.assertEqual(window.personality, 'lively')
+                self.assertEqual(window.action_interval_seconds, 0)
+                window.acts = ['first', 'second']
+                window.personality = 'random'
+                window._recent_actions = ['first', 'second']
+                with patch('pet.window.random.choice', return_value='first') as choice:
+                    self.assertEqual(window._pick_personality_action(exclude='first'), 'first')
+                    self.assertEqual(choice.call_args.args[0], ['first', 'second'])
+                window.action_interval_seconds = 30
+                window._last_action_started = 100
+                window._resource_constrained = False
+                with patch.object(window, '_switch') as switch, \
+                        patch('pet.window.time.monotonic', return_value=110):
+                    window._pick_next()
+                    self.assertEqual(switch.call_args.args[0], 'idle')
+                with patch.object(window, '_switch') as switch, \
+                        patch('pet.window.time.monotonic', return_value=131):
+                    window._pick_next()
+                    self.assertIn(switch.call_args.args[0], window.acts)
             finally:
                 window.shutdown()
                 window.close()
