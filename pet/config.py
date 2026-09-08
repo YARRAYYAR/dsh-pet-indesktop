@@ -57,7 +57,7 @@ class Config:
             'favorites': [],                # 用户收藏的动画名
             'playlist': [],                 # 播放列表动画名
             'playlist_mode': 'off',         # off / loop / random
-            'personality': 'lively',        # cool / quiet / lively / mischievous / gentle
+            'personality': 'lively',        # catalog.PERSONALITY_PRESETS 中的随机/性格模式
             'action_switch_delay_ms': 0,    # 动作结束后的切换等待，0=立即
             'action_interval_seconds': 0,   # 0=跟随模式；否则自动动作最小开始间隔
         }

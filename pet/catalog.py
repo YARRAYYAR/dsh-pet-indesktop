@@ -166,7 +166,7 @@ PERSONALITY_TAG_WEIGHTS = {
     'gentle': {'gentle': 6, 'social': 3, 'calm': 2},
 }
 PERSONALITY_DESCRIPTIONS = {
-    'random': '所有随机动作等概率选择，允许连续重复，不受性格偏好影响。',
+    'random': '沿用原版分类概率：待机 30%、转向 10%、随机动作 40%、移动 20%。随机动作池内等概率，允许重复；自定义间隔和省资源模式优先。',
     'cool': '更多待机，偏爱安静动作，很少主动问候。',
     'quiet': '安静陪伴，偏爱休息、思考和轻柔动作。',
     'lively': '动作丰富，喜欢跳舞、运动和主动问候。',
@@ -214,7 +214,7 @@ BUSY_IDLE_PROBABILITY = 0.82
 BUSY_TURN_PROBABILITY = 0.88
 BUSY_IDLE_SPEED_FACTOR = 0.70
 BUSY_IDLE_PAUSE_MS = 1800
-# 窗口 mask 只负责鼠标命中范围，不参与透明画面合成；每 2 帧同步一次
+# 窗口 mask 只负责鼠标命中范围，不参与透明画面合成；每 3 帧同步一次
 # 足够跟随动画，同时避免每帧重复构造 QBitmap/QRegion。
 MASK_FRAME_INTERVAL = 3
 BUSY_MASK_FRAME_INTERVAL = 3

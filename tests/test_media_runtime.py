@@ -7,6 +7,7 @@ import os
 import sys
 import tempfile
 import unittest
+from contextlib import contextmanager
 from pathlib import Path
 from unittest.mock import Mock, patch
 
@@ -15,8 +16,8 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from PySide6.QtCore import QObject, Signal  # noqa: E402
-from PySide6.QtGui import QColor, QImage  # noqa: E402
+from PySide6.QtCore import QEvent, QObject, QPoint, QPointF, QRect, Qt, Signal  # noqa: E402
+from PySide6.QtGui import QColor, QImage, QMouseEvent  # noqa: E402
 from PySide6.QtWidgets import QApplication  # noqa: E402
 
 from pet.config import Config  # noqa: E402
@@ -125,6 +126,128 @@ class _RecreatingLibrary(_FrameOnlyLibrary):
 
 
 class MediaRuntimeTests(unittest.TestCase):
+    @contextmanager
+    def interaction_window(self):
+        image = QImage(100, 80, QImage.Format.Format_RGBA8888)
+        image.fill(Qt.GlobalColor.transparent)
+        for y in range(20, 60):
+            for x in range(10, 30):
+                image.setPixelColor(x, y, QColor(255, 255, 255, 255))
+        lib = _FrameOnlyLibrary(_FrameOnlyClip(trim_transparent_frame(image)))
+        with tempfile.TemporaryDirectory() as tmp:
+            window = PetWindow(lib, Config(base=tmp))
+            try:
+                yield window
+            finally:
+                window.shutdown()
+                window.close()
+
+    def test_hit_region_follows_visible_frame_scale_and_mirroring(self) -> None:
+        with self.interaction_window() as window:
+            for scale in (0.25, 0.72, 2.0):
+                window.change_scale(scale)
+                for facing in ('left', 'right'):
+                    window.facing = facing
+                    window._rebuild_frame(force_mask=True)
+                    x = int(window._w * (0.2 if facing == 'left' else 0.8))
+                    y = window._h // 2
+                    self.assertTrue(window._is_in_interactive_area(QPoint(x, y)))
+                    self.assertFalse(window._is_in_interactive_area(QPoint(window._w // 2, y)))
+                    self.assertFalse(window._is_in_interactive_area(QPoint(x, 0)))
+                    self.assertFalse(window._is_in_interactive_area(QPoint(-1, y)))
+
+    @staticmethod
+    def mouse_event(window, kind, point):
+        button = Qt.MouseButton.LeftButton
+        return QMouseEvent(
+            kind, QPointF(point), QPointF(window.mapToGlobal(point)),
+            Qt.MouseButton.NoButton if kind == QEvent.Type.MouseMove else button,
+            Qt.MouseButton.NoButton if kind == QEvent.Type.MouseButtonRelease else button,
+            Qt.KeyboardModifier.NoModifier,
+        )
+
+    def test_transparent_press_and_unmatched_release_do_not_trigger_taps(self) -> None:
+        with self.interaction_window() as window, patch.object(window, '_queue_tap') as tap:
+            point = QPoint(window._w // 2, window._h // 2)
+            window.mousePressEvent(self.mouse_event(window, QEvent.Type.MouseButtonPress, point))
+            self.assertIsNone(window._press_global)
+            window.mouseReleaseEvent(self.mouse_event(window, QEvent.Type.MouseButtonRelease, point))
+            tap.assert_not_called()
+
+    def test_small_pet_click_jitter_and_drag_use_system_threshold(self) -> None:
+        with self.interaction_window() as window, patch.object(window, '_queue_tap') as tap:
+            window.change_scale(0.25)
+            point = QPoint(window._w // 5, window._h // 2)
+            window.mousePressEvent(self.mouse_event(window, QEvent.Type.MouseButtonPress, point))
+            jitter = point + QPoint(2, 0)
+            window.mouseMoveEvent(self.mouse_event(window, QEvent.Type.MouseMove, jitter))
+            self.assertFalse(window._dragging)
+            window.mouseReleaseEvent(self.mouse_event(window, QEvent.Type.MouseButtonRelease, jitter))
+            tap.assert_called_once()
+            tap.reset_mock()
+
+            window.mousePressEvent(self.mouse_event(window, QEvent.Type.MouseButtonPress, point))
+            dragged = point + QPoint(window._drag_threshold(), 0)
+            window.mouseMoveEvent(self.mouse_event(window, QEvent.Type.MouseMove, dragged))
+            self.assertTrue(window._dragging)
+            self.assertFalse(window._long_press_timer.isActive())
+            with patch.object(window, '_trigger_edge_feedback', return_value=False):
+                window.mouseReleaseEvent(self.mouse_event(window, QEvent.Type.MouseButtonRelease, dragged))
+            tap.assert_not_called()
+
+    def test_physics_matches_elapsed_time_across_timer_cadences(self) -> None:
+        with self.interaction_window() as window:
+            screen = Mock()
+            screen.availableGeometry.return_value = QRect(0, 0, 4000, 3000)
+            for mode in ('drag', 'throw'):
+                outcomes = []
+                for interval in (0.008, 0.016, 0.032):
+                    window._stop_physics()
+                    window._phys_pos = [500.0, 300.0]
+                    window._phys_vel = [100.0, 0.0]
+                    window._drag_target = QPoint(600, 400)
+                    with patch('pet.window.time.monotonic', return_value=100):
+                        window._start_physics(mode)
+                    for tick in range(1, round(0.32 / interval) + 1):
+                        with patch('pet.window.time.monotonic', return_value=100 + tick * interval), \
+                                patch.object(window, '_screen_available', return_value=screen), \
+                                patch.object(window, 'move') as move:
+                            window._on_physics_tick()
+                            move.assert_called_once()
+                    outcomes.append(window._phys_pos + window._phys_vel)
+                for outcome in outcomes[1:]:
+                    for expected, actual in zip(outcomes[0], outcome):
+                        self.assertAlmostEqual(expected, actual, places=6)
+
+    def test_physics_stall_is_bounded_and_restart_resets_clock(self) -> None:
+        with self.interaction_window() as window:
+            screen = Mock()
+            screen.availableGeometry.return_value = QRect(0, 0, 4000, 3000)
+            window._phys_pos = [500.0, 300.0]
+            window._phys_vel = [100.0, 0.0]
+            with patch('pet.window.time.monotonic', return_value=10):
+                window._start_physics('throw')
+            with patch('pet.window.time.monotonic', return_value=20), \
+                    patch.object(window, '_screen_available', return_value=screen):
+                window._on_physics_tick()
+            self.assertAlmostEqual(window._phys_pos[0], 503.3)
+            self.assertAlmostEqual(window._phys_vel[1], 1400 * 0.033)
+            screen.availableGeometry.assert_called_once()
+
+            window._physics_timer.stop()
+            with patch('pet.window.time.monotonic', return_value=30):
+                window._start_physics('throw')
+            with patch('pet.window.time.monotonic', return_value=30.016), \
+                    patch.object(window, '_screen_available', return_value=screen):
+                window._on_physics_tick()
+            self.assertAlmostEqual(window._phys_pos[0], 504.9)
+            window._paused = True
+            before = window._phys_pos[:]
+            window._on_physics_tick()
+            self.assertEqual(window._phys_pos, before)
+            self.assertIsNone(window._physics_mode)
+            self.assertFalse(window._physics_timer.isActive())
+
     def test_settings_cancel_save_and_defaults(self) -> None:
         image = QImage(100, 80, QImage.Format.Format_RGBA8888)
         image.fill(QColor(255, 255, 255, 255))

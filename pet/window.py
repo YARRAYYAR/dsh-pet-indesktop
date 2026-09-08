@@ -8,7 +8,7 @@
   - 点击回应 / 拖拽动画播完先回待机缓冲，待机播完再进随机链；
   - 移动：动画只提供"走路姿态"（3 选 1），位置由 QTimer 驱动，
     开头/结尾各 2s 不动，中间按播放进度插值；
-  - 透明区域鼠标穿透：每帧用当前帧 alpha 生成窗口 mask（等效原版命中层设计）。
+  - 透明区域鼠标穿透：定期用当前帧 alpha 同步窗口 mask，并复用它判断交互命中。
 """
 
 from __future__ import annotations
@@ -243,6 +243,7 @@ class PetWindow(QWidget):
         self._physics_timer.setInterval(16)
         self._physics_timer.timeout.connect(self._on_physics_tick)
         self._physics_mode: str | None = None  # None / 'drag' / 'throw'
+        self._last_physics_time: float | None = None
         self._phys_pos = [0.0, 0.0]
         self._phys_vel = [0.0, 0.0]
         self._drag_target: QPoint | None = None
@@ -1094,13 +1095,18 @@ class PetWindow(QWidget):
 
     # ================================================================ 交互
     def _is_in_interactive_area(self, local_pos) -> bool:
-        """由于动画左右有留白，只把窗口中间 1/3 宽度作为可交互区域。"""
-        return self._w / 3.0 <= local_pos.x() <= self._w * 2.0 / 3.0
+        """复用当前透明遮罩，允许点击伸出画布中部的头发、尾巴等部位。"""
+        return self.rect().contains(local_pos) and self.mask().contains(local_pos)
+
+    @staticmethod
+    def _drag_threshold() -> int:
+        """Qt 鼠标坐标使用逻辑像素；阈值跟随系统，不随桌宠尺寸缩小。"""
+        return max(catalog.DRAG_THRESHOLD, QApplication.startDragDistance())
 
     def mousePressEvent(self, event) -> None:  # noqa: N802
         if event.button() == Qt.MouseButton.LeftButton:
             if not self._is_in_interactive_area(event.position().toPoint()):
-                return  # 左右留白区域不参与点击/拖拽
+                return  # 透明留白区域不参与点击/拖拽
             self._press_global = event.globalPosition().toPoint()
             self._grab_offset = self._press_global - self.pos()
             self._dragging = False
@@ -1122,7 +1128,7 @@ class PetWindow(QWidget):
         g = event.globalPosition().toPoint()
         delta = g - self._press_global
         if not self._dragging:
-            if math.hypot(delta.x(), delta.y()) < catalog.DRAG_THRESHOLD * self.scale:
+            if math.hypot(delta.x(), delta.y()) < self._drag_threshold():
                 return  # 未超阈值：仍是点击候选
             self._dragging = True
             self._long_press_timer.stop()
@@ -1131,8 +1137,7 @@ class PetWindow(QWidget):
             if self.drag_physics:
                 self._phys_pos = [float(self.x()), float(self.y())]
                 self._drag_target = g - self._grab_offset
-                self._physics_mode = 'drag'
-                self._physics_timer.start()
+                self._start_physics('drag')
             else:
                 self.move(g - self._grab_offset)
             self._last_global = g
@@ -1153,8 +1158,7 @@ class PetWindow(QWidget):
             self._last_move_time = now
             self._drag_target = g - self._grab_offset
             if self._physics_mode != 'drag':
-                self._physics_mode = 'drag'
-                self._physics_timer.start()
+                self._start_physics('drag')
         else:
             self.move(g - self._grab_offset)  # 跟手（保持抓起时的偏移）
         event.accept()
@@ -1163,6 +1167,8 @@ class PetWindow(QWidget):
         if event.button() != Qt.MouseButton.LeftButton:
             super().mouseReleaseEvent(event)
             return
+        if self._press_global is None:
+            return  # 没有有效按压，不能把透明处松手当成一次点击
         was_dragging = self._dragging
         self._long_press_timer.stop()
         g = event.globalPosition().toPoint()
@@ -1175,8 +1181,7 @@ class PetWindow(QWidget):
             QTimer.singleShot(150, self._clear_just_dragged)
             if self.drag_physics:
                 # 松手后进入抛掷物理：保留当前速度，重力 + 反弹 + 衰减
-                self._physics_mode = 'throw'
-                self._physics_timer.start()
+                self._start_physics('throw')
             else:
                 if self._grab_offset is not None:
                     self.move(g - self._grab_offset)  # 停在松手处
@@ -1185,7 +1190,7 @@ class PetWindow(QWidget):
                 self._save_position()
             if self.idles and not edge_bounced:
                 self._switch(self._pick(self.idles))  # 回待机缓冲
-        elif dist < catalog.DRAG_THRESHOLD * self.scale and not self._long_press_fired:
+        elif dist < self._drag_threshold() and not self._long_press_fired:
             self._queue_tap()
         self._dragging = False
         self._press_global = None
@@ -1289,8 +1294,7 @@ class PetWindow(QWidget):
 
         if self.drag_physics:
             self._phys_pos = [float(self.x()), float(self.y())]
-            self._physics_mode = 'throw'
-            self._physics_timer.start()
+            self._start_physics('throw')
         self._start_squash()
         name = self._special_animation('被吓一跳', self.acts or self.clicks)
         if name:
@@ -1640,20 +1644,49 @@ class PetWindow(QWidget):
             self._greeting_timer.stop()
         self.proactiveGreetingsChanged.emit(self.proactive_greetings)
 
+    def _start_physics(self, mode: str) -> None:
+        if self._physics_mode != mode or not self._physics_timer.isActive():
+            self._last_physics_time = time.monotonic()
+            self._physics_mode = mode
+            self._physics_timer.start()
+
     def _stop_physics(self) -> None:
         self._physics_timer.stop()
         self._physics_mode = None
+        self._last_physics_time = None
 
     def _on_physics_tick(self) -> None:
-        if self._physics_mode == 'drag':
-            self._tick_drag_physics()
-        elif self._physics_mode == 'throw':
-            self._tick_throw_physics()
+        if self._paused or self._suspended or self._shutting_down:
+            self._stop_physics()
+            return
+        now = time.monotonic()
+        previous = self._last_physics_time
+        self._last_physics_time = now
+        if previous is None:
+            return
+        # 实际经过时间驱动物理；长卡顿最多补 33ms，分成至多 5 个小步，
+        # 避免弹簧积分不稳定，也不积压需要逐帧追赶的工作。
+        remaining = min(0.033, max(0.0, now - previous))
+        if remaining <= 1e-9 or self._physics_mode is None:
+            return
+        avail = (
+            self._screen_available().availableGeometry()
+            if self._physics_mode == 'throw' else None
+        )
+        while remaining > 1e-9 and self._physics_mode is not None:
+            dt = min(0.008, remaining)
+            if self._physics_mode == 'drag':
+                self._tick_drag_physics(dt)
+            elif self._physics_mode == 'throw':
+                self._tick_throw_physics(dt, avail)
+            remaining -= dt
+        self.move(int(round(self._phys_pos[0])), int(round(self._phys_pos[1])))
+        if self._physics_mode is None:
+            self._save_position()
 
-    def _tick_drag_physics(self) -> None:
+    def _tick_drag_physics(self, dt: float) -> None:
         if self._drag_target is None:
             return
-        dt = 0.016
         tx, ty = self._drag_target.x(), self._drag_target.y()
         px, py = self._phys_pos
         # 弹簧跟随 + 阻尼，产生惯性/离心感
@@ -1663,15 +1696,11 @@ class PetWindow(QWidget):
         self._phys_vel[1] += ay * dt
         self._phys_pos[0] += self._phys_vel[0] * dt
         self._phys_pos[1] += self._phys_vel[1] * dt
-        self.move(int(round(self._phys_pos[0])), int(round(self._phys_pos[1])))
 
-    def _tick_throw_physics(self) -> None:
-        dt = 0.016
+    def _tick_throw_physics(self, dt: float, avail) -> None:
         self._phys_vel[1] += 1400.0 * dt  # 重力
         self._phys_pos[0] += self._phys_vel[0] * dt
         self._phys_pos[1] += self._phys_vel[1] * dt
-        scr = self._screen_available()
-        avail = scr.availableGeometry()
         # 忽略左右留白：角色实际可视区域约为窗口中间 1/3，
         # 允许窗口略微超出屏幕边界，让角色形象真正碰到边缘才反弹。
         margin = self._w / 3.0
@@ -1702,15 +1731,12 @@ class PetWindow(QWidget):
             else:
                 self._phys_vel[1] = -abs(self._phys_vel[1]) * 0.78
             bounced = True
-        self.move(int(round(self._phys_pos[0])), int(round(self._phys_pos[1])))
         speed = math.hypot(self._phys_vel[0], self._phys_vel[1])
         # 在地面上且水平速度也很低时，彻底停下
         if self._phys_pos[1] >= bottom - 1 and abs(self._phys_vel[1]) < 1 and abs(self._phys_vel[0]) < 15:
             self._stop_physics()
-            self._save_position()
         elif bounced and speed < 40 and abs(self._phys_vel[1]) < 1:
             self._stop_physics()
-            self._save_position()
 
     def _request_quit(self) -> None:
         self._save_position()
