@@ -20,8 +20,8 @@ import sys
 import time
 
 from PySide6.QtCore import QElapsedTimer, QPoint, Qt, QTimer, Signal
-from PySide6.QtGui import QBitmap, QCursor, QImage, QPainter, QPixmap
-from PySide6.QtWidgets import QApplication, QMenu, QWidget
+from PySide6.QtGui import QBitmap, QCursor, QGuiApplication, QImage, QPainter, QPixmap, QRegion
+from PySide6.QtWidgets import QApplication, QInputDialog, QMenu, QWidget
 
 from . import autostart as autostart_mod
 from . import catalog
@@ -84,6 +84,7 @@ class PetWindow(QWidget):
 
     softEdgesChanged = Signal(bool)
     duckSoundChanged = Signal(bool)
+    soundChanged = Signal(bool)
     proactiveGreetingsChanged = Signal(bool)
     playlistChanged = Signal(str)
     personalityChanged = Signal(str)
@@ -101,7 +102,12 @@ class PetWindow(QWidget):
         self.lib.set_soft_edges(self.soft_edges)
 
         # 根据当前形象实际拥有的动画动态计算分类，支持不同角色动作不一致
-        self.cats = catalog.build_categories(lib.names(), getattr(lib, 'manifest', None), getattr(lib, 'folder_map', None), getattr(lib, 'folder_files', None))
+        self.cats = catalog.build_categories(
+            lib.names(),
+            getattr(lib, 'category_hints', getattr(lib, 'manifest', None)),
+            getattr(lib, 'folder_map', None),
+            getattr(lib, 'folder_files', None),
+        )
         self.idle = self.cats['idle']
         self.turn = self.cats['turn']
         self.idles = self.cats['idles']
@@ -132,12 +138,18 @@ class PetWindow(QWidget):
         self.playback_speed: float = float(config.get('playback_speed', 1.0))
         self.mouse_through: bool = bool(config.get('mouse_through', False))
         self.drag_physics: bool = bool(config.get('drag_physics', False))
-        self.duck_sound_enabled: bool = bool(config.get('duck_sound', True))
+        self.sound_enabled: bool = bool(
+            config.get('sound_enabled', config.get('duck_sound', True))
+        )
+        self.duck_sound_enabled: bool = self.sound_enabled
         self.proactive_greetings: bool = bool(
             config.get('proactive_greetings', True)
         )
         self._duck_sound = DuckScream(config.dir)
-        self._duck_sound.enabled = self.duck_sound_enabled
+        self._duck_sound.enabled = self.sound_enabled
+        self._personality_frequent_acts = catalog.personality_frequent_actions(
+            self.personality, self.acts
+        )
 
         # ---- 窗口属性：无边框 + 透明 + 不进任务栏；置顶可配置 ----
         flags = Qt.WindowType.FramelessWindowHint | Qt.WindowType.Tool
@@ -168,6 +180,10 @@ class PetWindow(QWidget):
         self._shutting_down = False
         self._suspended = False
         self._paused = False
+        self._failure_counts: dict[str, int] = {}
+        self._failed_animations: set[str] = set()
+        self._screen_hooked = False
+        self._screens_hooked = False
 
         # ---- 交互状态 ----
         self._press_global: QPoint | None = None
@@ -208,6 +224,12 @@ class PetWindow(QWidget):
         self._idle_pause_timer = QTimer(self)
         self._idle_pause_timer.setSingleShot(True)
         self._idle_pause_timer.timeout.connect(self._resume_busy_idle)
+        self.action_switch_delay_ms = int(
+            config.get('action_switch_delay_ms', 0)
+        )
+        self._action_switch_timer = QTimer(self)
+        self._action_switch_timer.setSingleShot(True)
+        self._action_switch_timer.timeout.connect(self._pick_next)
 
         # ---- 拖动物理 ----
         self._physics_timer = QTimer(self)
@@ -231,6 +253,7 @@ class PetWindow(QWidget):
         # ---- 尺寸与初始状态 ----
         self._apply_scale()
         self._restore_position()
+        self.lib.set_decode_size(*catalog.decode_size_for_scale(self.scale, self._screen_dpr()))
         self._switch(self.idle)
         self._resource_timer.start()
         self._check_system_load()
@@ -255,11 +278,12 @@ class PetWindow(QWidget):
 
     def change_scale(self, scale: float) -> None:
         """切换缩放；保持窗口底边不动（脚踩的地面不变）。"""
+        scale = max(0.25, min(2.0, float(scale)))
         if abs(scale - self.scale) < 1e-6:
             return
         old_bottom = self.geometry().bottom()
         self.scale = scale
-        self.lib.set_decode_size(*catalog.decode_size_for_scale(scale))
+        self.lib.set_decode_size(*catalog.decode_size_for_scale(scale, self._screen_dpr()))
         self._apply_scale()
         self.move(self.x(), old_bottom - self._h + 1)
         self._switch(self.anim)
@@ -269,15 +293,57 @@ class PetWindow(QWidget):
     # ================================================================ 位置
     def _screen_available(self):
         """窗口所在屏幕；macOS 上 self.screen() 可能失效，兜底主屏。"""
-        from PySide6.QtGui import QGuiApplication
         scr = self.screen()
+        if scr is None:
+            scr = self._configured_screen()
         if scr is None:
             scr = QGuiApplication.primaryScreen()
         return scr
 
+    def _configured_screen(self):
+        preferred = self.cfg.get('screen')
+        if isinstance(preferred, str):
+            for screen in QGuiApplication.screens():
+                if screen.name() == preferred:
+                    return screen
+        return None
+
+    def _screen_dpr(self) -> float:
+        screen = self.screen()
+        if screen is None or not self.isVisible():
+            screen = self._configured_screen() or screen
+        if screen is None:
+            screen = QGuiApplication.primaryScreen()
+        return float(screen.devicePixelRatio()) if screen is not None else 1.0
+
+    def _clamp_into_screen(self) -> None:
+        screen = self._screen_available()
+        if screen is None:
+            return
+        avail = screen.availableGeometry()
+        max_x = max(avail.left(), avail.right() - self._w + 1)
+        max_y = max(avail.top(), avail.bottom() - self._h + 1)
+        x = min(max(self.x(), avail.left()), max_x)
+        y = min(max(self.y(), avail.top()), max_y)
+        if (x, y) != (self.x(), self.y()):
+            self.move(x, y)
+
+    def _on_screen_changed(self, screen) -> None:
+        if screen is None:
+            return
+        self.lib.set_decode_size(
+            *catalog.decode_size_for_scale(self.scale, screen.devicePixelRatio())
+        )
+        self._clamp_into_screen()
+        self._rebuild_frame(force_mask=True)
+        self._save_position()
+
+    def _on_screen_removed(self, _screen) -> None:
+        QTimer.singleShot(0, self._clamp_into_screen)
+
     def _restore_position(self) -> None:
         """恢复上次位置（按屏幕比例），无记录则落右下角。"""
-        scr = self._screen_available()
+        scr = self._configured_screen() or self._screen_available()
         avail = scr.availableGeometry()
         rx, ry = self.cfg.get('rx'), self.cfg.get('ry')
         if rx is None or ry is None:
@@ -303,6 +369,7 @@ class PetWindow(QWidget):
         cy = self.y() + self._h / 2
         self.cfg.set('rx', (cx - avail.left()) / avail.width())
         self.cfg.set('ry', (cy - avail.top()) / avail.height())
+        self.cfg.set('screen', scr.name())
         self.cfg.set('facing', self.facing)
         self.cfg.set('scale', self.scale)
         self.cfg.save()
@@ -319,22 +386,34 @@ class PetWindow(QWidget):
         self._save_position()
 
     def set_on_top(self, on: bool) -> None:
+        was_visible = self.isVisible()
         if sys.platform == 'darwin':
             # 先设属性再改 flag：setWindowFlag 触发窗口重建时一并应用
             self.setAttribute(Qt.WidgetAttribute.WA_MacAlwaysShowToolWindow, on)
         self.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint, on)
         self.cfg.set('on_top', on)
         self.cfg.save()
-        self.show()
-        if sys.platform == 'darwin':
+        if was_visible:
+            self.show()
+        else:
+            self.hide()
+        if sys.platform == 'darwin' and was_visible:
             # 延迟到 Qt 窗口重建完成后再强制原生层级，避免被 Qt 覆盖
             QTimer.singleShot(0, lambda: _mac_set_window_level(int(self.winId()), 3 if on else 0))
-        if on:
+        if on and was_visible:
             self.raise_()
 
     def showEvent(self, event) -> None:  # noqa: N802 (Qt 命名)
         """窗口显示时校正层级（延迟执行，避免被 Qt 窗口重建覆盖）。"""
         super().showEvent(event)
+        handle = self.windowHandle()
+        if handle is not None and not self._screen_hooked:
+            handle.screenChanged.connect(self._on_screen_changed)
+            self._screen_hooked = True
+        app = QGuiApplication.instance()
+        if app is not None and not self._screens_hooked:
+            app.screenRemoved.connect(self._on_screen_removed)
+            self._screens_hooked = True
         if sys.platform == 'darwin':
             on = bool(self.cfg.get('on_top', True))
             QTimer.singleShot(0, lambda: _mac_set_window_level(int(self.winId()), 3 if on else 0))
@@ -376,9 +455,12 @@ class PetWindow(QWidget):
         self._bound_movie = None
         self._bound_movie_name = None
 
-    def _switch(self, name: str) -> None:
+    def _switch(self, name: str | None) -> bool:
         """切换到指定动画（链式模型：全部一次性播放）。"""
+        if not name or name in self._failed_animations:
+            return False
         self._idle_pause_timer.stop()
+        self._action_switch_timer.stop()
         self._cancel_move()
         previous = self.movie
         movie = self.lib.activate(name)
@@ -389,8 +471,11 @@ class PetWindow(QWidget):
         if name in self.playlist:
             self._playlist_index = self.playlist.index(name)
         self.movie = movie
-        movie.stop()
-        movie.jumpToFrame(0)
+        if hasattr(movie, 'rewind'):
+            movie.rewind(preload=self._suspended or self._paused)
+        else:
+            movie.stop()
+            movie.jumpToFrame(0)
         if hasattr(movie, 'set_playback_speed'):
             movie.set_playback_speed(self._effective_playback_speed(name))
         self._ended_fired = False
@@ -398,18 +483,17 @@ class PetWindow(QWidget):
         self._rebuild_frame(force_mask=True)
         if not self._suspended and not self._paused:
             movie.start()
+        return True
 
     def _on_frame(self, n: int) -> None:
-        """媒体帧推进回调：重建画面；最后一帧触发播完处理。"""
+        """媒体帧推进回调：只重建当前画面，结束由播放器 finished 信号处理。"""
         name = self._bound_movie_name
         if name != self.anim or self.movie is None or self.sender() is not self.movie:
             return
+        self._failure_counts.pop(name, None)
+        self._failed_animations.discard(name)
         self._rebuild_frame()
         self.update()
-        if n >= self.lib.frames(name) - 1 and not self._ended_fired:
-            self._ended_fired = True
-            self.movie.stop()  # 停在最后一帧，等 _on_anim_ended 切走
-            self._on_anim_ended(name)
 
     def _on_movie_finished(self) -> None:
         name = self._bound_movie_name
@@ -424,7 +508,32 @@ class PetWindow(QWidget):
         self._on_anim_ended(name)
 
     def _on_movie_error(self, message: str) -> None:
-        logging.error('动画解码失败 %s: %s', self._bound_movie_name, message)
+        name = self._bound_movie_name
+        if not name:
+            return
+        count = self._failure_counts.get(name, 0) + 1
+        self._failure_counts[name] = count
+        self._failed_animations.add(name)
+        logging.error('动画解码失败 %s（第 %d 次）: %s', name, count, message)
+        if count >= 3:
+            logging.error('动画已停用，避免坏素材切换风暴: %s', name)
+        self._ended_fired = True
+        if self.movie is not None:
+            self.movie.stop()
+        QTimer.singleShot(300, lambda name=name: self._recover_from_movie_error(name))
+
+    def _recover_from_movie_error(self, name: str) -> None:
+        if self._shutting_down or self._suspended or self._paused or self.anim != name:
+            return
+        self._schedule_action_switch()
+
+    def _schedule_action_switch(self) -> None:
+        """用单个一次性计时器实现低负载的动作切换等待。"""
+        delay = max(0, int(self.action_switch_delay_ms))
+        if delay <= 0:
+            self._pick_next()
+        else:
+            self._action_switch_timer.start(delay)
 
     def _rebuild_frame(self, *, force_mask: bool = False) -> None:
         """按固定逻辑画布生成 Retina pixmap，并同步窗口 mask。
@@ -437,7 +546,12 @@ class PetWindow(QWidget):
         frame = self.movie.currentFrame()
         if frame is None or frame.image.isNull():
             return
-        img = frame_canvas_image(frame)
+        if (frame.x == 0 and frame.y == 0
+                and frame.image.width() == frame.canvas_width
+                and frame.image.height() == frame.canvas_height):
+            img = frame.image
+        else:
+            img = frame_canvas_image(frame)
         if self.facing == 'right':
             img = img.mirrored(True, False)
         w_c = max(1, int(round(catalog.CANVAS_W * self.scale)))
@@ -445,9 +559,12 @@ class PetWindow(QWidget):
         dpr = min(catalog.RENDER_DPR_CAP, max(1.0, float(self.devicePixelRatioF())))
         pixel_w = max(1, int(round(w_c * dpr)))
         pixel_h = max(1, int(round(h_c * dpr)))
-        img = img.scaled(pixel_w, pixel_h,
-                         Qt.AspectRatioMode.IgnoreAspectRatio,
-                         Qt.TransformationMode.SmoothTransformation)
+        # 解码器通常已经按当前显示尺寸输出；同尺寸再次 SmoothTransformation
+        # 只会产生一份重复拷贝，24fps 下会稳定占用一段 CPU。
+        if img.width() != pixel_w or img.height() != pixel_h:
+            img = img.scaled(pixel_w, pixel_h,
+                             Qt.AspectRatioMode.IgnoreAspectRatio,
+                             Qt.TransformationMode.SmoothTransformation)
         pixmap = QPixmap.fromImage(img)
         pixmap.setDevicePixelRatio(dpr)
         self._frame_pixmap = pixmap
@@ -455,14 +572,20 @@ class PetWindow(QWidget):
         self._frame_logical_rect = (0, 0, w_c, h_c)
         self._mask_frame_counter += 1
         mask_interval = (
-            catalog.BUSY_MASK_FRAME_INTERVAL if self._resource_constrained else 1
+            catalog.BUSY_MASK_FRAME_INTERVAL
+            if self._resource_constrained
+            else catalog.MASK_FRAME_INTERVAL
         )
         if force_mask or self._mask_frame_counter >= mask_interval:
             self._sync_mask()
             self._mask_frame_counter = 0
 
     def _sync_mask(self) -> None:
-        """按当前帧 alpha 设置窗口 mask：透明区域鼠标穿透到下层窗口。"""
+        """按当前帧 alpha 设置窗口 mask：透明区域鼠标穿透到下层窗口。
+
+        这是命中测试层，不参与实际透明边缘的绘制；画面边缘仍由原始
+        Alpha + QPainter 合成，因此降低同步频率不会让可见边角变粗。
+        """
         canvas = QImage(self._w, self._h, QImage.Format.Format_ARGB32)
         canvas.fill(Qt.GlobalColor.transparent)
         p = QPainter(canvas)
@@ -471,7 +594,15 @@ class PetWindow(QWidget):
             x, y, _, _ = self._frame_logical_rect
             p.drawPixmap(x, y, self._frame_pixmap)
         p.end()
-        self.setMask(QBitmap.fromImage(canvas.createAlphaMask()))
+        region = QRegion(QBitmap.fromImage(canvas.createAlphaMask()))
+        # 二值窗口遮罩只限定命中范围，向外留 2 个逻辑像素，避免切掉
+        # Retina 半透明轮廓。实际颜色仍由原始 Alpha 合成。
+        padded = region
+        for dx, dy in ((-2, 0), (2, 0), (0, -2), (0, 2),
+                       (-1, -1), (-1, 1), (1, -1), (1, 1)):
+            padded = padded.united(region.translated(dx, dy))
+        if padded != self.mask():
+            self.setMask(padded)
 
     def paintEvent(self, event) -> None:  # noqa: N802 (Qt 命名)
         painter = QPainter(self)
@@ -526,7 +657,9 @@ class PetWindow(QWidget):
             painter.drawPixmap(x, y, self._frame_pixmap)
             painter.end()
         else:
-            frame = self.lib.movie(self.idle).currentFrame()
+            frame = self.lib.movie(self.idle).currentFrame() if self.idle else None
+            if frame is None or frame.image.isNull():
+                return QPixmap()
             image = QImage(
                 frame.canvas_width,
                 frame.canvas_height,
@@ -546,6 +679,8 @@ class PetWindow(QWidget):
 
     # ================================================================ 动画链
     def _on_anim_ended(self, name: str) -> None:
+        if self._suspended or self._paused or self._shutting_down:
+            return
         if name == self.drag and self._dragging:
             # 超长拖拽：拖拽动画循环重播，继续跟手
             self.movie.jumpToFrame(0)
@@ -561,13 +696,13 @@ class PetWindow(QWidget):
         if name == self.drag or name in self.clicks:
             # 交互打断的动画播完 → 待机缓冲（一次性），待机播完再进链
             if self.idles:
-                self._switch(self._pick(self.idles))
+                self._switch(self._pick_available(self.idles))
             return
         if self._resource_constrained and name in self.idles:
             # 保留最后一帧短暂停顿，不启动解码器；交互会通过 _switch 立即取消等待。
             self._idle_pause_timer.start(catalog.BUSY_IDLE_PAUSE_MS)
             return
-        self._pick_next()
+        self._schedule_action_switch()
 
     def _pick_next(self) -> None:
         """按播放列表或当前性格模式选择下一个动画。"""
@@ -577,11 +712,11 @@ class PetWindow(QWidget):
         roll = random.random()
         if self._resource_constrained:
             if roll < catalog.BUSY_IDLE_PROBABILITY and self.idles:
-                self._switch(self._pick(self.idles, exclude=self.anim))
+                self._switch(self._pick_available(self.idles, exclude=self.anim))
             elif roll < catalog.BUSY_TURN_PROBABILITY and self.turns:
-                self._switch(self._pick(self.turns, exclude=self.anim))
+                self._switch(self._pick_available(self.turns, exclude=self.anim))
             else:
-                self._switch(self._pick(self.acts, exclude=self.anim))
+                self._switch(self._pick_personality_action(exclude=self.anim))
             return
         profile = catalog.PERSONALITY_PRESETS[self.personality]
         idle_edge = float(profile['idle'])
@@ -591,24 +726,58 @@ class PetWindow(QWidget):
             acts_edge += float(profile['move'])
         if roll < idle_edge:
             if self.idles:
-                self._switch(self._pick(self.idles, exclude=self.anim))
+                self._switch(self._pick_available(self.idles, exclude=self.anim))
             else:
-                self._switch(self._pick(self.acts, exclude=self.anim))
+                self._switch(self._pick_personality_action(exclude=self.anim))
         elif roll < turn_edge:
             if self.turns:
-                self._switch(self._pick(self.turns, exclude=self.anim))
+                self._switch(self._pick_available(self.turns, exclude=self.anim))
             else:
-                self._switch(self._pick(self.acts, exclude=self.anim))
+                self._switch(self._pick_available(self.acts, exclude=self.anim))
         elif roll < acts_edge:
-            self._switch(self._pick(self.acts, exclude=self.anim))
+            self._switch(self._pick_personality_action(exclude=self.anim))
         else:
             if self.no_move or not self._try_move():
-                self._switch(self._pick(self.acts, exclude=self.anim))
+                self._switch(self._pick_personality_action(exclude=self.anim))
 
-    @staticmethod
-    def _pick(pool: list[str], exclude: str | None = None) -> str:
-        entries = [n for n in pool if n != exclude] or pool
-        return random.choice(entries)
+    def _pick(self, pool: list[str], exclude: str | None = None) -> str | None:
+        entries = [
+            n for n in pool
+            if n != exclude and n not in self._failed_animations
+        ]
+        if not entries:
+            entries = [n for n in pool if n not in self._failed_animations]
+        return random.choice(entries) if entries else None
+
+    def _pick_available(self, pool: list[str], exclude: str | None = None) -> str | None:
+        """从目标池选择；角色缺少该类动作时回退到已有动作。"""
+        picked = self._pick(pool, exclude=exclude)
+        if picked is not None:
+            return picked
+        for fallback in (
+            self.idles,
+            self.turns,
+            self.acts,
+            self.moves,
+            self.clicks,
+            list(self.lib.names()),
+        ):
+            picked = self._pick(fallback, exclude=exclude)
+            if picked is not None:
+                return picked
+        return None
+
+    def _pick_personality_action(self, exclude: str | None = None) -> str | None:
+        """按当前性格提高前 40% 高匹配动作的出现频率。"""
+        if not self.acts:
+            return self._pick_available(self.acts, exclude=exclude)
+        frequent = self._personality_frequent_acts
+        profile = catalog.PERSONALITY_PRESETS[self.personality]
+        if frequent and random.random() < float(profile['action_focus']):
+            picked = self._pick(frequent, exclude=exclude)
+            if picked is not None:
+                return picked
+        return self._pick(self.acts, exclude=exclude)
 
     def _save_action_names(self, key: str, names: list[str]) -> None:
         self.cfg.set(key, list(names))
@@ -726,9 +895,14 @@ class PetWindow(QWidget):
         if personality == self.personality:
             return
         self.personality = personality
+        self._personality_frequent_acts = catalog.personality_frequent_actions(
+            personality, self.acts
+        )
         self.cfg.set('personality', personality)
         self.cfg.save()
         self._schedule_next_greeting()
+        if self.anim in self.acts and self._personality_frequent_acts:
+            self._switch(self._pick_personality_action(exclude=self.anim))
         self.personalityChanged.emit(personality)
 
     def add_personality_menu(self, parent_menu: QMenu) -> QMenu:
@@ -823,8 +997,12 @@ class PetWindow(QWidget):
         if not self.moves:
             return False
         move_name = name or self._pick(self.moves)
-        duration = self.lib.duration(move_name)
-        self._switch(move_name)
+        if not self._switch(move_name) or self.movie is None:
+            return False
+        known_duration = getattr(self.movie, 'known_duration', None)
+        duration = known_duration() if callable(known_duration) else 0.0
+        if duration <= 0:
+            duration = catalog.MOVE_FALLBACK_DURATION_SEC
         self._move_plan = {
             'start_x': self.x(),
             'target_x': int(round(target_cx - half_w)),
@@ -957,7 +1135,7 @@ class PetWindow(QWidget):
                 if self._grab_offset is not None:
                     self.move(g - self._grab_offset)  # 停在松手处
             edge_bounced = self._trigger_edge_feedback()
-            if not edge_bounced and not self.drag_physics:
+            if not self.drag_physics:
                 self._save_position()
             if self.idles and not edge_bounced:
                 self._switch(self._pick(self.idles))  # 回待机缓冲
@@ -968,6 +1146,13 @@ class PetWindow(QWidget):
         self._grab_offset = None
         self._long_press_fired = False
         event.accept()
+
+    def mouseDoubleClickEvent(self, event) -> None:  # noqa: N802
+        """Qt 用 DoubleClick 替代第二次 Press；转发以保留拖拽状态。"""
+        if event.button() == Qt.MouseButton.LeftButton:
+            self.mousePressEvent(event)
+        else:
+            super().mouseDoubleClickEvent(event)
 
     def _clear_just_dragged(self) -> None:
         self._just_dragged = False
@@ -1043,20 +1228,24 @@ class PetWindow(QWidget):
 
         if 'left' in contacts:
             self.facing = 'right'
-            self._phys_vel[0] = max(abs(self._phys_vel[0]), catalog.EDGE_BOUNCE_SPEED)
+            if self.drag_physics:
+                self._phys_vel[0] = max(abs(self._phys_vel[0]), catalog.EDGE_BOUNCE_SPEED)
         elif 'right' in contacts:
             self.facing = 'left'
-            self._phys_vel[0] = -max(abs(self._phys_vel[0]), catalog.EDGE_BOUNCE_SPEED)
+            if self.drag_physics:
+                self._phys_vel[0] = -max(abs(self._phys_vel[0]), catalog.EDGE_BOUNCE_SPEED)
         if 'top' in contacts:
-            self._phys_vel[1] = max(abs(self._phys_vel[1]), catalog.EDGE_BOUNCE_SPEED)
+            if self.drag_physics:
+                self._phys_vel[1] = max(abs(self._phys_vel[1]), catalog.EDGE_BOUNCE_SPEED)
         elif 'bottom' in contacts:
-            self._phys_vel[1] = -max(abs(self._phys_vel[1]), catalog.EDGE_BOUNCE_SPEED)
+            if self.drag_physics:
+                self._phys_vel[1] = -max(abs(self._phys_vel[1]), catalog.EDGE_BOUNCE_SPEED)
 
-        self._phys_pos = [float(self.x()), float(self.y())]
-        self._physics_mode = 'throw'
-        self._physics_timer.start()
+        if self.drag_physics:
+            self._phys_pos = [float(self.x()), float(self.y())]
+            self._physics_mode = 'throw'
+            self._physics_timer.start()
         self._start_squash()
-        self._rebuild_frame(force_mask=True)
         name = self._special_animation('被吓一跳', self.acts or self.clicks)
         if name:
             self._switch(name)
@@ -1105,10 +1294,10 @@ class PetWindow(QWidget):
         drag_physics_act.toggled.connect(self.set_drag_physics)
 
         interaction = menu.addMenu('互动反馈')
-        duck_sound = interaction.addAction('尖叫鸭音效')
+        duck_sound = interaction.addAction('声音开关')
         duck_sound.setCheckable(True)
-        duck_sound.setChecked(self.duck_sound_enabled)
-        duck_sound.toggled.connect(self.set_duck_sound)
+        duck_sound.setChecked(self.sound_enabled)
+        duck_sound.toggled.connect(self.set_sound_enabled)
         greetings = interaction.addAction('偶尔主动打招呼')
         greetings.setCheckable(True)
         greetings.setChecked(self.proactive_greetings)
@@ -1147,12 +1336,39 @@ class PetWindow(QWidget):
         auto.toggled.connect(autostart_mod.set_enabled)
 
         m_scale = menu.addMenu('大小')
+        current_width = int(round(catalog.CANVAS_W * self.scale))
+        preset_widths = {
+            int(round(catalog.CANVAS_W * step)) for step in catalog.SCALE_STEPS
+        }
+        if current_width not in preset_widths:
+            current = m_scale.addAction(f'当前：{current_width}px')
+            current.setEnabled(False)
         for s in catalog.SCALE_STEPS:
             px = int(round(catalog.CANVAS_W * s))
             act = m_scale.addAction(f'{px}px')
             act.setCheckable(True)
             act.setChecked(abs(self.scale - s) < 0.02)
             act.triggered.connect(lambda checked=False, s=s: self.change_scale(s))
+        custom_scale = m_scale.addAction('自定义大小…')
+        custom_scale.triggered.connect(self._ask_custom_scale)
+
+        m_switch = menu.addMenu('动作切换时间')
+        preset_delays = {seconds * 1000 for seconds in (0, 1, 3, 5, 10)}
+        if self.action_switch_delay_ms not in preset_delays:
+            current_seconds = self.action_switch_delay_ms / 1000
+            current = m_switch.addAction(f'当前：{current_seconds:g} 秒')
+            current.setEnabled(False)
+        for seconds in (0, 1, 3, 5, 10):
+            action = m_switch.addAction('立即' if seconds == 0 else f'{seconds} 秒')
+            action.setCheckable(True)
+            action.setChecked(self.action_switch_delay_ms == seconds * 1000)
+            action.triggered.connect(
+                lambda checked=False, seconds=seconds: self.set_action_switch_delay(
+                    seconds * 1000
+                )
+            )
+        custom_delay = m_switch.addAction('自定义…')
+        custom_delay.triggered.connect(self._ask_action_switch_delay)
 
         menu.addSeparator()
         menu.addAction('退出', self._request_quit)
@@ -1173,6 +1389,36 @@ class PetWindow(QWidget):
         self.cfg.save()
         if self.movie is not None and hasattr(self.movie, 'set_playback_speed'):
             self.movie.set_playback_speed(self._effective_playback_speed(self.anim))
+
+    def _ask_custom_scale(self) -> None:
+        width = int(round(catalog.CANVAS_W * self.scale))
+        value, accepted = QInputDialog.getInt(
+            self, '自定义桌宠大小', '显示宽度（像素）', width, 160, 1280, 16
+        )
+        if accepted:
+            self.change_scale(value / catalog.CANVAS_W)
+
+    def set_action_switch_delay(self, delay_ms: int) -> None:
+        """设置动作结束后的等待时间，使用单次 QTimer，不增加常驻负载。"""
+        self.action_switch_delay_ms = max(0, min(60_000, int(delay_ms)))
+        self.cfg.set('action_switch_delay_ms', self.action_switch_delay_ms)
+        self.cfg.save()
+        if self._action_switch_timer.isActive():
+            self._action_switch_timer.stop()
+            self._schedule_action_switch()
+
+    def _ask_action_switch_delay(self) -> None:
+        seconds, accepted = QInputDialog.getInt(
+            self,
+            '自定义动作切换时间',
+            '动作结束后等待（秒）',
+            self.action_switch_delay_ms // 1000,
+            0,
+            60,
+            1,
+        )
+        if accepted:
+            self.set_action_switch_delay(seconds * 1000)
 
     def set_soft_edges(self, enabled: bool) -> None:
         """切换 Alpha=1 底噪清理并持久化；重建当前播放器以即时生效。"""
@@ -1235,6 +1481,7 @@ class PetWindow(QWidget):
         self._paused = on
         if on:
             self._cancel_move()
+            self._action_switch_timer.stop()
             self._long_press_timer.stop()
             self._tap_timer.stop()
             self._cursor_timer.stop()
@@ -1302,8 +1549,12 @@ class PetWindow(QWidget):
         self.mouse_through = bool(on)
         self.cfg.set('mouse_through', self.mouse_through)
         self.cfg.save()
+        was_visible = self.isVisible()
         self.setWindowFlag(Qt.WindowType.WindowTransparentForInput, self.mouse_through)
-        self.show()
+        if was_visible:
+            self.show()
+        else:
+            self.hide()
 
     def set_drag_physics(self, on: bool) -> None:
         """拖动物理开关。"""
@@ -1313,15 +1564,22 @@ class PetWindow(QWidget):
         if not self.drag_physics:
             self._stop_physics()
 
-    def set_duck_sound(self, on: bool) -> None:
-        """尖叫鸭音效开关。"""
-        self.duck_sound_enabled = bool(on)
-        self._duck_sound.enabled = self.duck_sound_enabled
-        self.cfg.set('duck_sound', self.duck_sound_enabled)
+    def set_sound_enabled(self, on: bool) -> None:
+        """统一声音开关；当前包含尖叫鸭音效，后续音效可复用。"""
+        self.sound_enabled = bool(on)
+        self.duck_sound_enabled = self.sound_enabled
+        self._duck_sound.enabled = self.sound_enabled
+        self.cfg.set('sound_enabled', self.sound_enabled)
+        self.cfg.set('duck_sound', self.sound_enabled)
         self.cfg.save()
-        if not self.duck_sound_enabled:
+        if not self.sound_enabled:
             self._duck_sound.close()
-        self.duckSoundChanged.emit(self.duck_sound_enabled)
+        self.soundChanged.emit(self.sound_enabled)
+        self.duckSoundChanged.emit(self.sound_enabled)
+
+    def set_duck_sound(self, on: bool) -> None:
+        """兼容旧调用名。"""
+        self.set_sound_enabled(on)
 
     def set_proactive_greetings(self, on: bool) -> None:
         """偶尔主动挥手问候开关。"""
@@ -1421,6 +1679,7 @@ class PetWindow(QWidget):
             self._physics_timer,
             self._resource_timer,
             self._idle_pause_timer,
+            self._action_switch_timer,
             self._long_press_timer,
             self._tap_timer,
             self._cursor_timer,

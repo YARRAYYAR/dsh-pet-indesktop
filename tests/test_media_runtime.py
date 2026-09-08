@@ -8,6 +8,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import Mock, patch
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 ROOT = Path(__file__).resolve().parent.parent
@@ -21,7 +22,7 @@ from PySide6.QtWidgets import QApplication  # noqa: E402
 from pet.config import Config  # noqa: E402
 from pet.library import MovieLibrary  # noqa: E402
 from pet.window import PetWindow  # noqa: E402
-from pet.webm_clip import trim_transparent_frame  # noqa: E402
+from pet.webm_clip import clear_alpha_floor, trim_transparent_frame  # noqa: E402
 
 
 def _app() -> QApplication:
@@ -123,6 +124,16 @@ class _RecreatingLibrary(_FrameOnlyLibrary):
 
 
 class MediaRuntimeTests(unittest.TestCase):
+    def test_alpha_cleanup_preserves_all_non_floor_levels(self) -> None:
+        image = QImage(256, 1, QImage.Format.Format_RGBA8888)
+        for value in range(256):
+            image.setPixelColor(value, 0, QColor(255, 255, 255, value))
+        result = clear_alpha_floor(image)
+        for value in range(256):
+            self.assertEqual(result.pixelColor(value, 0).alpha(),
+                             0 if value == 1 else value)
+        self.assertEqual(clear_alpha_floor(result), result)
+
     @classmethod
     def setUpClass(cls) -> None:
         cls.app = _app()
@@ -244,6 +255,45 @@ class MediaRuntimeTests(unittest.TestCase):
             self.assertFalse(window.soft_edges)
             self.assertFalse(library.soft_edges)
             self.assertFalse(config.get("soft_edges"))
+            window.shutdown()
+            window.close()
+
+    def test_empty_action_pool_falls_back_to_existing_idle(self) -> None:
+        image = QImage(20, 20, QImage.Format.Format_RGBA8888)
+        image.fill(QColor(255, 255, 255, 255))
+        library = _FrameOnlyLibrary(_FrameOnlyClip(trim_transparent_frame(image)))
+
+        with tempfile.TemporaryDirectory() as tmp:
+            window = PetWindow(library, Config(base=tmp))
+            window._resource_timer.stop()
+            window.acts = []
+            window.turns = []
+            window.moves = []
+            window.clicks = []
+            self.assertEqual(window._pick_available([]), 'idle')
+
+            with patch('pet.window.random.random', return_value=0.5):
+                window._pick_next()
+            self.assertEqual(window.anim, 'idle')
+
+            window.shutdown()
+            window.close()
+
+    def test_last_frame_does_not_end_before_finished_signal(self) -> None:
+        image = QImage(20, 20, QImage.Format.Format_RGBA8888)
+        image.fill(QColor(255, 255, 255, 255))
+        clip = _FrameOnlyClip(trim_transparent_frame(image))
+        library = _FrameOnlyLibrary(clip)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            window = PetWindow(library, Config(base=tmp))
+            window._resource_timer.stop()
+            window._rebuild_frame = Mock()
+            window._on_anim_ended = Mock()
+
+            clip.frameChanged.emit(99)
+
+            window._on_anim_ended.assert_not_called()
             window.shutdown()
             window.close()
 

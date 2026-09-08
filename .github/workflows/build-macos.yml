@@ -30,6 +30,9 @@ jobs:
       - name: Generate GIF assets from webm
         run: python scripts/convert_to_gif.py
 
+      - name: Run non-GUI regression tests
+        run: python -m unittest tests.test_stability
+
       - name: Build WebM .app
         run: |
           python -m PyInstaller --noconfirm --clean --windowed \
@@ -37,6 +40,7 @@ jobs:
             --collect-all imageio_ffmpeg \
             --name "dsh-pet-indesktop-webm" \
             --add-data "assets/characters:assets/characters" \
+            --add-data "assets/app-icon.png:assets" \
             packaging/pet_entry.py
 
       - name: Build GIF .app
@@ -46,6 +50,7 @@ jobs:
             --collect-all imageio_ffmpeg \
             --name "dsh-pet-indesktop-gif" \
             --add-data "assets/characters_gif:assets/characters_gif" \
+            --add-data "assets/app-icon.png:assets" \
             packaging/pet_entry.py
 
       - name: Verify pet module collected
@@ -60,6 +65,10 @@ jobs:
 
       - name: Ad-hoc codesign
         run: |
+          for APP in dsh-pet-indesktop-webm dsh-pet-indesktop-gif; do
+            test -x "dist/$APP.app/Contents/MacOS/$APP"
+            "dist/$APP.app/Contents/MacOS/$APP" --selftest
+          done
           codesign --force --deep --sign - "dist/dsh-pet-indesktop-webm.app"
           codesign --force --deep --sign - "dist/dsh-pet-indesktop-gif.app"
 

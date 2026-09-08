@@ -14,6 +14,7 @@ import os
 import sys
 import json
 import math
+import re
 from pathlib import Path
 
 # ---------------------------------------------------------------- 画布几何
@@ -30,15 +31,19 @@ DECODE_MAX_W = int(CANVAS_W * RENDER_DPR_CAP)
 DECODE_MAX_H = int(CANVAS_H * RENDER_DPR_CAP)
 
 
-def decode_size_for_scale(scale: float) -> tuple[int, int]:
-    """返回当前显示档位所需的 2× Retina 解码尺寸（偶数像素）。"""
+def decode_size_for_scale(
+    scale: float,
+    dpr: float = RENDER_DPR_CAP,
+) -> tuple[int, int]:
+    """按显示缩放和实际屏幕 DPR 返回所需解码尺寸（偶数像素）。"""
+    dpr = max(1.0, min(RENDER_DPR_CAP, float(dpr)))
     width = min(
         DECODE_MAX_W,
-        (math.ceil(CANVAS_W * max(0.1, scale) * RENDER_DPR_CAP) + 1) // 2 * 2,
+        (math.ceil(CANVAS_W * max(0.1, scale) * dpr) + 1) // 2 * 2,
     )
     height = min(
         DECODE_MAX_H,
-        (math.ceil(CANVAS_H * max(0.1, scale) * RENDER_DPR_CAP) + 1) // 2 * 2,
+        (math.ceil(CANVAS_H * max(0.1, scale) * dpr) + 1) // 2 * 2,
     )
     return max(2, width), max(2, height)
 
@@ -62,6 +67,7 @@ MOVE_MAX_PX = 240
 MOVE_MARGIN = 20    # 屏幕边缘安全边距
 MOVE_LEAD_SEC = 2   # 动画开头 2s 准备动作，位置不动
 MOVE_TAIL_SEC = 2   # 动画结尾 2s 收尾动作，位置不动
+MOVE_FALLBACK_DURATION_SEC = 6.0  # 素材元数据未知时避免阻塞 UI 的保守估计
 
 # 拖拽判定阈值（像素，缩放前逻辑像素）
 DRAG_THRESHOLD = 5
@@ -79,6 +85,17 @@ EDGE_BOUNCE_SPEED = 300.0
 
 # 行为预设：概率总和为 1；问候时间用毫秒，避免在窗口层散落魔法数字。
 PERSONALITY_PRESETS = {
+    'cool': {
+        'label': '高冷',
+        'idle': 0.82,
+        'turn': 0.10,
+        'acts': 0.08,
+        'move': 0.00,
+        'greeting_min_ms': 240_000,
+        'greeting_max_ms': 480_000,
+        'greeting_chance': 0.20,
+        'action_focus': 0.90,
+    },
     'quiet': {
         'label': '安静',
         'idle': 0.70,
@@ -88,6 +105,7 @@ PERSONALITY_PRESETS = {
         'greeting_min_ms': 120_000,
         'greeting_max_ms': 240_000,
         'greeting_chance': 0.45,
+        'action_focus': 0.78,
     },
     'lively': {
         'label': '活泼',
@@ -98,6 +116,7 @@ PERSONALITY_PRESETS = {
         'greeting_min_ms': 45_000,
         'greeting_max_ms': 90_000,
         'greeting_chance': 0.85,
+        'action_focus': 0.72,
     },
     'mischievous': {
         'label': '调皮',
@@ -108,8 +127,85 @@ PERSONALITY_PRESETS = {
         'greeting_min_ms': 20_000,
         'greeting_max_ms': 45_000,
         'greeting_chance': 1.00,
+        'action_focus': 0.76,
+    },
+    'gentle': {
+        'label': '温柔',
+        'idle': 0.52,
+        'turn': 0.15,
+        'acts': 0.25,
+        'move': 0.08,
+        'greeting_min_ms': 90_000,
+        'greeting_max_ms': 180_000,
+        'greeting_chance': 0.65,
+        'action_focus': 0.80,
     },
 }
+
+# 每个性格的动作候选按“符合程度”从高到低排列。运行时只取当前角色
+# 实际存在的动作，并把候选池前 40% 作为高频动作；因此默认 25 个候选
+# 会产生 10 个高频动作。没有匹配动作的外部角色会回退到普通随机池。
+PERSONALITY_ACTION_PRIORITY = {
+    'cool': (
+        '原地小憩沉眠', '悠闲哼歌', '深度思考碎碎念', '照镜子',
+        '摇扇纳凉', '小提琴演奏', '写代码', '轻快记录', '下五子棋',
+        '哈欠连天', '晨间刷牙', '吃白饭', '吃早餐', '吃午餐',
+        '吃晚餐', '吃长寿面', '吃汤圆', '吃青团', '吃腊八粥',
+        '吃饺子', '吃年糕', '吃重阳糕', '中秋赏月吃月饼', '插茱萸赏菊',
+        '写福字',
+    ),
+    'quiet': (
+        '悠闲哼歌', '原地小憩沉眠', '哈欠连天', '深度思考碎碎念',
+        '轻快记录', '写代码', '写福字', '小提琴演奏', '摇扇纳凉',
+        '照镜子', '下五子棋', '插茱萸赏菊', '中秋赏月吃月饼',
+        '吃白饭', '吃晚餐', '吃午餐', '吃早餐', '晨间刷牙',
+        '吃长寿面', '吃汤圆', '吃腊八粥', '吃青团', '吃饺子',
+        '吃年糕', '吃重阳糕',
+    ),
+    'lively': (
+        '轻快摇摆舞', '可爱宅舞', '优雅女仆舞', '舞狮头', '放烟花',
+        '放风筝', '吹气球', '骑木马', '踢毽子', '三球抛接', '吹笛子',
+        '变鸽子', '抽陀螺', '玩水枪', '荡秋千', '堆雪人', '装点圣诞树',
+        '动物环绕', '蝴蝶蜜蜂环绕头顶开花', '放孔明灯', '放河灯',
+        '拆礼物', '收红包', '吃冰淇淋融化', '吃西瓜',
+    ),
+    'mischievous': (
+        '玩游戏气急败坏', '吃Token', '用鲸鱼尾巴拍打地面',
+        '原地重力下蹲压缩', '原地敲击桌面互动', '原地蹲下玩玩具汽车',
+        '是啊，吃什么', '偷吃零食被抓住', '大口吃零食', '被吓一跳',
+        '讨糖南瓜灯', '萌化小幽灵', '凭空生花', '原地跳跃抓碎头顶物品',
+        '扑克魔术', '吃大闸蟹', '吃糖葫芦', '原地专心玩魔方', '撸猫',
+        '被落叶淹没', '蓝鲸现世', '鲸鱼吐泡泡特效', '整体换装试色',
+        '原地小幅度360度旋转展示', '玩水枪',
+    ),
+    'gentle': (
+        '悠闲哼歌', '女仆屈膝礼仪', '写福字', '放河灯', '中秋赏月吃月饼',
+        '插茱萸赏菊', '蝴蝶蜜蜂环绕头顶开花', '小提琴演奏', '摇扇纳凉',
+        '轻快记录', '放孔明灯', '优雅女仆舞', '照镜子', '吹笛子',
+        '吃冰淇淋融化', '吃西瓜', '吃汤圆', '吃青团', '吃饺子',
+        '吃年糕', '吃长寿面', '吃早餐', '吃午餐', '吃晚餐', '吃白饭',
+    ),
+}
+
+PERSONALITY_ACTION_FREQUENT_RATIO = 0.40
+
+
+def personality_action_candidates(personality: str, names) -> list[str]:
+    """返回当前角色中按性格符合度排序的动作候选。"""
+    available = set(names)
+    return [
+        name for name in PERSONALITY_ACTION_PRIORITY.get(personality, ())
+        if name in available
+    ]
+
+
+def personality_frequent_actions(personality: str, names) -> list[str]:
+    """取符合度候选的前 40%，作为切换性格后的高频动作池。"""
+    candidates = personality_action_candidates(personality, names)
+    if not candidates:
+        return []
+    count = max(1, math.ceil(len(candidates) * PERSONALITY_ACTION_FREQUENT_RATIO))
+    return candidates[:count]
 
 # 默认显示缩放与右下角边距
 # 目标显示宽度 ≈ 462px（与 DSH web 端一致）→ 462 / 640 ≈ 0.72
@@ -124,13 +220,17 @@ BUSY_IDLE_PROBABILITY = 0.82
 BUSY_TURN_PROBABILITY = 0.88
 BUSY_IDLE_SPEED_FACTOR = 0.70
 BUSY_IDLE_PAUSE_MS = 1800
-BUSY_MASK_FRAME_INTERVAL = 2
+# 窗口 mask 只负责鼠标命中范围，不参与透明画面合成；每 2 帧同步一次
+# 足够跟随动画，同时避免每帧重复构造 QBitmap/QRegion。
+MASK_FRAME_INTERVAL = 3
+BUSY_MASK_FRAME_INTERVAL = 3
 LOAD_SAMPLE_MS = 5000
 
 # ---------------------------------------------------------------- 多形象
 # 当前内置形象与未来扩展形象 ID（目录名建议使用稳定 ASCII）
 DEFAULT_CHARACTER = 'shenshen'
 CHARACTERS = ('shenshen',)
+CHARACTER_ID_RE = re.compile(r'^[A-Za-z0-9_-]{1,64}$')
 MANIFEST_FILENAME = 'manifest.json'
 # videos 下的分类子目录
 DIR_IDLE = 'idle'
@@ -200,6 +300,10 @@ def character_gif_video_dir(character_id: str) -> Path:
     return characters_gif_dir() / character_id / 'videos'
 
 
+def is_valid_character_id(character_id: str) -> bool:
+    return isinstance(character_id, str) and bool(CHARACTER_ID_RE.fullmatch(character_id))
+
+
 def external_character_dirs() -> list[Path]:
     """外部可扩展形象根目录（不存在时返回空列表，不报错）。
 
@@ -226,9 +330,13 @@ def external_character_dirs() -> list[Path]:
 
 def resolve_character_video_dir(character_id: str) -> Path:
     """按 外部 > 内置(webm) > 内置(gif) 返回形象视频目录；都不存在时回退 webm 路径，不报错。"""
+    if not is_valid_character_id(character_id):
+        character_id = DEFAULT_CHARACTER
     for root in external_character_dirs():
         candidate = root / character_id / 'videos'
-        if candidate.is_dir():
+        if candidate.is_dir() and (
+            any(candidate.rglob('*.webm')) or any(candidate.rglob('*.gif'))
+        ):
             return candidate
     webm_dir_path = character_video_dir(character_id)
     if webm_dir_path.is_dir() and any(webm_dir_path.rglob('*.webm')):
@@ -259,7 +367,7 @@ def list_available_characters() -> list[str]:
                 any(video_dir.rglob('*.webm')) or any(video_dir.rglob('*.gif'))
             ):
                 cid = child.name
-                if cid not in seen:
+                if is_valid_character_id(cid) and cid not in seen:
                     seen.add(cid)
                     ids.append(cid)
     return ids
@@ -349,8 +457,9 @@ def build_categories(names, manifest: dict | None = None, folder_map: dict | Non
         ├── drag/     # 拖拽（可选）
         └── random/   # 随机动作
     """
-    names = set(names)
-    if not names:
+    ordered_names = list(dict.fromkeys(names))
+    names = set(ordered_names)
+    if not ordered_names:
         return {
             'idle': None, 'turn': None,
             'idles': [], 'turns': [],
@@ -367,7 +476,7 @@ def build_categories(names, manifest: dict | None = None, folder_map: dict | Non
         by_folder: dict[str, list[str]] = {k: list(v) for k, v in folder_files.items()}
     elif folder_map:
         by_folder: dict[str, list[str]] = {}
-        for name in names:
+        for name in ordered_names:
             by_folder.setdefault(folder_map.get(name, ''), []).append(name)
     else:
         by_folder = {}
@@ -419,32 +528,32 @@ def build_categories(names, manifest: dict | None = None, folder_map: dict | Non
     # 关键词兜底
     if not idles:
         m = IDLE if IDLE in names else next(
-            (n for n in names if _keyword_match(n, ['待机', 'idle', '呼吸'])), None
+            (n for n in ordered_names if _keyword_match(n, ['待机', 'idle', '呼吸'])), None
         )
         if m:
             idles = [m]
     if not turns:
         m = TURN if TURN in names else next(
-            (n for n in names if _keyword_match(n, ['转向', '转身', '东张西望', 'turn', '回头', '转'])), None
+            (n for n in ordered_names if _keyword_match(n, ['转向', '转身', '东张西望', 'turn', '回头', '转'])), None
         )
         if m:
             turns = [m]
     if drag is None:
         drag = DRAG if DRAG in names else next(
-            (n for n in names if _keyword_match(n, ['拖拽', '拖', '悬空', 'drag', '抓'])), None
+            (n for n in ordered_names if _keyword_match(n, ['拖拽', '拖', '悬空', 'drag', '抓'])), None
         )
     if not moves:
         moves = [n for n in MOVES if n in names]
         if not moves:
-            moves = [n for n in names if _keyword_match(n, ['走', '跑', '移动', 'move', 'walk', 'run', '踏步', '奔跑'])]
+            moves = [n for n in ordered_names if _keyword_match(n, ['走', '跑', '移动', 'move', 'walk', 'run', '踏步', '奔跑'])]
     if not clicks:
         clicks = [n for n in CLICKS if n in names]
         if not clicks:
-            clicks = [n for n in names if _keyword_match(n, ['点击', '回应', 'click', 'response'])]
+            clicks = [n for n in ordered_names if _keyword_match(n, ['点击', '回应', 'click', 'response'])]
 
     # 如果没有明确 idle，安全回退到第一个动画，避免启动崩溃
     if not idles:
-        first = next(iter(names), None)
+        first = ordered_names[0] if ordered_names else None
         if first:
             idles = [first]
 
@@ -472,7 +581,7 @@ def build_categories(names, manifest: dict | None = None, folder_map: dict | Non
                 unique_acts.append(n)
         acts = unique_acts
     else:
-        acts = [n for n in names if n not in core]
+        acts = [n for n in ordered_names if n not in core]
     return {
         'idle': idles[0] if idles else None,
         'turn': turns[0] if turns else None,

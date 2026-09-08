@@ -11,9 +11,8 @@
 from __future__ import annotations
 
 import logging
-import shutil
 import sys
-import time
+from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
 from PySide6.QtCore import QCoreApplication, QTimer
@@ -25,16 +24,23 @@ from . import catalog
 from .config import Config
 from .hotkeys import GlobalHotkeys
 from .library import MovieLibrary
+from .preflight import format_preflight, preflight
 from .window import PetWindow
 
 
 def _setup_logging(config: Config) -> None:
     config.dir.mkdir(parents=True, exist_ok=True)
+    handler = RotatingFileHandler(
+        config.dir / 'pet.log',
+        maxBytes=2 * 1024 * 1024,
+        backupCount=2,
+        encoding='utf-8',
+    )
     logging.basicConfig(
-        filename=str(config.dir / 'pet.log'),
         level=logging.INFO,
         format='%(asctime)s %(levelname)s %(message)s',
-        encoding='utf-8',
+        handlers=[handler],
+        force=True,
     )
 
 
@@ -63,37 +69,6 @@ def _application_icon() -> QIcon:
     return QIcon(str(icon_path)) if icon_path.is_file() else QIcon()
 
 
-def _cleanup_stale_runtime_dirs() -> None:
-    """清理 PyInstaller onefile 遗留的 _MEI* 临时目录。
-
-    注意：多开桌宠时，每个实例都有自己的 _MEI 目录，不能删除其他正在运行的实例目录。
-    这里只清理“很久没有被修改”的目录，避免误删其他桌宠的运行缓存。
-    """
-    if not getattr(sys, "frozen", False):
-        return
-    meipass = getattr(sys, "_MEIPASS", None)
-    if not meipass:
-        return
-    current = Path(meipass).resolve()
-    parent = current.parent
-    stale_age = 24 * 3600  # 只清理超过 24 小时未变化的目录
-    now = time.time()
-    for child in parent.glob("_MEI[0-9]*"):
-        if not child.is_dir() or child.resolve() == current:
-            continue
-        try:
-            mtime = child.stat().st_mtime
-        except OSError:
-            continue
-        if now - mtime < stale_age:
-            continue
-        try:
-            shutil.rmtree(child)
-            logging.info("已清理遗留缓存目录: %s", child)
-        except OSError:
-            logging.warning("清理遗留缓存目录失败（可能被占用）: %s", child)
-
-
 class PetApp:
     """管理桌宠窗口、托盘与角色热切换。"""
 
@@ -113,7 +88,15 @@ class PetApp:
             self.app.aboutToQuit.connect(self.shutdown)
             self._quit_bound = True
         self.hotkeys.start()
-        self._create_ui(character_id)
+        try:
+            self._create_ui(character_id)
+        except FileNotFoundError:
+            if character_id == catalog.DEFAULT_CHARACTER:
+                raise
+            logging.exception('配置中的形象不可用，回退到默认形象: %s', character_id)
+            self.config.set('character', catalog.DEFAULT_CHARACTER)
+            self.config.save()
+            self._create_ui(catalog.DEFAULT_CHARACTER)
 
     def _create_library(self, character_id: str) -> MovieLibrary:
         scale = float(self.config.get('scale', catalog.DEFAULT_SCALE))
@@ -156,10 +139,6 @@ class PetApp:
         if character_id == current:
             return
 
-        # 先保存配置，即使后续加载失败也记住用户选择
-        self.config.set('character', character_id)
-        self.config.save()
-
         try:
             # 预创建新库，失败则保留当前角色
             lib = self._create_library(character_id)
@@ -167,6 +146,10 @@ class PetApp:
             logging.exception('切换角色失败: %s', character_id)
             _show_startup_error('切换角色失败', str(exc))
             return
+
+        # 素材库验证成功后再提交配置，失败时不会留下不可启动的角色。
+        self.config.set('character', character_id)
+        self.config.save()
 
         logging.info('切换角色: %s -> %s', current, character_id)
 
@@ -254,11 +237,11 @@ class PetApp:
         win.softEdgesChanged.connect(soft_edges.setChecked)
 
         interaction = menu.addMenu('互动反馈')
-        duck_sound = interaction.addAction('尖叫鸭音效')
-        duck_sound.setCheckable(True)
-        duck_sound.setChecked(win.duck_sound_enabled)
-        duck_sound.toggled.connect(win.set_duck_sound)
-        win.duckSoundChanged.connect(duck_sound.setChecked)
+        sound = interaction.addAction('声音开关')
+        sound.setCheckable(True)
+        sound.setChecked(win.sound_enabled)
+        sound.toggled.connect(win.set_sound_enabled)
+        win.soundChanged.connect(sound.setChecked)
         greetings = interaction.addAction('偶尔主动打招呼')
         greetings.setCheckable(True)
         greetings.setChecked(win.proactive_greetings)
@@ -311,8 +294,14 @@ class PetApp:
 
 
 def main(argv: list[str] | None = None) -> int:
+    args = list(sys.argv if argv is None else argv)
+    if '--selftest' in args:
+        result = format_preflight(preflight(Config()))
+        print(result)
+        return 0 if result == 'preflight: OK' else 1
+
     _configure_qt_plugins()
-    app = QApplication(argv if argv is not None else sys.argv)
+    app = QApplication(args)
     app.setWindowIcon(_application_icon())
     app.setApplicationName('dsh-pet-standalone')
     app.setQuitOnLastWindowClosed(False)
@@ -320,13 +309,12 @@ def main(argv: list[str] | None = None) -> int:
     config = Config()
     _setup_logging(config)
     logging.info('dsh-pet-standalone 启动')
-    _cleanup_stale_runtime_dirs()
-
     controller = PetApp(app, config)
     try:
         controller.start()
     except Exception as exc:
         logging.exception('启动失败')
+        controller.shutdown()
         _show_startup_error('dsh-pet-standalone', str(exc))
         return 1
 

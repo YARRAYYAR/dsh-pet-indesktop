@@ -16,7 +16,9 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
-os.environ.setdefault("QT_PLUGIN_PATH", os.path.join(ROOT, "qt-plugins"))
+QT_PLUGIN_ROOT = os.path.join(ROOT, "qt-plugins")
+if os.path.isdir(QT_PLUGIN_ROOT):
+    os.environ.setdefault("QT_PLUGIN_PATH", QT_PLUGIN_ROOT)
 
 from PySide6.QtWidgets import QApplication  # noqa: E402
 
@@ -43,7 +45,7 @@ def main() -> int:
     # 1. 91 段素材全量可加载，帧数/时长有效
     names = lib.names()
     assert len(names) == 91, len(names)
-    # 启动只预热移动动画；其余播放器按需创建，避免 91 个 QTimer/reader 同时常驻。
+    # 播放器按需创建，避免 91 个 QTimer/reader 同时常驻。
     assert lib.loaded_count() <= len(catalog.MOVES)
     for name in names:
         assert lib.frames(name) >= 1, (name, lib.frames(name))

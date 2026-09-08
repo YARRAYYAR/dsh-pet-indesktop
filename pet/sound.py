@@ -9,6 +9,7 @@ import shutil
 import struct
 import subprocess
 import sys
+import time
 import wave
 from pathlib import Path
 
@@ -21,10 +22,15 @@ class DuckScream:
         self.enabled = True
         self._process: subprocess.Popen | None = None
         self._warned = False
+        self._last_play = 0.0
 
     def play(self) -> None:
         if not self.enabled:
             return
+        now = time.monotonic()
+        if now - self._last_play < 0.35:
+            return
+        self._last_play = now
         try:
             self._ensure_wave()
             if sys.platform == "darwin":

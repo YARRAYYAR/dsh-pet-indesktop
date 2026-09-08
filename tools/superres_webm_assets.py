@@ -57,7 +57,8 @@ def alpha_range(path: Path, ffmpeg: Path) -> tuple[int, int] | None:
     completed = subprocess.run(
         [
             str(ffmpeg), "-v", "error", "-c:v", "libvpx-vp9", "-i", str(path),
-            "-vf", "alphaextract", "-frames:v", "1", "-pix_fmt", "gray",
+            "-vf", "alphaextract,select='not(mod(n,10))'", "-frames:v", "5",
+            "-vsync", "0", "-pix_fmt", "gray",
             "-f", "rawvideo", "-",
         ],
         stdout=subprocess.PIPE,

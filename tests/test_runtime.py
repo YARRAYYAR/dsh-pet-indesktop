@@ -21,7 +21,8 @@ def test_catalog_integrity():
     assert (catalog.DECODE_MAX_W, catalog.DECODE_MAX_H) == (1280, 720)
     assert catalog.decode_size_for_scale(0.72) == (922, 520)
     assert catalog.decode_size_for_scale(1.0) == (1280, 720)
-    assert catalog.BUSY_MASK_FRAME_INTERVAL == 2
+    assert catalog.MASK_FRAME_INTERVAL == 3
+    assert catalog.BUSY_MASK_FRAME_INTERVAL == 3
 
 
 def test_load_governor_hysteresis():
@@ -62,7 +63,9 @@ def test_duck_sound_generates_small_wav(tmp_path):
 
 
 def test_personality_presets_and_global_hotkeys_are_stable():
-    assert set(catalog.PERSONALITY_PRESETS) == {'quiet', 'lively', 'mischievous'}
+    assert set(catalog.PERSONALITY_PRESETS) == {
+        'cool', 'quiet', 'lively', 'mischievous', 'gentle'
+    }
     for profile in catalog.PERSONALITY_PRESETS.values():
         assert abs(
             profile['idle'] + profile['turn'] + profile['acts'] + profile['move']
@@ -75,3 +78,13 @@ def test_personality_presets_and_global_hotkeys_are_stable():
         'toggle_mouse_through',
         'duck_sound',
     ]
+
+
+def test_personality_high_frequency_actions_use_top_40_percent():
+    for personality in catalog.PERSONALITY_PRESETS:
+        candidates = catalog.personality_action_candidates(
+            personality, catalog.ACTS
+        )
+        frequent = catalog.personality_frequent_actions(personality, catalog.ACTS)
+        assert frequent == candidates[:max(1, (len(candidates) * 2 + 4) // 5)]
+        assert len(frequent) == 10

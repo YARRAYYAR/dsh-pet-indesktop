@@ -19,9 +19,7 @@ GifClip 基于 QMovie 播放透明 GIF（兼容旧 GIF 路线）。
 from __future__ import annotations
 
 from collections import OrderedDict
-from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
-import threading
 from pathlib import Path
 from typing import Mapping
 
@@ -93,6 +91,9 @@ class GifClip(QObject):
 
     def duration(self) -> float:
         return self.frameCount() * catalog.FRAME_MS / 1000.0 / self.playback_speed
+
+    def known_duration(self) -> float:
+        return self.duration()
 
     def currentFrameNumber(self) -> int:
         return self._movie.currentFrameNumber()
@@ -175,12 +176,13 @@ class MovieLibrary(QObject):
             self._asset_dir = Path(asset_dir)
         else:
             self._asset_dir = catalog.resolve_character_video_dir(self.character_id)
-        self._manifest = None if manifest is None else dict(manifest)
+        self._file_map = None if manifest is None else dict(manifest)
         self._decode_size = decode_size or catalog.decode_size_for_scale(catalog.DEFAULT_SCALE)
         self._cache_limit = max(1, int(cache_limit))
         self._soft_edges = bool(soft_edges)
         self._active_name: str | None = None
-        self.manifest = catalog.load_character_manifest(self.character_id, self._asset_dir)
+        self.category_hints = catalog.load_character_manifest(self.character_id, self._asset_dir)
+        self.manifest = self.category_hints  # 兼容旧窗口/插件调用
         self.folder_map: dict[str, str] = {}
         self.folder_files: dict[str, list[str]] = {}
         self._sources: dict[str, MediaSource] = {}
@@ -190,7 +192,7 @@ class MovieLibrary(QObject):
         self._load_all()
 
     def _load_all(self) -> None:
-        if self._manifest is None:
+        if self._file_map is None:
             # 自动扫描该形象目录下的 webm 或 gif，支持不同角色有不同动作集
             if not self._asset_dir.is_dir():
                 raise FileNotFoundError(
@@ -209,22 +211,34 @@ class MovieLibrary(QObject):
                 self.media_type = 'webm'
             else:
                 self.media_type = 'gif'
-            self._manifest = {}
+            self._file_map = {}
             self.folder_map = {}
             self.folder_files = {}
             for f in files:
                 rel = f.relative_to(self._asset_dir)
                 name = f.stem
-                self._manifest[name] = rel.as_posix()
+                if name in self._file_map:
+                    previous = self._asset_dir / self._file_map[name]
+                    raise ValueError(
+                        f'动画名冲突：{name!r} 同时对应 {previous} 和 {f}'
+                    )
+                self._file_map[name] = rel.as_posix()
                 folder = rel.parts[0].lower() if len(rel.parts) > 1 else ''
                 self.folder_map[name] = folder
                 self.folder_files.setdefault(folder, []).append(name)
 
         missing: list[str] = []
         resolved: dict[str, Path] = {}
-        for name, fname in self._manifest.items():
-            path = self._asset_dir / fname
-            if not path.exists():
+        base = self._asset_dir.resolve()
+        for name, fname in self._file_map.items():
+            try:
+                path = (base / fname).resolve()
+            except (OSError, RuntimeError):
+                path = base / fname
+            if not path.is_relative_to(base):
+                missing.append(f"{name}: 非法素材路径 {fname}")
+                continue
+            if not path.is_file():
                 missing.append(f"{name}: {path}")
                 continue
             resolved[name] = path
@@ -236,27 +250,6 @@ class MovieLibrary(QObject):
             folder = self.folder_map.get(name, '')
             media_type = 'gif' if path.suffix.lower() == '.gif' else 'webm'
             self._sources[name] = MediaSource(name, path, media_type, folder)
-
-        # 只预热移动动画：移动逻辑在播放前就需要 duration；其他动画的 reader
-        # 会在首帧回调前补齐元数据。避免 91 个动作启动时全部创建播放器并跑 ffmpeg。
-        move_names = self.folder_files.get(catalog.DIR_MOVE, [])
-        move_clips = [self.movie(name) for name in move_names if name in self._sources]
-        if move_clips:
-            threading.Thread(
-                target=self._warm_meta_background,
-                args=(move_clips,),
-                daemon=True,
-            ).start()
-
-    @staticmethod
-    def _warm_meta_background(clips: list[object]) -> None:
-        try:
-            workers = min(3, len(clips))
-            with ThreadPoolExecutor(max_workers=workers) as ex:
-                list(ex.map(lambda clip: clip.warm_meta(), clips))
-        except Exception:
-            # 预热失败不致命，后续按需读取时会再尝试
-            pass
 
     def movie(self, name: str):
         """按需创建并缓存播放器；索引不存在时保持原有 KeyError 语义。"""

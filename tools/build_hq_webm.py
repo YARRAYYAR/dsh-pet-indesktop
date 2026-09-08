@@ -287,7 +287,7 @@ def _process_one(job: tuple[Path, Path, Path, str, bool]) -> str:
     output = out_dir / f'{name}.webm'
     if not force and output.exists() and output.stat().st_size > 100_000:
         probe = subprocess.run(
-            [ffmpeg.replace('ffmpeg', 'ffprobe'), '-v', 'error', '-show_entries',
+            [str(Path(ffmpeg).with_name('ffprobe')), '-v', 'error', '-show_entries',
              'stream=codec_name,width,height', '-of', 'csv=p=0', str(output)],
             capture_output=True, text=True,
         )
