@@ -6,6 +6,7 @@ from pet.interaction import classify_tap_burst, cursor_facing, edge_contacts
 from pet.hotkeys import GlobalHotkeys
 from pet.performance import LoadGovernor
 from pet.sound import DuckScream
+from unittest.mock import patch
 
 
 def test_catalog_integrity():
@@ -87,4 +88,26 @@ def test_personality_high_frequency_actions_use_top_40_percent():
         )
         frequent = catalog.personality_frequent_actions(personality, catalog.ACTS)
         assert frequent == candidates[:max(1, (len(candidates) * 2 + 4) // 5)]
-        assert len(frequent) == 10
+        assert len(frequent) == (len(catalog.ACTS) * 2 + 4) // 5
+
+
+def test_external_action_tags_drive_personality_without_known_names():
+    names = ['A', 'B', 'C', 'D', 'E']
+    tags = {'A': ['playful'], 'B': ['calm'], 'C': ['gentle'], 'D': ['active']}
+    assert catalog.personality_frequent_actions('cool', names, tags)[0] == 'B'
+    assert catalog.personality_frequent_actions('mischievous', names, tags)[0] == 'A'
+    assert len(catalog.personality_frequent_actions('gentle', names, tags)) == 2
+
+
+def test_mac_volume_and_silent_playback(tmp_path):
+    sound = DuckScream(tmp_path)
+    sound.volume = 25
+    with patch('pet.sound.sys.platform', 'darwin'), \
+            patch('pet.sound.shutil.which', return_value='/usr/bin/afplay'), \
+            patch('pet.sound.subprocess.Popen') as player:
+        sound.play()
+        assert player.call_args.args[0] == ['/usr/bin/afplay', '-v', '0.25', str(sound.path)]
+        sound.volume = 0
+        sound._last_play = 0
+        sound.play()
+        assert player.call_count == 1

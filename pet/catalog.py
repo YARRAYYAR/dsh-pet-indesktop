@@ -142,66 +142,52 @@ PERSONALITY_PRESETS = {
     },
 }
 
-# 每个性格的动作候选按“符合程度”从高到低排列。运行时只取当前角色
-# 实际存在的动作，并把候选池前 40% 作为高频动作；因此默认 25 个候选
-# 会产生 10 个高频动作。没有匹配动作的外部角色会回退到普通随机池。
-PERSONALITY_ACTION_PRIORITY = {
-    'cool': (
-        '原地小憩沉眠', '悠闲哼歌', '深度思考碎碎念', '照镜子',
-        '摇扇纳凉', '小提琴演奏', '写代码', '轻快记录', '下五子棋',
-        '哈欠连天', '晨间刷牙', '吃白饭', '吃早餐', '吃午餐',
-        '吃晚餐', '吃长寿面', '吃汤圆', '吃青团', '吃腊八粥',
-        '吃饺子', '吃年糕', '吃重阳糕', '中秋赏月吃月饼', '插茱萸赏菊',
-        '写福字',
-    ),
-    'quiet': (
-        '悠闲哼歌', '原地小憩沉眠', '哈欠连天', '深度思考碎碎念',
-        '轻快记录', '写代码', '写福字', '小提琴演奏', '摇扇纳凉',
-        '照镜子', '下五子棋', '插茱萸赏菊', '中秋赏月吃月饼',
-        '吃白饭', '吃晚餐', '吃午餐', '吃早餐', '晨间刷牙',
-        '吃长寿面', '吃汤圆', '吃腊八粥', '吃青团', '吃饺子',
-        '吃年糕', '吃重阳糕',
-    ),
-    'lively': (
-        '轻快摇摆舞', '可爱宅舞', '优雅女仆舞', '舞狮头', '放烟花',
-        '放风筝', '吹气球', '骑木马', '踢毽子', '三球抛接', '吹笛子',
-        '变鸽子', '抽陀螺', '玩水枪', '荡秋千', '堆雪人', '装点圣诞树',
-        '动物环绕', '蝴蝶蜜蜂环绕头顶开花', '放孔明灯', '放河灯',
-        '拆礼物', '收红包', '吃冰淇淋融化', '吃西瓜',
-    ),
-    'mischievous': (
-        '玩游戏气急败坏', '吃Token', '用鲸鱼尾巴拍打地面',
-        '原地重力下蹲压缩', '原地敲击桌面互动', '原地蹲下玩玩具汽车',
-        '是啊，吃什么', '偷吃零食被抓住', '大口吃零食', '被吓一跳',
-        '讨糖南瓜灯', '萌化小幽灵', '凭空生花', '原地跳跃抓碎头顶物品',
-        '扑克魔术', '吃大闸蟹', '吃糖葫芦', '原地专心玩魔方', '撸猫',
-        '被落叶淹没', '蓝鲸现世', '鲸鱼吐泡泡特效', '整体换装试色',
-        '原地小幅度360度旋转展示', '玩水枪',
-    ),
-    'gentle': (
-        '悠闲哼歌', '女仆屈膝礼仪', '写福字', '放河灯', '中秋赏月吃月饼',
-        '插茱萸赏菊', '蝴蝶蜜蜂环绕头顶开花', '小提琴演奏', '摇扇纳凉',
-        '轻快记录', '放孔明灯', '优雅女仆舞', '照镜子', '吹笛子',
-        '吃冰淇淋融化', '吃西瓜', '吃汤圆', '吃青团', '吃饺子',
-        '吃年糕', '吃长寿面', '吃早餐', '吃午餐', '吃晚餐', '吃白饭',
-    ),
-}
-
 PERSONALITY_ACTION_FREQUENT_RATIO = 0.40
 
 
-def personality_action_candidates(personality: str, names) -> list[str]:
+ACTION_TAG_KEYWORDS = {
+    'calm': ('小憩', '哼歌', '思考', '镜子', '摇扇', '提琴', '代码', '记录', '五子棋', '哈欠', 'sleep', 'calm'),
+    'social': ('礼仪', '挥手', '礼物', '红包', '动物', '撸猫', 'hello', 'wave'),
+    'playful': ('游戏', '玩', '魔', '气球', '陀螺', '水枪', '幽灵', 'Token', '拍打', '敲击', 'play'),
+    'active': ('舞', '跳', '风筝', '木马', '毽', '抛接', '秋千', 'dance', 'jump'),
+    'gentle': ('花', '灯', '月', '菊', '礼仪', '笛', '提琴', '哼歌', 'gentle'),
+    'food': ('吃', '早餐', '午餐', '晚餐', 'food', 'eat'),
+}
+PERSONALITY_TAG_WEIGHTS = {
+    'cool': {'calm': 6, 'food': 1, 'active': -3, 'playful': -3},
+    'quiet': {'calm': 5, 'gentle': 2, 'active': -3, 'playful': -2},
+    'lively': {'active': 6, 'social': 3, 'playful': 2},
+    'mischievous': {'playful': 6, 'active': 2, 'calm': -2},
+    'gentle': {'gentle': 6, 'social': 3, 'calm': 2},
+}
+PERSONALITY_DESCRIPTIONS = {
+    'cool': '更多待机，偏爱安静动作，很少主动问候。',
+    'quiet': '安静陪伴，偏爱休息、思考和轻柔动作。',
+    'lively': '动作丰富，喜欢跳舞、运动和主动问候。',
+    'mischievous': '偏爱玩耍和恶作剧，互动更频繁。',
+    'gentle': '偏爱轻柔、友好的动作，偶尔主动问候。',
+}
+
+
+def action_tags(name: str, metadata=None) -> tuple[str, ...]:
+    explicit = metadata.get(name) if isinstance(metadata, dict) else None
+    if isinstance(explicit, list):
+        return tuple(tag for tag in explicit if tag in ACTION_TAG_KEYWORDS)
+    return tuple(tag for tag, words in ACTION_TAG_KEYWORDS.items()
+                 if any(word.lower() in name.lower() for word in words))
+
+
+def personality_action_candidates(personality: str, names, metadata=None) -> list[str]:
     """返回当前角色中按性格符合度排序的动作候选。"""
-    available = set(names)
-    return [
-        name for name in PERSONALITY_ACTION_PRIORITY.get(personality, ())
-        if name in available
-    ]
+    weights = PERSONALITY_TAG_WEIGHTS.get(personality, {})
+    return sorted(dict.fromkeys(names), key=lambda name: -sum(
+        weights.get(tag, 0) for tag in action_tags(name, metadata)
+    ))
 
 
-def personality_frequent_actions(personality: str, names) -> list[str]:
+def personality_frequent_actions(personality: str, names, metadata=None) -> list[str]:
     """取符合度候选的前 40%，作为切换性格后的高频动作池。"""
-    candidates = personality_action_candidates(personality, names)
+    candidates = personality_action_candidates(personality, names, metadata)
     if not candidates:
         return []
     count = max(1, math.ceil(len(candidates) * PERSONALITY_ACTION_FREQUENT_RATIO))

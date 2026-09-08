@@ -31,6 +31,7 @@ from .interaction import classify_tap_burst, cursor_facing, edge_contacts
 from .library import MovieLibrary
 from .performance import LoadGovernor, system_load_ratio
 from .sound import DuckScream
+from .settings_dialog import SettingsDialog
 from .webm_clip import frame_canvas_image
 
 
@@ -147,8 +148,12 @@ class PetWindow(QWidget):
         )
         self._duck_sound = DuckScream(config.dir)
         self._duck_sound.enabled = self.sound_enabled
+        self._duck_sound.volume = int(config.get('volume', 80))
+        self._recent_actions = []
+        manifest = getattr(lib, 'manifest', None) or {}
+        self._action_tags = manifest.get('action_tags', {})
         self._personality_frequent_acts = catalog.personality_frequent_actions(
-            self.personality, self.acts
+            self.personality, self.acts, self._action_tags
         )
 
         # ---- 窗口属性：无边框 + 透明 + 不进任务栏；置顶可配置 ----
@@ -773,11 +778,18 @@ class PetWindow(QWidget):
             return self._pick_available(self.acts, exclude=exclude)
         frequent = self._personality_frequent_acts
         profile = catalog.PERSONALITY_PRESETS[self.personality]
+        available = [n for n in self.acts if n != exclude and n not in self._recent_actions]
+        if not available:
+            available = [n for n in self.acts if n != exclude] or self.acts
+        preferred = [n for n in frequent if n in available]
         if frequent and random.random() < float(profile['action_focus']):
-            picked = self._pick(frequent, exclude=exclude)
-            if picked is not None:
-                return picked
-        return self._pick(self.acts, exclude=exclude)
+            pool = preferred or available
+        else:
+            pool = available
+        picked = self._pick(pool)
+        if picked:
+            self._recent_actions = (self._recent_actions + [picked])[-3:]
+        return picked
 
     def _save_action_names(self, key: str, names: list[str]) -> None:
         self.cfg.set(key, list(names))
@@ -896,8 +908,9 @@ class PetWindow(QWidget):
             return
         self.personality = personality
         self._personality_frequent_acts = catalog.personality_frequent_actions(
-            personality, self.acts
+            personality, self.acts, self._action_tags
         )
+        self._recent_actions.clear()
         self.cfg.set('personality', personality)
         self.cfg.save()
         self._schedule_next_greeting()
@@ -914,7 +927,21 @@ class PetWindow(QWidget):
             action.triggered.connect(
                 lambda checked=False, key=key: self.set_personality(key)
             )
+            menu.aboutToShow.connect(
+                lambda action=action, key=key: action.setChecked(self.personality == key)
+            )
         return menu
+
+    def open_settings(self) -> None:
+        dialog = SettingsDialog(self)
+        dialog.exec()
+
+    def set_volume(self, value: int) -> None:
+        self._duck_sound.volume = max(0, min(100, int(value)))
+        self.cfg.set('volume', self._duck_sound.volume)
+        self.cfg.save()
+        if self._duck_sound.volume == 0:
+            self._duck_sound.close()
 
     def _special_animation(self, preferred: str, fallback: list[str]) -> str | None:
         """优先使用有明确语义的动作，没有时回退到当前角色已有动作。"""
@@ -1255,6 +1282,7 @@ class PetWindow(QWidget):
         if not self._is_in_interactive_area(event.pos()):
             return
         menu = QMenu(self)
+        menu.addAction('设置与动作预览…', self.open_settings)
 
         if self.idles:
             m_idle = menu.addMenu('动画 · 待机')
@@ -1526,6 +1554,7 @@ class PetWindow(QWidget):
         self._physics_timer.stop()
         self._idle_pause_timer.stop()
         self._resource_timer.stop()
+        self._action_switch_timer.stop()
         self._unbind_movie()
         if self.movie is not None:
             self.movie.stop()

@@ -20,12 +20,13 @@ class DuckScream:
     def __init__(self, output_dir: Path) -> None:
         self.path = Path(output_dir) / "sounds" / "screaming-duck.wav"
         self.enabled = True
+        self.volume = 80
         self._process: subprocess.Popen | None = None
         self._warned = False
         self._last_play = 0.0
 
     def play(self) -> None:
-        if not self.enabled:
+        if not self.enabled or self.volume <= 0:
             return
         now = time.monotonic()
         if now - self._last_play < 0.35:
@@ -41,7 +42,7 @@ class DuckScream:
                 if self._process is not None and self._process.poll() is None:
                     self._process.terminate()
                 self._process = subprocess.Popen(
-                    [player, str(self.path)],
+                    [player, '-v', str(self.volume / 100.0), str(self.path)],
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL,
                 )

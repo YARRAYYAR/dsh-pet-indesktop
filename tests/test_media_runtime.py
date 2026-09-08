@@ -22,6 +22,7 @@ from PySide6.QtWidgets import QApplication  # noqa: E402
 from pet.config import Config  # noqa: E402
 from pet.library import MovieLibrary  # noqa: E402
 from pet.window import PetWindow  # noqa: E402
+from pet.settings_dialog import SettingsDialog  # noqa: E402
 from pet.webm_clip import clear_alpha_floor, trim_transparent_frame  # noqa: E402
 
 
@@ -124,6 +125,39 @@ class _RecreatingLibrary(_FrameOnlyLibrary):
 
 
 class MediaRuntimeTests(unittest.TestCase):
+    def test_settings_cancel_save_and_defaults(self) -> None:
+        image = QImage(100, 80, QImage.Format.Format_RGBA8888)
+        image.fill(QColor(255, 255, 255, 255))
+        lib = _FrameOnlyLibrary(_FrameOnlyClip(trim_transparent_frame(image)))
+        with tempfile.TemporaryDirectory() as tmp:
+            config = Config(base=tmp)
+            window = PetWindow(lib, config)
+            try:
+                dialog = SettingsDialog(window)
+                dialog.volume.setValue(12)
+                dialog.reject()
+                self.assertEqual(window._duck_sound.volume, 80)
+                dialog = SettingsDialog(window)
+                dialog.volume.setValue(24)
+                dialog.size.setValue(640)
+                dialog.delay.setValue(7)
+                dialog.personality.setCurrentIndex(dialog.personality.findData('cool'))
+                dialog.save()
+                loaded = Config(base=tmp)
+                self.assertEqual(loaded.get('volume'), 24)
+                self.assertEqual(loaded.get('personality'), 'cool')
+                self.assertEqual(loaded.get('action_switch_delay_ms'), 7000)
+                self.assertEqual(window.scale, 1.0)
+                dialog = SettingsDialog(window)
+                dialog.reset_fields()
+                self.assertEqual(window._duck_sound.volume, 24)
+                dialog.save()
+                self.assertEqual(window._duck_sound.volume, 80)
+                self.assertEqual(window.personality, 'lively')
+            finally:
+                window.shutdown()
+                window.close()
+
     def test_alpha_cleanup_preserves_all_non_floor_levels(self) -> None:
         image = QImage(256, 1, QImage.Format.Format_RGBA8888)
         for value in range(256):

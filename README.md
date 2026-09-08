@@ -912,3 +912,16 @@ python -m pet
 - 本项目的 Python 代码为独立实现，采用 **MIT** 许可。
 - 动画素材版权与许可归属原项目 [dsh-pet](https://github.com/PC2005-cloud/dsh-pet)（MIT）。
 - 再次感谢 [PC2005-cloud/dsh-pet](https://github.com/PC2005-cloud/dsh-pet) 原作者。
+# r4 设置与动作偏好
+
+托盘或桌宠右键 →「设置与动作预览」：调整音量（macOS）、性格、画布宽度、动作结束后的等待时间。保存才应用设置；取消不保存。恢复默认只重置本页字段，点击保存生效，保留角色、收藏和位置。动作预览会立即播放，并恢复隐藏或暂停的桌宠。
+
+五种性格按动作标签评分，取全部随机动作中排名前 40% 为高频池；最近三个自动动作尽量不重复。外部角色可在 `manifest.json` 添加：
+
+```json
+{"action_tags": {"自定义动作名": ["calm", "gentle"]}}
+```
+
+支持 `calm`、`social`、`playful`、`active`、`gentle`、`food`。显式标签优先；未标注时按文件名关键词分类。仅加载/切换性格时排序，无逐帧评分。隐藏时关闭媒体 reader，显示时恢复。
+
+macOS r4 ZIP 解压后运行 `install-r4.command`。自检并确认应用进程启动后，脚本将标准名称 ZIP 和解压目录移至废纸篓；重命名的下载目录保留。当前构建未做 Developer ID 公证。

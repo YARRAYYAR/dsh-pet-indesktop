@@ -213,6 +213,7 @@ class PetApp:
         tray = QSystemTrayIcon(QIcon(win.icon_pixmap()))
 
         menu = QMenu()
+        menu.addAction('设置与动作预览…', win.open_settings)
         menu.addAction('显示 / 隐藏', self._toggle_visible)
         pause = menu.addAction('暂停 / 继续')
         pause.setCheckable(True)

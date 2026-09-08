@@ -51,6 +51,7 @@ class Config:
             'drag_physics': False,         # 拖动物理效果
             'soft_edges': True,             # 兼容旧配置：清理精确 Alpha=1 底噪
             'sound_enabled': True,          # 全部音效开关
+            'volume': 80,
             'duck_sound': True,             # 旧配置兼容字段
             'proactive_greetings': True,    # 偶尔主动播放挥手问候
             'favorites': [],                # 用户收藏的动画名
@@ -102,6 +103,11 @@ class Config:
         except (KeyError, TypeError, ValueError):
             delay = 0
         self.data['action_switch_delay_ms'] = max(0, min(60_000, delay))
+        try:
+            volume = int(self.data['volume'])
+        except (TypeError, ValueError, OverflowError):
+            volume = 80
+        self.data['volume'] = max(0, min(100, volume))
 
         for key in (
             'on_top', 'no_move', 'mouse_through', 'drag_physics',
