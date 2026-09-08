@@ -149,12 +149,15 @@ def frame_canvas_image(frame: DecodedFrame) -> QImage:
 # 在保留短时调度缓冲的同时，把队列峰值控制在约 7 MiB。
 FRAME_QUEUE_SIZE = 2
 
-# 2560×1440 母版由 ffmpeg 在解码进程内用 Lanczos 缩到 Retina 真正需要的
-# 最大 backing size；较小的外部角色不会被反向放大。
+# 在解码进程内先预乘 Alpha，再面积采样，避免透明背景 RGB 混入边缘。
+# 16 位中间格式减小低 Alpha 的量化损失；输出仍是普通 8 位 RGBA。
+# 面积采样不产生锐化振铃，较小的外部角色不会被反向放大。
 def _decode_filter(width: int, height: int) -> str:
     return (
+        "format=gbrap16le,premultiply=inplace=1,"
         "scale=w='min(%d,iw)':h='min(%d,ih)':"
-        "force_original_aspect_ratio=decrease:force_divisible_by=2:flags=lanczos"
+        "force_original_aspect_ratio=decrease:force_divisible_by=2:flags=area,"
+        "unpremultiply=inplace=1,format=rgba"
     ) % (width, height)
 
 # 进程内元数据缓存：避免反复切换角色时重复调用 count_frames_and_secs
