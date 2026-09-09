@@ -27,6 +27,7 @@ from PySide6.QtGui import (
     QGuiApplication,
     QImage,
     QPainter,
+    QPainterPath,
     QPen,
     QPixmap,
     QRegion,
@@ -305,7 +306,7 @@ class PetWindow(QWidget):
     def _apply_scale(self) -> None:
         """按逻辑画布缩放窗口；素材分辨率不会改变桌宠大小。"""
         self._w = max(1, int(round(catalog.CANVAS_W * self.scale)))
-        self._bubble_h = int(round(292 * self.scale))
+        self._bubble_h = int(round(230 * self.scale))
         canvas_height = int(round((catalog.CANVAS_H + catalog.PAD) * self.scale))
         self._h = max(1, canvas_height + self._bubble_h)
         self.setFixedSize(self._w, self._h)
@@ -678,17 +679,37 @@ class PetWindow(QWidget):
         """返回与当前桌宠大小联动的气泡区域。"""
         s = self.scale
         margin = 14.0 * s
-        width = min(self._w - 2 * margin, 472.0 * s)
-        height = 220.0 * s
-        return QRectF(margin, 12.0 * s, max(1.0, width), height)
+        width = min(self._w - 2 * margin, 360.0 * s)
+        height = width * 0.63
+        return QRectF((self._w - width) / 2.0 - 35.0 * s,
+                      12.0 * s, max(1.0, width), height)
+
+    @staticmethod
+    def _bubble_body_path(rect: QRectF) -> QPainterPath:
+        """参考轮廓：饱满椭圆，底部连着圆润的小凸泡。"""
+        def point(x: float, y: float) -> QPointF:
+            return QPointF(rect.left() + x * rect.width(),
+                           rect.top() + y * rect.height())
+
+        path = QPainterPath(point(0.5, 0.0))
+        path.cubicTo(point(0.776, 0.0), point(1.0, 0.224), point(1.0, 0.52))
+        path.cubicTo(point(1.0, 0.817), point(0.776, 1.0), point(0.5, 1.0))
+        path.cubicTo(point(0.475, 1.0), point(0.456, 0.998), point(0.445, 0.997))
+        path.cubicTo(point(0.430, 0.997), point(0.447, 1.040), point(0.390, 1.040))
+        path.cubicTo(point(0.350, 1.040), point(0.312, 1.019), point(0.310, 0.975))
+        path.cubicTo(point(0.307, 0.959), point(0.305, 0.960), point(0.287, 0.953))
+        path.cubicTo(point(0.115, 0.893), point(0.0, 0.735), point(0.0, 0.52))
+        path.cubicTo(point(0.0, 0.224), point(0.224, 0.0), point(0.5, 0.0))
+        path.closeSubpath()
+        return path
 
     def _bubble_tail_rects(self, rect: QRectF) -> tuple[QRectF, QRectF]:
-        s = self.scale
+        unit = rect.width()
         return (
-            QRectF(rect.left() + rect.width() * 0.27, rect.bottom() + 8 * s,
-                   28 * s, 20 * s),
-            QRectF(rect.left() + rect.width() * 0.36, rect.bottom() + 31 * s,
-                   18 * s, 14 * s),
+            QRectF(rect.left() + unit * 0.33, rect.bottom() + unit * 0.060,
+                   unit * 0.098, unit * 0.062),
+            QRectF(rect.left() + unit * 0.45, rect.bottom() + unit * 0.129,
+                   unit * 0.070, unit * 0.048),
         )
 
     def _bubble_hit_test(self, point: QPoint) -> bool:
@@ -709,9 +730,9 @@ class PetWindow(QWidget):
             return dx * dx + dy * dy <= 1.0
 
         main_progress = max(0.0, min(1.0, (self._bubble_progress - 0.16) / 0.84))
-        if main_progress > 0.0 and in_ellipse(
+        if main_progress > 0.0 and self._bubble_body_path(
             self._scaled_bubble_rect(rect, main_progress)
-        ):
+        ).contains(point_f):
             return True
         tail_rects = self._bubble_tail_rects(rect)
         tail_progress = (
@@ -745,14 +766,13 @@ class PetWindow(QWidget):
     def _paint_bubble(self, painter: QPainter) -> None:
         """绘制无文字的白底深蓝描边气泡，并按阶段渐进展开。"""
         rect = self._bubble_geometry()
-        s = self.scale
         progress = self._bubble_progress
         if progress <= 0.0:
             return
 
         painter.save()
         painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
-        painter.setPen(QPen(QColor('#203170'), max(2.0, 7.0 * s)))
+        painter.setPen(QPen(QColor('#1e286c'), max(2.0, rect.width() * 0.024)))
         painter.setBrush(QColor('#ffffff'))
 
         # 由靠近宠物的小尾泡开始，再展开中尾泡和主体，接近参考图的出现顺序。
@@ -767,7 +787,9 @@ class PetWindow(QWidget):
 
         main_progress = max(0.0, min(1.0, (progress - 0.16) / 0.84))
         if main_progress > 0.0:
-            painter.drawEllipse(self._scaled_bubble_rect(rect, main_progress))
+            painter.drawPath(self._bubble_body_path(
+                self._scaled_bubble_rect(rect, main_progress)
+            ))
         painter.restore()
 
     def _start_squash(self) -> None:
