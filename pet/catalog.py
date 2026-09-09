@@ -12,15 +12,40 @@ assets/thumb/*.webm（640×360 透明 webm，VP9 alpha）。
 
 import os
 import sys
-
 import json
-
+import math
+import re
 from pathlib import Path
 
 # ---------------------------------------------------------------- 画布几何
-# webm 尺寸（16:9，640×360 高清素材）
+# 逻辑画布尺寸。素材可以高于这个尺寸；窗口布局、移动和命中区域始终
+# 使用逻辑像素，避免更换 1080p/1440p 素材时连带修改交互参数。
 CANVAS_W = 640
 CANVAS_H = 360
+
+# macOS Retina 最大按 2× backing pixels 渲染。2560×1440 超分母版在备份/
+# 发布素材中保留，App 使用由母版下采样的 1280×720 透明运行代理；默认档位
+# 还会按显示尺寸继续有界解码，避免无效 RGBA 像素进入 Python。
+RENDER_DPR_CAP = 2.0
+DECODE_MAX_W = int(CANVAS_W * RENDER_DPR_CAP)
+DECODE_MAX_H = int(CANVAS_H * RENDER_DPR_CAP)
+
+
+def decode_size_for_scale(
+    scale: float,
+    dpr: float = RENDER_DPR_CAP,
+) -> tuple[int, int]:
+    """按显示缩放和实际屏幕 DPR 返回所需解码尺寸（偶数像素）。"""
+    dpr = max(1.0, min(RENDER_DPR_CAP, float(dpr)))
+    width = min(
+        DECODE_MAX_W,
+        (math.ceil(CANVAS_W * max(0.1, scale) * dpr) + 1) // 2 * 2,
+    )
+    height = min(
+        DECODE_MAX_H,
+        (math.ceil(CANVAS_H * max(0.1, scale) * dpr) + 1) // 2 * 2,
+    )
+    return max(2, width), max(2, height)
 
 # 脚底在画布内的 y 坐标（与母版一致：640×360 画布脚底 y=330）
 FEET_Y = 330 / 360 * CANVAS_H  # = 330
@@ -42,9 +67,138 @@ MOVE_MAX_PX = 240
 MOVE_MARGIN = 20    # 屏幕边缘安全边距
 MOVE_LEAD_SEC = 2   # 动画开头 2s 准备动作，位置不动
 MOVE_TAIL_SEC = 2   # 动画结尾 2s 收尾动作，位置不动
+MOVE_FALLBACK_DURATION_SEC = 6.0  # 素材元数据未知时避免阻塞 UI 的保守估计
 
 # 拖拽判定阈值（像素，缩放前逻辑像素）
 DRAG_THRESHOLD = 5
+
+# 交互反馈参数：短延迟用于区分单击/双击，其他反馈保持低频且可打断。
+TAP_BURST_WINDOW_MS = 320
+LONG_PRESS_MS = 520
+CURSOR_POLL_MS = 120
+CURSOR_REACTION_RADIUS = 280
+CURSOR_DEAD_ZONE = 16
+PROACTIVE_GREETING_MIN_MS = 45_000
+PROACTIVE_GREETING_MAX_MS = 90_000
+EDGE_FEEDBACK_MARGIN = 18
+EDGE_BOUNCE_SPEED = 300.0
+
+# 行为预设：概率总和为 1；问候时间用毫秒，避免在窗口层散落魔法数字。
+PERSONALITY_PRESETS = {
+    'random': {
+        'label': '原版随机', 'idle': 0.30, 'turn': 0.10, 'acts': 0.40,
+        'move': 0.20, 'greeting_min_ms': 45_000, 'greeting_max_ms': 90_000,
+        'greeting_chance': 0.85, 'action_focus': 0.0,
+    },
+    'cool': {
+        'label': '高冷',
+        'idle': 0.82,
+        'turn': 0.10,
+        'acts': 0.08,
+        'move': 0.00,
+        'greeting_min_ms': 240_000,
+        'greeting_max_ms': 480_000,
+        'greeting_chance': 0.20,
+        'action_focus': 0.90,
+    },
+    'quiet': {
+        'label': '安静',
+        'idle': 0.70,
+        'turn': 0.10,
+        'acts': 0.20,
+        'move': 0.00,
+        'greeting_min_ms': 120_000,
+        'greeting_max_ms': 240_000,
+        'greeting_chance': 0.45,
+        'action_focus': 0.78,
+    },
+    'lively': {
+        'label': '活泼',
+        'idle': 0.30,
+        'turn': 0.10,
+        'acts': 0.40,
+        'move': 0.20,
+        'greeting_min_ms': 45_000,
+        'greeting_max_ms': 90_000,
+        'greeting_chance': 0.85,
+        'action_focus': 0.72,
+    },
+    'mischievous': {
+        'label': '调皮',
+        'idle': 0.15,
+        'turn': 0.15,
+        'acts': 0.50,
+        'move': 0.20,
+        'greeting_min_ms': 20_000,
+        'greeting_max_ms': 45_000,
+        'greeting_chance': 1.00,
+        'action_focus': 0.76,
+    },
+    'gentle': {
+        'label': '温柔',
+        'idle': 0.52,
+        'turn': 0.15,
+        'acts': 0.25,
+        'move': 0.08,
+        'greeting_min_ms': 90_000,
+        'greeting_max_ms': 180_000,
+        'greeting_chance': 0.65,
+        'action_focus': 0.80,
+    },
+}
+
+PERSONALITY_ACTION_FREQUENT_RATIO = 0.40
+
+
+ACTION_TAG_KEYWORDS = {
+    'calm': ('小憩', '哼歌', '思考', '镜子', '摇扇', '提琴', '代码', '记录', '五子棋', '哈欠', 'sleep', 'calm'),
+    'social': ('礼仪', '挥手', '礼物', '红包', '动物', '撸猫', 'hello', 'wave'),
+    'playful': ('游戏', '玩', '魔', '气球', '陀螺', '水枪', '幽灵', 'Token', '拍打', '敲击', 'play'),
+    'active': ('舞', '跳', '风筝', '木马', '毽', '抛接', '秋千', 'dance', 'jump'),
+    'gentle': ('花', '灯', '月', '菊', '礼仪', '笛', '提琴', '哼歌', 'gentle'),
+    'food': ('吃', '早餐', '午餐', '晚餐', 'food', 'eat'),
+}
+PERSONALITY_TAG_WEIGHTS = {
+    'cool': {'calm': 6, 'food': 1, 'active': -3, 'playful': -3},
+    'quiet': {'calm': 5, 'gentle': 2, 'active': -3, 'playful': -2},
+    'lively': {'active': 6, 'social': 3, 'playful': 2},
+    'mischievous': {'playful': 6, 'active': 2, 'calm': -2},
+    'gentle': {'gentle': 6, 'social': 3, 'calm': 2},
+}
+PERSONALITY_DESCRIPTIONS = {
+    'random': '沿用原版分类概率：待机 30%、转向 10%、随机动作 40%、移动 20%。随机动作池内等概率，允许重复；自定义间隔和省资源模式优先。',
+    'cool': '更多待机，偏爱安静动作，很少主动问候。',
+    'quiet': '安静陪伴，偏爱休息、思考和轻柔动作。',
+    'lively': '动作丰富，喜欢跳舞、运动和主动问候。',
+    'mischievous': '偏爱玩耍和恶作剧，互动更频繁。',
+    'gentle': '偏爱轻柔、友好的动作，偶尔主动问候。',
+}
+
+def action_tags(name: str, metadata=None) -> tuple[str, ...]:
+    explicit = metadata.get(name) if isinstance(metadata, dict) else None
+    if isinstance(explicit, list):
+        return tuple(tag for tag in explicit if tag in ACTION_TAG_KEYWORDS)
+    return tuple(tag for tag, words in ACTION_TAG_KEYWORDS.items()
+                 if any(word.lower() in name.lower() for word in words))
+
+
+def personality_action_candidates(personality: str, names, metadata=None) -> list[str]:
+    """返回当前角色中按性格符合度排序的动作候选。"""
+    weights = PERSONALITY_TAG_WEIGHTS.get(personality, {})
+    return sorted(dict.fromkeys(names), key=lambda name: -sum(
+        weights.get(tag, 0) for tag in action_tags(name, metadata)
+    ))
+
+
+def personality_frequent_actions(personality: str, names, metadata=None) -> list[str]:
+    """取符合度候选的前 40%，作为切换性格后的高频动作池。"""
+    if personality == 'random':
+        return []
+    candidates = personality_action_candidates(personality, names, metadata)
+    if not candidates:
+        return []
+    count = max(1, math.ceil(len(candidates) * PERSONALITY_ACTION_FREQUENT_RATIO))
+    return candidates[:count]
 
 # 默认显示缩放与右下角边距
 # 目标显示宽度 ≈ 462px（与 DSH web 端一致）→ 462 / 640 ≈ 0.72
@@ -54,10 +208,22 @@ CORNER_MARGIN = 24  # 距屏幕右缘的默认间距
 # 可选的显示缩放档位（相对 640 宽：320px / 462px / 544px / 640px）
 SCALE_STEPS = (0.5, 0.72, 0.85, 1.0)
 
+# 系统繁忙时减少主动动作与解码频率。负载判断使用迟滞，避免频繁切换。
+BUSY_IDLE_PROBABILITY = 0.82
+BUSY_TURN_PROBABILITY = 0.88
+BUSY_IDLE_SPEED_FACTOR = 0.70
+BUSY_IDLE_PAUSE_MS = 1800
+# 窗口 mask 只负责鼠标命中范围，不参与透明画面合成；每 3 帧同步一次
+# 足够跟随动画，同时避免每帧重复构造 QBitmap/QRegion。
+MASK_FRAME_INTERVAL = 3
+BUSY_MASK_FRAME_INTERVAL = 3
+LOAD_SAMPLE_MS = 5000
+
 # ---------------------------------------------------------------- 多形象
 # 当前内置形象与未来扩展形象 ID（目录名建议使用稳定 ASCII）
 DEFAULT_CHARACTER = 'shenshen'
 CHARACTERS = ('shenshen',)
+CHARACTER_ID_RE = re.compile(r'^[A-Za-z0-9_-]{1,64}$')
 MANIFEST_FILENAME = 'manifest.json'
 # videos 下的分类子目录
 DIR_IDLE = 'idle'
@@ -70,59 +236,15 @@ DIR_RANDOM = 'random'
 
 
 # ---------------------------------------------------------------- 动画映射
-# 中文名 → webm 文件名（主路径，文件名与中文名一致）
+# 内置动作以实际素材目录为事实来源。这样新增原作动作时不必再手工维护
+# 一份容易漏项的 90+ 行文件名清单；值保留相对 videos/ 的分类路径。
+_DEFAULT_VIDEO_ROOT = (
+    Path(__file__).resolve().parent.parent
+    / 'assets' / 'characters' / DEFAULT_CHARACTER / 'videos'
+)
 ANIM_FILES: dict[str, str] = {
-    '待机呼吸休闲': '待机呼吸休闲.webm',
-    '东张西望': '东张西望.webm',
-    '螃蟹走路': '螃蟹走路.webm',
-    '原地漂浮踏步': '原地漂浮踏步.webm',
-    '原地左转奔跑': '原地左转奔跑.webm',
-    '点击回应 - 开心跃动': '点击回应 - 开心跃动.webm',
-    '点击回应 - 害羞惊讶': '点击回应 - 害羞惊讶.webm',
-    '点击回应 - 傲娇生气（侧身展示）': '点击回应 - 傲娇生气（侧身展示）.webm',
-    '被鼠标拖拽悬空反馈': '被鼠标拖拽悬空反馈.webm',
-    '悠闲哼歌': '悠闲哼歌.webm',
-    '超大伸懒腰': '超大伸懒腰.webm',
-    '原地专心玩魔方': '原地专心玩魔方.webm',
-    '原地敲击桌面互动': '原地敲击桌面互动.webm',
-    '原地重力下蹲压缩': '原地重力下蹲压缩.webm',
-    '哈欠连天': '哈欠连天.webm',
-    '原地小憩沉眠': '原地小憩沉眠.webm',
-    '原地蹲下玩玩具汽车': '原地蹲下玩玩具汽车.webm',
-    '鲸鱼吐泡泡特效': '鲸鱼吐泡泡特效.webm',
-    '女仆屈膝礼仪': '女仆屈膝礼仪.webm',
-    '被吓一跳（炸毛）': '被吓一跳（炸毛）.webm',
-    '原地跳跃抓碎头顶物品': '原地跳跃抓碎头顶物品.webm',
-    '小幅度原地 360 度旋转展示': '小幅度原地 360 度旋转展示.webm',
-    '偷吃零食被抓住': '偷吃零食被抓住.webm',
-    '玩游戏气急败坏': '玩游戏气急败坏.webm',
-    '用鲸鱼尾巴拍打地面': '用鲸鱼尾巴拍打地面.webm',
-    '打瞌睡被惊醒': '打瞌睡被惊醒.webm',
-    '玩水枪': '玩水枪.webm',
-    '小提琴演奏': '小提琴演奏.webm',
-    '蓝鲸现世': '蓝鲸现世.webm',
-    '吃白饭': '吃白饭.webm',
-    '照镜子': '照镜子.webm',
-    '优雅女仆舞': '优雅女仆舞.webm',
-    '轻快摇摆舞': '轻快摇摆舞.webm',
-    '可爱宅舞': '可爱宅舞.webm',
-    '整体换装试色': '整体换装试色.webm',
-    '大口吃零食': '大口吃零食.webm',
-    '吹气球': '吹气球.webm',
-    '动物环绕': '动物环绕.webm',
-    '深度思考碎碎念': '深度思考碎碎念.webm',
-    '轻快记录': '轻快记录.webm',
-    '写代码': '写代码.webm',
-    '吃Token': '吃Token.webm',
-    '吃早餐': '吃早餐.webm',
-    '吃午餐': '吃午餐.webm',
-    '吃晚餐': '吃晚餐.webm',
-    '放风筝': '放风筝.webm',
-    '摇扇纳凉': '摇扇纳凉.webm',
-    '吃冰淇淋融化': '吃冰淇淋融化.webm',
-    '被落叶淹没': '被落叶淹没.webm',
-    '中秋赏月吃月饼': '中秋赏月吃月饼.webm',
-    '堆雪人': '堆雪人.webm',
+    path.stem: path.relative_to(_DEFAULT_VIDEO_ROOT).as_posix()
+    for path in sorted(_DEFAULT_VIDEO_ROOT.rglob('*.webm'))
 }
 
 # 兼容旧字段名：webm 文件名映射
@@ -132,12 +254,18 @@ WEBM_FILES: dict[str, str] = ANIM_FILES
 IDLE = '待机呼吸休闲'
 TURN = '东张西望'
 MOVES = ['螃蟹走路', '原地漂浮踏步', '原地左转奔跑']
-CLICKS = ['点击回应 - 开心跃动', '点击回应 - 害羞惊讶', '点击回应 - 傲娇生气（侧身展示）']
+CLICKS = [
+    '点击回应-开心跃动',
+    '点击回应-害羞惊讶',
+    '点击回应-傲娇生气',
+    '点击回应-元气挥手',
+    '点击回应-挠痒咯咯笑',
+]
 DRAG = '被鼠标拖拽悬空反馈'
 ACTS = [n for n in ANIM_FILES if n not in (IDLE, TURN, DRAG, *MOVES, *CLICKS)]
 
-assert len(ANIM_FILES) == 51, f"动画总数应为 51，实际 {len(ANIM_FILES)}"
-assert len(ACTS) == 42, f"动作池应为 42，实际 {len(ACTS)}"
+# 不在导入阶段锁死动作数量。默认形象当前是 91 段，但后续新增动作或
+# 外部角色不应因为 catalog import 失败；当前素材完整性由测试/打包验收负责。
 
 
 def assets_dir() -> Path:
@@ -163,6 +291,10 @@ def characters_gif_dir() -> Path:
 def character_gif_video_dir(character_id: str) -> Path:
     """内置某个形象的 GIF 目录：assets/characters_gif/<id>/videos。"""
     return characters_gif_dir() / character_id / 'videos'
+
+
+def is_valid_character_id(character_id: str) -> bool:
+    return isinstance(character_id, str) and bool(CHARACTER_ID_RE.fullmatch(character_id))
 
 
 def external_character_dirs() -> list[Path]:
@@ -191,9 +323,13 @@ def external_character_dirs() -> list[Path]:
 
 def resolve_character_video_dir(character_id: str) -> Path:
     """按 外部 > 内置(webm) > 内置(gif) 返回形象视频目录；都不存在时回退 webm 路径，不报错。"""
+    if not is_valid_character_id(character_id):
+        character_id = DEFAULT_CHARACTER
     for root in external_character_dirs():
         candidate = root / character_id / 'videos'
-        if candidate.is_dir():
+        if candidate.is_dir() and (
+            any(candidate.rglob('*.webm')) or any(candidate.rglob('*.gif'))
+        ):
             return candidate
     webm_dir_path = character_video_dir(character_id)
     if webm_dir_path.is_dir() and any(webm_dir_path.rglob('*.webm')):
@@ -224,7 +360,7 @@ def list_available_characters() -> list[str]:
                 any(video_dir.rglob('*.webm')) or any(video_dir.rglob('*.gif'))
             ):
                 cid = child.name
-                if cid not in seen:
+                if is_valid_character_id(cid) and cid not in seen:
                     seen.add(cid)
                     ids.append(cid)
     return ids
@@ -314,8 +450,9 @@ def build_categories(names, manifest: dict | None = None, folder_map: dict | Non
         ├── drag/     # 拖拽（可选）
         └── random/   # 随机动作
     """
-    names = set(names)
-    if not names:
+    ordered_names = list(dict.fromkeys(names))
+    names = set(ordered_names)
+    if not ordered_names:
         return {
             'idle': None, 'turn': None,
             'idles': [], 'turns': [],
@@ -332,7 +469,7 @@ def build_categories(names, manifest: dict | None = None, folder_map: dict | Non
         by_folder: dict[str, list[str]] = {k: list(v) for k, v in folder_files.items()}
     elif folder_map:
         by_folder: dict[str, list[str]] = {}
-        for name in names:
+        for name in ordered_names:
             by_folder.setdefault(folder_map.get(name, ''), []).append(name)
     else:
         by_folder = {}
@@ -384,32 +521,32 @@ def build_categories(names, manifest: dict | None = None, folder_map: dict | Non
     # 关键词兜底
     if not idles:
         m = IDLE if IDLE in names else next(
-            (n for n in names if _keyword_match(n, ['待机', 'idle', '呼吸'])), None
+            (n for n in ordered_names if _keyword_match(n, ['待机', 'idle', '呼吸'])), None
         )
         if m:
             idles = [m]
     if not turns:
         m = TURN if TURN in names else next(
-            (n for n in names if _keyword_match(n, ['转向', '转身', '东张西望', 'turn', '回头', '转'])), None
+            (n for n in ordered_names if _keyword_match(n, ['转向', '转身', '东张西望', 'turn', '回头', '转'])), None
         )
         if m:
             turns = [m]
     if drag is None:
         drag = DRAG if DRAG in names else next(
-            (n for n in names if _keyword_match(n, ['拖拽', '拖', '悬空', 'drag', '抓'])), None
+            (n for n in ordered_names if _keyword_match(n, ['拖拽', '拖', '悬空', 'drag', '抓'])), None
         )
     if not moves:
         moves = [n for n in MOVES if n in names]
         if not moves:
-            moves = [n for n in names if _keyword_match(n, ['走', '跑', '移动', 'move', 'walk', 'run', '踏步', '奔跑'])]
+            moves = [n for n in ordered_names if _keyword_match(n, ['走', '跑', '移动', 'move', 'walk', 'run', '踏步', '奔跑'])]
     if not clicks:
         clicks = [n for n in CLICKS if n in names]
         if not clicks:
-            clicks = [n for n in names if _keyword_match(n, ['点击', '回应', 'click', 'response'])]
+            clicks = [n for n in ordered_names if _keyword_match(n, ['点击', '回应', 'click', 'response'])]
 
     # 如果没有明确 idle，安全回退到第一个动画，避免启动崩溃
     if not idles:
-        first = next(iter(names), None)
+        first = ordered_names[0] if ordered_names else None
         if first:
             idles = [first]
 
@@ -417,13 +554,17 @@ def build_categories(names, manifest: dict | None = None, folder_map: dict | Non
     if drag:
         core.add(drag)
 
-    if folder_files is not None:
+    # 平铺目录（folder == ''）只是兼容旧素材结构，不应把所有动画
+    # 当成“随机动作”。只有真正存在子目录时，才按目录分类处理。
+    has_folder_layout = folder_files is not None and any(by_folder)
+    if has_folder_layout:
         # 子目录模式下，random/ 和未知目录的内容都进入随机动作池；
         # 允许同一文件同时出现在多个分类中（例如测试时复制同一视频到多个文件夹）
         acts = []
         known = {DIR_IDLE, DIR_TURN, DIR_MOVE, DIR_CLICK, DIR_DRAG}
         for folder, ns in by_folder.items():
-            if folder == DIR_RANDOM or folder not in known:
+            # folder == '' 是旧版平铺素材的重复入口，不应覆盖结构化分类。
+            if folder == DIR_RANDOM or (folder and folder not in known):
                 acts.extend(ns)
         seen_acts = set()
         unique_acts = []
@@ -433,7 +574,7 @@ def build_categories(names, manifest: dict | None = None, folder_map: dict | Non
                 unique_acts.append(n)
         acts = unique_acts
     else:
-        acts = [n for n in names if n not in core]
+        acts = [n for n in ordered_names if n not in core]
     return {
         'idle': idles[0] if idles else None,
         'turn': turns[0] if turns else None,

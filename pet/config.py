@@ -1,246 +1,215 @@
 # -*- coding: utf-8 -*-
-"""配置读取与持久化；兼容旧版平铺 chat_* 字段的迁移。"""
+"""
+配置持久化（跨平台）：
+- Windows：%APPDATA%/dsh-pet-standalone/config.json
+- macOS：~/Library/Application Support/dsh-pet-standalone/config.json
+- Linux：~/.config/dsh-pet-standalone/config.json
+
+记录：位置（相对屏幕可用区的中心比例，分辨率变化后仍正确）、
+朝向、缩放、置顶开关。
+"""
+
 from __future__ import annotations
 
 import json
+import logging
+import math
 import os
-import shutil
 import sys
+from contextlib import contextmanager
 from pathlib import Path
 
 from . import catalog
 
 
-DEFAULT_ANIMATION_GAP_SECONDS = 0.0
-DEFAULT_SELF_TALK_MIN_INTERVAL = 20.0
-DEFAULT_SELF_TALK_MAX_INTERVAL = 60.0
-DEFAULT_SELF_TALK_TEXTS = [
-    "\u597d\u5973\u5b69\u2026\u2026",
-    "\u597d\u6a21\u578b\u2026\u2026",
-    "\u6b27\u9cb8\u9cb8\u2026\u2026",
-    "\u4eca\u5929\u4e5f\u8981\u8ba4\u771f\u5de5\u4f5c\u5440\u3002",
-    "\u518d\u966a\u4f60\u4e00\u4f1a\u513f\u3002",
-]
-
-
-def _default_chat_data():
-    return {
-        "enabled": True,
-        "active_provider": "openai-main",
-        "default_system_prompt": "\u4f60\u662f\u4e00\u53ea\u53ef\u7231\u7684\u684c\u9762\u5ba0\u7269\uff0c\u8bf7\u7528\u81ea\u7136\u3001\u53cb\u5584\u7684\u4e2d\u6587\u548c\u7528\u6237\u4ea4\u6d41\u3002",
-        "history_message_limit": 40,
-        "history_char_limit": 24000,
-        "providers": {
-            "openai-main": {
-                "name": "OpenAI Compatible",
-                "base_url": "https://api.openai.com",
-                "chat_path": "/v1/chat/completions",
-                "model": "gpt-4o-mini",
-                "api_key_ref": "provider/openai-main",
-                "api_key": "",
-                "timeout": 60.0,
-                "temperature": 0.7,
-                "max_tokens": 2048,
-            }
-        },
-    }
-
-
-def _merge_chat_data(raw):
-    result = _default_chat_data()
-    raw = raw if isinstance(raw, dict) else {}
-    result.update({k: v for k, v in raw.items() if k != "providers"})
-    incoming = raw.get("providers")
-    if isinstance(incoming, dict) and incoming:
-        providers = {}
-        for provider_id, provider in incoming.items():
-            if isinstance(provider, dict):
-                base = dict(_default_chat_data()["providers"].get("openai-main", {}))
-                base.update(provider)
-                providers[str(provider_id)] = base
-    else:
-        providers = dict(result["providers"])
-    result["providers"] = providers or _default_chat_data()["providers"]
-    active = str(result.get("active_provider") or "")
-    result["active_provider"] = active if active in result["providers"] else next(iter(result["providers"]))
-    return result
-
-
-def _default_base():
-    if sys.platform == "win32":
-        return Path(os.environ.get("APPDATA") or Path.home())
-    if sys.platform == "darwin":
-        return Path.home() / "Library" / "Application Support"
-    return Path.home() / ".config"
-
-
-def _app_dir_name() -> str:
-    """打包变体的独立数据目录名；源码运行时回退到共享目录。
-
-    构建脚本（scripts/build_onedir.ps1）会在打包前生成
-    packaging/build_variant.py（VARIANT = "webm-chat" 等），
-    使 Chat / 无 Chat 等变体各自使用独立的配置目录、会话与自启项。
-    """
-    try:
-        from build_variant import VARIANT  # 仅打包产物中存在
-        name = str(VARIANT).strip()
-        if name:
-            return f"dsh-pet-standalone-{name}"
-    except Exception:
-        pass
-    return "dsh-pet-standalone"
-
-
-APP_DIR_NAME = _app_dir_name()
-
-
-def _float_or_default(value, default, minimum, maximum):
-    try:
-        number = float(value)
-    except (TypeError, ValueError):
-        return default
-    return max(minimum, min(maximum, number))
-
-
-def _clean_self_talk_texts(value):
-    if not isinstance(value, list):
-        return list(DEFAULT_SELF_TALK_TEXTS)
-    texts = []
-    for item in value:
-        text = str(item).strip()
-        if text and text not in texts:
-            texts.append(text[:120])
-    return texts or list(DEFAULT_SELF_TALK_TEXTS)
+def _default_base() -> Path:
+    """按平台返回配置根目录（Windows=APPDATA，macOS=Application Support，Linux=~/.config）。"""
+    if sys.platform == 'win32':
+        return Path(os.environ.get('APPDATA') or Path.home())
+    if sys.platform == 'darwin':
+        return Path.home() / 'Library' / 'Application Support'
+    return Path.home() / '.config'
 
 
 class Config:
-    def __init__(self, base=None):
+    def __init__(self, base: Path | str | None = None) -> None:
         base = Path(base) if isinstance(base, str) else (base or _default_base())
-        self.dir = base / APP_DIR_NAME
-        self.path = self.dir / "config.json"
-        self._migrate_legacy_config(base)
-        self.data = {
-            "version": 3,
-            "rx": None,
-            "ry": None,
-            "facing": "left",
-            "scale": catalog.DEFAULT_SCALE,
-            "on_top": True,
-            "no_move": False,
-            "character": catalog.DEFAULT_CHARACTER,
-            "playback_speed": 1.0,
-            "animation_gap_seconds": DEFAULT_ANIMATION_GAP_SECONDS,
-            "self_talk_enabled": False,
-            "self_talk_min_interval": DEFAULT_SELF_TALK_MIN_INTERVAL,
-            "self_talk_max_interval": DEFAULT_SELF_TALK_MAX_INTERVAL,
-            "self_talk_texts": list(DEFAULT_SELF_TALK_TEXTS),
-            "mouse_through": False,
-            "drag_physics": False,
-            "chat": _default_chat_data(),
+        self.dir = base / 'dsh-pet-standalone'
+        self.path = self.dir / 'config.json'
+        self._warned_save = False
+        self._save_depth = 0
+        self._save_pending = False
+        self.data: dict = {
+            'version': 2,  # 配置结构版本；scale 语义变更时递增
+            'rx': None,    # 窗口中心 x / 屏幕可用区宽（None=默认右下角）
+            'ry': None,    # 窗口中心 y / 屏幕可用区高
+            'screen': None,  # 上次使用的屏幕名称；找不到时回退主屏
+            'facing': 'left',
+            'scale': catalog.DEFAULT_SCALE,
+            'on_top': True,
+            'no_move': False,  # 不移动：勾选后状态机不再自动移动，仅手动点移动动画才走动
+            'character': catalog.DEFAULT_CHARACTER,  # 当前形象 ID
+            'playback_speed': 1.0,       # 动画播放速率
+            'mouse_through': False,        # 鼠标穿透
+            'drag_physics': False,         # 拖动物理效果
+            'soft_edges': True,             # 兼容旧配置：清理精确 Alpha=1 底噪
+            'sound_enabled': True,          # 全部音效开关
+            'volume': 80,
+            'duck_sound': True,             # 旧配置兼容字段
+            'proactive_greetings': True,    # 偶尔主动播放挥手问候
+            'bubble_enabled': True,         # 显示无文字动态气泡
+            'bubble_offset_x': 0,
+            'bubble_offset_y': 0,
+            'favorites': [],                # 用户收藏的动画名
+            'playlist': [],                 # 播放列表动画名
+            'playlist_mode': 'off',         # off / loop / random
+            'personality': 'lively',        # catalog.PERSONALITY_PRESETS 中的随机/性格模式
+            'action_switch_delay_ms': 0,    # 动作结束后的切换等待，0=立即
+            'action_interval_seconds': 0,   # 0=跟随模式；否则自动动作最小开始间隔
         }
         self._load()
-        self._normalize_pet_settings()
 
-    def _migrate_legacy_config(self, base) -> None:
-        """旧版各变体共用 %APPDATA%/dsh-pet-standalone；升级后首次运行时
-        把该目录的 config.json 与 sessions/ 一次性复制到变体独立目录，
-        避免用户设置与聊天会话“消失”。仅在新目录尚不存在时执行。"""
-        if APP_DIR_NAME == "dsh-pet-standalone" or self.path.exists():
-            return
-        legacy = base / "dsh-pet-standalone"
-        if not (legacy / "config.json").is_file():
-            return
+    def _load(self) -> None:
         try:
-            self.dir.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(legacy / "config.json", self.path)
-            src_sessions = legacy / "sessions"
-            if src_sessions.is_dir():
-                shutil.copytree(src_sessions, self.dir / "sessions", dirs_exist_ok=True)
-        except OSError:
-            pass
-
-    def _load(self):
-        try:
-            raw = json.loads(self.path.read_text(encoding="utf-8"))
+            raw = json.loads(self.path.read_text(encoding='utf-8'))
         except (OSError, ValueError):
             return
         if not isinstance(raw, dict):
             return
-        old_version = int(raw.get("version", 1) or 1)
-        if old_version < 2:
-            raw.pop("scale", None)
-        chat = raw.get("chat") if isinstance(raw.get("chat"), dict) else {}
-        legacy = {}
-        if "chat_enabled" in raw:
-            legacy["enabled"] = raw["chat_enabled"]
-        if "chat_system_prompt" in raw:
-            legacy["default_system_prompt"] = raw["chat_system_prompt"]
-        legacy_provider = {}
-        if raw.get("chat_api_url"):
-            legacy_provider["base_url"] = raw["chat_api_url"]
-        if raw.get("chat_model"):
-            legacy_provider["model"] = raw["chat_model"]
-        if raw.get("chat_api_key"):
-            legacy_provider["api_key"] = raw["chat_api_key"]
-        if legacy_provider:
-            legacy["providers"] = {"openai-main": legacy_provider}
-        merged = dict(legacy)
-        merged.update(chat)
-        self.data["chat"] = _merge_chat_data(merged)
-        for key in (
-            "rx", "ry", "facing", "scale", "on_top", "no_move", "character",
-            "playback_speed", "animation_gap_seconds", "self_talk_enabled",
-            "self_talk_min_interval", "self_talk_max_interval", "self_talk_texts",
-            "mouse_through", "drag_physics",
-        ):
+        if 'sound_enabled' not in raw and 'duck_sound' in raw:
+            raw['sound_enabled'] = raw['duck_sound']
+        try:
+            version = int(raw.get('version', 1))
+        except (TypeError, ValueError):
+            version = 1
+        if version < 2:
+            # v1 → v2：素材从 220×124 换成 640×360，scale 语义变化，
+            # 旧 scale（如 1.0 表示 220px）需重置为新的默认值。
+            raw.pop('scale', None)
+        for key in self.data:
             if key in raw and raw[key] is not None:
                 self.data[key] = raw[key]
-        self.data["version"] = 3
+        self._normalize()
 
-    def _normalize_pet_settings(self):
-        self.data["playback_speed"] = _float_or_default(self.data.get("playback_speed"), 1.0, 0.1, 8.0)
-        self.data["animation_gap_seconds"] = _float_or_default(
-            self.data.get("animation_gap_seconds"), DEFAULT_ANIMATION_GAP_SECONDS, 0.0, 3600.0
-        )
-        minimum = _float_or_default(
-            self.data.get("self_talk_min_interval"), DEFAULT_SELF_TALK_MIN_INTERVAL, 5.0, 3600.0
-        )
-        maximum = _float_or_default(
-            self.data.get("self_talk_max_interval"), DEFAULT_SELF_TALK_MAX_INTERVAL, 5.0, 3600.0
-        )
-        self.data["self_talk_min_interval"] = min(minimum, maximum)
-        self.data["self_talk_max_interval"] = max(minimum, maximum)
-        self.data["self_talk_enabled"] = bool(self.data.get("self_talk_enabled", False))
-        self.data["self_talk_texts"] = _clean_self_talk_texts(self.data.get("self_talk_texts"))
+    def _normalize(self) -> None:
+        """把外部 JSON 限制到窗口层可以安全消费的类型和值域。"""
+        for key in ('bubble_offset_x', 'bubble_offset_y'):
+            try:
+                value = int(self.data[key])
+            except (TypeError, ValueError, OverflowError):
+                value = 0
+            self.data[key] = max(-90, min(90, value))
+        for key, default in (
+            ('scale', catalog.DEFAULT_SCALE),
+            ('playback_speed', 1.0),
+        ):
+            try:
+                value = float(self.data[key])
+            except (TypeError, ValueError):
+                value = float(default)
+            if not math.isfinite(value):
+                value = float(default)
+            self.data[key] = max(0.1, min(4.0 if key == 'playback_speed' else 2.0, value))
 
-    def get(self, key, default=None):
+        try:
+            delay = int(self.data['action_switch_delay_ms'])
+        except (KeyError, TypeError, ValueError):
+            delay = 0
+        self.data['action_switch_delay_ms'] = max(0, min(60_000, delay))
+        try:
+            interval = int(self.data['action_interval_seconds'])
+        except (TypeError, ValueError, OverflowError):
+            interval = 0
+        self.data['action_interval_seconds'] = max(0, min(3600, interval))
+        try:
+            volume = int(self.data['volume'])
+        except (TypeError, ValueError, OverflowError):
+            volume = 80
+        self.data['volume'] = max(0, min(100, volume))
+
+        for key in (
+            'on_top', 'no_move', 'mouse_through', 'drag_physics',
+            'soft_edges', 'sound_enabled', 'duck_sound', 'proactive_greetings',
+            'bubble_enabled',
+        ):
+            if not isinstance(self.data[key], bool):
+                value = self.data[key]
+                if isinstance(value, (int, float)):
+                    value = bool(value)
+                elif isinstance(value, str):
+                    value = value.strip().lower() not in ('', '0', 'false', 'no', 'off')
+                else:
+                    value = True
+                self.data[key] = value
+        self.data['duck_sound'] = self.data['sound_enabled']
+
+        if self.data['facing'] not in ('left', 'right'):
+            self.data['facing'] = 'left'
+        if not catalog.is_valid_character_id(self.data['character']):
+            self.data['character'] = catalog.DEFAULT_CHARACTER
+
+        for key in ('rx', 'ry'):
+            value = self.data[key]
+            if value is None:
+                continue
+            try:
+                value = float(value)
+            except (TypeError, ValueError):
+                value = None
+            if value is not None and math.isfinite(value):
+                self.data[key] = max(0.0, min(1.0, value))
+            else:
+                self.data[key] = None
+
+        if not isinstance(self.data['screen'], str) or not self.data['screen'].strip():
+            self.data['screen'] = None
+
+        for key in ('favorites', 'playlist'):
+            value = self.data[key]
+            if not isinstance(value, list):
+                self.data[key] = []
+            else:
+                self.data[key] = list(dict.fromkeys(
+                    item for item in value if isinstance(item, str)
+                ))
+        if self.data['playlist_mode'] not in ('off', 'loop', 'random'):
+            self.data['playlist_mode'] = 'off'
+        if self.data['personality'] not in catalog.PERSONALITY_PRESETS:
+            self.data['personality'] = 'lively'
+        self.data['version'] = 2
+
+    def get(self, key: str, default=None):
         return self.data.get(key, default)
 
-    def set(self, key, value):
+    def set(self, key: str, value) -> None:
         self.data[key] = value
-        if key in {
-            "playback_speed", "animation_gap_seconds", "self_talk_enabled",
-            "self_talk_min_interval", "self_talk_max_interval", "self_talk_texts",
-        }:
-            self._normalize_pet_settings()
 
-    def chat_settings(self):
-        from .chat.models import ChatSettings
-        return ChatSettings.from_dict(self.data.get("chat", {}))
-
-    def set_chat_settings(self, settings):
-        self.data["chat"] = settings.to_dict(include_secrets=True)
-
-    def resolve_api_key(self, provider):
-        from .chat.models import SecretStore
-        return SecretStore().get(provider.api_key_ref) or provider.api_key
-
-    def save(self):
+    @contextmanager
+    def batch_save(self):
+        """合并同一次设置操作的写盘请求，保留现有原子保存方式。"""
+        self._save_depth += 1
         try:
-            self._normalize_pet_settings()
+            yield
+        finally:
+            self._save_depth -= 1
+            if self._save_depth == 0 and self._save_pending:
+                self._save_pending = False
+                self.save()
+
+    def save(self) -> None:
+        if self._save_depth:
+            self._save_pending = True
+            return
+        try:
             self.dir.mkdir(parents=True, exist_ok=True)
-            temp = self.path.with_suffix(".json.tmp")
-            temp.write_text(json.dumps(self.data, ensure_ascii=False, indent=2), encoding="utf-8")
-            os.replace(temp, self.path)
-        except OSError:
-            pass
+            tmp_path = self.path.with_name(f'.{self.path.name}.tmp')
+            with tmp_path.open('w', encoding='utf-8') as handle:
+                json.dump(self.data, handle, ensure_ascii=False, indent=2)
+                handle.flush()
+                os.fsync(handle.fileno())
+            os.replace(tmp_path, self.path)
+            self._warned_save = False
+        except (OSError, TypeError, ValueError):
+            if not self._warned_save:
+                logging.error('配置保存失败：%s', self.path, exc_info=True)
+                self._warned_save = True

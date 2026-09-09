@@ -16,6 +16,9 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
+QT_PLUGIN_ROOT = os.path.join(ROOT, "qt-plugins")
+if os.path.isdir(QT_PLUGIN_ROOT):
+    os.environ.setdefault("QT_PLUGIN_PATH", QT_PLUGIN_ROOT)
 
 from PySide6.QtWidgets import QApplication  # noqa: E402
 
@@ -39,9 +42,11 @@ def main() -> int:
     app = QApplication([])
     lib = MovieLibrary()  # 真实 webm：assets/videos
 
-    # 1. 51 段素材全量可加载，帧数/时长有效
+    # 1. 91 段素材全量可加载，帧数/时长有效
     names = lib.names()
-    assert len(names) == 51, len(names)
+    assert len(names) == 91, len(names)
+    # 播放器按需创建，避免 91 个 QTimer/reader 同时常驻。
+    assert lib.loaded_count() <= len(catalog.MOVES)
     for name in names:
         assert lib.frames(name) >= 1, (name, lib.frames(name))
         assert lib.duration(name) > 0, (name, lib.duration(name))
@@ -49,6 +54,11 @@ def main() -> int:
     # 2. 透明通道：待机首帧同时含透明与不透明像素
     idle = lib.movie(catalog.IDLE)
     idle.jumpToFrame(0)
+    assert idle.sourceSize() == (1280, 720), idle.sourceSize()
+    decoded_w, decoded_h = idle.decodedSize()
+    limit_w, limit_h = catalog.decode_size_for_scale(catalog.DEFAULT_SCALE)
+    assert 0 < decoded_w <= limit_w and 0 < decoded_h <= limit_h
+    assert limit_w - decoded_w <= 2 and limit_h - decoded_h <= 2
     img = idle.currentPixmap().toImage()
     alphas = set()
     for x in range(0, img.width(), 20):
@@ -65,6 +75,8 @@ def main() -> int:
     # 4. 窗口实例化：尺寸/初始动画/透明 mask
     cfg = Config(base=os.path.join(os.path.dirname(os.path.abspath(__file__)), "_tmp_cfg"))
     win = PetWindow(lib, cfg)
+    win._resource_timer.stop()  # 冒烟测试固定为普通模式；迟滞策略由纯逻辑测试覆盖
+    win._resource_constrained = False
     win.show()
     assert win.anim == catalog.IDLE
     assert win.mask() is not None and not win.mask().isNull()
@@ -104,10 +116,13 @@ def main() -> int:
     # 9. 「不移动」：状态机不再进入移动动画；手动移动仍可走动；开关持久化
     win.set_no_move(True)
     assert win.no_move is True and cfg.get("no_move") is True
+    selected = []
+    real_switch = win._switch
+    win._switch = selected.append
     for _ in range(200):
-        win._cancel_move()
         win._pick_next()
-        assert win.anim not in catalog.MOVES, win.anim
+    assert selected and all(name not in catalog.MOVES for name in selected)
+    win._switch = real_switch
     win._cancel_move()
     win._trigger_move(catalog.MOVES[0])
     assert win.anim in catalog.MOVES, win.anim
@@ -115,6 +130,7 @@ def main() -> int:
     win.set_no_move(False)
     assert win.no_move is False and cfg.get("no_move") is False
 
+    win.shutdown()
     win.close()
     print("\n=== ALL SMOKE TESTS PASSED ===")
     return 0
