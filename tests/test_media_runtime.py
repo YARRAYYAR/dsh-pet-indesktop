@@ -205,6 +205,55 @@ class MediaRuntimeTests(unittest.TestCase):
             self.assertTrue(window._bubble_visible)
             self.assertEqual(window._bubble_progress, 0.0)
 
+    def test_bubble_preview_moves_without_restarting_or_changing_preference(self) -> None:
+        with self.interaction_window() as window:
+            window.set_bubble_enabled(False)
+            dialog = SettingsDialog(window)
+            dialog.preview_bubble()
+            self.assertFalse(window.bubble_enabled)
+            self.assertFalse(window.cfg.get('bubble_enabled'))
+            window._bubble_anim_timer.stop()
+            window._bubble_progress = 0.6
+            with patch.object(window, 'show_bubble') as show:
+                dialog.bubble_x.setValue(30)
+                dialog.bubble_y.setValue(-20)
+                show.assert_not_called()
+            self.assertEqual(window._bubble_progress, 0.6)
+            dialog.hide_preview_bubble()
+            window.show_bubble()
+            self.assertEqual(window._bubble_anim_direction, -1)
+            dialog.reject()
+            self.assertEqual((window.bubble_offset_x, window.bubble_offset_y), (0, 0))
+            self.assertIsNone(window._bubble_preview)
+
+    def test_settings_save_writes_once_and_persists_offsets(self) -> None:
+        with self.interaction_window() as window:
+            dialog = SettingsDialog(window)
+            dialog.bubble_x.setValue(42)
+            dialog.bubble_y.setValue(-24)
+            with patch('pet.config.os.fsync') as sync:
+                dialog.save()
+            self.assertEqual(sync.call_count, 1)
+            restored = Config(window.cfg.dir.parent)
+            self.assertEqual(restored.get('bubble_offset_x'), 42)
+            self.assertEqual(restored.get('bubble_offset_y'), -24)
+
+    def test_bubble_ticks_reuse_pet_mask_and_frame_changes_invalidate_it(self) -> None:
+        with self.interaction_window() as window:
+            window._sync_mask()
+            cached_region = window._pet_mask_region
+            cached_key = window._pet_mask_key
+            window.show_bubble()
+            window._bubble_anim_timer.stop()
+            for progress in (0.1, 0.5, 1.0):
+                window._bubble_progress = progress
+                window._sync_mask()
+                self.assertIs(window._pet_mask_region, cached_region)
+                self.assertEqual(window._pet_mask_key, cached_key)
+            window.change_scale(1.2)
+            window._sync_mask()
+            self.assertNotEqual(window._pet_mask_key, cached_key)
+
     def test_small_pet_click_jitter_and_drag_use_system_threshold(self) -> None:
         with self.interaction_window() as window, patch.object(window, '_queue_tap') as tap:
             window.change_scale(0.25)

@@ -23,7 +23,7 @@ class SettingsDialog(QDialog):
         self.bubble = QCheckBox('显示动态气泡')
         self.bubble.setChecked(pet.bubble_enabled)
         layout.addRow('互动', self.bubble)
-        self._original_bubble = (pet.bubble_enabled, pet.bubble_offset_x, pet.bubble_offset_y)
+        self._original_bubble = (pet.bubble_offset_x, pet.bubble_offset_y)
         self.bubble_x = QSpinBox()
         self.bubble_y = QSpinBox()
         for field, value in ((self.bubble_x, pet.bubble_offset_x),
@@ -128,21 +128,17 @@ class SettingsDialog(QDialog):
     def preview_bubble_position(self) -> None:
         self.pet.set_bubble_position(self.bubble_x.value(), self.bubble_y.value())
         self.update_bubble_data()
-        self.preview_bubble()
 
     def preview_bubble(self) -> None:
-        self.pet.bubble_enabled = True
-        self.pet.show_bubble(30_000)
+        self.pet.preview_bubble(True)
 
     def hide_preview_bubble(self) -> None:
-        self.pet.bubble_enabled = False
-        self.pet.hide_bubble()
+        self.pet.preview_bubble(False)
 
     def reject(self) -> None:
-        enabled, x, y = self._original_bubble
-        self.pet.bubble_enabled = enabled
+        x, y = self._original_bubble
         self.pet.set_bubble_position(x, y)
-        self.pet.hide_bubble(immediate=True)
+        self.pet.preview_bubble(None)
         super().reject()
 
     def preview(self) -> None:
@@ -165,12 +161,14 @@ class SettingsDialog(QDialog):
         self.frequency.setValue(0)
 
     def save(self) -> None:
-        self.pet.set_sound_enabled(self.sound.isChecked())
-        self.pet.set_bubble_enabled(self.bubble.isChecked())
-        self.pet.set_volume(self.volume.value())
-        self.pet.set_personality(self.personality.currentData())
-        self.pet.change_scale(self.size.value() / catalog.CANVAS_W)
-        self.pet.set_bubble_position(self.bubble_x.value(), self.bubble_y.value(), persist=True)
-        self.pet.set_action_switch_delay(self.delay.value() * 1000)
-        self.pet.set_action_interval(self.frequency.value())
+        self.pet.preview_bubble(None)
+        with self.pet.cfg.batch_save():
+            self.pet.set_sound_enabled(self.sound.isChecked())
+            self.pet.set_bubble_enabled(self.bubble.isChecked())
+            self.pet.set_volume(self.volume.value())
+            self.pet.set_personality(self.personality.currentData())
+            self.pet.change_scale(self.size.value() / catalog.CANVAS_W)
+            self.pet.set_bubble_position(self.bubble_x.value(), self.bubble_y.value(), persist=True)
+            self.pet.set_action_switch_delay(self.delay.value() * 1000)
+            self.pet.set_action_interval(self.frequency.value())
         self.accept()

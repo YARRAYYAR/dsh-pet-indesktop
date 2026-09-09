@@ -16,6 +16,7 @@ import logging
 import math
 import os
 import sys
+from contextlib import contextmanager
 from pathlib import Path
 
 from . import catalog
@@ -36,6 +37,8 @@ class Config:
         self.dir = base / 'dsh-pet-standalone'
         self.path = self.dir / 'config.json'
         self._warned_save = False
+        self._save_depth = 0
+        self._save_pending = False
         self.data: dict = {
             'version': 2,  # 配置结构版本；scale 语义变更时递增
             'rx': None,    # 窗口中心 x / 屏幕可用区宽（None=默认右下角）
@@ -181,7 +184,22 @@ class Config:
     def set(self, key: str, value) -> None:
         self.data[key] = value
 
+    @contextmanager
+    def batch_save(self):
+        """合并同一次设置操作的写盘请求，保留现有原子保存方式。"""
+        self._save_depth += 1
+        try:
+            yield
+        finally:
+            self._save_depth -= 1
+            if self._save_depth == 0 and self._save_pending:
+                self._save_pending = False
+                self.save()
+
     def save(self) -> None:
+        if self._save_depth:
+            self._save_pending = True
+            return
         try:
             self.dir.mkdir(parents=True, exist_ok=True)
             tmp_path = self.path.with_name(f'.{self.path.name}.tmp')
