@@ -20,6 +20,9 @@ class SettingsDialog(QDialog):
         self.sound = QCheckBox('开启声音')
         self.sound.setChecked(pet.sound_enabled)
         layout.addRow('声音', self.sound)
+        self.bubble = QCheckBox('显示对话气泡')
+        self.bubble.setChecked(pet.bubble_enabled)
+        layout.addRow('互动', self.bubble)
         self.volume = QSlider(Qt.Orientation.Horizontal)
         self.volume.setRange(0, 100)
         self.volume.setValue(pet._duck_sound.volume)
@@ -105,6 +108,7 @@ class SettingsDialog(QDialog):
 
     def reset_fields(self) -> None:
         self.sound.setChecked(True)
+        self.bubble.setChecked(True)
         self.volume.setValue(80)
         self.personality.setCurrentIndex(self.personality.findData('lively'))
         self.size.setValue(round(catalog.CANVAS_W * catalog.DEFAULT_SCALE))
@@ -113,6 +117,7 @@ class SettingsDialog(QDialog):
 
     def save(self) -> None:
         self.pet.set_sound_enabled(self.sound.isChecked())
+        self.pet.set_bubble_enabled(self.bubble.isChecked())
         self.pet.set_volume(self.volume.value())
         self.pet.set_personality(self.personality.currentData())
         self.pet.change_scale(self.size.value() / catalog.CANVAS_W)

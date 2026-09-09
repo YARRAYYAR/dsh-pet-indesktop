@@ -174,6 +174,15 @@ PERSONALITY_DESCRIPTIONS = {
     'gentle': '偏爱轻柔、友好的动作，偶尔主动问候。',
 }
 
+PERSONALITY_BUBBLE_LINES = {
+    'random': ('今天也陪你随机一下~', '下一步会是什么动作呢？', '被你发现啦。'),
+    'cool': ('……我在。', '别一直盯着我。', '偶尔动一下就好。'),
+    'quiet': ('安静陪你一会儿~', '慢慢来，不着急。', '记得休息一下。'),
+    'lively': ('嗨！来玩一下嘛~', '今天也要元气满满！', '看我这招！'),
+    'mischievous': ('嘿嘿，被你发现了~', '再点一下试试？', '我可没有在捣蛋。'),
+    'gentle': ('辛苦啦，休息一下吧。', '我会安静陪着你。', '今天也温柔一点。'),
+}
+
 
 def action_tags(name: str, metadata=None) -> tuple[str, ...]:
     explicit = metadata.get(name) if isinstance(metadata, dict) else None

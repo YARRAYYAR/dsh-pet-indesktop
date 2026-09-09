@@ -19,8 +19,19 @@ import random
 import sys
 import time
 
-from PySide6.QtCore import QElapsedTimer, QPoint, Qt, QTimer, Signal
-from PySide6.QtGui import QBitmap, QCursor, QGuiApplication, QImage, QPainter, QPixmap, QRegion
+from PySide6.QtCore import QElapsedTimer, QPoint, QPointF, QRectF, Qt, QTimer, Signal
+from PySide6.QtGui import (
+    QBitmap,
+    QColor,
+    QCursor,
+    QFont,
+    QGuiApplication,
+    QImage,
+    QPainter,
+    QPainterPath,
+    QPixmap,
+    QRegion,
+)
 from PySide6.QtWidgets import QApplication, QInputDialog, QMenu, QWidget
 
 from . import autostart as autostart_mod
@@ -87,6 +98,7 @@ class PetWindow(QWidget):
     duckSoundChanged = Signal(bool)
     soundChanged = Signal(bool)
     proactiveGreetingsChanged = Signal(bool)
+    bubbleChanged = Signal(bool)
     playlistChanged = Signal(str)
     personalityChanged = Signal(str)
     pausedChanged = Signal(bool)
@@ -146,6 +158,7 @@ class PetWindow(QWidget):
         self.proactive_greetings: bool = bool(
             config.get('proactive_greetings', True)
         )
+        self.bubble_enabled: bool = bool(config.get('bubble_enabled', True))
         self._duck_sound = DuckScream(config.dir)
         self._duck_sound.enabled = self.sound_enabled
         self._duck_sound.volume = int(config.get('volume', 80))
@@ -258,6 +271,14 @@ class PetWindow(QWidget):
         self._greeting_timer.setSingleShot(True)
         self._greeting_timer.timeout.connect(self._on_greeting_timer)
 
+        # ---- 低负载对话气泡：只在显示期间重绘，结束后自动收起 ----
+        self._bubble_visible = False
+        self._bubble_text = ''
+        self._bubble_index = -1
+        self._bubble_timer = QTimer(self)
+        self._bubble_timer.setSingleShot(True)
+        self._bubble_timer.timeout.connect(self.hide_bubble)
+
         # ---- 尺寸与初始状态 ----
         self._apply_scale()
         self._restore_position()
@@ -281,7 +302,9 @@ class PetWindow(QWidget):
     def _apply_scale(self) -> None:
         """按逻辑画布缩放窗口；素材分辨率不会改变桌宠大小。"""
         self._w = max(1, int(round(catalog.CANVAS_W * self.scale)))
-        self._h = max(1, int(round((catalog.CANVAS_H + catalog.PAD) * self.scale)))
+        self._bubble_h = int(round(178 * self.scale))
+        canvas_height = int(round((catalog.CANVAS_H + catalog.PAD) * self.scale))
+        self._h = max(1, canvas_height + self._bubble_h)
         self.setFixedSize(self._w, self._h)
 
     def change_scale(self, scale: float) -> None:
@@ -599,11 +622,15 @@ class PetWindow(QWidget):
         canvas = QImage(self._w, self._h, QImage.Format.Format_ARGB32)
         canvas.fill(Qt.GlobalColor.transparent)
         p = QPainter(canvas)
-        p.translate(0, int(round(catalog.PAD * self.scale)))
+        p.translate(0, self._bubble_h + int(round(catalog.PAD * self.scale)))
         if self._frame_pixmap is not None:
             x, y, _, _ = self._frame_logical_rect
             p.drawPixmap(x, y, self._frame_pixmap)
         p.end()
+        if self._bubble_visible:
+            p = QPainter(canvas)
+            self._paint_bubble(p, include_text=False)
+            p.end()
         region = QRegion(QBitmap.fromImage(canvas.createAlphaMask()))
         # 二值窗口遮罩只限定命中范围，向外留 2 个逻辑像素，避免切掉
         # Retina 半透明轮廓。实际颜色仍由原始 Alpha 合成。
@@ -616,7 +643,10 @@ class PetWindow(QWidget):
 
     def paintEvent(self, event) -> None:  # noqa: N802 (Qt 命名)
         painter = QPainter(self)
-        painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+        painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform, True)
+        if self._bubble_visible:
+            self._paint_bubble(painter)
         if self._frame_pixmap is not None:
             if self._squash_active:
                 # Q 弹：垂直变矮 + 水平微微变宽，脚底保持不动
@@ -627,7 +657,8 @@ class PetWindow(QWidget):
                 scaled_canvas_w = canvas_w * sx
                 scaled_canvas_h = canvas_h * sy
                 base_x = (self._w - scaled_canvas_w) / 2.0
-                base_y = self._h - scaled_canvas_h
+                pet_bottom = self._bubble_h + int(round(catalog.PAD * self.scale))
+                base_y = pet_bottom + canvas_h - scaled_canvas_h
                 x = int(round(base_x + crop_x * sx))
                 y = int(round(base_y + crop_y * sy))
                 w = max(1, int(round(crop_w * sx)))
@@ -635,10 +666,64 @@ class PetWindow(QWidget):
                 painter.drawPixmap(x, y, w, h, self._frame_pixmap)
             else:
                 # 落地对齐：整帧下移 PAD×scale，让人物脚底踩在窗口底线
-                painter.translate(0, int(round(catalog.PAD * self.scale)))
+                painter.translate(0, self._bubble_h + int(round(catalog.PAD * self.scale)))
                 x, y, _, _ = self._frame_logical_rect
                 painter.drawPixmap(x, y, self._frame_pixmap)
         painter.end()
+
+    def _bubble_geometry(self) -> QRectF:
+        """返回与当前桌宠大小联动的气泡区域。"""
+        s = self.scale
+        margin = 22.0 * s
+        width = min(self._w - 2 * margin, 472.0 * s)
+        height = 132.0 * s
+        return QRectF(margin, 12.0 * s, max(1.0, width), height)
+
+    def _bubble_tail_rects(self, rect: QRectF) -> tuple[QRectF, QRectF]:
+        s = self.scale
+        return (
+            QRectF(rect.left() + rect.width() * 0.27, rect.bottom() + 8 * s,
+                   28 * s, 20 * s),
+            QRectF(rect.left() + rect.width() * 0.36, rect.bottom() + 31 * s,
+                   18 * s, 14 * s),
+        )
+
+    def _bubble_hit_test(self, point: QPoint) -> bool:
+        if not self._bubble_visible:
+            return False
+        point_f = QPointF(point)
+        rect = self._bubble_geometry()
+        return rect.contains(point_f) or any(
+            tail.contains(point_f) for tail in self._bubble_tail_rects(rect)
+        )
+
+    def _paint_bubble(self, painter: QPainter, *, include_text: bool = True) -> None:
+        """绘制参考项目风格的白底深蓝描边气泡和两个小尾泡。"""
+        rect = self._bubble_geometry()
+        s = self.scale
+        border = QColor('#203170')
+        fill = QColor('#ffffff')
+        path = QPainterPath()
+        path.addRoundedRect(rect, 38.0 * s, 38.0 * s)
+        painter.save()
+        painter.setPen(border if include_text else Qt.PenStyle.NoPen)
+        painter.setBrush(fill)
+        painter.drawPath(path)
+        for tail in self._bubble_tail_rects(rect):
+            painter.drawEllipse(tail)
+        if include_text and self._bubble_text:
+            text_rect = rect.adjusted(30 * s, 20 * s, -30 * s, -18 * s)
+            font = painter.font()
+            font.setPixelSize(max(9, int(round(22 * s))))
+            font.setWeight(QFont.Weight.DemiBold)
+            painter.setFont(font)
+            painter.setPen(QColor('#536ba9'))
+            painter.drawText(
+                text_rect,
+                Qt.AlignmentFlag.AlignCenter | Qt.TextFlag.TextWordWrap,
+                self._bubble_text,
+            )
+        painter.restore()
 
     def _start_squash(self) -> None:
         """点击时启动 Q 弹效果：画面先变矮再恢复。"""
@@ -926,11 +1011,14 @@ class PetWindow(QWidget):
             personality, self.acts, self._action_tags
         )
         self._recent_actions.clear()
+        self._bubble_index = -1
         self.cfg.set('personality', personality)
         self.cfg.save()
         self._schedule_next_greeting()
         if self.anim in self.acts and self._personality_frequent_acts:
             self._switch(self._pick_personality_action(exclude=self.anim))
+        if self._bubble_visible:
+            self.show_bubble()
         self.personalityChanged.emit(personality)
 
     def add_personality_menu(self, parent_menu: QMenu) -> QMenu:
@@ -1003,6 +1091,7 @@ class PetWindow(QWidget):
             )
             if name:
                 self._switch(name)
+                self.show_bubble()
         self._schedule_next_greeting()
 
     def _on_cursor_tick(self) -> None:
@@ -1105,7 +1194,12 @@ class PetWindow(QWidget):
 
     def mousePressEvent(self, event) -> None:  # noqa: N802
         if event.button() == Qt.MouseButton.LeftButton:
-            if not self._is_in_interactive_area(event.position().toPoint()):
+            local_pos = event.position().toPoint()
+            if self._bubble_hit_test(local_pos):
+                self._cycle_bubble()
+                event.accept()
+                return
+            if not self._is_in_interactive_area(local_pos):
                 return  # 透明留白区域不参与点击/拖拽
             self._press_global = event.globalPosition().toPoint()
             self._grab_offset = self._press_global - self.pos()
@@ -1249,16 +1343,58 @@ class PetWindow(QWidget):
         if self._just_dragged:
             return
         self._play_click_response(self.clicks)
+        self.show_bubble()
 
     def _on_double_click(self) -> None:
         """双击：播放更强的回应，并触发尖叫鸭。"""
         self._play_click_response(self.clicks or self.acts)
         self._duck_sound.play()
+        self.show_bubble()
 
     def _on_rapid_click(self, count: int) -> None:
         """快速连续点击：切到随机动作，次数越多越像被连续戳醒。"""
         self._play_click_response(self.acts or self.clicks)
         self._duck_sound.play()
+        self.show_bubble()
+
+    def _bubble_lines(self) -> tuple[str, ...]:
+        return catalog.PERSONALITY_BUBBLE_LINES.get(
+            self.personality,
+            catalog.PERSONALITY_BUBBLE_LINES['lively'],
+        )
+
+    def show_bubble(self, text: str | None = None, duration_ms: int = 4800) -> None:
+        """显示一条短台词；气泡只在显示期间参与绘制和鼠标命中。"""
+        if (
+            not self.bubble_enabled
+            or self._suspended
+            or self._paused
+            or self._shutting_down
+        ):
+            return
+        lines = self._bubble_lines()
+        if text is None:
+            self._bubble_index = (self._bubble_index + 1) % len(lines)
+            text = lines[self._bubble_index]
+        self._bubble_text = str(text)
+        self._bubble_visible = True
+        self._bubble_timer.start(max(1200, min(30_000, int(duration_ms))))
+        self._sync_mask()
+        self.update()
+
+    def _cycle_bubble(self) -> None:
+        self._bubble_index = (self._bubble_index + 1) % len(self._bubble_lines())
+        self.show_bubble(self._bubble_lines()[self._bubble_index])
+
+    def hide_bubble(self) -> None:
+        """隐藏气泡并恢复纯动画命中区域。"""
+        self._bubble_timer.stop()
+        if not self._bubble_visible:
+            return
+        self._bubble_visible = False
+        self._bubble_text = ''
+        self._sync_mask()
+        self.update()
 
     def _trigger_edge_feedback(self) -> bool:
         """拖到屏幕边缘时做一次短暂压扁，并用物理反弹离开边缘。"""
@@ -1345,6 +1481,10 @@ class PetWindow(QWidget):
         drag_physics_act.toggled.connect(self.set_drag_physics)
 
         interaction = menu.addMenu('互动反馈')
+        bubble = interaction.addAction('对话气泡')
+        bubble.setCheckable(True)
+        bubble.setChecked(self.bubble_enabled)
+        bubble.toggled.connect(self.set_bubble_enabled)
         duck_sound = interaction.addAction('声音开关')
         duck_sound.setCheckable(True)
         duck_sound.setChecked(self.sound_enabled)
@@ -1531,6 +1671,7 @@ class PetWindow(QWidget):
             return
         self._paused = on
         if on:
+            self.hide_bubble()
             self._cancel_move()
             self._action_switch_timer.stop()
             self._long_press_timer.stop()
@@ -1568,6 +1709,7 @@ class PetWindow(QWidget):
         if self._suspended or self._shutting_down:
             return
         self._suspended = True
+        self.hide_bubble()
         self._long_press_timer.stop()
         self._tap_timer.stop()
         self._cursor_timer.stop()
@@ -1643,6 +1785,17 @@ class PetWindow(QWidget):
         else:
             self._greeting_timer.stop()
         self.proactiveGreetingsChanged.emit(self.proactive_greetings)
+
+    def set_bubble_enabled(self, on: bool) -> None:
+        """切换对话气泡；关闭时立即清掉气泡的窗口命中区域。"""
+        self.bubble_enabled = bool(on)
+        self.cfg.set('bubble_enabled', self.bubble_enabled)
+        self.cfg.save()
+        if self.bubble_enabled:
+            self.show_bubble()
+        else:
+            self.hide_bubble()
+        self.bubbleChanged.emit(self.bubble_enabled)
 
     def _start_physics(self, mode: str) -> None:
         if self._physics_mode != mode or not self._physics_timer.isActive():
@@ -1747,6 +1900,7 @@ class PetWindow(QWidget):
         if self._shutting_down:
             return
         self._shutting_down = True
+        self.hide_bubble()
         for timer in (
             self._move_timer,
             self._squash_timer,

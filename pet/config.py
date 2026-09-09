@@ -54,6 +54,7 @@ class Config:
             'volume': 80,
             'duck_sound': True,             # 旧配置兼容字段
             'proactive_greetings': True,    # 偶尔主动播放挥手问候
+            'bubble_enabled': True,         # 显示桌宠对话气泡
             'favorites': [],                # 用户收藏的动画名
             'playlist': [],                 # 播放列表动画名
             'playlist_mode': 'off',         # off / loop / random
@@ -118,6 +119,7 @@ class Config:
         for key in (
             'on_top', 'no_move', 'mouse_through', 'drag_physics',
             'soft_edges', 'sound_enabled', 'duck_sound', 'proactive_greetings',
+            'bubble_enabled',
         ):
             if not isinstance(self.data[key], bool):
                 value = self.data[key]
