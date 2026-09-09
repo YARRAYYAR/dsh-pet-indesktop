@@ -23,6 +23,27 @@ class SettingsDialog(QDialog):
         self.bubble = QCheckBox('显示动态气泡')
         self.bubble.setChecked(pet.bubble_enabled)
         layout.addRow('互动', self.bubble)
+        self._original_bubble = (pet.bubble_enabled, pet.bubble_offset_x, pet.bubble_offset_y)
+        self.bubble_x = QSpinBox()
+        self.bubble_y = QSpinBox()
+        for field, value in ((self.bubble_x, pet.bubble_offset_x),
+                             (self.bubble_y, pet.bubble_offset_y)):
+            field.setRange(-90, 90)
+            field.setSuffix(' 逻辑 px')
+            field.setValue(value)
+        layout.addRow('气泡左右（负左／正右）', self.bubble_x)
+        layout.addRow('气泡上下（负上／正下）', self.bubble_y)
+        self.bubble_data = QLabel()
+        layout.addRow('实际偏移', self.bubble_data)
+        self.bubble_x.valueChanged.connect(self.preview_bubble_position)
+        self.bubble_y.valueChanged.connect(self.preview_bubble_position)
+        show_bubble = QPushButton('立即出现（预览 30 秒）')
+        show_bubble.clicked.connect(self.preview_bubble)
+        layout.addRow('', show_bubble)
+        hide_bubble = QPushButton('立即消失')
+        hide_bubble.clicked.connect(self.hide_preview_bubble)
+        layout.addRow('', hide_bubble)
+        self.update_bubble_data()
         self.volume = QSlider(Qt.Orientation.Horizontal)
         self.volume.setRange(0, 100)
         self.volume.setValue(pet._duck_sound.volume)
@@ -98,6 +119,32 @@ class SettingsDialog(QDialog):
         for name in catalog.personality_action_candidates(key, self.pet.acts, self.pet._action_tags):
             self.actions.addItem(f'★ {name}' if name in frequent else name, name)
 
+    def update_bubble_data(self) -> None:
+        self.bubble_data.setText(
+            f'X: {self.bubble_x.value() * self.pet.scale:+.1f} px，'
+            f'Y: {self.bubble_y.value() * self.pet.scale:+.1f} px（随桌宠缩放）'
+        )
+
+    def preview_bubble_position(self) -> None:
+        self.pet.set_bubble_position(self.bubble_x.value(), self.bubble_y.value())
+        self.update_bubble_data()
+        self.preview_bubble()
+
+    def preview_bubble(self) -> None:
+        self.pet.bubble_enabled = True
+        self.pet.show_bubble(30_000)
+
+    def hide_preview_bubble(self) -> None:
+        self.pet.bubble_enabled = False
+        self.pet.hide_bubble()
+
+    def reject(self) -> None:
+        enabled, x, y = self._original_bubble
+        self.pet.bubble_enabled = enabled
+        self.pet.set_bubble_position(x, y)
+        self.pet.hide_bubble(immediate=True)
+        super().reject()
+
     def preview(self) -> None:
         name = self.actions.currentData()
         if name:
@@ -109,6 +156,8 @@ class SettingsDialog(QDialog):
     def reset_fields(self) -> None:
         self.sound.setChecked(True)
         self.bubble.setChecked(True)
+        self.bubble_x.setValue(0)
+        self.bubble_y.setValue(0)
         self.volume.setValue(80)
         self.personality.setCurrentIndex(self.personality.findData('lively'))
         self.size.setValue(round(catalog.CANVAS_W * catalog.DEFAULT_SCALE))
@@ -121,6 +170,7 @@ class SettingsDialog(QDialog):
         self.pet.set_volume(self.volume.value())
         self.pet.set_personality(self.personality.currentData())
         self.pet.change_scale(self.size.value() / catalog.CANVAS_W)
+        self.pet.set_bubble_position(self.bubble_x.value(), self.bubble_y.value(), persist=True)
         self.pet.set_action_switch_delay(self.delay.value() * 1000)
         self.pet.set_action_interval(self.frequency.value())
         self.accept()

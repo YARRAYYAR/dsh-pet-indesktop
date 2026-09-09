@@ -159,6 +159,8 @@ class PetWindow(QWidget):
             config.get('proactive_greetings', True)
         )
         self.bubble_enabled: bool = bool(config.get('bubble_enabled', True))
+        self.bubble_offset_x = int(config.get('bubble_offset_x', 0))
+        self.bubble_offset_y = int(config.get('bubble_offset_y', 0))
         self._duck_sound = DuckScream(config.dir)
         self._duck_sound.enabled = self.sound_enabled
         self._duck_sound.volume = int(config.get('volume', 80))
@@ -306,7 +308,7 @@ class PetWindow(QWidget):
     def _apply_scale(self) -> None:
         """按逻辑画布缩放窗口；素材分辨率不会改变桌宠大小。"""
         self._w = max(1, int(round(catalog.CANVAS_W * self.scale)))
-        self._bubble_h = int(round(230 * self.scale))
+        self._bubble_h = int(round(330 * self.scale))
         canvas_height = int(round((catalog.CANVAS_H + catalog.PAD) * self.scale))
         self._h = max(1, canvas_height + self._bubble_h)
         self.setFixedSize(self._w, self._h)
@@ -681,8 +683,18 @@ class PetWindow(QWidget):
         margin = 14.0 * s
         width = min(self._w - 2 * margin, 360.0 * s)
         height = width * 0.63
-        return QRectF((self._w - width) / 2.0 - 35.0 * s,
-                      12.0 * s, max(1.0, width), height)
+        return QRectF((self._w - width) / 2.0 + (self.bubble_offset_x - 35.0) * s,
+                      (112.0 + self.bubble_offset_y) * s, max(1.0, width), height)
+
+    def set_bubble_position(self, x: int, y: int, *, persist: bool = False) -> None:
+        self.bubble_offset_x = max(-90, min(90, int(x)))
+        self.bubble_offset_y = max(-90, min(90, int(y)))
+        if persist:
+            self.cfg.set('bubble_offset_x', self.bubble_offset_x)
+            self.cfg.set('bubble_offset_y', self.bubble_offset_y)
+            self.cfg.save()
+        self._sync_mask()
+        self.update()
 
     @staticmethod
     def _bubble_body_path(rect: QRectF) -> QPainterPath:

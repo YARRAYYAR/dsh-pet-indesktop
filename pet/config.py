@@ -55,6 +55,8 @@ class Config:
             'duck_sound': True,             # 旧配置兼容字段
             'proactive_greetings': True,    # 偶尔主动播放挥手问候
             'bubble_enabled': True,         # 显示无文字动态气泡
+            'bubble_offset_x': 0,
+            'bubble_offset_y': 0,
             'favorites': [],                # 用户收藏的动画名
             'playlist': [],                 # 播放列表动画名
             'playlist_mode': 'off',         # off / loop / random
@@ -88,6 +90,12 @@ class Config:
 
     def _normalize(self) -> None:
         """把外部 JSON 限制到窗口层可以安全消费的类型和值域。"""
+        for key in ('bubble_offset_x', 'bubble_offset_y'):
+            try:
+                value = int(self.data[key])
+            except (TypeError, ValueError, OverflowError):
+                value = 0
+            self.data[key] = max(-90, min(90, value))
         for key, default in (
             ('scale', catalog.DEFAULT_SCALE),
             ('playback_speed', 1.0),
