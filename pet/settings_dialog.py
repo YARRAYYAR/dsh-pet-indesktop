@@ -20,7 +20,7 @@ class SettingsDialog(QDialog):
         self.sound = QCheckBox('开启声音')
         self.sound.setChecked(pet.sound_enabled)
         layout.addRow('声音', self.sound)
-        self.bubble = QCheckBox('显示对话气泡')
+        self.bubble = QCheckBox('显示动态气泡')
         self.bubble.setChecked(pet.bubble_enabled)
         layout.addRow('互动', self.bubble)
         self.volume = QSlider(Qt.Orientation.Horizontal)

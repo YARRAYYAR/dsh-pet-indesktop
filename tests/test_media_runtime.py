@@ -21,7 +21,6 @@ from PySide6.QtGui import QColor, QImage, QMouseEvent  # noqa: E402
 from PySide6.QtWidgets import QApplication  # noqa: E402
 
 from pet.config import Config  # noqa: E402
-from pet import catalog  # noqa: E402
 from pet.library import MovieLibrary  # noqa: E402
 from pet.window import PetWindow  # noqa: E402
 from pet.settings_dialog import SettingsDialog  # noqa: E402
@@ -178,24 +177,25 @@ class MediaRuntimeTests(unittest.TestCase):
     def test_bubble_is_drawn_and_removed_from_hit_region(self) -> None:
         with self.interaction_window() as window:
             point = window._bubble_geometry().center().toPoint()
-            window.show_bubble('测试气泡')
+            window.show_bubble()
             self.assertTrue(window._bubble_visible)
-            self.assertEqual(window._bubble_text, '测试气泡')
+            self.assertEqual(window._bubble_progress, 0.0)
+            window._bubble_anim_timer.stop()
+            window._bubble_progress = 1.0
+            window._sync_mask()
             self.assertTrue(window._is_in_interactive_area(point))
             tail_point = window._bubble_tail_rects(
                 window._bubble_geometry()
             )[1].center().toPoint()
             self.assertTrue(window._bubble_hit_test(tail_point))
 
-            window.hide_bubble()
+            window.hide_bubble(immediate=True)
             self.assertFalse(window._bubble_visible)
             self.assertFalse(window._is_in_interactive_area(point))
 
-    def test_bubble_toggle_and_personality_text_persist(self) -> None:
+    def test_bubble_toggle_persists_without_text(self) -> None:
         with self.interaction_window() as window:
-            window.set_personality('cool')
             window.show_bubble()
-            self.assertIn(window._bubble_text, catalog.PERSONALITY_BUBBLE_LINES['cool'])
             window.set_bubble_enabled(False)
             self.assertFalse(window.bubble_enabled)
             self.assertFalse(window._bubble_visible)
@@ -203,6 +203,7 @@ class MediaRuntimeTests(unittest.TestCase):
             window.set_bubble_enabled(True)
             self.assertTrue(window.bubble_enabled)
             self.assertTrue(window._bubble_visible)
+            self.assertEqual(window._bubble_progress, 0.0)
 
     def test_small_pet_click_jitter_and_drag_use_system_threshold(self) -> None:
         with self.interaction_window() as window, patch.object(window, '_queue_tap') as tap:

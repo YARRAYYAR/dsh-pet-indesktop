@@ -54,7 +54,7 @@ class Config:
             'volume': 80,
             'duck_sound': True,             # 旧配置兼容字段
             'proactive_greetings': True,    # 偶尔主动播放挥手问候
-            'bubble_enabled': True,         # 显示桌宠对话气泡
+            'bubble_enabled': True,         # 显示无文字动态气泡
             'favorites': [],                # 用户收藏的动画名
             'playlist': [],                 # 播放列表动画名
             'playlist_mode': 'off',         # off / loop / random
