@@ -1,5 +1,9 @@
 # dsh-pet-indesktop
 
+## 2026-09-10 本地控制面板版本
+
+本地构建包：`dist/DSH-Pet-Control-Panel-macOS-arm64.zip`（Apple Silicon）。五页控制面板、双栏动作库、搜索时排序、即时预览与取消恢复。保留原版拖拽回弹、快速拖动加速、短音效、对话框开关和 JSON 导入导出；使用说明见 [ACTION_LIBRARY.md](ACTION_LIBRARY.md)。源码和完整的 91 段原视频保留在本项目。
+
 ## 下载
 
 无需从源码构建，直接到 [Releases](https://github.com/MerZlin/dsh-pet-indesktop/releases)

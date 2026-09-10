@@ -24,6 +24,9 @@ from . import catalog
 
 def _default_base() -> Path:
     """按平台返回配置根目录（Windows=APPDATA，macOS=Application Support，Linux=~/.config）。"""
+    override = os.environ.get('DSH_PET_CONFIG_BASE')
+    if override:
+        return Path(override).expanduser()
     if sys.platform == 'win32':
         return Path(os.environ.get('APPDATA') or Path.home())
     if sys.platform == 'darwin':

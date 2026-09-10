@@ -40,9 +40,10 @@ from .config import Config
 from .interaction import classify_tap_burst, cursor_facing, edge_contacts
 from .library import MovieLibrary
 from .performance import LoadGovernor, system_load_ratio
-from .sound import DuckScream
+from .sound import BounceSound, DuckScream
 from .settings_dialog import SettingsDialog
-from .webm_clip import frame_canvas_image
+from .frames import frame_canvas_image
+from .drag_motion import pointer_velocity, release_velocity, spring_step
 
 
 def _mac_set_window_level(view_id: int, level: int) -> bool:
@@ -163,6 +164,9 @@ class PetWindow(QWidget):
         self._duck_sound = DuckScream(config.dir)
         self._duck_sound.enabled = self.sound_enabled
         self._duck_sound.volume = int(config.get('volume', 80))
+        self._bounce_sound = BounceSound(config.dir)
+        self._bounce_sound.enabled = self.sound_enabled
+        self._bounce_sound.volume = self._duck_sound.volume
         self._recent_actions = []
         self.action_interval_seconds = int(config.get('action_interval_seconds', 0))
         self._last_action_started = time.monotonic()
@@ -254,6 +258,7 @@ class PetWindow(QWidget):
 
         # ---- 拖动物理 ----
         self._physics_timer = QTimer(self)
+        self._physics_timer.setTimerType(Qt.TimerType.PreciseTimer)
         self._physics_timer.setInterval(16)
         self._physics_timer.timeout.connect(self._on_physics_tick)
         self._physics_mode: str | None = None  # None / 'drag' / 'throw'
@@ -263,6 +268,7 @@ class PetWindow(QWidget):
         self._drag_target: QPoint | None = None
         self._last_global: QPoint | None = None
         self._last_move_time = 0.0
+        self._pointer_velocity = (0.0, 0.0)
 
         # ---- 鼠标靠近与主动问候 ----
         self._cursor_timer = QTimer(self)
@@ -313,7 +319,7 @@ class PetWindow(QWidget):
         self._h = max(1, canvas_height + self._bubble_h)
         self.setFixedSize(self._w, self._h)
 
-    def change_scale(self, scale: float) -> None:
+    def change_scale(self, scale: float, *, persist: bool = True) -> None:
         """切换缩放；保持窗口底边不动（脚踩的地面不变）。"""
         scale = max(0.25, min(2.0, float(scale)))
         if abs(scale - self.scale) < 1e-6:
@@ -325,7 +331,8 @@ class PetWindow(QWidget):
         self.move(self.x(), old_bottom - self._h + 1)
         self._switch(self.anim)
         self.update()
-        self._save_position()
+        if persist:
+            self._save_position()
 
     # ================================================================ 位置
     def _screen_available(self):
@@ -889,10 +896,21 @@ class PetWindow(QWidget):
 
     def _edit_action_set(self, key: str, title: str) -> None:
         current = list(self.favorites if key == 'favorites' else self.playlist)
-        dialog = ActionSetDialog(title, list(self.lib.names()), current, self)
-        if dialog.exec() != dialog.DialogCode.Accepted:
+        dialog = ActionSetDialog(
+            title, list(self.lib.names()), current, self,
+            allow_exchange=key == 'playlist',
+        )
+        try:
+            accepted = dialog.exec() == dialog.DialogCode.Accepted
+            selected = dialog.selected_names() if accepted else None
+        finally:
+            dialog.deleteLater()
+        if selected is None:
             return
-        selected = [name for name in dialog.selected_names() if name in self.lib.names()]
+        self._apply_action_set(key, selected)
+
+    def _apply_action_set(self, key: str, selected: list[str]) -> None:
+        selected = [name for name in selected if name in self.lib.names()]
         if key == 'favorites':
             self.favorites = selected
         else:
@@ -1028,14 +1046,20 @@ class PetWindow(QWidget):
 
     def open_settings(self) -> None:
         dialog = SettingsDialog(self)
-        dialog.exec()
+        try:
+            dialog.exec()
+        finally:
+            dialog.deleteLater()
 
-    def set_volume(self, value: int) -> None:
+    def set_volume(self, value: int, *, persist: bool = True) -> None:
         self._duck_sound.volume = max(0, min(100, int(value)))
-        self.cfg.set('volume', self._duck_sound.volume)
-        self.cfg.save()
+        self._bounce_sound.volume = self._duck_sound.volume
+        if persist:
+            self.cfg.set('volume', self._duck_sound.volume)
+            self.cfg.save()
         if self._duck_sound.volume == 0:
             self._duck_sound.close()
+            self._bounce_sound.close()
 
     def set_action_interval(self, seconds: int) -> None:
         self.action_interval_seconds = max(0, min(3600, int(seconds)))
@@ -1183,22 +1207,6 @@ class PetWindow(QWidget):
         """Qt 鼠标坐标使用逻辑像素；阈值跟随系统，不随桌宠尺寸缩小。"""
         return max(catalog.DRAG_THRESHOLD, QApplication.startDragDistance())
 
-    def _update_drag_velocity(self, global_pos: QPoint) -> None:
-        """按原版抛掷逻辑记录更灵敏的拖动速度。"""
-        now = time.monotonic()
-        dt = now - self._last_move_time
-        if self._last_global is not None and 0.0 < dt <= 0.12:
-            inst_vx = (global_pos.x() - self._last_global.x()) / dt
-            inst_vy = (global_pos.y() - self._last_global.y()) / dt
-            max_speed = catalog.DRAG_SPEED_SAMPLE_MAX
-            inst_vx = max(-max_speed, min(max_speed, inst_vx))
-            inst_vy = max(-max_speed, min(max_speed, inst_vy))
-            alpha = catalog.DRAG_SPEED_EMA_ALPHA
-            self._phys_vel[0] = self._phys_vel[0] * (1.0 - alpha) + inst_vx * alpha
-            self._phys_vel[1] = self._phys_vel[1] * (1.0 - alpha) + inst_vy * alpha
-        self._last_global = global_pos
-        self._last_move_time = now
-
     def _boost_throw_velocity(self) -> None:
         """按释放时速度整体放大抛掷向量，保持鼠标拖动方向。"""
         speed = math.hypot(self._phys_vel[0], self._phys_vel[1])
@@ -1213,6 +1221,8 @@ class PetWindow(QWidget):
         self._phys_vel[1] *= scale
 
     def mousePressEvent(self, event) -> None:  # noqa: N802
+        if self._suspended or self._shutting_down:
+            return
         if event.button() == Qt.MouseButton.LeftButton:
             local_pos = event.position().toPoint()
             if self._bubble_hit_test(local_pos):
@@ -1229,6 +1239,7 @@ class PetWindow(QWidget):
             self._cancel_move()  # 按下即打断移动
             self._last_global = self._press_global
             self._last_move_time = time.monotonic()
+            self._pointer_velocity = (0.0, 0.0)
             self._phys_vel = [0.0, 0.0]
             self._phys_pos = [float(self.x()), float(self.y())]
             self._stop_physics()
@@ -1240,35 +1251,46 @@ class PetWindow(QWidget):
         if self._press_global is None or not (event.buttons() & Qt.MouseButton.LeftButton):
             return
         g = event.globalPosition().toPoint()
+        use_physics = self.drag_physics and not self._paused
         delta = g - self._press_global
         if not self._dragging:
             if math.hypot(delta.x(), delta.y()) < self._drag_threshold():
                 return  # 未超阈值：仍是点击候选
             self._dragging = True
             self._long_press_timer.stop()
-            if self.drag:
-                self._switch(self.drag)  # 进入拖拽：播放悬空反馈动画
-            if self.drag_physics:
-                self._phys_pos = [float(self.x()), float(self.y())]
-                self._drag_target = g - self._grab_offset
+            self.setCursor(Qt.CursorShape.ClosedHandCursor)
+            self._record_drag_pointer(g)
+            # 移动优先于动画切换；首个拖拽事件立即响应，不等待解码或时钟。
+            target = g - self._grab_offset
+            self.move(target)
+            if use_physics:
+                self._phys_pos = [float(target.x()), float(target.y())]
+                self._drag_target = target
                 self._start_physics('drag')
-                self._update_drag_velocity(g)
-            else:
-                self.move(g - self._grab_offset)
-                self._last_global = g
-                self._last_move_time = time.monotonic()
+            if self.drag and not self._paused:
+                self._switch(self.drag)  # 已预载时立即展示悬空首帧
             event.accept()
             return
 
         # 已经处于拖拽中
-        if self.drag_physics:
-            self._update_drag_velocity(g)
+        self._record_drag_pointer(g)
+        if use_physics:
             self._drag_target = g - self._grab_offset
             if self._physics_mode != 'drag':
                 self._start_physics('drag')
         else:
             self.move(g - self._grab_offset)  # 跟手（保持抓起时的偏移）
         event.accept()
+
+    def _record_drag_pointer(self, position: QPoint) -> None:
+        now = time.monotonic()
+        if self._last_global is not None:
+            delta = position - self._last_global
+            self._pointer_velocity = pointer_velocity(
+                self._pointer_velocity, delta.x(), delta.y(), now - self._last_move_time,
+            )
+        self._last_global = position
+        self._last_move_time = now
 
     def mouseReleaseEvent(self, event) -> None:  # noqa: N802
         if event.button() != Qt.MouseButton.LeftButton:
@@ -1277,6 +1299,7 @@ class PetWindow(QWidget):
         if self._press_global is None:
             return  # 没有有效按压，不能把透明处松手当成一次点击
         was_dragging = self._dragging
+        use_physics = self.drag_physics and not self._paused
         self._long_press_timer.stop()
         g = event.globalPosition().toPoint()
         dist = 0.0
@@ -1284,20 +1307,25 @@ class PetWindow(QWidget):
             d = g - self._press_global
             dist = math.hypot(d.x(), d.y())
         if was_dragging:
+            self.unsetCursor()
             self._just_dragged = True  # 抑制拖拽结束后的幽灵点击
             QTimer.singleShot(150, self._clear_just_dragged)
-            if self.drag_physics:
-                self._update_drag_velocity(g)
+            if use_physics:
+                # 松手惯性来自鼠标采样，不混入弹簧追赶速度；停住再松手不甩飞。
+                if self._last_global is not None and g != self._last_global:
+                    self._record_drag_pointer(g)
+                self._phys_vel = list(release_velocity(
+                    self._pointer_velocity, time.monotonic() - self._last_move_time,
+                ))
                 self._boost_throw_velocity()
-                # 松手后进入原版抛掷物理：重力 + 碰撞反弹 + 低速停止
                 self._start_physics('throw')
             else:
                 if self._grab_offset is not None:
                     self.move(g - self._grab_offset)  # 停在松手处
-            edge_bounced = self._trigger_edge_feedback()
-            if not self.drag_physics:
+            edge_bounced = False if self._paused else self._trigger_edge_feedback()
+            if not use_physics:
                 self._save_position()
-            if self.idles and not edge_bounced:
+            if self.idles and not edge_bounced and not self._paused:
                 self._switch(self._pick(self.idles))  # 回待机缓冲
         elif dist < self._drag_threshold() and not self._long_press_fired:
             self._queue_tap()
@@ -1466,6 +1494,7 @@ class PetWindow(QWidget):
             self._phys_pos = [float(self.x()), float(self.y())]
             self._start_physics('throw')
         self._start_squash()
+        self._play_bounce_sound()
         name = self._special_animation('被吓一跳', self.acts or self.clicks)
         if name:
             self._switch(name)
@@ -1475,7 +1504,12 @@ class PetWindow(QWidget):
         if not self._is_in_interactive_area(event.pos()):
             return
         menu = QMenu(self)
-        menu.addAction('设置与动作预览…', self.open_settings)
+        menu.addAction('控制面板…', self.open_settings)
+        menu.addAction('暂停 / 继续', self.toggle_pause)
+        menu.addAction('随机动作', self.play_random_action)
+        self.add_bubble_toggle(menu)
+        root_menu = menu
+        menu = root_menu.addMenu('更多控制')
 
         if self.idles:
             m_idle = menu.addMenu('动画 · 待机')
@@ -1509,16 +1543,12 @@ class PetWindow(QWidget):
             act.setChecked(abs(self.playback_speed - v) < 0.01)
             act.triggered.connect(lambda checked=False, v=v: self.set_playback_speed(v))
 
-        drag_physics_act = menu.addAction('拖动物理')
+        drag_physics_act = menu.addAction('弹性拖拽与抛掷（原版回弹）')
         drag_physics_act.setCheckable(True)
         drag_physics_act.setChecked(self.drag_physics)
         drag_physics_act.toggled.connect(self.set_drag_physics)
 
         interaction = menu.addMenu('互动反馈')
-        bubble = interaction.addAction('动态气泡')
-        bubble.setCheckable(True)
-        bubble.setChecked(self.bubble_enabled)
-        bubble.toggled.connect(self.set_bubble_enabled)
         duck_sound = interaction.addAction('声音开关')
         duck_sound.setCheckable(True)
         duck_sound.setChecked(self.sound_enabled)
@@ -1596,8 +1626,12 @@ class PetWindow(QWidget):
         custom_delay.triggered.connect(self._ask_action_switch_delay)
 
         menu.addSeparator()
-        menu.addAction('退出', self._request_quit)
-        menu.exec(event.globalPos())
+        root_menu.addAction('回到右下角', self._go_default_corner)
+        root_menu.addAction('退出', self._request_quit)
+        try:
+            root_menu.exec(event.globalPos())
+        finally:
+            root_menu.deleteLater()
 
     def _request_switch_character(self, character_id: str) -> None:
         """请求切换角色；优先交给 app 做热切换，否则只保存配置。"""
@@ -1705,6 +1739,8 @@ class PetWindow(QWidget):
             return
         self._paused = on
         if on:
+            self._cancel_drag_input()
+            self._bounce_sound.close()
             self.hide_bubble(immediate=True)
             self._cancel_move()
             self._action_switch_timer.stop()
@@ -1743,6 +1779,8 @@ class PetWindow(QWidget):
         if self._suspended or self._shutting_down:
             return
         self._suspended = True
+        self._cancel_drag_input()
+        self._bounce_sound.close()
         self.hide_bubble(immediate=True)
         self._long_press_timer.stop()
         self._tap_timer.stop()
@@ -1775,6 +1813,8 @@ class PetWindow(QWidget):
     def set_mouse_through(self, on: bool) -> None:
         """鼠标穿透：开启后桌宠不接收鼠标事件，点击会穿透到下层。"""
         self.mouse_through = bool(on)
+        if self.mouse_through:
+            self._cancel_drag_input()
         self.cfg.set('mouse_through', self.mouse_through)
         self.cfg.save()
         was_visible = self.isVisible()
@@ -1784,24 +1824,28 @@ class PetWindow(QWidget):
         else:
             self.hide()
 
-    def set_drag_physics(self, on: bool) -> None:
+    def set_drag_physics(self, on: bool, *, persist: bool = True) -> None:
         """拖动物理开关。"""
         self.drag_physics = bool(on)
-        self.cfg.set('drag_physics', self.drag_physics)
-        self.cfg.save()
+        if persist:
+            self.cfg.set('drag_physics', self.drag_physics)
+            self.cfg.save()
         if not self.drag_physics:
             self._stop_physics()
 
-    def set_sound_enabled(self, on: bool) -> None:
+    def set_sound_enabled(self, on: bool, *, persist: bool = True) -> None:
         """统一声音开关；当前包含尖叫鸭音效，后续音效可复用。"""
         self.sound_enabled = bool(on)
         self.duck_sound_enabled = self.sound_enabled
         self._duck_sound.enabled = self.sound_enabled
-        self.cfg.set('sound_enabled', self.sound_enabled)
-        self.cfg.set('duck_sound', self.sound_enabled)
-        self.cfg.save()
+        self._bounce_sound.enabled = self.sound_enabled
+        if persist:
+            self.cfg.set('sound_enabled', self.sound_enabled)
+            self.cfg.set('duck_sound', self.sound_enabled)
+            self.cfg.save()
         if not self.sound_enabled:
             self._duck_sound.close()
+            self._bounce_sound.close()
         self.soundChanged.emit(self.sound_enabled)
         self.duckSoundChanged.emit(self.sound_enabled)
 
@@ -1820,11 +1864,21 @@ class PetWindow(QWidget):
             self._greeting_timer.stop()
         self.proactiveGreetingsChanged.emit(self.proactive_greetings)
 
-    def set_bubble_enabled(self, on: bool) -> None:
+    def add_bubble_toggle(self, menu: QMenu):
+        action = menu.addAction('显示对话框（气泡）')
+        action.setCheckable(True)
+        action.setChecked(self.bubble_enabled)
+        action.triggered.connect(self.set_bubble_enabled)
+        self.bubbleChanged.connect(action.setChecked)
+        return action
+
+    def set_bubble_enabled(self, on: bool, *, persist: bool = True) -> None:
         """切换无文字对话气泡；关闭时立即清掉窗口命中区域。"""
         self.bubble_enabled = bool(on)
-        self.cfg.set('bubble_enabled', self.bubble_enabled)
-        self.cfg.save()
+        self._bubble_preview = None
+        if persist:
+            self.cfg.set('bubble_enabled', self.bubble_enabled)
+            self.cfg.save()
         if self.bubble_enabled:
             self.show_bubble()
         else:
@@ -1833,9 +1887,25 @@ class PetWindow(QWidget):
 
     def _start_physics(self, mode: str) -> None:
         if self._physics_mode != mode or not self._physics_timer.isActive():
+            screen = self.screen()
+            refresh = screen.refreshRate() if screen is not None else 60.0
+            self._physics_timer.setInterval(round(1000 / max(60.0, min(120.0, refresh))))
             self._last_physics_time = time.monotonic()
             self._physics_mode = mode
             self._physics_timer.start()
+
+    def _cancel_drag_input(self) -> None:
+        """隐藏、暂停或关闭时释放抓手状态，避免恢复后沿用旧按压。"""
+        self._dragging = False
+        self._press_global = None
+        self._grab_offset = None
+        self._drag_target = None
+        self._last_global = None
+        self._pointer_velocity = (0.0, 0.0)
+        self._long_press_timer.stop()
+        self._tap_timer.stop()
+        self.unsetCursor()
+        self._stop_physics()
 
     def _stop_physics(self) -> None:
         self._physics_timer.stop()
@@ -1875,20 +1945,17 @@ class PetWindow(QWidget):
         if self._drag_target is None:
             return
         tx, ty = self._drag_target.x(), self._drag_target.y()
-        px, py = self._phys_pos
-        # 弹簧跟随 + 阻尼，产生惯性/离心感
-        ax = (
-            (tx - px) * catalog.DRAG_FOLLOW_STIFFNESS
-            - self._phys_vel[0] * catalog.DRAG_FOLLOW_DAMPING
-        )
-        ay = (
-            (ty - py) * catalog.DRAG_FOLLOW_STIFFNESS
-            - self._phys_vel[1] * catalog.DRAG_FOLLOW_DAMPING
-        )
-        self._phys_vel[0] += ax * dt
-        self._phys_vel[1] += ay * dt
-        self._phys_pos[0] += self._phys_vel[0] * dt
-        self._phys_pos[1] += self._phys_vel[1] * dt
+        rebounded = False
+        for axis, target in enumerate((tx, ty)):
+            previous_velocity = self._phys_vel[axis]
+            self._phys_pos[axis], self._phys_vel[axis] = spring_step(
+                self._phys_pos[axis], self._phys_vel[axis], target, dt,
+            )
+            offset = self._phys_pos[axis] - target
+            if abs(offset) >= 3.0 and previous_velocity * self._phys_vel[axis] < 0 and offset * previous_velocity > 0:
+                rebounded = True
+        if rebounded:
+            QTimer.singleShot(0, self._play_bounce_sound)
 
     def _tick_throw_physics(self, dt: float, avail) -> None:
         self._phys_vel[1] += 1400.0 * dt  # 重力
@@ -1902,19 +1969,24 @@ class PetWindow(QWidget):
         right = avail.right() - self._w + margin
         bottom = avail.bottom() - self._h
         bounced = False
+        impact_speed = 0.0
         if self._phys_pos[0] < left:
+            impact_speed = abs(self._phys_vel[0])
             self._phys_pos[0] = left
             self._phys_vel[0] = abs(self._phys_vel[0]) * 0.78
             bounced = True
         elif self._phys_pos[0] > right:
+            impact_speed = abs(self._phys_vel[0])
             self._phys_pos[0] = right
             self._phys_vel[0] = -abs(self._phys_vel[0]) * 0.78
             bounced = True
         if self._phys_pos[1] < top:
+            impact_speed = max(impact_speed, abs(self._phys_vel[1]))
             self._phys_pos[1] = top
             self._phys_vel[1] = abs(self._phys_vel[1]) * 0.78
             bounced = True
         elif self._phys_pos[1] >= bottom:
+            impact_speed = max(impact_speed, abs(self._phys_vel[1]))
             self._phys_pos[1] = bottom
             # 地面摩擦力：水平速度逐渐衰减，避免一直在地面滑/弹
             friction = 2.5 * dt
@@ -1924,6 +1996,9 @@ class PetWindow(QWidget):
             else:
                 self._phys_vel[1] = -abs(self._phys_vel[1]) * 0.78
             bounced = True
+        if bounced and impact_speed >= 80.0:
+            # 先完成本轮位置更新，再播放音效；静止落地不连续发声。
+            QTimer.singleShot(0, self._play_bounce_sound)
         speed = math.hypot(self._phys_vel[0], self._phys_vel[1])
         # 在地面上且水平速度也很低时，彻底停下
         if self._phys_pos[1] >= bottom - 1 and abs(self._phys_vel[1]) < 1 and abs(self._phys_vel[0]) < 15:
@@ -1931,12 +2006,17 @@ class PetWindow(QWidget):
         elif bounced and speed < 40 and abs(self._phys_vel[1]) < 1:
             self._stop_physics()
 
+    def _play_bounce_sound(self) -> None:
+        if not self._paused and not self._suspended and not self._shutting_down:
+            self._bounce_sound.play()
+
     def _request_quit(self) -> None:
         self._save_position()
         QApplication.instance().quit()
 
     def shutdown(self) -> None:
         """停止窗口计时器和媒体 reader，可安全重复调用。"""
+        self._cancel_drag_input()
         if self._shutting_down:
             return
         self._shutting_down = True
@@ -1960,6 +2040,7 @@ class PetWindow(QWidget):
             self.movie = None
         self.lib.close()
         self._duck_sound.close()
+        self._bounce_sound.close()
 
     def closeEvent(self, event) -> None:  # noqa: N802
         self._save_position()

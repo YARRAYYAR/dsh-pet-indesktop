@@ -17,6 +17,8 @@ from pathlib import Path
 class DuckScream:
     """生成一段短促的卡通尖叫鸭，不把音频解码库塞进桌宠包。"""
 
+    COOLDOWN = 0.35
+
     def __init__(self, output_dir: Path) -> None:
         self.path = Path(output_dir) / "sounds" / "screaming-duck.wav"
         self.enabled = True
@@ -29,7 +31,7 @@ class DuckScream:
         if not self.enabled or self.volume <= 0:
             return
         now = time.monotonic()
-        if now - self._last_play < 0.35:
+        if now - self._last_play < self.COOLDOWN:
             return
         self._last_play = now
         try:
@@ -37,7 +39,7 @@ class DuckScream:
             if sys.platform == "darwin":
                 player = shutil.which("afplay")
                 if not player:
-                    self._warn_once("找不到 afplay，尖叫鸭音效不可用")
+                    self._warn_once("找不到 afplay，音效不可用")
                     return
                 if self._process is not None and self._process.poll() is None:
                     self._process.terminate()
@@ -63,7 +65,7 @@ class DuckScream:
                     stderr=subprocess.DEVNULL,
                 )
         except (OSError, RuntimeError, ValueError) as exc:
-            self._warn_once("尖叫鸭音效播放失败: %s", exc)
+            self._warn_once("音效播放失败: %s", exc)
 
     def close(self) -> None:
         if self._process is not None and self._process.poll() is None:
@@ -107,6 +109,40 @@ class DuckScream:
             sample = max(-1.0, min(1.0, tone * 0.24 * envelope))
             frames.extend(struct.pack("<h", int(sample * 32767)))
         with wave.open(str(self.path), "wb") as output:
+            output.setnchannels(1)
+            output.setsampwidth(2)
+            output.setframerate(sample_rate)
+            output.writeframes(frames)
+
+
+class BounceSound(DuckScream):
+    """短促的软弹簧音，复用系统异步播放器，不引入音频依赖。"""
+
+    COOLDOWN = 0.16
+
+    def __init__(self, output_dir: Path) -> None:
+        super().__init__(output_dir)
+        self.path = Path(output_dir) / 'sounds' / 'bounce-pop-v1.wav'
+
+    def _ensure_wave(self) -> None:
+        if self.path.is_file() and self.path.stat().st_size > 44:
+            return
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        sample_rate = 24000
+        duration = 0.18
+        total = round(sample_rate * duration)
+        phase = 0.0
+        frames = bytearray()
+        for index in range(total):
+            t = index / sample_rate
+            frequency = 220.0 + 540.0 * math.exp(-t * 24.0)
+            phase += math.tau * frequency / sample_rate
+            # 5ms 淡入、30ms 收尾，避免尖锐爆音；音量低于点击尖叫鸭。
+            envelope = min(1.0, t / 0.005) * min(1.0, (total - 1 - index) / (sample_rate * 0.03))
+            envelope *= math.exp(-t * 15.0)
+            tone = math.sin(phase) + 0.15 * math.sin(phase * 2)
+            frames.extend(struct.pack('<h', round(tone * envelope * 0.25 * 32767)))
+        with wave.open(str(self.path), 'wb') as output:
             output.setnchannels(1)
             output.setsampwidth(2)
             output.setframerate(sample_rate)

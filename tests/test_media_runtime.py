@@ -362,7 +362,7 @@ class MediaRuntimeTests(unittest.TestCase):
                 self.assertEqual(window.scale, 1.0)
                 dialog = SettingsDialog(window)
                 dialog.reset_fields()
-                self.assertEqual(window._duck_sound.volume, 24)
+                self.assertEqual(window._duck_sound.volume, 80)
                 dialog.save()
                 self.assertEqual(window._duck_sound.volume, 80)
                 self.assertEqual(window.personality, 'lively')

@@ -16,7 +16,6 @@ WebM-backed clip library（webm 主路线）。
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import ctypes
 import logging
 import queue
@@ -24,130 +23,26 @@ import sys
 import threading
 
 from PySide6.QtCore import QObject, QTimer, Signal
-from PySide6.QtGui import QBitmap, QImage, QPainter, QPixmap, QRegion
+from PySide6.QtGui import QImage, QPixmap
 
 from . import catalog
 
+# 保留原导入路径，兼容已有窗口、工具及外部调用。
+from .frames import (
+    DecodedFrame,
+    clear_alpha_floor,
+    frame_canvas_image,
+    trim_transparent_frame,
+)
+
 logger = logging.getLogger(__name__)
-TRANSPARENT_CROP_PADDING = 8
-ALPHA_FLOOR_MASK = bytes(255 if value == 1 else 0 for value in range(256))
 
-
-@dataclass(frozen=True, slots=True)
-class DecodedFrame:
-    """裁掉透明边缘后的图像，以及它在原解码画布中的位置。"""
-
-    image: QImage
-    x: int
-    y: int
-    canvas_width: int
-    canvas_height: int
-
-    @property
-    def offset(self) -> tuple[int, int]:
-        return self.x, self.y
-
-    @property
-    def canvas_size(self) -> tuple[int, int]:
-        return self.canvas_width, self.canvas_height
-
-
-def clear_alpha_floor(image: QImage) -> QImage:
-    """清除 VP9 Alpha 常见的精确 1 阶底噪，不改变真实半透明边缘。"""
-    result = image.convertToFormat(QImage.Format.Format_ARGB32_Premultiplied)
-    if result.isNull():
-        return result
-
-    # 用 C 实现的 bytes.translate 生成“仅 Alpha=1 可见”的清除遮罩，
-    # 再用 DestinationOut 清掉这些像素。这样 Alpha=2 及以上（真实抗锯齿
-    # 边缘）完全原样保留，且会同步清掉透明像素里残留的 RGB。
-    alpha = result.convertToFormat(QImage.Format.Format_Alpha8)
-    alpha_bytes = bytes(alpha.constBits())
-    if b'\x01' not in alpha_bytes:
-        return result
-    mask_alpha = QImage(
-        result.width(),
-        result.height(),
-        QImage.Format.Format_Alpha8,
-    )
-    mask_alpha.bits()[:] = alpha_bytes.translate(ALPHA_FLOOR_MASK)
-    mask = QImage(
-        result.width(),
-        result.height(),
-        QImage.Format.Format_ARGB32_Premultiplied,
-    )
-    mask.fill(0xFFFFFFFF)
-    mask.setAlphaChannel(mask_alpha)
-    painter = QPainter(result)
-    painter.setCompositionMode(
-        QPainter.CompositionMode.CompositionMode_DestinationOut
-    )
-    painter.drawImage(0, 0, mask)
-    painter.end()
-    return result
-
-
-def trim_transparent_frame(
-    image: QImage,
-    *,
-    padding: int = TRANSPARENT_CROP_PADDING,
-    soften_edges: bool = False,
-) -> DecodedFrame:
-    """裁掉透明压缩噪声，并保留安全边与原画布坐标。"""
-    canvas_width, canvas_height = image.width(), image.height()
-    if image.isNull():
-        return DecodedFrame(QImage(), 0, 0, canvas_width, canvas_height)
-
-    # Alpha=1 必须在计算边界前清掉；否则它虽然不会进入最终画面，仍会把
-    # 每一帧的裁剪范围撑大，造成动画边缘/尺寸在播放时抖动。
-    working = clear_alpha_floor(image) if soften_edges else image
-    bounds = QRegion(QBitmap.fromImage(working.createAlphaMask())).boundingRect()
-    if bounds.isEmpty():
-        transparent = QImage(
-            1,
-            1,
-            QImage.Format.Format_ARGB32_Premultiplied,
-        )
-        transparent.fill(0)
-        return DecodedFrame(transparent, 0, 0, canvas_width, canvas_height)
-
-    padding = max(0, int(padding))
-    if padding:
-        bounds = bounds.adjusted(-padding, -padding, padding, padding).intersected(
-            image.rect()
-        )
-
-    cropped = working.copy(bounds).convertToFormat(
-        QImage.Format.Format_ARGB32_Premultiplied
-    )
-
-    return DecodedFrame(
-        cropped,
-        bounds.x(),
-        bounds.y(),
-        canvas_width,
-        canvas_height,
-    )
-
-
-def frame_canvas_image(frame: DecodedFrame) -> QImage:
-    """兼容接口需要完整画布时才还原；动画热路径不调用。"""
-    if frame.canvas_width <= 0 or frame.canvas_height <= 0:
-        return QImage()
-    canvas = QImage(
-        frame.canvas_width,
-        frame.canvas_height,
-        QImage.Format.Format_ARGB32,
-    )
-    canvas.fill(0)
-    painter = QPainter(canvas)
-    painter.drawImage(frame.x, frame.y, frame.image)
-    painter.end()
-    return canvas
 
 # 解码输出最多 1280×720，RGBA 单帧约 3.5 MiB。2 帧覆盖约 83ms（24fps），
 # 在保留短时调度缓冲的同时，把队列峰值控制在约 7 MiB。
 FRAME_QUEUE_SIZE = 2
+# 只限制滤镜并行度；16 位预乘、采样算法、输出像素格式保持不变。
+FFMPEG_FILTER_THREADS = 2
 
 # 在解码进程内先预乘 Alpha，再面积采样，避免透明背景 RGB 混入边缘。
 # 16 位中间格式减小低 Alpha 的量化损失；输出仍是普通 8 位 RGBA。
@@ -218,7 +113,7 @@ def _reader_loop(
             path,
             pix_fmt='rgba',
             bits_per_pixel=bpp * 8,
-            input_params=['-c:v', 'libvpx-vp9'],
+            input_params=['-c:v', 'libvpx-vp9', '-filter_threads', str(FFMPEG_FILTER_THREADS)],
             output_params=['-vf', decode_filter],
         )
         meta = dict(next(gen))
@@ -428,12 +323,11 @@ class WebMClip(QObject):
         """重置播放位置；播放中的切换不再同步解码首帧。"""
         self.stop()
         self._frame_index = 0
-        if preload:
-            if self._first_frame is not None:
-                self._current_frame = self._first_frame
-            else:
-                self._current_frame = None
-                self._decode_first_frame_sync()
+        if self._first_frame is not None:
+            self._current_frame = self._first_frame
+        elif preload:
+            self._current_frame = None
+            self._decode_first_frame_sync()
 
     def jumpToFrame(self, frame_index: int) -> bool:
         # 本项目只需要回到首帧；完整 seek 通过重启 reader + 丢弃帧实现。
@@ -458,7 +352,7 @@ class WebMClip(QObject):
                 _ffmpeg_safe_path(self.path),
                 pix_fmt='rgba',
                 bits_per_pixel=self._bpp * 8,
-                input_params=['-c:v', 'libvpx-vp9'],
+                input_params=['-c:v', 'libvpx-vp9', '-filter_threads', str(FFMPEG_FILTER_THREADS)],
                 output_params=['-vf', self._decode_filter],
             )
             meta = next(gen)
@@ -539,7 +433,11 @@ class WebMClip(QObject):
         if kind == 'meta':
             self._apply_stream_meta(payload)
             self._timer.setInterval(self._timer_interval())
-            return
+            # 元数据不是显示帧；若首帧已到队列，同一轮立即呈现，少等一个帧周期。
+            try:
+                kind, payload = self._queue.get_nowait()
+            except queue.Empty:
+                return
         if kind == 'error':
             self.errorOccurred.emit(str(payload))
             return
@@ -572,3 +470,10 @@ class WebMClip(QObject):
         )
         self._frame_index += 1
         self.frameChanged.emit(self._frame_index)
+
+    def release_frames(self, *, keep_first: bool = True) -> None:
+        """停止非活动播放器并释放末帧；保留预载首帧用于即时拖拽。"""
+        self.stop()
+        self._current_frame = None
+        if not keep_first:
+            self._first_frame = None

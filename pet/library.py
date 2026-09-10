@@ -27,9 +27,9 @@ from PySide6.QtCore import QObject, Signal
 from PySide6.QtGui import QMovie, QPixmap
 
 from . import catalog
-from .webm_clip import (
+from .webm_clip import WebMClip
+from .frames import (
     DecodedFrame,
-    WebMClip,
     frame_canvas_image,
     trim_transparent_frame,
 )
@@ -139,6 +139,11 @@ class GifClip(QObject):
     def warm_meta(self) -> None:
         # GIF 由 QMovie 直接管理元数据，无需额外预热
         return
+
+    def release_frames(self, *, keep_first: bool = True) -> None:
+        """QMovie 使用 CacheNone；丢弃包装层末帧，按需重新读取。"""
+        self.stop()
+        self._current_frame = None
 
     def _on_frame_changed(self, n: int) -> None:
         self._refresh_frame()
@@ -287,11 +292,18 @@ class MovieLibrary(QObject):
             self._active_name = previous
             raise
         self._trim_cache()
+        self._release_inactive_frames()
         return movie
 
     def deactivate(self, name: str | None = None) -> None:
         if name is None or name == self._active_name:
             self._active_name = None
+
+    def _release_inactive_frames(self) -> None:
+        """动作切换后只保留非活动 clip 的预载首帧和轻量播放器。"""
+        for name, clip in self._movies.items():
+            if name != self._active_name:
+                clip.release_frames(keep_first=True)
 
     def _trim_cache(self) -> None:
         while len(self._movies) > self._cache_limit:
@@ -307,7 +319,7 @@ class MovieLibrary(QObject):
         clip = self._movies.pop(name, None)
         if clip is None:
             return
-        clip.stop()
+        clip.release_frames(keep_first=False)
         clip.deleteLater()
 
     def frames(self, name: str) -> int:
