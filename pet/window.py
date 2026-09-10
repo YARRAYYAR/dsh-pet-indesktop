@@ -97,6 +97,7 @@ class PetWindow(QWidget):
     softEdgesChanged = Signal(bool)
     duckSoundChanged = Signal(bool)
     soundChanged = Signal(bool)
+    bounceSoundVariantChanged = Signal(str)
     proactiveGreetingsChanged = Signal(bool)
     bubbleChanged = Signal(bool)
     playlistChanged = Signal(str)
@@ -165,6 +166,7 @@ class PetWindow(QWidget):
         self._duck_sound.enabled = self.sound_enabled
         self._duck_sound.volume = int(config.get('volume', 80))
         self._bounce_sound = BounceSound(config.dir)
+        self.set_bounce_sound_variant(config.get('bounce_sound_variant', 'random'), persist=False)
         self._bounce_sound.enabled = self.sound_enabled
         self._bounce_sound.volume = self._duck_sound.volume
         self._recent_actions = []
@@ -1287,7 +1289,11 @@ class PetWindow(QWidget):
         if self._last_global is not None:
             delta = position - self._last_global
             self._pointer_velocity = pointer_velocity(
-                self._pointer_velocity, delta.x(), delta.y(), now - self._last_move_time,
+                self._pointer_velocity,
+                delta.x(),
+                delta.y(),
+                now - self._last_move_time,
+                max_speed=catalog.DRAG_SPEED_SAMPLE_MAX,
             )
         self._last_global = position
         self._last_move_time = now
@@ -1849,6 +1855,14 @@ class PetWindow(QWidget):
         self.soundChanged.emit(self.sound_enabled)
         self.duckSoundChanged.emit(self.sound_enabled)
 
+    def set_bounce_sound_variant(self, variant: str, *, persist: bool = True) -> None:
+        """选择实际碰撞时播放的回弹音，不影响拖动过程。"""
+        self._bounce_sound.set_variant(variant)
+        if persist:
+            self.cfg.set('bounce_sound_variant', self._bounce_sound.variant)
+            self.cfg.save()
+        self.bounceSoundVariantChanged.emit(self._bounce_sound.variant)
+
     def set_duck_sound(self, on: bool) -> None:
         """兼容旧调用名。"""
         self.set_sound_enabled(on)
@@ -1945,17 +1959,10 @@ class PetWindow(QWidget):
         if self._drag_target is None:
             return
         tx, ty = self._drag_target.x(), self._drag_target.y()
-        rebounded = False
         for axis, target in enumerate((tx, ty)):
-            previous_velocity = self._phys_vel[axis]
             self._phys_pos[axis], self._phys_vel[axis] = spring_step(
                 self._phys_pos[axis], self._phys_vel[axis], target, dt,
             )
-            offset = self._phys_pos[axis] - target
-            if abs(offset) >= 3.0 and previous_velocity * self._phys_vel[axis] < 0 and offset * previous_velocity > 0:
-                rebounded = True
-        if rebounded:
-            QTimer.singleShot(0, self._play_bounce_sound)
 
     def _tick_throw_physics(self, dt: float, avail) -> None:
         self._phys_vel[1] += 1400.0 * dt  # 重力

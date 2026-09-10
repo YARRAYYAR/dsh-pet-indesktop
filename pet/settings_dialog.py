@@ -21,6 +21,7 @@ class SettingsDialog(QDialog):
         apply_style(self)
         self._original = dict(scale=pet.scale, position=pet.pos(), volume=pet._duck_sound.volume,
             sound=pet.sound_enabled, bubble=pet.bubble_enabled, drag=pet.drag_physics,
+            bounce_variant=pet._bounce_sound.variant,
             bubble_x=pet.bubble_offset_x, bubble_y=pet.bubble_offset_y,
             paused=pet._paused, anim=pet.anim, visible=pet.isVisible(), suspended=pet._suspended)
         self._did_preview_action = False
@@ -159,8 +160,15 @@ class SettingsDialog(QDialog):
         volume_row.addWidget(self.volume, 1)
         volume_row.addWidget(self.volume_label)
         audio.addLayout(volume_row)
+        self.bounce_variant = QComboBox()
+        for key in pet._bounce_sound.VARIANTS:
+            self.bounce_variant.addItem(pet._bounce_sound.VARIANT_LABELS[key], key)
+        self.bounce_variant.setCurrentIndex(self.bounce_variant.findData(pet._bounce_sound.variant))
+        self.bounce_variant.setAccessibleName('回弹音效种类')
+        audio.addWidget(label('回弹音效'))
+        audio.addWidget(self.bounce_variant)
         audio.addWidget(button('试听回弹音', pet._play_bounce_sound), alignment=Qt.AlignmentFlag.AlignLeft)
-        audio.addWidget(label('关闭声音不影响动作。拖拽尾部的微小抖动不会反复发声。'))
+        audio.addWidget(label('拖动过程不发声，只在真正撞到边缘或地面时播放。'))
         sounds.addStretch()
 
         settings = self._page('设置', '调整性格与动作节奏。高级参数按需展开。')
@@ -210,6 +218,12 @@ class SettingsDialog(QDialog):
         self.bubble.toggled.connect(self._preview_bubble_enabled)
         pet.bubbleChanged.connect(self.bubble.setChecked)
         pet.soundChanged.connect(self.sound.setChecked)
+        pet.bounceSoundVariantChanged.connect(
+            lambda key: self.bounce_variant.setCurrentIndex(self.bounce_variant.findData(key))
+        )
+        self.bounce_variant.currentIndexChanged.connect(
+            lambda _: pet.set_bounce_sound_variant(self.bounce_variant.currentData(), persist=False)
+        )
         self.drag.toggled.connect(lambda on: pet.set_drag_physics(on, persist=False))
         self.bubble_x.valueChanged.connect(self.preview_bubble_position)
         self.bubble_y.valueChanged.connect(self.preview_bubble_position)
@@ -321,6 +335,7 @@ class SettingsDialog(QDialog):
         self.pet.set_sound_enabled(old['sound'], persist=False)
         self.pet.set_bubble_enabled(old['bubble'], persist=False)
         self.pet.set_volume(old['volume'], persist=False)
+        self.pet.set_bounce_sound_variant(old['bounce_variant'], persist=False)
         self.pet.set_drag_physics(old['drag'], persist=False)
         self.pet.change_scale(old['scale'], persist=False)
         self.pet.move(old['position'])
@@ -341,6 +356,7 @@ class SettingsDialog(QDialog):
         self.bubble_x.setValue(0)
         self.bubble_y.setValue(0)
         self.volume.setValue(80)
+        self.bounce_variant.setCurrentIndex(self.bounce_variant.findData('random'))
         self.personality.setCurrentIndex(self.personality.findData('lively'))
         self.size.setValue(round(catalog.CANVAS_W * catalog.DEFAULT_SCALE))
         self.delay.setValue(0)
@@ -354,6 +370,7 @@ class SettingsDialog(QDialog):
             self.pet.set_sound_enabled(self.sound.isChecked())
             self.pet.set_bubble_enabled(self.bubble.isChecked())
             self.pet.set_volume(self.volume.value())
+            self.pet.set_bounce_sound_variant(self.bounce_variant.currentData())
             self.pet.set_drag_physics(self.drag.isChecked())
             self.pet.set_proactive_greetings(self.greetings.isChecked())
             self.pet.set_personality(self.personality.currentData())

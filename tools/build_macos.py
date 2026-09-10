@@ -60,6 +60,7 @@ def main():
         '--osx-bundle-identifier', 'com.yarrayyar.dsh-pet-smooth',
         '--add-data', f'{ROOT / "assets/characters"}:assets/characters',
         '--add-data', f'{ROOT / "assets/app-icon.png"}:assets',
+        '--add-data', f'{ROOT / "assets/sounds"}:assets/sounds',
     ]
     for plugin in plugins:
         command.extend(['--add-binary', f'{plugin}:qt-plugins/{plugin.parent.name}'])

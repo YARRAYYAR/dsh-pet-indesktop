@@ -58,6 +58,7 @@ class Config:
             'soft_edges': True,             # 兼容旧配置：清理精确 Alpha=1 底噪
             'sound_enabled': True,          # 全部音效开关
             'volume': 80,
+            'bounce_sound_variant': 'random',  # classic / retro / cute / random
             'duck_sound': True,             # 旧配置兼容字段
             'proactive_greetings': True,    # 偶尔主动播放挥手问候
             'bubble_enabled': True,         # 显示无文字动态气泡
@@ -129,6 +130,9 @@ class Config:
         except (TypeError, ValueError, OverflowError):
             volume = 80
         self.data['volume'] = max(0, min(100, volume))
+
+        if self.data['bounce_sound_variant'] not in ('classic', 'retro', 'cute', 'random'):
+            self.data['bounce_sound_variant'] = 'random'
 
         for key in (
             'on_top', 'no_move', 'mouse_through', 'drag_physics',

@@ -52,6 +52,11 @@ def test_pointer_filter_is_time_based_and_throw_is_bounded():
     assert release_velocity((600, 0), 0.2) == (0, 0)
 
 
+def test_fast_drag_can_reach_the_configured_throw_sample_speed():
+    velocity = pointer_velocity((0, 0), 416, 0, 0.08, max_speed=5200)
+    assert 3000 < velocity[0] < 5200
+
+
 def test_rewind_uses_preloaded_drag_frame_without_sync_decode():
     app = QApplication.instance() or QApplication([])
     clip = WebMClip('unused.webm')

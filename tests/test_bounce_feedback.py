@@ -57,7 +57,22 @@ def test_bounce_audio_obeys_volume_mute_and_rate_limit(tmp_path):
         assert player.call_count == 2
 
 
-def test_drag_rebound_emits_sound_at_turn_and_settles_silently():
+def test_bounce_variants_use_bundled_paths_without_loading_audio_in_process(tmp_path):
+    sound = BounceSound(tmp_path)
+    assert set(sound.VARIANTS) == {'classic', 'retro', 'cute', 'random'}
+    sound.set_variant('retro')
+    assert sound.variant == 'retro'
+    with patch('pet.sound.sys.platform', 'darwin'), \
+            patch('pet.sound.shutil.which', return_value='/usr/bin/afplay'), \
+            patch('pet.sound.subprocess.Popen') as player, \
+            patch('pet.sound.time.monotonic', return_value=10):
+        sound.play()
+        assert player.call_args.args[0][-1].endswith('bounce-retro-cc0.wav')
+    sound.set_variant('not-a-variant')
+    assert sound.variant == 'random'
+
+
+def test_drag_rebound_is_silent_and_settles_normally():
     harness = media_tests.MediaRuntimeTests()
     with harness.interaction_window() as window:
         window._phys_pos = [0.0, 300.0]
@@ -70,9 +85,7 @@ def test_drag_rebound_emits_sound_at_turn_and_settles_silently():
                 positions.append(window._phys_pos[0])
             assert max(positions) > 110
             assert abs(positions[-1] - 100) < 0.01
-            # Only the substantial rebound, not the tiny final oscillations.
-            assert callback.call_count == 1
-            assert callback.call_args.args == (0, window._play_bounce_sound)
+            callback.assert_not_called()
 
 
 def test_floor_rest_is_silent_but_fast_wall_impact_keeps_original_bounce():

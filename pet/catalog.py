@@ -17,6 +17,8 @@ import math
 import re
 from pathlib import Path
 
+from .drag_motion import MAX_THROW_SPEED as DRAG_SPEED_SAMPLE_MAX
+
 # ---------------------------------------------------------------- 画布几何
 # 逻辑画布尺寸。素材可以高于这个尺寸；窗口布局、移动和命中区域始终
 # 使用逻辑像素，避免更换 1080p/1440p 素材时连带修改交互参数。
@@ -84,8 +86,6 @@ EDGE_FEEDBACK_MARGIN = 18
 EDGE_BOUNCE_SPEED = 300.0
 
 # 拖动响应：只增加速度采样与跟手响应，不改变原版抛掷物理。
-DRAG_SPEED_EMA_ALPHA = 0.55
-DRAG_SPEED_SAMPLE_MAX = 5200.0
 DRAG_FOLLOW_STIFFNESS = 120.0
 DRAG_FOLLOW_DAMPING = 12.0
 DRAG_THROW_BOOST_START_SPEED = 700.0

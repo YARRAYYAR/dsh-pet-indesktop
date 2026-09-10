@@ -32,7 +32,7 @@ def test_drag_response_keeps_original_throw_physics_independent():
     assert catalog.DRAG_SPEED_SAMPLE_MAX == 5200.0
     assert catalog.DRAG_FOLLOW_STIFFNESS == 120.0
     assert catalog.DRAG_FOLLOW_DAMPING == 12.0
-    assert not hasattr(catalog, 'drag_bounce_limit')
+    assert not hasattr(catalog, 'DRAG_SPEED_EMA_ALPHA')
 
 
 def test_fast_drag_boosts_the_whole_throw_vector():
