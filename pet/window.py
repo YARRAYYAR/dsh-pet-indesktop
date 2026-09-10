@@ -1183,6 +1183,35 @@ class PetWindow(QWidget):
         """Qt 鼠标坐标使用逻辑像素；阈值跟随系统，不随桌宠尺寸缩小。"""
         return max(catalog.DRAG_THRESHOLD, QApplication.startDragDistance())
 
+    def _update_drag_velocity(self, global_pos: QPoint) -> None:
+        """按原版抛掷逻辑记录更灵敏的拖动速度。"""
+        now = time.monotonic()
+        dt = now - self._last_move_time
+        if self._last_global is not None and 0.0 < dt <= 0.12:
+            inst_vx = (global_pos.x() - self._last_global.x()) / dt
+            inst_vy = (global_pos.y() - self._last_global.y()) / dt
+            max_speed = catalog.DRAG_SPEED_SAMPLE_MAX
+            inst_vx = max(-max_speed, min(max_speed, inst_vx))
+            inst_vy = max(-max_speed, min(max_speed, inst_vy))
+            alpha = catalog.DRAG_SPEED_EMA_ALPHA
+            self._phys_vel[0] = self._phys_vel[0] * (1.0 - alpha) + inst_vx * alpha
+            self._phys_vel[1] = self._phys_vel[1] * (1.0 - alpha) + inst_vy * alpha
+        self._last_global = global_pos
+        self._last_move_time = now
+
+    def _boost_throw_velocity(self) -> None:
+        """按释放时速度整体放大抛掷向量，保持鼠标拖动方向。"""
+        speed = math.hypot(self._phys_vel[0], self._phys_vel[1])
+        if speed <= 1e-6:
+            return
+        target_speed = min(
+            catalog.DRAG_THROW_MAX_SPEED,
+            speed * catalog.drag_throw_boost(speed),
+        )
+        scale = target_speed / speed
+        self._phys_vel[0] *= scale
+        self._phys_vel[1] *= scale
+
     def mousePressEvent(self, event) -> None:  # noqa: N802
         if event.button() == Qt.MouseButton.LeftButton:
             local_pos = event.position().toPoint()
@@ -1223,24 +1252,17 @@ class PetWindow(QWidget):
                 self._phys_pos = [float(self.x()), float(self.y())]
                 self._drag_target = g - self._grab_offset
                 self._start_physics('drag')
+                self._update_drag_velocity(g)
             else:
                 self.move(g - self._grab_offset)
-            self._last_global = g
-            self._last_move_time = time.monotonic()
+                self._last_global = g
+                self._last_move_time = time.monotonic()
             event.accept()
             return
 
         # 已经处于拖拽中
         if self.drag_physics:
-            now = time.monotonic()
-            dt = now - self._last_move_time
-            if dt > 0 and self._last_global is not None:
-                inst_vx = (g.x() - self._last_global.x()) / dt
-                inst_vy = (g.y() - self._last_global.y()) / dt
-                self._phys_vel[0] = self._phys_vel[0] * 0.6 + inst_vx * 0.4
-                self._phys_vel[1] = self._phys_vel[1] * 0.6 + inst_vy * 0.4
-            self._last_global = g
-            self._last_move_time = now
+            self._update_drag_velocity(g)
             self._drag_target = g - self._grab_offset
             if self._physics_mode != 'drag':
                 self._start_physics('drag')
@@ -1265,7 +1287,9 @@ class PetWindow(QWidget):
             self._just_dragged = True  # 抑制拖拽结束后的幽灵点击
             QTimer.singleShot(150, self._clear_just_dragged)
             if self.drag_physics:
-                # 松手后进入抛掷物理：保留当前速度，重力 + 反弹 + 衰减
+                self._update_drag_velocity(g)
+                self._boost_throw_velocity()
+                # 松手后进入原版抛掷物理：重力 + 碰撞反弹 + 低速停止
                 self._start_physics('throw')
             else:
                 if self._grab_offset is not None:
@@ -1853,8 +1877,14 @@ class PetWindow(QWidget):
         tx, ty = self._drag_target.x(), self._drag_target.y()
         px, py = self._phys_pos
         # 弹簧跟随 + 阻尼，产生惯性/离心感
-        ax = (tx - px) * 80.0 - self._phys_vel[0] * 10.0
-        ay = (ty - py) * 80.0 - self._phys_vel[1] * 10.0
+        ax = (
+            (tx - px) * catalog.DRAG_FOLLOW_STIFFNESS
+            - self._phys_vel[0] * catalog.DRAG_FOLLOW_DAMPING
+        )
+        ay = (
+            (ty - py) * catalog.DRAG_FOLLOW_STIFFNESS
+            - self._phys_vel[1] * catalog.DRAG_FOLLOW_DAMPING
+        )
         self._phys_vel[0] += ax * dt
         self._phys_vel[1] += ay * dt
         self._phys_pos[0] += self._phys_vel[0] * dt

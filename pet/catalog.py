@@ -83,6 +83,31 @@ PROACTIVE_GREETING_MAX_MS = 90_000
 EDGE_FEEDBACK_MARGIN = 18
 EDGE_BOUNCE_SPEED = 300.0
 
+# 拖动响应：只增加速度采样与跟手响应，不改变原版抛掷物理。
+DRAG_SPEED_EMA_ALPHA = 0.55
+DRAG_SPEED_SAMPLE_MAX = 5200.0
+DRAG_FOLLOW_STIFFNESS = 120.0
+DRAG_FOLLOW_DAMPING = 12.0
+DRAG_THROW_BOOST_START_SPEED = 700.0
+DRAG_THROW_BOOST_FULL_SPEED = 3600.0
+DRAG_THROW_BOOST_MAX = 1.65
+DRAG_THROW_MAX_SPEED = 7200.0
+
+
+def drag_throw_boost(speed: float) -> float:
+    """按释放时拖动速度返回抛掷倍率，结果保持有限且可预测。"""
+    try:
+        value = float(speed)
+    except (TypeError, ValueError, OverflowError):
+        return 1.0
+    if not math.isfinite(value):
+        return 1.0
+    ratio = (value - DRAG_THROW_BOOST_START_SPEED) / (
+        DRAG_THROW_BOOST_FULL_SPEED - DRAG_THROW_BOOST_START_SPEED
+    )
+    ratio = max(0.0, min(1.0, ratio))
+    return 1.0 + (DRAG_THROW_BOOST_MAX - 1.0) * ratio
+
 # 行为预设：概率总和为 1；问候时间用毫秒，避免在窗口层散落魔法数字。
 PERSONALITY_PRESETS = {
     'random': {

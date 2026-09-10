@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """目录/常量完整性测试（无需 GUI）。"""
 
+import math
+
 from pet import catalog
 from pet.interaction import classify_tap_burst, cursor_facing, edge_contacts
 from pet.hotkeys import GlobalHotkeys
@@ -24,6 +26,68 @@ def test_catalog_integrity():
     assert catalog.decode_size_for_scale(1.0) == (1280, 720)
     assert catalog.MASK_FRAME_INTERVAL == 3
     assert catalog.BUSY_MASK_FRAME_INTERVAL == 3
+
+
+def test_drag_response_keeps_original_throw_physics_independent():
+    assert catalog.DRAG_SPEED_SAMPLE_MAX == 5200.0
+    assert catalog.DRAG_FOLLOW_STIFFNESS == 120.0
+    assert catalog.DRAG_FOLLOW_DAMPING == 12.0
+    assert not hasattr(catalog, 'drag_bounce_limit')
+
+
+def test_fast_drag_boosts_the_whole_throw_vector():
+    from pet.window import PetWindow
+
+    assert catalog.drag_throw_boost(0) == 1.0
+    assert catalog.drag_throw_boost(3600) == catalog.DRAG_THROW_BOOST_MAX
+    assert catalog.drag_throw_boost(float('nan')) == 1.0
+
+    window = PetWindow.__new__(PetWindow)
+    window._phys_vel = [1200.0, -900.0]
+    before = math.hypot(*window._phys_vel)
+    window._boost_throw_velocity()
+    after = math.hypot(*window._phys_vel)
+    assert after > before
+    assert math.isclose(window._phys_vel[0] / window._phys_vel[1], -4 / 3)
+    assert after <= catalog.DRAG_THROW_MAX_SPEED
+
+
+def test_throw_physics_uses_natural_multiple_bounces():
+    from pet.window import PetWindow
+
+    class Geometry:
+        def left(self):
+            return 0
+
+        def top(self):
+            return 0
+
+        def right(self):
+            return 800
+
+        def bottom(self):
+            return 600
+
+    window = PetWindow.__new__(PetWindow)
+    window._w = 20
+    window._h = 20
+    window._phys_pos = [400.0, 580.0]
+    window._phys_vel = [0.0, 900.0]
+    window._physics_mode = 'throw'
+    window._stop_physics = lambda: setattr(window, '_physics_mode', None)
+
+    bounces = 0
+    geometry = Geometry()
+    for _ in range(5000):
+        if window._physics_mode is None:
+            break
+        incoming = window._phys_vel[1]
+        window._tick_throw_physics(0.008, geometry)
+        if incoming > 0 and window._phys_vel[1] < 0:
+            bounces += 1
+    assert bounces >= 4
+    assert window._physics_mode is None
+    assert not hasattr(window, '_throw_bounce_count')
 
 
 def test_load_governor_hysteresis():

@@ -210,7 +210,12 @@ class PetApp:
 
     # ------------------------------------------------------------ 托盘
     def _build_tray(self, win: PetWindow) -> QSystemTrayIcon:
-        tray = QSystemTrayIcon(QIcon(win.icon_pixmap()))
+        # 固定使用应用图标，避免从当前动画帧复制/缩放图像；
+        # macOS 会把 QSystemTrayIcon 显示为菜单栏状态图标。
+        menu_bar_icon = _application_icon()
+        if menu_bar_icon.isNull():
+            menu_bar_icon = QIcon(win.icon_pixmap(32))
+        tray = QSystemTrayIcon(menu_bar_icon)
 
         menu = QMenu()
         menu.addAction('设置与动作预览…', win.open_settings)
