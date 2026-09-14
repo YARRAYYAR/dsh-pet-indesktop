@@ -394,6 +394,16 @@ class MediaRuntimeTests(unittest.TestCase):
 
             self.assertLess(window._phys_pos[1], 5.0)
 
+    def test_screen_clamp_allows_real_top_above_menu_bar(self) -> None:
+        with self.interaction_window() as window:
+            window._workspace_geometry = lambda: QRect(0, 33, 2000, 1600)
+            window._workspace_screen_top = lambda: 0
+            window.move(500, 0)
+
+            window._clamp_into_screen()
+
+            self.assertEqual(window.y(), 0)
+
     def test_settings_cancel_save_and_defaults(self) -> None:
         image = QImage(100, 80, QImage.Format.Format_RGBA8888)
         image.fill(QColor(255, 255, 255, 255))

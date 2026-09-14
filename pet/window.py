@@ -445,10 +445,11 @@ class PetWindow(QWidget):
         avail = self._workspace_geometry()
         if avail is None:
             return
+        top = self._workspace_screen_top()
         max_x = max(avail.left(), avail.right() - self._w + 1)
-        max_y = max(avail.top(), avail.bottom() - self._h + 1)
+        max_y = max(top, avail.bottom() - self._h + 1)
         x = min(max(self.x(), avail.left()), max_x)
-        y = min(max(self.y(), avail.top()), max_y)
+        y = min(max(self.y(), top), max_y)
         if (x, y) != (self.x(), self.y()):
             self.move(x, y)
 
