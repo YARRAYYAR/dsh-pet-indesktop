@@ -45,6 +45,7 @@ jobs:
             --name "dsh-pet-indesktop-webm" \
             --add-data "assets/characters:assets/characters" \
             --add-data "assets/app-icon.png:assets" \
+            --add-data "assets/memes:assets/memes" \
             packaging/pet_entry.py
 
       - name: Build GIF .app
@@ -55,6 +56,7 @@ jobs:
             --name "dsh-pet-indesktop-gif" \
             --add-data "assets/characters_gif:assets/characters_gif" \
             --add-data "assets/app-icon.png:assets" \
+            --add-data "assets/memes:assets/memes" \
             packaging/pet_entry.py
 
       - name: Verify pet module collected

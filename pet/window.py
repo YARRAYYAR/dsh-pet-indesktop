@@ -42,6 +42,7 @@ from .config import Config
 from .interaction import classify_tap_burst, cursor_facing, edge_contacts
 from .library import MovieLibrary
 from . import menus
+from . import memes
 from .performance import LoadGovernor, system_load_ratio
 from .presenter import FramePresenter, PresenterLayout
 from .sound import BounceSound, DuckScream
@@ -49,6 +50,7 @@ from .settings_dialog import SettingsDialog
 from .drag_motion import pointer_velocity, release_velocity
 from .physics import PhysicsEngine, ThrowBounds
 from .edge_probe import EdgeProbeController
+from .screen_geometry import union_available_geometry
 
 
 def _mac_set_window_level(view_id: int, level: int) -> bool:
@@ -105,6 +107,7 @@ class PetWindow(QWidget):
     bounceSoundVariantChanged = Signal(str)
     proactiveGreetingsChanged = Signal(bool)
     bubbleChanged = Signal(bool)
+    whisperImageChanged = Signal(bool)
     playlistChanged = Signal(str)
     personalityChanged = Signal(str)
     pausedChanged = Signal(bool)
@@ -159,6 +162,14 @@ class PetWindow(QWidget):
             config.get('proactive_greetings', True)
         )
         self.bubble_enabled: bool = bool(config.get('bubble_enabled', True))
+        self.whisper_image_enabled: bool = bool(
+            config.get('whisperImageEnabled', config.get('whisper_image_enabled', False))
+        )
+        # 保留原项目的配置语义；当前独立版没有 DSH 聊天宿主，因此暂不自行
+        # 生成模型对话，未来接入聊天时可直接使用这个开关。
+        self.chat_image_enabled: bool = bool(
+            config.get('chatImageEnabled', config.get('chat_image_enabled', False))
+        )
         self.bubble_offset_x = int(config.get('bubble_offset_x', 0))
         self.bubble_offset_y = int(config.get('bubble_offset_y', 0))
         self._duck_sound = DuckScream(config.dir)
@@ -169,6 +180,7 @@ class PetWindow(QWidget):
         self._bounce_sound.enabled = self.sound_enabled
         self._bounce_sound.volume = self._duck_sound.volume
         self._recent_actions = []
+        self._recent_animations: list[str] = []
         self.action_interval_seconds = int(config.get('action_interval_seconds', 0))
         self._last_action_started = time.monotonic()
         manifest = getattr(lib, 'manifest', None) or {}
@@ -297,6 +309,8 @@ class PetWindow(QWidget):
         self._bubble_anim_timer.timeout.connect(self._on_bubble_anim_tick)
         self._bubble_anim_clock = QElapsedTimer()
         self._bubble_anim_direction = 1
+        self._meme_name: str | None = None
+        self._meme_pixmap: QPixmap | None = None
 
         # ---- 尺寸与初始状态 ----
         self._apply_scale()
@@ -400,11 +414,24 @@ class PetWindow(QWidget):
             screen = QGuiApplication.primaryScreen()
         return float(screen.devicePixelRatio()) if screen is not None else 1.0
 
-    def _clamp_into_screen(self) -> None:
+    def _workspace_geometry(self) -> QRect | None:
+        """返回所有显示器可用工作区的联合矩形，支持负坐标与跨屏拖动。"""
+        screens = QGuiApplication.screens()
+        # 单屏时沿用当前屏幕入口，便于窗口测试替身和 macOS 屏幕切换兜底；
+        # 真正多屏时才计算联合区域。
+        if len(screens) == 1:
+            screen = self._screen_available()
+            return screen.availableGeometry() if screen is not None else None
+        workspace = union_available_geometry(screens)
+        if workspace is not None:
+            return workspace
         screen = self._screen_available()
-        if screen is None:
+        return screen.availableGeometry() if screen is not None else None
+
+    def _clamp_into_screen(self) -> None:
+        avail = self._workspace_geometry()
+        if avail is None:
             return
-        avail = screen.availableGeometry()
         max_x = max(avail.left(), avail.right() - self._w + 1)
         max_y = max(avail.top(), avail.bottom() - self._h + 1)
         x = min(max(self.x(), avail.left()), max_x)
@@ -426,9 +453,14 @@ class PetWindow(QWidget):
         QTimer.singleShot(0, self._clamp_into_screen)
 
     def _restore_position(self) -> None:
-        """恢复上次位置（按屏幕比例），无记录则落右下角。"""
+        """恢复位置；旧版配置先按单屏比例读取，保存后转为联合工作区。"""
         scr = self._configured_screen() or self._screen_available()
-        avail = scr.availableGeometry()
+        if scr is None:
+            return
+        if self.cfg.get('position_space', 'workspace') == 'screen':
+            avail = scr.availableGeometry()
+        else:
+            avail = self._workspace_geometry() or scr.availableGeometry()
         rx, ry = self.cfg.get('rx'), self.cfg.get('ry')
         if rx is None or ry is None:
             x = avail.right() - self._w - catalog.CORNER_MARGIN
@@ -438,22 +470,24 @@ class PetWindow(QWidget):
             y = int(round(avail.top() + ry * avail.height())) - self._h // 2
             x = min(max(x, avail.left()), avail.right() - self._w)
             y = min(max(y, avail.top()), avail.bottom() - self._h)
-        logging.info('恢复位置 screen=%s avail=(%d,%d,%d,%d) dpr=%s -> (%d,%d)',
-                     scr.name(), avail.left(), avail.top(), avail.right(),
+        logging.info('恢复位置 space=%s screen=%s avail=(%d,%d,%d,%d) dpr=%s -> (%d,%d)',
+                     self.cfg.get('position_space', 'workspace'), scr.name(),
+                     avail.left(), avail.top(), avail.right(),
                      avail.bottom(), scr.devicePixelRatio(), x, y)
         self.move(x, y)
 
     def _save_position(self) -> None:
-        """以"窗口中心相对屏幕可用区的比例"持久化位置（分辨率变化后仍正确）。"""
+        """以窗口中心相对联合工作区的比例持久化位置。"""
         scr = self._screen_available()
-        avail = scr.availableGeometry()
-        if avail.width() <= 0 or avail.height() <= 0:
+        avail = self._workspace_geometry()
+        if scr is None or avail is None or avail.width() <= 0 or avail.height() <= 0:
             return
         cx = self.x() + self._w / 2
         cy = self.y() + self._h / 2
         self.cfg.set('rx', (cx - avail.left()) / avail.width())
         self.cfg.set('ry', (cy - avail.top()) / avail.height())
         self.cfg.set('screen', scr.name())
+        self.cfg.set('position_space', 'workspace')
         self.cfg.set('facing', self.facing)
         self.cfg.set('scale', self.scale)
         self.cfg.save()
@@ -461,7 +495,9 @@ class PetWindow(QWidget):
     def _go_default_corner(self) -> None:
         self._edge_probe.cancel('return_corner', restore=False)
         scr = self._screen_available()
-        avail = scr.availableGeometry()
+        avail = self._workspace_geometry()
+        if scr is None or avail is None:
+            return
         x = avail.right() - self._w - catalog.CORNER_MARGIN
         y = avail.bottom() - self._h
         logging.info('回到右下角 screen=%s avail=(%d,%d,%d,%d) dpr=%s -> (%d,%d)',
@@ -552,7 +588,12 @@ class PetWindow(QWidget):
         if previous is not None and previous is not movie:
             previous.stop()
         self._bind_movie(name, movie)
+        previous_name = self.anim
         self.anim = name
+        if name != previous_name:
+            self._recent_animations = anim_chain.remember(
+                self._recent_animations, name
+            )
         if name in self.acts:
             self._last_action_started = time.monotonic()
         if name in self.playlist:
@@ -757,7 +798,10 @@ class PetWindow(QWidget):
         ).contains(QPointF(point))
 
     def _paint_bubble(self, painter: QPainter) -> None:
-        bubble_visual.paint(painter, self._bubble_geometry(), self._bubble_progress)
+        bubble_visual.paint(
+            painter, self._bubble_geometry(), self._bubble_progress,
+            image=self._meme_pixmap,
+        )
 
     def _start_squash(self) -> None:
         """点击时启动 Q 弹效果：画面先变矮再恢复。"""
@@ -875,13 +919,15 @@ class PetWindow(QWidget):
 
     def _pick(self, pool: list[str], exclude: str | None = None) -> str | None:
         return anim_chain.pick(
-            pool, exclude=exclude, failed=self._failed_animations, rng=random
+            pool, exclude=exclude, recent=self._recent_animations,
+            failed=self._failed_animations, rng=random
         )
 
     def _pick_available(self, pool: list[str], exclude: str | None = None) -> str | None:
         """从目标池选择；角色缺少该类动作时回退到已有动作。"""
         return anim_chain.pick_available(
             pool, self._fallback_pools(), exclude=exclude,
+            recent=self._recent_animations,
             failed=self._failed_animations, rng=random,
         )
 
@@ -1011,6 +1057,7 @@ class PetWindow(QWidget):
             personality, self.acts, self._action_tags
         )
         self._recent_actions.clear()
+        self._recent_animations.clear()
         self.cfg.set('personality', personality)
         self.cfg.save()
         self._schedule_next_greeting()
@@ -1124,7 +1171,9 @@ class PetWindow(QWidget):
             return False
         if self._move_plan is not None:
             return True  # 已在移动/已计划
-        avail = self.screen().availableGeometry()
+        avail = self._workspace_geometry()
+        if avail is None:
+            return False
         dir_sign = 1 if self.facing == 'right' else -1
         cx = self.x() + self._w / 2
         distance = random.randint(catalog.MOVE_MIN_PX, catalog.MOVE_MAX_PX)
@@ -1412,6 +1461,8 @@ class PetWindow(QWidget):
             if self._bubble_anim_direction < 0:
                 self._bubble_visible = False
                 self._bubble_progress = 0.0
+                self._meme_name = None
+                self._meme_pixmap = None
         self._sync_mask()
         self.update()
 
@@ -1424,7 +1475,7 @@ class PetWindow(QWidget):
             self.hide_bubble(immediate=visible is None)
 
     def show_bubble(self, duration_ms: int = 4800) -> None:
-        """无文字渐进展开气泡；只在短暂动画期间增加重绘。"""
+        """渐进展开气泡；开启 v0.2.9 配图时按需读取一张 PNG。"""
         if (
             not (self.bubble_enabled if self._bubble_preview is None else self._bubble_preview)
             or self._suspended
@@ -1432,6 +1483,13 @@ class PetWindow(QWidget):
             or self._shutting_down
         ):
             return
+        if self.whisper_image_enabled:
+            self._meme_name, self._meme_pixmap = memes.random_pixmap(
+                exclude=self._meme_name
+            )
+        else:
+            self._meme_name = None
+            self._meme_pixmap = None
         self._bubble_visible = True
         self._bubble_progress = 0.0
         self._bubble_anim_direction = 1
@@ -1450,6 +1508,8 @@ class PetWindow(QWidget):
             self._bubble_anim_timer.stop()
             self._bubble_visible = False
             self._bubble_progress = 0.0
+            self._meme_name = None
+            self._meme_pixmap = None
             self._sync_mask()
             self.update()
             return
@@ -1460,8 +1520,9 @@ class PetWindow(QWidget):
 
     def _trigger_edge_feedback(self) -> bool:
         """拖到屏幕边缘时做一次短暂压扁，并用物理反弹离开边缘。"""
-        scr = self._screen_available()
-        avail = scr.availableGeometry()
+        avail = self._workspace_geometry()
+        if avail is None:
+            return False
         contacts = edge_contacts(
             (float(self.x()), float(self.y()), float(self._w), float(self._h)),
             (
@@ -1508,6 +1569,7 @@ class PetWindow(QWidget):
         root_menu.addAction('暂停 / 继续', self.toggle_pause)
         menus.add_random_action(root_menu, self)
         menus.add_bubble_toggle(root_menu, self)
+        menus.add_meme_toggle(root_menu, self)
 
         menu = root_menu.addMenu('更多控制')
         self._add_animation_shortcuts_menu(menu)
@@ -1901,6 +1963,28 @@ class PetWindow(QWidget):
             self.hide_bubble(immediate=True)
         self.bubbleChanged.emit(self.bubble_enabled)
 
+    def set_whisper_image_enabled(self, on: bool, *, persist: bool = True) -> None:
+        """切换 v0.2.9 气泡随机配图；图片只在气泡显示期间驻留。"""
+        self.whisper_image_enabled = bool(on)
+        if persist:
+            self.cfg.set('whisperImageEnabled', self.whisper_image_enabled)
+            self.cfg.save()
+        if self.whisper_image_enabled and self._bubble_visible:
+            self.show_bubble()
+        elif not self.whisper_image_enabled:
+            self._meme_name = None
+            self._meme_pixmap = None
+            self._sync_mask()
+            self.update()
+        self.whisperImageChanged.emit(self.whisper_image_enabled)
+
+    def set_chat_image_enabled(self, on: bool, *, persist: bool = True) -> None:
+        """保留原项目聊天配图开关，供未来聊天宿主接入。"""
+        self.chat_image_enabled = bool(on)
+        if persist:
+            self.cfg.set('chatImageEnabled', self.chat_image_enabled)
+            self.cfg.save()
+
     def _start_physics(self, mode: str) -> None:
         if self._physics_mode != mode or not self._physics_timer.isActive():
             screen = self.screen()
@@ -1943,7 +2027,10 @@ class PetWindow(QWidget):
         # 数值核心在 pet.physics；这里只负责计时、屏幕边界与提交位置。
         bounds = None
         if self._physics_mode == 'throw':
-            avail = self._screen_available().availableGeometry()
+            avail = self._workspace_geometry()
+            if avail is None:
+                self._stop_physics()
+                return
             bounds = ThrowBounds.from_screen(
                 float(avail.left()), float(avail.top()),
                 float(avail.right()), float(avail.bottom()),

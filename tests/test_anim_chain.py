@@ -74,6 +74,13 @@ def test_pick_excludes_current_then_falls_back_to_whole_pool():
     assert anim_chain.pick([], rng=rng) is None
 
 
+def test_pick_prefers_candidates_outside_recent_window():
+    rng = random.Random(7)
+    assert anim_chain.pick(['a', 'b', 'c'], recent=['a', 'b'], rng=rng) == 'c'
+    # 最近窗口覆盖整个候选池时仍然返回可用动作，不会让动画链中断。
+    assert anim_chain.pick(['a', 'b'], recent=['a', 'b'], rng=rng) in {'a', 'b'}
+
+
 def test_pick_never_returns_failed_entries():
     rng = random.Random(11)
     for _ in range(50):

@@ -258,6 +258,7 @@ class PetApp:
         menus.add_settings(menu, win.open_settings)
         menu.addAction('显示 / 隐藏', self._toggle_visible)
         menus.add_bubble_toggle(menu, win)
+        menus.add_meme_toggle(menu, win)
         menus.add_pause(menu, win, checkable=True, sync=True)
         menus.add_random_action(menu, win)
 

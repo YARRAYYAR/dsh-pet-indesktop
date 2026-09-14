@@ -177,6 +177,9 @@ class EdgeProbeController:
                 self._timer.start()
 
     def _available_geometry(self) -> QRect | None:
+        workspace = getattr(self.win, '_workspace_geometry', None)
+        if callable(workspace):
+            return workspace()
         screen = self.win._screen_available()
         return screen.availableGeometry() if screen is not None else None
 

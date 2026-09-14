@@ -43,10 +43,11 @@ class Config:
         self._save_depth = 0
         self._save_pending = False
         self.data: dict = {
-            'version': 2,  # 配置结构版本；scale 语义变更时递增
+            'version': 3,  # 配置结构版本；屏幕位置改为联合工作区后递增
             'rx': None,    # 窗口中心 x / 屏幕可用区宽（None=默认右下角）
             'ry': None,    # 窗口中心 y / 屏幕可用区高
             'screen': None,  # 上次使用的屏幕名称；找不到时回退主屏
+            'position_space': 'workspace',  # workspace / screen（旧配置兼容）
             'facing': 'left',
             'scale': catalog.DEFAULT_SCALE,
             'on_top': True,
@@ -62,6 +63,8 @@ class Config:
             'duck_sound': True,             # 旧配置兼容字段
             'proactive_greetings': True,    # 偶尔主动播放挥手问候
             'bubble_enabled': True,         # 显示无文字动态气泡
+            'whisperImageEnabled': False,   # v0.2.9：气泡随机显示一张表情图
+            'chatImageEnabled': False,      # v0.2.9：预留给未来聊天语境选图
             'bubble_offset_x': 0,
             'bubble_offset_y': 0,
             'edge_probe_enabled': False,     # 左右贴边后进入边缘探头姿态
@@ -104,6 +107,10 @@ class Config:
             # v1 → v2：素材从 220×124 换成 640×360，scale 语义变化，
             # 旧 scale（如 1.0 表示 220px）需重置为新的默认值。
             raw.pop('scale', None)
+        if version < 3 and 'position_space' not in raw:
+            # v2 的 rx/ry 是相对于单个屏幕保存的；新版第一次启动时先按
+            # 旧语义恢复，保存后即转换为所有屏幕联合工作区坐标。
+            raw['position_space'] = 'screen'
         for key in self.data:
             if key in raw and raw[key] is not None:
                 self.data[key] = raw[key]
@@ -194,6 +201,7 @@ class Config:
             'soft_edges', 'sound_enabled', 'duck_sound', 'proactive_greetings',
             'edge_probe_enabled',
             'bubble_enabled',
+            'whisperImageEnabled', 'chatImageEnabled',
         ):
             if not isinstance(self.data[key], bool):
                 value = self.data[key]
@@ -226,6 +234,8 @@ class Config:
 
         if not isinstance(self.data['screen'], str) or not self.data['screen'].strip():
             self.data['screen'] = None
+        if self.data.get('position_space') not in ('workspace', 'screen'):
+            self.data['position_space'] = 'workspace'
 
         for key in ('favorites', 'playlist'):
             value = self.data[key]
@@ -239,7 +249,7 @@ class Config:
             self.data['playlist_mode'] = 'off'
         if self.data['personality'] not in catalog.PERSONALITY_PRESETS:
             self.data['personality'] = 'lively'
-        self.data['version'] = 2
+        self.data['version'] = 3
 
     def get(self, key: str, default=None):
         return self.data.get(key, default)

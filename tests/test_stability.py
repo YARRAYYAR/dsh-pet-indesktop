@@ -47,7 +47,7 @@ class StabilityTests(unittest.TestCase):
             )
 
             loaded = Config(base=tmp)
-            self.assertEqual(loaded.get('version'), 2)
+            self.assertEqual(loaded.get('version'), 3)
             self.assertEqual(loaded.get('scale'), catalog.DEFAULT_SCALE)
             self.assertEqual(loaded.get('playback_speed'), 1.0)
             self.assertIsNone(loaded.get('rx'))
@@ -69,7 +69,7 @@ class StabilityTests(unittest.TestCase):
 
             loaded.save()
             persisted = json.loads(config.path.read_text(encoding='utf-8'))
-            self.assertEqual(persisted['version'], 2)
+            self.assertEqual(persisted['version'], 3)
             self.assertFalse((config.path.parent / '.config.json.tmp').exists())
 
     def test_category_fallback_preserves_input_order(self) -> None:

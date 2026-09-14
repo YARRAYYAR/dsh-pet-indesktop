@@ -28,6 +28,7 @@ def pick(
     pool: Sequence[str],
     *,
     exclude: str | None = None,
+    recent: Sequence[str] = (),
     failed: Iterable[str] = (),
     rng: random.Random | None = None,
 ) -> str | None:
@@ -37,7 +38,14 @@ def pick(
     避免坏素材造成切换风暴）。
     """
     failed = failed if isinstance(failed, (set, frozenset)) else set(failed)
-    entries = [n for n in pool if n != exclude and n not in failed]
+    recent = set(recent)
+    entries = [
+        n for n in pool
+        if n != exclude and n not in failed and n not in recent
+    ]
+    # 候选池小于最近窗口时，优先保证仍能播放，而不是返回空结果。
+    if not entries:
+        entries = [n for n in pool if n != exclude and n not in failed]
     if not entries:
         entries = [n for n in pool if n not in failed]
     if not entries:
@@ -50,15 +58,17 @@ def pick_available(
     fallback_pools: Iterable[Sequence[str]] = (),
     *,
     exclude: str | None = None,
+    recent: Sequence[str] = (),
     failed: Iterable[str] = (),
     rng: random.Random | None = None,
 ) -> str | None:
     """从目标池选择；角色缺少该类动作时按顺序回退到其它已有动作。"""
-    picked = pick(pool, exclude=exclude, failed=failed, rng=rng)
+    picked = pick(pool, exclude=exclude, recent=recent, failed=failed, rng=rng)
     if picked is not None:
         return picked
     for fallback in fallback_pools:
-        picked = pick(fallback, exclude=exclude, failed=failed, rng=rng)
+        picked = pick(fallback, exclude=exclude, recent=recent,
+                      failed=failed, rng=rng)
         if picked is not None:
             return picked
     return None

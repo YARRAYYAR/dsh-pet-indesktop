@@ -61,6 +61,7 @@ def main():
         '--add-data', f'{ROOT / "assets/characters"}:assets/characters',
         '--add-data', f'{ROOT / "assets/app-icon.png"}:assets',
         '--add-data', f'{ROOT / "assets/sounds"}:assets/sounds',
+        '--add-data', f'{ROOT / "assets/memes"}:assets/memes',
     ]
     for plugin in plugins:
         command.extend(['--add-binary', f'{plugin}:qt-plugins/{plugin.parent.name}'])

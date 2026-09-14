@@ -24,6 +24,7 @@ from . import autostart as autostart_mod
 from . import catalog
 
 BUBBLE_LABEL = '显示对话框（气泡）'
+MEME_LABEL = '气泡显示表情图片（随机）'
 SOFT_EDGES_LABEL = '清理透明底噪（Alpha=1）'
 EDGE_PROBE_LABEL = '边缘探头（左右贴边）'
 
@@ -84,6 +85,16 @@ def add_bubble_toggle(menu: QMenu, win) -> QAction:
     action.setChecked(win.bubble_enabled)
     action.triggered.connect(win.set_bubble_enabled)
     win.bubbleChanged.connect(action.setChecked)
+    return action
+
+
+def add_meme_toggle(menu: QMenu, win) -> QAction:
+    """v0.2.9 本地等价开关；独立版不调用模型，只随机展示包内 PNG。"""
+    action = menu.addAction(MEME_LABEL)
+    action.setCheckable(True)
+    action.setChecked(win.whisper_image_enabled)
+    action.triggered.connect(win.set_whisper_image_enabled)
+    win.whisperImageChanged.connect(action.setChecked)
     return action
 
 

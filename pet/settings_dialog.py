@@ -22,6 +22,7 @@ class SettingsDialog(QDialog):
         island_cfg = dict(pet.cfg.get('dynamic_island', {}) or {})
         self._original = dict(scale=pet.scale, position=pet.pos(), volume=pet._duck_sound.volume,
             sound=pet.sound_enabled, bubble=pet.bubble_enabled, drag=pet.drag_physics,
+            meme_images=pet.whisper_image_enabled,
             edge_probe=pet.edge_probe_enabled,
             bounce_variant=pet._bounce_sound.variant,
             bubble_x=pet.bubble_offset_x, bubble_y=pet.bubble_offset_y,
@@ -149,6 +150,13 @@ class SettingsDialog(QDialog):
         advanced_button.toggled.connect(lambda on: advanced_button.setArrowType(Qt.ArrowType.DownArrow if on else Qt.ArrowType.RightArrow))
         details.addWidget(advanced)
         bubbles.addWidget(self.bubble_details)
+        self.meme_images = self._check(
+            '气泡显示 v0.2.9 表情图片（随机）', pet.whisper_image_enabled
+        )
+        self.meme_images.setToolTip(
+            '独立桌面版按需读取一张包内 PNG；当前没有 DSH 聊天模型连接。'
+        )
+        bubbles.addWidget(self.meme_images)
         self.bubble_details.setVisible(self.bubble.isChecked())
         _, greetings = self._card(interactions, '主动互动')
         self.greetings = self._check('偶尔主动打招呼', pet.proactive_greetings)
@@ -256,6 +264,10 @@ class SettingsDialog(QDialog):
         self.volume.valueChanged.connect(self._preview_volume)
         self.sound.toggled.connect(lambda on: pet.set_sound_enabled(on, persist=False))
         self.bubble.toggled.connect(self._preview_bubble_enabled)
+        self.meme_images.toggled.connect(
+            lambda on: pet.set_whisper_image_enabled(on, persist=False)
+        )
+        pet.whisperImageChanged.connect(self.meme_images.setChecked)
         pet.bubbleChanged.connect(self.bubble.setChecked)
         pet.soundChanged.connect(self.sound.setChecked)
         pet.bounceSoundVariantChanged.connect(
@@ -409,6 +421,7 @@ class SettingsDialog(QDialog):
         self.pet.set_bubble_position(old['bubble_x'], old['bubble_y'])
         self.pet.set_sound_enabled(old['sound'], persist=False)
         self.pet.set_bubble_enabled(old['bubble'], persist=False)
+        self.pet.set_whisper_image_enabled(old['meme_images'], persist=False)
         self.pet.set_volume(old['volume'], persist=False)
         self.pet.set_bounce_sound_variant(old['bounce_variant'], persist=False)
         self.pet.set_drag_physics(old['drag'], persist=False)
@@ -427,6 +440,7 @@ class SettingsDialog(QDialog):
     def reset_fields(self):
         self.sound.setChecked(True)
         self.bubble.setChecked(True)
+        self.meme_images.setChecked(False)
         self.drag.setChecked(False)
         self.edge_probe.setChecked(False)
         self.greetings.setChecked(True)
@@ -458,6 +472,7 @@ class SettingsDialog(QDialog):
                 callback()
             self.pet.set_sound_enabled(self.sound.isChecked())
             self.pet.set_bubble_enabled(self.bubble.isChecked())
+            self.pet.set_whisper_image_enabled(self.meme_images.isChecked())
             self.pet.set_volume(self.volume.value())
             self.pet.set_bounce_sound_variant(self.bounce_variant.currentData())
             self.pet.set_drag_physics(self.drag.isChecked())

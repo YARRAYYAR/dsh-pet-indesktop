@@ -2,7 +2,7 @@
 """气泡布局和形状计算；绘制、命中测试和遮罩共享同一轮廓。"""
 
 from PySide6.QtCore import QPointF, QRectF, Qt
-from PySide6.QtGui import QColor, QPainter, QPainterPath, QPen
+from PySide6.QtGui import QColor, QPainter, QPainterPath, QPen, QPixmap
 
 HEADER_HEIGHT = 330
 
@@ -69,10 +69,50 @@ def stroke_width(rect: QRectF) -> float:
     return max(2.0, rect.width() * 0.024)
 
 
-def paint(painter: QPainter, rect: QRectF, progress: float) -> None:
+def _content_rect(rect: QRectF, progress: float) -> QRectF | None:
+    """返回表情图在气泡主体内的内容区域。"""
+    main = max(0.0, min(1.0, (progress - 0.16) / 0.84))
+    if main <= 0.0:
+        return None
+    body = scaled_rect(rect, main)
+    padding = max(8.0, body.width() * 0.085)
+    content = body.adjusted(padding, padding, -padding, -padding)
+    return content if content.width() > 2 and content.height() > 2 else None
+
+
+def paint(painter: QPainter, rect: QRectF, progress: float,
+          image: QPixmap | None = None) -> None:
+    """绘制气泡；image 只在调用方已按需加载时显示。"""
     painter.save()
     painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
-    painter.setPen(QPen(QColor('#1e286c'), stroke_width(rect)))
+    outline = QPen(QColor('#1e286c'), stroke_width(rect))
     painter.setBrush(QColor('#ffffff'))
-    painter.drawPath(shape(rect, progress))
+    bubble_shape = shape(rect, progress)
+    painter.setPen(outline)
+    painter.drawPath(bubble_shape)
+    content = _content_rect(rect, progress)
+    if image is not None and content is not None and not image.isNull():
+        body = scaled_rect(rect, max(0.0, min(1.0, (progress - 0.16) / 0.84)))
+        painter.save()
+        painter.setClipPath(body_path(body))
+        source_ratio = image.width() / max(1, image.height())
+        target_ratio = content.width() / max(1.0, content.height())
+        if source_ratio >= target_ratio:
+            draw_h = content.height()
+            draw_w = draw_h * source_ratio
+        else:
+            draw_w = content.width()
+            draw_h = draw_w / max(0.001, source_ratio)
+        draw_rect = QRectF(
+            content.center().x() - draw_w / 2,
+            content.center().y() - draw_h / 2,
+            draw_w,
+            draw_h,
+        )
+        painter.drawPixmap(draw_rect, image)
+        painter.restore()
+        # 图片绘制后再描边，避免图片覆盖气泡轮廓。
+        painter.setBrush(Qt.BrushStyle.NoBrush)
+        painter.setPen(outline)
+        painter.drawPath(bubble_shape)
     painter.restore()
