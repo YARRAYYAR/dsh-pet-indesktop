@@ -376,6 +376,24 @@ class MediaRuntimeTests(unittest.TestCase):
             self.assertIsNone(window._physics_mode)
             self.assertFalse(window._physics_timer.isActive())
 
+    def test_throw_at_physical_top_does_not_hit_menu_bar_workarea_wall(self) -> None:
+        with self.interaction_window() as window:
+            available = QRect(0, 33, 2000, 1600)
+            screen = Mock()
+            screen.geometry.return_value = QRect(0, 0, 2000, 1633)
+            window._workspace_geometry = lambda: available
+            window._phys_pos = [500.0, 0.0]
+            window._phys_vel = [0.0, 0.0]
+
+            with patch('pet.window.QGuiApplication.screens', return_value=[screen]), \
+                    patch('pet.window.time.monotonic', return_value=10.0):
+                window._start_physics('throw')
+            with patch('pet.window.QGuiApplication.screens', return_value=[screen]), \
+                    patch('pet.window.time.monotonic', return_value=10.016):
+                window._on_physics_tick()
+
+            self.assertLess(window._phys_pos[1], 5.0)
+
     def test_settings_cancel_save_and_defaults(self) -> None:
         image = QImage(100, 80, QImage.Format.Format_RGBA8888)
         image.fill(QColor(255, 255, 255, 255))

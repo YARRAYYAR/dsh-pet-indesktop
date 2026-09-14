@@ -428,6 +428,19 @@ class PetWindow(QWidget):
         screen = self._screen_available()
         return screen.availableGeometry() if screen is not None else None
 
+    def _workspace_screen_top(self) -> int:
+        """返回所有显示器真实几何区域的最上边，允许桌宠到菜单栏上方。"""
+        tops = []
+        for screen in QGuiApplication.screens():
+            geometry = getattr(screen, 'geometry', None)
+            rect = geometry() if callable(geometry) else None
+            if isinstance(rect, QRect) and not rect.isEmpty():
+                tops.append(rect.top())
+        if tops:
+            return min(tops)
+        available = self._workspace_geometry()
+        return available.top() if available is not None else 0
+
     def _clamp_into_screen(self) -> None:
         avail = self._workspace_geometry()
         if avail is None:
@@ -2048,7 +2061,7 @@ class PetWindow(QWidget):
                 self._stop_physics()
                 return
             bounds = ThrowBounds.from_screen(
-                float(avail.left()), float(avail.top()),
+                float(avail.left()), float(self._workspace_screen_top()),
                 float(avail.right()), float(avail.bottom()),
                 window_width=float(self._w), window_height=float(self._h),
             )
