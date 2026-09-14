@@ -1363,13 +1363,21 @@ class PetWindow(QWidget):
                     self._pointer_velocity, time.monotonic() - self._last_move_time,
                 ))
                 self._boost_throw_velocity()
-                self._start_physics('throw')
             else:
                 if self._grab_offset is not None:
                     self.move(g - self._grab_offset)  # 停在松手处
-            edge_bounced = False if self._paused else self._trigger_edge_feedback()
+
+            # 先判断左右探头，再启动抛掷物理。此前顺序相反时，物理模式会
+            # 先把状态置为 throw，边缘探头就会误以为仍在运动而不进入。
             if not self._paused:
                 self._edge_probe.on_release(was_dragging)
+            edge_probed = self._edge_probe.active
+            if use_physics and not edge_probed and not self._paused:
+                self._start_physics('throw')
+            edge_bounced = (
+                False if self._paused or edge_probed
+                else self._trigger_edge_feedback()
+            )
             if not use_physics:
                 self._save_position()
             if self.idles and not edge_bounced and not self._paused:
