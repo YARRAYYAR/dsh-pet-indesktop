@@ -441,11 +441,20 @@ class PetWindow(QWidget):
         available = self._workspace_geometry()
         return available.top() if available is not None else 0
 
+    def _workspace_window_top(self) -> int:
+        """返回窗口上边界，使角色可见像素能够贴到真实屏幕顶部。"""
+        visible = self.character_local_region()
+        if visible is not None and not visible.isEmpty():
+            character_top = max(0, visible.top())
+        else:
+            character_top = self._presenter_layout().pet_top()
+        return self._workspace_screen_top() - character_top
+
     def _clamp_into_screen(self) -> None:
         avail = self._workspace_geometry()
         if avail is None:
             return
-        top = self._workspace_screen_top()
+        top = self._workspace_window_top()
         max_x = max(avail.left(), avail.right() - self._w + 1)
         max_y = max(top, avail.bottom() - self._h + 1)
         x = min(max(self.x(), avail.left()), max_x)
@@ -483,7 +492,8 @@ class PetWindow(QWidget):
             x = int(round(avail.left() + rx * avail.width())) - self._w // 2
             y = int(round(avail.top() + ry * avail.height())) - self._h // 2
             x = min(max(x, avail.left()), avail.right() - self._w)
-            y = min(max(y, avail.top()), avail.bottom() - self._h)
+            top = self._workspace_window_top()
+            y = min(max(y, top), max(top, avail.bottom() - self._h))
         logging.info('恢复位置 space=%s screen=%s avail=(%d,%d,%d,%d) dpr=%s -> (%d,%d)',
                      self.cfg.get('position_space', 'workspace'), scr.name(),
                      avail.left(), avail.top(), avail.right(),
@@ -1553,13 +1563,14 @@ class PetWindow(QWidget):
         avail = self._workspace_geometry()
         if avail is None:
             return False
+        top = float(self._workspace_window_top())
         contacts = edge_contacts(
             (float(self.x()), float(self.y()), float(self._w), float(self._h)),
             (
                 float(avail.left()),
-                float(avail.top()),
+                top,
                 float(avail.width()),
-                float(avail.height()),
+                float(avail.bottom()) - top,
             ),
             catalog.EDGE_FEEDBACK_MARGIN,
         )
@@ -2062,7 +2073,7 @@ class PetWindow(QWidget):
                 self._stop_physics()
                 return
             bounds = ThrowBounds.from_screen(
-                float(avail.left()), float(self._workspace_screen_top()),
+                float(avail.left()), float(self._workspace_window_top()),
                 float(avail.right()), float(avail.bottom()),
                 window_width=float(self._w), window_height=float(self._h),
             )

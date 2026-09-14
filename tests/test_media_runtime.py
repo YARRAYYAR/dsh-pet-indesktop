@@ -382,7 +382,9 @@ class MediaRuntimeTests(unittest.TestCase):
             screen = Mock()
             screen.geometry.return_value = QRect(0, 0, 2000, 1633)
             window._workspace_geometry = lambda: available
-            window._phys_pos = [500.0, 0.0]
+            visible_top = window.character_local_region().top()
+            physical_top = -float(visible_top)
+            window._phys_pos = [500.0, physical_top]
             window._phys_vel = [0.0, 0.0]
 
             with patch('pet.window.QGuiApplication.screens', return_value=[screen]), \
@@ -392,17 +394,19 @@ class MediaRuntimeTests(unittest.TestCase):
                     patch('pet.window.time.monotonic', return_value=10.016):
                 window._on_physics_tick()
 
-            self.assertLess(window._phys_pos[1], 5.0)
+            self.assertGreater(window._phys_pos[1], physical_top)
+            self.assertLess(window._phys_pos[1], physical_top + 15.0)
 
     def test_screen_clamp_allows_real_top_above_menu_bar(self) -> None:
         with self.interaction_window() as window:
             window._workspace_geometry = lambda: QRect(0, 33, 2000, 1600)
             window._workspace_screen_top = lambda: 0
-            window.move(500, 0)
+            visible_top = window.character_local_region().top()
+            window.move(500, -500)
 
             window._clamp_into_screen()
 
-            self.assertEqual(window.y(), 0)
+            self.assertEqual(window.y(), -visible_top)
 
     def test_settings_cancel_save_and_defaults(self) -> None:
         image = QImage(100, 80, QImage.Format.Format_RGBA8888)
