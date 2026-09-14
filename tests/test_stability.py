@@ -56,7 +56,18 @@ class StabilityTests(unittest.TestCase):
             self.assertEqual(loaded.get('personality'), 'lively')
             self.assertEqual(loaded.get('action_switch_delay_ms'), 60_000)
             self.assertTrue(loaded.get('sound_enabled'))
+            self.assertTrue(loaded.get('edge_probe_enabled'))
             self.assertEqual(loaded.get('character'), catalog.DEFAULT_CHARACTER)
+
+    def test_legacy_dynamic_island_config_is_ignored(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            config = Config(base=tmp)
+            config.path.parent.mkdir(parents=True, exist_ok=True)
+            config.path.write_text(json.dumps({
+                'dynamic_island': {'enabled': True, 'show_name': True},
+            }), encoding='utf-8')
+            loaded = Config(base=tmp)
+            self.assertIsNone(loaded.get('dynamic_island'))
 
     def test_legacy_duck_sound_config_migrates_to_global_sound(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

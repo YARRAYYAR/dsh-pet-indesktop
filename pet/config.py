@@ -67,20 +67,7 @@ class Config:
             'chatImageEnabled': False,      # v0.2.9：预留给未来聊天语境选图
             'bubble_offset_x': 0,
             'bubble_offset_y': 0,
-            'edge_probe_enabled': False,     # 左右贴边后进入边缘探头姿态
-            'dynamic_island': {
-                'enabled': True,
-                'show_icon': True,
-                'show_name': True,
-                'show_info': True,
-                'show_status': True,
-                'info_mode': 'time',       # time / custom
-                'custom_text': '',
-                'style': 'dark',           # dark / light / glass
-                'icon': '🐳',
-                'x': None,
-                'y': None,
-            },
+            'edge_probe_enabled': True,      # 左右贴边后进入边缘探头姿态
             'favorites': [],                # 用户收藏的动画名
             'playlist': [],                 # 播放列表动画名
             'playlist_mode': 'off',         # off / loop / random
@@ -151,47 +138,6 @@ class Config:
         except (TypeError, ValueError, OverflowError):
             volume = 80
         self.data['volume'] = max(0, min(100, volume))
-
-        default_island = self.data['dynamic_island']
-        if not isinstance(default_island, dict):
-            default_island = {}
-        island = {
-            'enabled': True,
-            'show_icon': True,
-            'show_name': True,
-            'show_info': True,
-            'show_status': True,
-            'info_mode': 'time',
-            'custom_text': '',
-            'style': 'dark',
-            'icon': '🐳',
-            'x': None,
-            'y': None,
-        }
-        island.update({key: value for key, value in default_island.items() if key in island})
-        for key in ('enabled', 'show_icon', 'show_name', 'show_info', 'show_status'):
-            value = island[key]
-            if isinstance(value, str):
-                island[key] = value.strip().lower() not in ('', '0', 'false', 'no', 'off')
-            else:
-                island[key] = bool(value)
-        island['info_mode'] = str(island['info_mode'] or 'time')
-        if island['info_mode'] not in ('time', 'custom'):
-            island['info_mode'] = 'time'
-        island['custom_text'] = str(island['custom_text'] or '')[:80]
-        island['style'] = str(island['style'] or 'dark')
-        if island['style'] not in ('dark', 'light', 'glass'):
-            island['style'] = 'dark'
-        island['icon'] = str(island['icon'] or '🐳').strip()[:8] or '🐳'
-        for key in ('x', 'y'):
-            value = island[key]
-            try:
-                island[key] = int(value) if value is not None else None
-            except (TypeError, ValueError, OverflowError):
-                island[key] = None
-        if not any(island[key] for key in ('show_icon', 'show_name', 'show_info', 'show_status')):
-            island['show_info'] = True
-        self.data['dynamic_island'] = island
 
         if self.data['bounce_sound_variant'] not in ('classic', 'retro', 'cute', 'random'):
             self.data['bounce_sound_variant'] = 'random'

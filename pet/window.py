@@ -153,7 +153,7 @@ class PetWindow(QWidget):
         self.playback_speed: float = float(config.get('playback_speed', 1.0))
         self.mouse_through: bool = bool(config.get('mouse_through', False))
         self.drag_physics: bool = bool(config.get('drag_physics', False))
-        self.edge_probe_enabled: bool = bool(config.get('edge_probe_enabled', False))
+        self.edge_probe_enabled: bool = bool(config.get('edge_probe_enabled', True))
         self.sound_enabled: bool = bool(
             config.get('sound_enabled', config.get('duck_sound', True))
         )

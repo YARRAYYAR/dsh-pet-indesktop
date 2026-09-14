@@ -62,7 +62,7 @@ class EdgeProbeController:
         self.win = win
         self._clock = clock if callable(clock) else time.monotonic
         self.enabled = bool(getattr(win, 'cfg', None)
-                            and win.cfg.get('edge_probe_enabled', False))
+                            and win.cfg.get('edge_probe_enabled', True))
         self._mode = OFF
         self._side: str | None = None
         self._angle_deg = 0.0

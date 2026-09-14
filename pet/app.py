@@ -77,7 +77,6 @@ class PetApp:
         self.config = config
         self.win: PetWindow | None = None
         self.tray: QSystemTrayIcon | None = None
-        self.island = None
         self._quit_bound = False
         self.hotkeys = GlobalHotkeys(self._handle_hotkey)
 
@@ -113,7 +112,6 @@ class PetApp:
         lib = self._create_library(character_id)
         win = PetWindow(lib, self.config)
         win.on_switch_character = self.switch_character
-        win.on_dynamic_island_changed = self._sync_dynamic_island
         win.show()
 
         tray = self._build_tray(win)
@@ -123,7 +121,6 @@ class PetApp:
         old_tray = self.tray
         self.win = win
         self.tray = tray
-        self._sync_dynamic_island()
 
         if old_win is not None:
             old_win.shutdown()
@@ -159,7 +156,6 @@ class PetApp:
         # 用新库创建新窗口/托盘，旧对象延迟销毁
         win = PetWindow(lib, self.config)
         win.on_switch_character = self.switch_character
-        win.on_dynamic_island_changed = self._sync_dynamic_island
         win.show()
 
         tray = self._build_tray(win)
@@ -168,7 +164,6 @@ class PetApp:
         old_tray = self.tray
         self.win = win
         self.tray = tray
-        self._sync_dynamic_island()
 
         old_win.hide()
         old_win.shutdown()
@@ -183,9 +178,6 @@ class PetApp:
         """应用唯一退出入口；避免每次热切换重复连接 aboutToQuit。"""
         if self.tray is not None:
             self.tray.hide()
-        if self.island is not None:
-            self.island.close()
-            self.island = None
         if self.win is not None:
             self.win._save_position()
             self.win.shutdown()
@@ -200,33 +192,6 @@ class PetApp:
         else:
             self.win.show()
             self.win.resume_animation()
-        if self.island is not None:
-            self.island.set_pet_visible(self.win.isVisible())
-
-    def _set_dynamic_island_enabled(self, enabled: bool) -> None:
-        island = dict(self.config.get('dynamic_island', {}) or {})
-        island['enabled'] = bool(enabled)
-        self.config.set('dynamic_island', island)
-        self.config.save()
-        self._sync_dynamic_island()
-
-    def _sync_dynamic_island(self) -> None:
-        """按需创建灵动岛；关闭时不保留定时器或额外窗口。"""
-        island_cfg = self.config.get('dynamic_island', {})
-        enabled = bool(island_cfg.get('enabled', False)) if isinstance(island_cfg, dict) else False
-        if not enabled or self.win is None:
-            if self.island is not None:
-                self.island.close()
-                self.island = None
-            return
-        if self.island is None:
-            from .dynamic_island import DynamicIsland
-
-            self.island = DynamicIsland(self.config)
-            self.island.clicked.connect(self._toggle_visible)
-        self.island.refresh_from_config()
-        self.island.set_pet_visible(self.win.isVisible())
-        self.island.show()
 
     def _handle_hotkey(self, action: str) -> None:
         win = self.win
@@ -270,14 +235,6 @@ class PetApp:
             checked=lambda: win.edge_probe_enabled,
             toggled=win.set_edge_probe_enabled,
             sync_signal=win.edgeProbeChanged,
-        ))
-
-        island_action = menu.addAction('灵动岛')
-        island_action.setCheckable(True)
-        island_action.setChecked(bool(self.config.get('dynamic_island', {}).get('enabled', True)))
-        island_action.toggled.connect(self._set_dynamic_island_enabled)
-        menu.aboutToShow.connect(lambda: island_action.setChecked(
-            bool(self.config.get('dynamic_island', {}).get('enabled', True))
         ))
 
         win.add_action_menu(menu)
