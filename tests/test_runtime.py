@@ -53,41 +53,29 @@ def test_fast_drag_boosts_the_whole_throw_vector():
 
 
 def test_throw_physics_uses_natural_multiple_bounces():
-    from pet.window import PetWindow
+    from pet.physics import MODE_THROW, PhysicsEngine, ThrowBounds
 
-    class Geometry:
-        def left(self):
-            return 0
-
-        def top(self):
-            return 0
-
-        def right(self):
-            return 800
-
-        def bottom(self):
-            return 600
-
-    window = PetWindow.__new__(PetWindow)
-    window._w = 20
-    window._h = 20
-    window._phys_pos = [400.0, 580.0]
-    window._phys_vel = [0.0, 900.0]
-    window._physics_mode = 'throw'
-    window._stop_physics = lambda: setattr(window, '_physics_mode', None)
+    bounds = ThrowBounds.from_screen(
+        0.0, 0.0, 800.0, 600.0, window_width=20.0, window_height=20.0,
+    )
+    engine = PhysicsEngine(position=(400.0, 580.0), velocity=(0.0, 900.0))
 
     bounces = 0
-    geometry = Geometry()
+    stopped = False
     for _ in range(5000):
-        if window._physics_mode is None:
-            break
-        incoming = window._phys_vel[1]
-        window._tick_throw_physics(0.008, geometry)
-        if incoming > 0 and window._phys_vel[1] < 0:
+        incoming = engine.vel[1]
+        result = engine.step_frame(
+            0.008, mode=MODE_THROW, drag_target=None, bounds=bounds,
+        )
+        if incoming > 0 and engine.vel[1] < 0:
             bounces += 1
+        if result.stopped:
+            stopped = True
+            break
+
     assert bounces >= 4
-    assert window._physics_mode is None
-    assert not hasattr(window, '_throw_bounce_count')
+    assert stopped
+    assert not hasattr(engine, '_throw_bounce_count')
 
 
 def test_load_governor_hysteresis():

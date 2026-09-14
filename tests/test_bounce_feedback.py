@@ -13,7 +13,36 @@ from PySide6.QtWidgets import QApplication, QMenu
 
 from pet.sound import BounceSound
 from pet.config import Config
+from pet.physics import ThrowBounds
 from tests import test_media_runtime as media_tests
+
+
+class _FixedScreen:
+    """把窗口所在屏幕固定成指定矩形，供物理边界计算使用。"""
+
+    def __init__(self, rect: QRect) -> None:
+        self._rect = rect
+        self._dpr = 1.0
+
+    def availableGeometry(self) -> QRect:
+        return self._rect
+
+    def name(self) -> str:
+        return 'fixed'
+
+    def devicePixelRatio(self) -> float:
+        return self._dpr
+
+    def refreshRate(self) -> float:
+        return 60.0
+
+
+def _drive_physics(window, ticks: int, *, clock, step: float = 0.008) -> None:
+    """用受控时钟驱动窗口的物理帧（每步一个 8ms 子步）。"""
+    for _ in range(ticks):
+        clock[0] += step
+        with patch('pet.window.time.monotonic', return_value=clock[0]):
+            window._on_physics_tick()
 
 
 @pytest.fixture(scope='module', autouse=True)
@@ -75,13 +104,15 @@ def test_bounce_variants_use_bundled_paths_without_loading_audio_in_process(tmp_
 def test_drag_rebound_is_silent_and_settles_normally():
     harness = media_tests.MediaRuntimeTests()
     with harness.interaction_window() as window:
-        window._phys_pos = [0.0, 300.0]
-        window._phys_vel = [0.0, 0.0]
+        window._physics.reset((0.0, 300.0))
         window._drag_target = QPoint(100, 300)
+        window._physics_mode = 'drag'
+        window._last_physics_time = 0.0
         positions = []
+        clock = [0.0]
         with patch('pet.window.QTimer.singleShot') as callback:
             for _ in range(250):
-                window._tick_drag_physics(0.008)
+                _drive_physics(window, 1, clock=clock)
                 positions.append(window._phys_pos[0])
             assert max(positions) > 110
             assert abs(positions[-1] - 100) < 0.01
@@ -92,15 +123,23 @@ def test_floor_rest_is_silent_but_fast_wall_impact_keeps_original_bounce():
     harness = media_tests.MediaRuntimeTests()
     with harness.interaction_window() as window:
         screen = QRect(0, 0, 2000, 1600)
-        window._phys_pos = [500.0, float(screen.bottom() - window._h)]
-        window._phys_vel = [0.0, 0.0]
+        bounds = ThrowBounds.from_screen(
+            0.0, 0.0, 2000.0, 1600.0,
+            window_width=float(window._w), window_height=float(window._h),
+        )
+        window._screen_available = lambda: _FixedScreen(screen)
+        clock = [0.0]
         with patch('pet.window.QTimer.singleShot') as callback:
-            for _ in range(10):
-                window._tick_throw_physics(0.008, screen)
+            # 静止躺在地面上：不该有任何音效
+            window._physics.reset((500.0, bounds.bottom), (0.0, 0.0))
+            window._physics_mode = 'throw'
+            window._last_physics_time = 0.0
+            _drive_physics(window, 10, clock=clock)
             callback.assert_not_called()
-            window._phys_pos = [-window._w / 3.0, 300.0]
-            window._phys_vel = [-800.0, 0.0]
-            window._tick_throw_physics(0.008, screen)
+            # 高速撞左墙：保留原来的一次回弹音
+            window._physics.reset((-window._w / 3.0, 300.0), (-800.0, 0.0))
+            window._physics_mode = 'throw'
+            _drive_physics(window, 1, clock=clock)
             assert window._phys_vel[0] == pytest.approx(800 * 0.78)
             callback.assert_called_once()
 

@@ -19,8 +19,8 @@ from PySide6.QtCore import QCoreApplication, QTimer
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QMenu, QMessageBox, QSystemTrayIcon
 
-from . import autostart as autostart_mod
 from . import catalog
+from . import menus
 from .config import Config
 from .hotkeys import GlobalHotkeys
 from .library import MovieLibrary
@@ -77,6 +77,7 @@ class PetApp:
         self.config = config
         self.win: PetWindow | None = None
         self.tray: QSystemTrayIcon | None = None
+        self.island = None
         self._quit_bound = False
         self.hotkeys = GlobalHotkeys(self._handle_hotkey)
 
@@ -112,6 +113,7 @@ class PetApp:
         lib = self._create_library(character_id)
         win = PetWindow(lib, self.config)
         win.on_switch_character = self.switch_character
+        win.on_dynamic_island_changed = self._sync_dynamic_island
         win.show()
 
         tray = self._build_tray(win)
@@ -121,6 +123,7 @@ class PetApp:
         old_tray = self.tray
         self.win = win
         self.tray = tray
+        self._sync_dynamic_island()
 
         if old_win is not None:
             old_win.shutdown()
@@ -156,6 +159,7 @@ class PetApp:
         # 用新库创建新窗口/托盘，旧对象延迟销毁
         win = PetWindow(lib, self.config)
         win.on_switch_character = self.switch_character
+        win.on_dynamic_island_changed = self._sync_dynamic_island
         win.show()
 
         tray = self._build_tray(win)
@@ -164,6 +168,7 @@ class PetApp:
         old_tray = self.tray
         self.win = win
         self.tray = tray
+        self._sync_dynamic_island()
 
         old_win.hide()
         old_win.shutdown()
@@ -178,6 +183,9 @@ class PetApp:
         """应用唯一退出入口；避免每次热切换重复连接 aboutToQuit。"""
         if self.tray is not None:
             self.tray.hide()
+        if self.island is not None:
+            self.island.close()
+            self.island = None
         if self.win is not None:
             self.win._save_position()
             self.win.shutdown()
@@ -192,6 +200,33 @@ class PetApp:
         else:
             self.win.show()
             self.win.resume_animation()
+        if self.island is not None:
+            self.island.set_pet_visible(self.win.isVisible())
+
+    def _set_dynamic_island_enabled(self, enabled: bool) -> None:
+        island = dict(self.config.get('dynamic_island', {}) or {})
+        island['enabled'] = bool(enabled)
+        self.config.set('dynamic_island', island)
+        self.config.save()
+        self._sync_dynamic_island()
+
+    def _sync_dynamic_island(self) -> None:
+        """按需创建灵动岛；关闭时不保留定时器或额外窗口。"""
+        island_cfg = self.config.get('dynamic_island', {})
+        enabled = bool(island_cfg.get('enabled', False)) if isinstance(island_cfg, dict) else False
+        if not enabled or self.win is None:
+            if self.island is not None:
+                self.island.close()
+                self.island = None
+            return
+        if self.island is None:
+            from .dynamic_island import DynamicIsland
+
+            self.island = DynamicIsland(self.config)
+            self.island.clicked.connect(self._toggle_visible)
+        self.island.refresh_from_config()
+        self.island.set_pet_visible(self.win.isVisible())
+        self.island.show()
 
     def _handle_hotkey(self, action: str) -> None:
         win = self.win
@@ -217,77 +252,47 @@ class PetApp:
             menu_bar_icon = QIcon(win.icon_pixmap(32))
         tray = QSystemTrayIcon(menu_bar_icon)
 
+        # 托盘与右键菜单共用同一批分节构造器（见 pet/menus.py）。
+        # 托盘需要把外部状态变化反向同步回勾选状态，右键菜单不需要。
         menu = QMenu()
-        menu.addAction('控制面板…', win.open_settings)
+        menus.add_settings(menu, win.open_settings)
         menu.addAction('显示 / 隐藏', self._toggle_visible)
-        win.add_bubble_toggle(menu)
-        pause = menu.addAction('暂停 / 继续')
-        pause.setCheckable(True)
-        pause.setChecked(win._paused)
-        pause.toggled.connect(win.set_paused)
-        win.pausedChanged.connect(pause.setChecked)
-        menu.addAction('随机动作', win.play_random_action)
+        menus.add_bubble_toggle(menu, win)
+        menus.add_pause(menu, win, checkable=True, sync=True)
+        menus.add_random_action(menu, win)
 
-        m_char = menu.addMenu('切换角色')
-        current = str(self.config.get('character', catalog.DEFAULT_CHARACTER))
-        for cid in catalog.list_available_characters():
-            act = m_char.addAction(cid)
-            act.setCheckable(True)
-            act.setChecked(cid == current)
-            act.triggered.connect(lambda checked=False, cid=cid: self.switch_character(cid))
+        menus.add_character_menu(menu, self.config, self.switch_character)
+        menus.add_display_menu(menu, win, sync=True)
+        menus.add_interaction_menu(menu, win, sync=True, sound_signal='triggered')
+        menus.add_toggle(menu, menus.ToggleSpec(
+            label='边缘探头（左右贴边）',
+            checked=lambda: win.edge_probe_enabled,
+            toggled=win.set_edge_probe_enabled,
+            sync_signal=win.edgeProbeChanged,
+        ))
 
-        display = menu.addMenu('画面调整')
-        soft_edges = display.addAction('清理透明底噪（Alpha=1）')
-        soft_edges.setCheckable(True)
-        soft_edges.setChecked(win.soft_edges)
-        soft_edges.toggled.connect(win.set_soft_edges)
-        win.softEdgesChanged.connect(soft_edges.setChecked)
-
-        interaction = menu.addMenu('互动反馈')
-        sound = interaction.addAction('声音开关')
-        sound.setCheckable(True)
-        sound.setChecked(win.sound_enabled)
-        sound.triggered.connect(win.set_sound_enabled)
-        win.soundChanged.connect(sound.setChecked)
-        greetings = interaction.addAction('偶尔主动打招呼')
-        greetings.setCheckable(True)
-        greetings.setChecked(win.proactive_greetings)
-        greetings.toggled.connect(win.set_proactive_greetings)
-        win.proactiveGreetingsChanged.connect(greetings.setChecked)
+        island_action = menu.addAction('灵动岛')
+        island_action.setCheckable(True)
+        island_action.setChecked(bool(self.config.get('dynamic_island', {}).get('enabled', True)))
+        island_action.toggled.connect(self._set_dynamic_island_enabled)
+        menu.aboutToShow.connect(lambda: island_action.setChecked(
+            bool(self.config.get('dynamic_island', {}).get('enabled', True))
+        ))
 
         win.add_action_menu(menu)
         win.add_personality_menu(menu)
+        menus.add_shortcut_legend(menu, enabled=self.hotkeys.enabled)
 
-        shortcuts = menu.addMenu('全局快捷键')
-        shortcut_prefix = '⌃⌥⌘'
-        shortcut_rows = (
-            ('H', '显示 / 隐藏'),
-            ('P', '暂停 / 继续'),
-            ('R', '随机动作'),
-            ('M', '鼠标穿透'),
-            ('D', '尖叫鸭'),
-        )
-        for key, label in shortcut_rows:
-            item = shortcuts.addAction(f'{shortcut_prefix}{key}  {label}')
-            item.setEnabled(False)
-        status = '已启用' if self.hotkeys.enabled else '不可用（仍可使用菜单）'
-        status_item = shortcuts.addAction(f'状态：{status}')
-        status_item.setEnabled(False)
-
-        mouse_through = menu.addAction('鼠标穿透')
-        mouse_through.setCheckable(True)
-        mouse_through.setChecked(bool(self.config.get('mouse_through', False)))
-        mouse_through.toggled.connect(win.set_mouse_through)
+        menus.add_toggle(menu, menus.ToggleSpec(
+            label='鼠标穿透',
+            checked=lambda: bool(self.config.get('mouse_through', False)),
+            toggled=win.set_mouse_through,
+        ))
 
         menu.addSeparator()
-
-        auto = menu.addAction('开机自启')
-        auto.setCheckable(True)
-        auto.setChecked(autostart_mod.is_enabled())
-        auto.toggled.connect(autostart_mod.set_enabled)
-
+        menus.add_autostart(menu)
         menu.addSeparator()
-        menu.addAction('退出', self.app.quit)
+        menus.add_quit(menu, self.app.quit)
 
         tray.setContextMenu(menu)
         tray.setToolTip('dsh-pet 独立桌宠')

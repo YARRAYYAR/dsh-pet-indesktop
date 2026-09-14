@@ -3,7 +3,7 @@ from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import (
     QCheckBox, QComboBox, QDialog, QDialogButtonBox, QFormLayout, QFrame,
-    QHBoxLayout, QLabel, QListWidget, QScrollArea, QSlider, QSpinBox,
+    QHBoxLayout, QLabel, QLineEdit, QListWidget, QScrollArea, QSlider, QSpinBox,
     QStackedWidget, QToolButton, QVBoxLayout, QWidget,
 )
 from . import catalog
@@ -19,11 +19,14 @@ class SettingsDialog(QDialog):
         self.setMinimumSize(820, 550)
         self.resize(1020, 680)
         apply_style(self)
+        island_cfg = dict(pet.cfg.get('dynamic_island', {}) or {})
         self._original = dict(scale=pet.scale, position=pet.pos(), volume=pet._duck_sound.volume,
             sound=pet.sound_enabled, bubble=pet.bubble_enabled, drag=pet.drag_physics,
+            edge_probe=pet.edge_probe_enabled,
             bounce_variant=pet._bounce_sound.variant,
             bubble_x=pet.bubble_offset_x, bubble_y=pet.bubble_offset_y,
-            paused=pet._paused, anim=pet.anim, visible=pet.isVisible(), suspended=pet._suspended)
+            paused=pet._paused, anim=pet.anim, visible=pet.isVisible(), suspended=pet._suspended,
+            island=island_cfg)
         self._did_preview_action = False
         self._preview_name = None
         self._preview_attempts = 0
@@ -43,7 +46,7 @@ class SettingsDialog(QDialog):
         self.navigation.setObjectName('navigation')
         self.navigation.setAccessibleName('控制面板导航')
         self.navigation.setFixedWidth(144)
-        self.navigation.addItems(['桌宠', '动作库', '互动', '声音', '设置'])
+        self.navigation.addItems(['桌宠', '动作库', '互动', '声音', '桌面组件', '设置'])
         body.addWidget(self.navigation)
         self.pages = QStackedWidget()
         body.addWidget(self.pages, 1)
@@ -109,6 +112,10 @@ class SettingsDialog(QDialog):
         interactions = self._page('互动', '保留你喜欢的回弹手感，调整气泡和主动互动。')
         _, physical = self._card(interactions, '拖拽手感')
         physical.addWidget(self._mirror(self.drag, '启用原版来回回弹与抛掷'))
+        self.edge_probe = self._check(
+            '启用边缘探头（拖到左右边缘后探出）', pet.edge_probe_enabled
+        )
+        physical.addWidget(self.edge_probe)
         physical.addWidget(label('第一下立即跟手；后续保留弹簧回弹。'))
         _, bubbles = self._card(interactions, '对话框')
         bubbles.addWidget(self._mirror(self.bubble, '显示气泡'))
@@ -147,6 +154,39 @@ class SettingsDialog(QDialog):
         self.greetings = self._check('偶尔主动打招呼', pet.proactive_greetings)
         greetings.addWidget(self.greetings)
         interactions.addStretch()
+
+        components = self._page('桌面组件', '让灵动岛保持轻量常驻，不读取视频帧、不启动后台线程。')
+        _, island_layout = self._card(components, '灵动岛')
+        self.island_enabled = self._check('显示灵动岛胶囊', island_cfg.get('enabled', True))
+        self.island_icon = self._check('显示图标', island_cfg.get('show_icon', True))
+        self.island_name = self._check('显示角色名称', island_cfg.get('show_name', True))
+        self.island_info = self._check('显示时间或短文本', island_cfg.get('show_info', True))
+        self.island_status = self._check('显示状态灯', island_cfg.get('show_status', True))
+        for control in (
+            self.island_enabled, self.island_icon, self.island_name,
+            self.island_info, self.island_status,
+        ):
+            island_layout.addWidget(control)
+        island_layout.addWidget(label('信息内容'))
+        self.island_info_mode = QComboBox()
+        self.island_info_mode.addItem('当前时间', 'time')
+        self.island_info_mode.addItem('自定义短文本', 'custom')
+        self.island_info_mode.setCurrentIndex(
+            self.island_info_mode.findData(island_cfg.get('info_mode', 'time'))
+        )
+        island_layout.addWidget(self.island_info_mode)
+        self.island_custom_text = QLineEdit(str(island_cfg.get('custom_text', '')))
+        self.island_custom_text.setPlaceholderText('例如：正在陪伴你')
+        self.island_custom_text.setMaxLength(80)
+        island_layout.addWidget(self.island_custom_text)
+        island_layout.addWidget(label('胶囊风格'))
+        self.island_style = QComboBox()
+        for key, title in [('dark', '深色'), ('light', '浅色'), ('glass', '玻璃')]:
+            self.island_style.addItem(title, key)
+        self.island_style.setCurrentIndex(self.island_style.findData(island_cfg.get('style', 'dark')))
+        island_layout.addWidget(self.island_style)
+        island_layout.addWidget(label('单击胶囊显示/隐藏桌宠；拖动胶囊可调整位置。'))
+        components.addStretch()
 
         sounds = self._page('声音', '短促回弹音和点击音效，统一控制音量。')
         _, audio = self._card(sounds, '互动音效')
@@ -225,8 +265,19 @@ class SettingsDialog(QDialog):
             lambda _: pet.set_bounce_sound_variant(self.bounce_variant.currentData(), persist=False)
         )
         self.drag.toggled.connect(lambda on: pet.set_drag_physics(on, persist=False))
+        self.edge_probe.toggled.connect(
+            lambda on: pet.set_edge_probe_enabled(on, persist=False)
+        )
         self.bubble_x.valueChanged.connect(self.preview_bubble_position)
         self.bubble_y.valueChanged.connect(self.preview_bubble_position)
+        for control in (
+            self.island_enabled, self.island_icon, self.island_name,
+            self.island_info, self.island_status,
+        ):
+            control.toggled.connect(self._preview_island)
+        self.island_info_mode.currentIndexChanged.connect(self._preview_island)
+        self.island_custom_text.textChanged.connect(self._preview_island)
+        self.island_style.currentIndexChanged.connect(self._preview_island)
         self.update_bubble_data()
 
     def showEvent(self, event):
@@ -272,6 +323,26 @@ class SettingsDialog(QDialog):
         result.toggled.connect(source.setChecked)
         source.toggled.connect(result.setChecked)
         return result
+
+    def _island_config_from_controls(self) -> dict:
+        old = dict(self.pet.cfg.get('dynamic_island', {}) or {})
+        old.update({
+            'enabled': self.island_enabled.isChecked(),
+            'show_icon': self.island_icon.isChecked(),
+            'show_name': self.island_name.isChecked(),
+            'show_info': self.island_info.isChecked(),
+            'show_status': self.island_status.isChecked(),
+            'info_mode': self.island_info_mode.currentData() or 'time',
+            'custom_text': self.island_custom_text.text()[:80],
+            'style': self.island_style.currentData() or 'dark',
+        })
+        return old
+
+    def _preview_island(self, *args):
+        self.pet.cfg.set('dynamic_island', self._island_config_from_controls())
+        callback = getattr(self.pet, 'on_dynamic_island_changed', None)
+        if callback is not None:
+            callback()
 
     def _sync_pause(self, paused):
         self.pause_button.setText('继续播放' if paused else '暂停播放')
@@ -330,6 +401,10 @@ class SettingsDialog(QDialog):
         self._size_timer.stop()
         self._preview_timer.stop()
         old = self._original
+        self.pet.cfg.set('dynamic_island', dict(old['island']))
+        callback = getattr(self.pet, 'on_dynamic_island_changed', None)
+        if callback is not None:
+            callback()
         self.pet.preview_bubble(None)
         self.pet.set_bubble_position(old['bubble_x'], old['bubble_y'])
         self.pet.set_sound_enabled(old['sound'], persist=False)
@@ -337,6 +412,7 @@ class SettingsDialog(QDialog):
         self.pet.set_volume(old['volume'], persist=False)
         self.pet.set_bounce_sound_variant(old['bounce_variant'], persist=False)
         self.pet.set_drag_physics(old['drag'], persist=False)
+        self.pet.set_edge_probe_enabled(old['edge_probe'], persist=False)
         self.pet.change_scale(old['scale'], persist=False)
         self.pet.move(old['position'])
         if self._did_preview_action:
@@ -352,6 +428,7 @@ class SettingsDialog(QDialog):
         self.sound.setChecked(True)
         self.bubble.setChecked(True)
         self.drag.setChecked(False)
+        self.edge_probe.setChecked(False)
         self.greetings.setChecked(True)
         self.bubble_x.setValue(0)
         self.bubble_y.setValue(0)
@@ -361,17 +438,30 @@ class SettingsDialog(QDialog):
         self.size.setValue(round(catalog.CANVAS_W * catalog.DEFAULT_SCALE))
         self.delay.setValue(0)
         self.frequency.setValue(0)
+        self.island_enabled.setChecked(True)
+        self.island_icon.setChecked(True)
+        self.island_name.setChecked(True)
+        self.island_info.setChecked(True)
+        self.island_status.setChecked(True)
+        self.island_info_mode.setCurrentIndex(self.island_info_mode.findData('time'))
+        self.island_custom_text.clear()
+        self.island_style.setCurrentIndex(self.island_style.findData('dark'))
 
     def save(self):
         self._size_timer.stop()
         self._preview_timer.stop()
         self.pet.preview_bubble(None)
         with self.pet.cfg.batch_save():
+            self.pet.cfg.set('dynamic_island', self._island_config_from_controls())
+            callback = getattr(self.pet, 'on_dynamic_island_changed', None)
+            if callback is not None:
+                callback()
             self.pet.set_sound_enabled(self.sound.isChecked())
             self.pet.set_bubble_enabled(self.bubble.isChecked())
             self.pet.set_volume(self.volume.value())
             self.pet.set_bounce_sound_variant(self.bounce_variant.currentData())
             self.pet.set_drag_physics(self.drag.isChecked())
+            self.pet.set_edge_probe_enabled(self.edge_probe.isChecked())
             self.pet.set_proactive_greetings(self.greetings.isChecked())
             self.pet.set_personality(self.personality.currentData())
             self.pet.change_scale(self.size.value() / catalog.CANVAS_W, persist=False)

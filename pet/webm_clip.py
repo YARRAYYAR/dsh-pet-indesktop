@@ -3,7 +3,7 @@
 WebM-backed clip library（webm 主路线）。
 
 使用 imageio-ffmpeg 自带的静态 ffmpeg 解码透明 webm：
-- read_frames(..., pix_fmt='rgba', bits_per_pixel=32, input_params=['-c:v','libvpx-vp9'])
+- 统一由 `_open_decode_stream` 装配参数，以 pix_fmt='rgba'、32 位读取，
   可正确保留 VP9 alpha，输出 RGBA 原始帧。
 - imageio_ffmpeg 内部在 Windows 上使用 STARTUPINFO 隐藏控制台窗口，
   避免旧 ffmpeg 子进程方案导致的“窗口反复出现/消失”。
@@ -77,6 +77,38 @@ def _ffmpeg_safe_path(path) -> str:
         return value
 
 
+def _meta_cache_key(path) -> str:
+    """元数据缓存的唯一键。
+
+    读路径和解码路径必须用同一个键，否则在 Windows 上（安全路径与原始
+    路径不同）缓存永远命不中，会反复触发 count_frames_and_secs 整片解码。
+    """
+    return _ffmpeg_safe_path(path)
+
+
+def _cache_meta(key: str, frames: int, duration: float) -> None:
+    """写入元数据缓存并按上限淘汰最早条目（唯一写入点）。"""
+    _META_CACHE[key] = (frames, duration)
+    while len(_META_CACHE) > META_CACHE_LIMIT:
+        _META_CACHE.pop(next(iter(_META_CACHE)))
+
+
+def _open_decode_stream(path, decode_filter: str, bpp: int):
+    """打开一路透明 WebM 解码流。
+
+    后台 reader 与首帧同步预解码必须使用完全相同的参数，否则同一条素材会
+    走两条不同的像素链路。这里是唯一的参数装配点。
+    """
+    return imageio_ffmpeg.read_frames(
+        path,
+        pix_fmt='rgba',
+        bits_per_pixel=bpp * 8,
+        input_params=['-c:v', 'libvpx-vp9',
+                      '-filter_threads', str(FFMPEG_FILTER_THREADS)],
+        output_params=['-vf', decode_filter],
+    )
+
+
 def _queue_item(
     frame_queue: queue.Queue,
     item: tuple[str, object],
@@ -109,13 +141,7 @@ def _reader_loop(
         return
     gen = None
     try:
-        gen = imageio_ffmpeg.read_frames(
-            path,
-            pix_fmt='rgba',
-            bits_per_pixel=bpp * 8,
-            input_params=['-c:v', 'libvpx-vp9', '-filter_threads', str(FFMPEG_FILTER_THREADS)],
-            output_params=['-vf', decode_filter],
-        )
+        gen = _open_decode_stream(path, decode_filter, bpp)
         meta = dict(next(gen))
         if not _queue_item(frame_queue, ('meta', meta), stop_evt):
             return
@@ -198,7 +224,7 @@ class WebMClip(QObject):
     def _ensure_meta(self) -> None:
         if self._duration > 0 or imageio_ffmpeg is None:
             return
-        key = _ffmpeg_safe_path(self.path)
+        key = _meta_cache_key(self.path)
         cached = _META_CACHE.get(key)
         if cached is not None:
             self._frame_count, self._duration = cached
@@ -213,9 +239,7 @@ class WebMClip(QObject):
                 self._duration = float(secs)
             if self._frame_count > 0 and self._duration > 0:
                 self._fps = self._frame_count / self._duration
-            _META_CACHE[key] = (self._frame_count, self._duration)
-            while len(_META_CACHE) > META_CACHE_LIMIT:
-                _META_CACHE.pop(next(iter(_META_CACHE)))
+            _cache_meta(key, self._frame_count, self._duration)
         except Exception as exc:
             logger.warning('webm 元数据读取失败 %s: %s', self.path, exc)
             # 保留默认值，后续 reader 会尝试从 read_frames 的 meta 补充
@@ -348,12 +372,8 @@ class WebMClip(QObject):
             return
         gen = None
         try:
-            gen = imageio_ffmpeg.read_frames(
-                _ffmpeg_safe_path(self.path),
-                pix_fmt='rgba',
-                bits_per_pixel=self._bpp * 8,
-                input_params=['-c:v', 'libvpx-vp9', '-filter_threads', str(FFMPEG_FILTER_THREADS)],
-                output_params=['-vf', self._decode_filter],
+            gen = _open_decode_stream(
+                _ffmpeg_safe_path(self.path), self._decode_filter, self._bpp
             )
             meta = next(gen)
             self._apply_stream_meta(meta)
@@ -414,9 +434,7 @@ class WebMClip(QObject):
         if self._frame_count <= 0 and self._fps > 0 and self._duration > 0:
             self._frame_count = int(round(self._fps * self._duration))
         if self._frame_count > 0 and self._duration > 0:
-            _META_CACHE[str(self.path)] = (self._frame_count, self._duration)
-            while len(_META_CACHE) > META_CACHE_LIMIT:
-                _META_CACHE.pop(next(iter(_META_CACHE)))
+            _cache_meta(_meta_cache_key(self.path), self._frame_count, self._duration)
 
     def _poll(self) -> None:
         """主线程按视频帧率逐帧取帧，不跳帧、不积压追帧。
