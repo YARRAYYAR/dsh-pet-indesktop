@@ -178,20 +178,41 @@ class MediaRuntimeTests(unittest.TestCase):
         with self.interaction_window() as window:
             available = QRect(0, 0, 2000, 1600)
             window._workspace_geometry = lambda: available
-            visible = window.character_local_region()
-            window.move(-visible.left(), 300)
             window.drag_physics = True
-            window._dragging = True
-            window._press_global = window.pos()
-            window._grab_offset = QPoint(0, 0)
-            window._last_global = window._press_global
-            window._last_move_time = 1.0
-            window._pointer_velocity = (0.0, 0.0)
+            window.move(600, 300)
+            point = next(
+                QPoint(x, y)
+                for y in range(window.height())
+                for x in range(window.width())
+                if window._is_in_interactive_area(QPoint(x, y))
+            )
 
-            with patch.object(window, '_trigger_edge_feedback') as feedback, \
-                    patch('pet.window.time.monotonic', return_value=1.0):
+            def mouse(kind, global_point):
+                is_move = kind == QEvent.Type.MouseMove
+                is_release = kind == QEvent.Type.MouseButtonRelease
+                return QMouseEvent(
+                    kind,
+                    QPointF(window.mapFromGlobal(global_point)),
+                    QPointF(global_point),
+                    Qt.MouseButton.NoButton if is_move else Qt.MouseButton.LeftButton,
+                    Qt.MouseButton.NoButton if is_release else Qt.MouseButton.LeftButton,
+                    Qt.KeyboardModifier.NoModifier,
+                )
+
+            origin = window.mapToGlobal(point)
+            window.mousePressEvent(mouse(QEvent.Type.MouseButtonPress, origin))
+            window.mouseMoveEvent(mouse(QEvent.Type.MouseMove, origin + QPoint(300, 0)))
+
+            visible = window.character_local_region()
+            edge_target = QPoint(available.left() - visible.left(), window.y())
+            edge_pointer = edge_target + window._grab_offset
+            window.mouseMoveEvent(mouse(QEvent.Type.MouseMove, edge_pointer))
+            self.assertEqual(window._drag_target, edge_target)
+            self.assertNotEqual(window.x(), edge_target.x())
+
+            with patch.object(window, '_trigger_edge_feedback') as feedback:
                 window.mouseReleaseEvent(
-                    self.mouse_event(window, QEvent.Type.MouseButtonRelease, QPoint(0, 0))
+                    mouse(QEvent.Type.MouseButtonRelease, edge_pointer)
                 )
 
             self.assertTrue(window._edge_probe.active)

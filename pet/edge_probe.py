@@ -43,14 +43,22 @@ def probe_window_x(side: str, exposure: float, visible: QRect, available: QRect)
     raise ValueError(f'unknown edge side: {side!r}')
 
 
-def edge_side_at_rest(win: Any, available: QRect) -> str | None:
+def edge_side_at_rest(
+    win: Any, available: QRect, *, window_x: float | None = None
+) -> str | None:
+    """按窗口当前位置判断角色可见区域是否贴到左右边缘。
+
+    拖动物理开启时，窗口本体会通过弹簧追赶鼠标目标；松手瞬间本体
+    可能还没追上，所以允许调用方传入松手目标的窗口 x 坐标。
+    """
     visible = win.character_local_region()
     if visible is None or visible.isEmpty():
         return None
     frame = win.frameGeometry()
-    if frame.left() + visible.left() <= available.left():
+    left = frame.left() if window_x is None else float(window_x)
+    if left + visible.left() <= available.left():
         return 'left'
-    if frame.left() + visible.right() >= available.right():
+    if left + visible.right() >= available.right():
         return 'right'
     return None
 
@@ -106,14 +114,18 @@ class EdgeProbeController:
         if self.active:
             self.cancel('drag_away', restore=False)
 
-    def on_release(self, was_dragging: bool) -> None:
+    def on_release(
+        self, was_dragging: bool, *, release_window_x: float | None = None
+    ) -> None:
         if not self.enabled or self._hidden or not was_dragging:
             return
         if self.active:
             self.cancel('drag_away', restore=False)
-        # 物理抛掷仍由物理引擎负责；停稳后由 on_throw_settled 重评估。
-        if getattr(self.win, '_physics_mode', None) is None:
-            self._maybe_enter()
+        # 松手目标已贴边时先进入探头；其他位置仍交给物理抛掷，停稳后
+        # 由 on_throw_settled 重评估。
+        if (getattr(self.win, '_physics_mode', None) is None
+                or release_window_x is not None):
+            self._maybe_enter(window_x=release_window_x)
 
     def on_throw_settled(self) -> None:
         """抛掷停稳后延迟重进，避免探头立刻抢走反弹手感。"""
@@ -183,14 +195,15 @@ class EdgeProbeController:
         screen = self.win._screen_available()
         return screen.availableGeometry() if screen is not None else None
 
-    def _maybe_enter(self) -> None:
+    def _maybe_enter(self, *, window_x: float | None = None) -> None:
         if (not self.enabled or self._hidden or self.active
-                or getattr(self.win, '_physics_mode', None) is not None):
+                or (getattr(self.win, '_physics_mode', None) is not None
+                    and window_x is None)):
             return
         available = self._available_geometry()
         if available is None:
             return
-        side = edge_side_at_rest(self.win, available)
+        side = edge_side_at_rest(self.win, available, window_x=window_x)
         if side is None:
             return
         visible = self.win.character_local_region()

@@ -1355,6 +1355,9 @@ class PetWindow(QWidget):
             self.unsetCursor()
             self._just_dragged = True  # 抑制拖拽结束后的幽灵点击
             QTimer.singleShot(150, self._clear_just_dragged)
+            release_target = (
+                g - self._grab_offset if self._grab_offset is not None else None
+            )
             if use_physics:
                 # 松手惯性来自鼠标采样，不混入弹簧追赶速度；停住再松手不甩飞。
                 if self._last_global is not None and g != self._last_global:
@@ -1370,7 +1373,12 @@ class PetWindow(QWidget):
             # 先判断左右探头，再启动抛掷物理。此前顺序相反时，物理模式会
             # 先把状态置为 throw，边缘探头就会误以为仍在运动而不进入。
             if not self._paused:
-                self._edge_probe.on_release(was_dragging)
+                self._edge_probe.on_release(
+                    was_dragging,
+                    release_window_x=(
+                        release_target.x() if release_target is not None else None
+                    ),
+                )
             edge_probed = self._edge_probe.active
             if use_physics and not edge_probed and not self._paused:
                 self._start_physics('throw')

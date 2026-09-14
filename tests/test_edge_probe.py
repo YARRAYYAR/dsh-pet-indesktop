@@ -3,7 +3,7 @@
 
 from PySide6.QtCore import QRect
 
-from pet.edge_probe import probe_window_x
+from pet.edge_probe import edge_side_at_rest, probe_window_x
 from pet.window_effects import rotated_region_bounds
 
 
@@ -20,3 +20,18 @@ def test_rotated_bounds_expand_for_probe_pose():
     )
     assert bounds.width() > 300
     assert bounds.height() > 220
+
+
+def test_edge_side_at_rest_accepts_drag_release_target_on_both_sides():
+    class Window:
+        def character_local_region(self):
+            return QRect(46, 325, 92, 129)
+
+        def frameGeometry(self):
+            return QRect(600, 300, 200, 500)
+
+    available = QRect(0, 0, 2000, 1600)
+    window = Window()
+    assert edge_side_at_rest(window, available, window_x=-46) == 'left'
+    assert edge_side_at_rest(window, available, window_x=2000 - 92 - 46) == 'right'
+    assert edge_side_at_rest(window, available, window_x=600) is None
