@@ -87,7 +87,19 @@ class StabilityTests(unittest.TestCase):
         categories = catalog.build_categories(['待机甲', '动作乙', '动作丙'])
         self.assertEqual(categories['idle'], '待机甲')
         self.assertEqual(categories['acts'], ['动作乙', '动作丙'])
+        self.assertEqual(categories['events'], [])
         self.assertEqual(catalog.decode_size_for_scale(0.72, 1.0), (462, 260))
+
+    def test_events_folder_is_manual_only_and_not_random(self) -> None:
+        categories = catalog.build_categories(
+            ['待机', '余额-钱袋满溢', '工作状态-忙碌点按'],
+            folder_files={
+                'idle': ['待机'],
+                'events': ['余额-钱袋满溢', '工作状态-忙碌点按'],
+            },
+        )
+        self.assertEqual(categories['events'], ['余额-钱袋满溢', '工作状态-忙碌点按'])
+        self.assertEqual(categories['acts'], [])
 
     def test_empty_external_character_dir_does_not_hide_builtin_assets(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

@@ -113,7 +113,14 @@ class PetWindow(QWidget):
     pausedChanged = Signal(bool)
     edgeProbeChanged = Signal(bool)
 
-    def __init__(self, lib: MovieLibrary, config: Config) -> None:
+    def __init__(
+        self,
+        lib: MovieLibrary,
+        config: Config,
+        *,
+        persist_position: bool = True,
+        is_clone: bool = False,
+    ) -> None:
         super().__init__()
         self.lib = lib
         # 让窗口成为媒体库的生命周期所有者；角色切换/退出时不留下孤立 reader。
@@ -121,6 +128,10 @@ class PetWindow(QWidget):
             lib.setParent(self)
         self.cfg = config
         self.on_switch_character = None  # 由 app 注入，用于运行时切换角色
+        self.on_add_clone = None
+        self.on_remove_clone = None
+        self._persist_position = bool(persist_position)
+        self.is_clone = bool(is_clone)
         self.soft_edges: bool = bool(config.get('soft_edges', True))
         self.lib.set_soft_edges(self.soft_edges)
 
@@ -138,6 +149,7 @@ class PetWindow(QWidget):
         self.moves = self.cats['moves']
         self.clicks = self.cats['clicks']
         self.drag = self.cats['drag']
+        self.events = self.cats.get('events', [])
         self.acts = self.cats['acts']
         # 收藏夹/播放列表的数据与持久化在 pet/action_sets.py；
         # 下面的属性把旧的读写形状保留下来，窗口其余部分无需改动。
@@ -502,6 +514,8 @@ class PetWindow(QWidget):
 
     def _save_position(self) -> None:
         """以窗口中心相对联合工作区的比例持久化位置。"""
+        if not self._persist_position:
+            return
         scr = self._screen_available()
         avail = self._workspace_geometry()
         if scr is None or avail is None or avail.width() <= 0 or avail.height() <= 0:
@@ -1072,6 +1086,11 @@ class PetWindow(QWidget):
             action.setEnabled(mode == 'off' or bool(self.playlist))
             action.triggered.connect(lambda checked=False, mode=mode: self.set_playlist_mode(mode))
 
+        if self.events:
+            events = menu.addMenu(f'事件动作 · {len(self.events)}')
+            for name in self.events:
+                events.addAction(name, lambda checked=False, name=name: self._switch(name))
+
     def set_personality(self, personality: str) -> None:
         personality = self._normalize_personality(personality)
         if personality == self.personality:
@@ -1611,6 +1630,8 @@ class PetWindow(QWidget):
         menus.add_random_action(root_menu, self)
         menus.add_bubble_toggle(root_menu, self)
         menus.add_meme_toggle(root_menu, self)
+        if self.on_add_clone is not None:
+            root_menu.addAction('增加复制体', self.on_add_clone)
 
         menu = root_menu.addMenu('更多控制')
         self._add_animation_shortcuts_menu(menu)
@@ -1650,6 +1671,8 @@ class PetWindow(QWidget):
 
         menu.addSeparator()
         root_menu.addAction('回到右下角', self._go_default_corner)
+        if self.is_clone and self.on_remove_clone is not None:
+            root_menu.addAction('关闭此复制体', lambda: self.on_remove_clone(self))
         root_menu.addAction('退出', self._request_quit)
         try:
             root_menu.exec(event.globalPos())
@@ -2129,6 +2152,9 @@ class PetWindow(QWidget):
             self._bounce_sound.play()
 
     def _request_quit(self) -> None:
+        if self.is_clone and self.on_remove_clone is not None:
+            self.on_remove_clone(self)
+            return
         self._save_position()
         QApplication.instance().quit()
 

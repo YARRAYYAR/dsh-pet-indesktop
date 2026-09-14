@@ -12,8 +12,9 @@ from unittest.mock import patch
 
 
 def test_catalog_integrity():
-    assert len(catalog.ANIM_FILES) == 91
+    assert len(catalog.ANIM_FILES) == 106
     assert len(catalog.ACTS) == 80
+    assert len(catalog.EVENTS) == 15
     assert len(catalog.CLICKS) == 5
     assert len(catalog.MOVES) == 3
     assert catalog.IDLE in catalog.ANIM_FILES

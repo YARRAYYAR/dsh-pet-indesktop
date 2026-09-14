@@ -115,7 +115,11 @@ def main() -> None:
     parser.add_argument("--ffprobe", type=Path, default=Path("/opt/homebrew/bin/ffprobe"))
     parser.add_argument("--model-name", default="realesr-animevideov3")
     parser.add_argument("--scale", type=int, choices=(2, 3, 4), default=2)
-    parser.add_argument("--workers", default="1:4:2")
+    # Apple Silicon 上较大的 tile/线程组合可能触发 Vulkan 崩溃；默认值刻意
+    # 偏保守，处理动画时也只保持一组解码/推理/写盘线程，避免额外内存峰值。
+    parser.add_argument("--tile-size", type=int, default=32)
+    parser.add_argument("--gpu-id", default="0")
+    parser.add_argument("--workers", default="1:1:1")
     parser.add_argument("--crf", type=int, default=18)
     parser.add_argument("--limit", type=int, default=0)
     parser.add_argument("--verify-only", action="store_true")
@@ -176,7 +180,9 @@ def main() -> None:
             run([
                 str(engine), "-i", str(source_frames), "-o", str(output_frames),
                 "-n", args.model_name, "-s", str(args.scale), "-f", "png",
-                "-t", "256", "-j", args.workers,
+                "-m", str(engine_root / "models"),
+                "-t", str(args.tile_size), "-g", str(args.gpu_id),
+                "-j", args.workers,
             ], cwd=engine_root)
             run([
                 str(ffmpeg), "-y", "-hide_banner", "-loglevel", "error",

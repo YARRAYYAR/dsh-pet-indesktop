@@ -76,7 +76,9 @@ class PetApp:
         self.app = app
         self.config = config
         self.win: PetWindow | None = None
+        self.clones: list[PetWindow] = []
         self.tray: QSystemTrayIcon | None = None
+        self._clone_count_action = None
         self._quit_bound = False
         self.hotkeys = GlobalHotkeys(self._handle_hotkey)
 
@@ -98,20 +100,44 @@ class PetApp:
             self.config.save()
             self._create_ui(catalog.DEFAULT_CHARACTER)
 
-    def _create_library(self, character_id: str) -> MovieLibrary:
+    def _create_library(self, character_id: str, *, cache_limit: int | None = None) -> MovieLibrary:
         scale = float(self.config.get('scale', catalog.DEFAULT_SCALE))
-        lib = MovieLibrary(
+        options = dict(
             character_id=character_id,
             decode_size=catalog.decode_size_for_scale(scale),
             soft_edges=bool(self.config.get('soft_edges', True)),
         )
+        if cache_limit is not None:
+            options['cache_limit'] = cache_limit
+        lib = MovieLibrary(**options)
         logging.info('素材加载完成：%s %d 段动画', character_id, len(lib.names()))
         return lib
+
+    def _wire_window(self, win: PetWindow, *, is_clone: bool = False) -> None:
+        win.on_switch_character = self.switch_character
+        win.on_add_clone = self.add_clone
+        win.on_remove_clone = self.remove_clone if is_clone else None
+
+    @staticmethod
+    def _clone_position(base: PetWindow, clone: PetWindow, index: int) -> tuple[int, int]:
+        """从主桌宠旁边按网格错开放置复制体，并限制在联合工作区内。"""
+        step = max(32, int(round(56 * clone.scale)))
+        slot = max(0, index - 1)
+        column, row = slot % 4, slot // 4
+        x = base.x() + step * (column + 1)
+        y = base.y() - step * row
+        available = clone._workspace_geometry()
+        if available is None:
+            return x, y
+        top = clone._workspace_window_top()
+        x = min(max(x, available.left()), available.right() - clone.width() + 1)
+        y = min(max(y, top), available.bottom() - clone.height() + 1)
+        return x, y
 
     def _create_ui(self, character_id: str) -> None:
         lib = self._create_library(character_id)
         win = PetWindow(lib, self.config)
-        win.on_switch_character = self.switch_character
+        self._wire_window(win)
         win.show()
 
         tray = self._build_tray(win)
@@ -129,6 +155,50 @@ class PetApp:
             QTimer.singleShot(0, old_win.deleteLater)
             if old_tray is not None:
                 QTimer.singleShot(0, old_tray.deleteLater)
+
+
+    # ------------------------------------------------------------ 复制体
+    def add_clone(self) -> None:
+        """增加一个独立桌宠窗口；不设应用层数量上限，媒体缓存保持最小。"""
+        if self.win is None:
+            return
+        character_id = str(self.config.get('character', catalog.DEFAULT_CHARACTER))
+        lib = None
+        try:
+            # 复制体只缓存当前动作，避免每个窗口各自保留完整动作缓存。
+            lib = self._create_library(character_id, cache_limit=1)
+            clone = PetWindow(lib, self.config, persist_position=False, is_clone=True)
+            self._wire_window(clone, is_clone=True)
+            clone.move(*self._clone_position(self.win, clone, len(self.clones) + 1))
+            self.clones.append(clone)
+            clone.show()
+            self._update_clone_menu()
+            logging.info('增加桌宠复制体: count=%d', len(self.clones))
+        except Exception as exc:
+            if lib is not None:
+                lib.close()
+                lib.deleteLater()
+            logging.exception('增加桌宠复制体失败')
+            _show_startup_error('增加复制体失败', str(exc))
+
+    def remove_clone(self, clone: PetWindow) -> None:
+        """关闭一个复制体；不会影响主桌宠或边缘探头配置。"""
+        if clone not in self.clones:
+            return
+        self.clones.remove(clone)
+        clone.hide()
+        clone.shutdown()
+        clone.deleteLater()
+        self._update_clone_menu()
+        logging.info('关闭桌宠复制体: count=%d', len(self.clones))
+
+    def close_all_clones(self) -> None:
+        for clone in list(self.clones):
+            self.remove_clone(clone)
+
+    def _update_clone_menu(self) -> None:
+        if self._clone_count_action is not None:
+            self._clone_count_action.setText(f'当前复制体：{len(self.clones)}')
 
 
     # ------------------------------------------------------------ 角色切换
@@ -155,7 +225,7 @@ class PetApp:
 
         # 用新库创建新窗口/托盘，旧对象延迟销毁
         win = PetWindow(lib, self.config)
-        win.on_switch_character = self.switch_character
+        self._wire_window(win)
         win.show()
 
         tray = self._build_tray(win)
@@ -178,6 +248,7 @@ class PetApp:
         """应用唯一退出入口；避免每次热切换重复连接 aboutToQuit。"""
         if self.tray is not None:
             self.tray.hide()
+        self.close_all_clones()
         if self.win is not None:
             self.win._save_position()
             self.win.shutdown()
@@ -186,12 +257,15 @@ class PetApp:
     def _toggle_visible(self) -> None:
         if self.win is None:
             return
-        if self.win.isVisible():
-            self.win.suspend_animation()
-            self.win.hide()
+        windows = [self.win, *self.clones]
+        if any(window.isVisible() for window in windows):
+            for window in windows:
+                window.suspend_animation()
+                window.hide()
         else:
-            self.win.show()
-            self.win.resume_animation()
+            for window in windows:
+                window.show()
+                window.resume_animation()
 
     def _handle_hotkey(self, action: str) -> None:
         win = self.win
@@ -226,6 +300,13 @@ class PetApp:
         menus.add_meme_toggle(menu, win)
         menus.add_pause(menu, win, checkable=True, sync=True)
         menus.add_random_action(menu, win)
+
+        clones = menu.addMenu('复制体')
+        self._clone_count_action = clones.addAction('当前复制体：0')
+        self._clone_count_action.setEnabled(False)
+        clones.addAction('增加复制体', self.add_clone)
+        clones.addAction('关闭全部复制体', self.close_all_clones)
+        self._update_clone_menu()
 
         menus.add_character_menu(menu, self.config, self.switch_character)
         menus.add_display_menu(menu, win, sync=True)

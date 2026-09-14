@@ -257,6 +257,7 @@ DIR_IDLE_TURN = 'idle_turn'  # 兼容旧结构：待机+转向合并目录
 DIR_MOVE = 'move'
 DIR_CLICK = 'click'
 DIR_DRAG = 'drag'
+DIR_EVENTS = 'events'
 DIR_RANDOM = 'random'
 
 
@@ -287,9 +288,16 @@ CLICKS = [
     '点击回应-挠痒咯咯笑',
 ]
 DRAG = '被鼠标拖拽悬空反馈'
-ACTS = [n for n in ANIM_FILES if n not in (IDLE, TURN, DRAG, *MOVES, *CLICKS)]
+EVENTS = [
+    n for n, relative in ANIM_FILES.items()
+    if relative.split('/', 1)[0] == DIR_EVENTS
+]
+ACTS = [
+    n for n in ANIM_FILES
+    if n not in (IDLE, TURN, DRAG, *MOVES, *CLICKS) and n not in EVENTS
+]
 
-# 不在导入阶段锁死动作数量。默认形象当前是 91 段，但后续新增动作或
+# 不在导入阶段锁死动作数量。默认形象当前是基础动作加事件动作，但后续新增动作或
 # 外部角色不应因为 catalog import 失败；当前素材完整性由测试/打包验收负责。
 
 
@@ -473,6 +481,7 @@ def build_categories(names, manifest: dict | None = None, folder_map: dict | Non
         ├── move/     # 移动
         ├── click/    # 点击回应
         ├── drag/     # 拖拽（可选）
+        ├── events/   # 事件动作（手动/播放列表）
         └── random/   # 随机动作
     """
     ordered_names = list(dict.fromkeys(names))
@@ -481,7 +490,7 @@ def build_categories(names, manifest: dict | None = None, folder_map: dict | Non
         return {
             'idle': None, 'turn': None,
             'idles': [], 'turns': [],
-            'moves': [], 'clicks': [], 'drag': None, 'acts': [],
+            'moves': [], 'clicks': [], 'drag': None, 'events': [], 'acts': [],
         }
 
     idles: list[str] = []
@@ -489,6 +498,7 @@ def build_categories(names, manifest: dict | None = None, folder_map: dict | Non
     moves: list[str] = []
     clicks: list[str] = []
     drag = None
+    events: list[str] = []
 
     if folder_files is not None:
         by_folder: dict[str, list[str]] = {k: list(v) for k, v in folder_files.items()}
@@ -525,6 +535,7 @@ def build_categories(names, manifest: dict | None = None, folder_map: dict | Non
         drag_names = by_folder.get(DIR_DRAG, [])
         if drag_names:
             drag = drag_names[0]
+        events = list(by_folder.get(DIR_EVENTS, []))
 
     # manifest 补充/覆盖
     if manifest:
@@ -542,6 +553,8 @@ def build_categories(names, manifest: dict | None = None, folder_map: dict | Non
             clicks = _manifest_names(manifest.get('clicks', []), names)
         if drag is None:
             drag = _manifest_name(manifest.get('drag'), names)
+        if not events:
+            events = _manifest_names(manifest.get('events', []), names)
 
     # 关键词兜底
     if not idles:
@@ -575,7 +588,7 @@ def build_categories(names, manifest: dict | None = None, folder_map: dict | Non
         if first:
             idles = [first]
 
-    core = set(idles) | set(turns) | set(moves) | set(clicks)
+    core = set(idles) | set(turns) | set(moves) | set(clicks) | set(events)
     if drag:
         core.add(drag)
 
@@ -586,7 +599,7 @@ def build_categories(names, manifest: dict | None = None, folder_map: dict | Non
         # 子目录模式下，random/ 和未知目录的内容都进入随机动作池；
         # 允许同一文件同时出现在多个分类中（例如测试时复制同一视频到多个文件夹）
         acts = []
-        known = {DIR_IDLE, DIR_TURN, DIR_MOVE, DIR_CLICK, DIR_DRAG}
+        known = {DIR_IDLE, DIR_TURN, DIR_MOVE, DIR_CLICK, DIR_DRAG, DIR_EVENTS}
         for folder, ns in by_folder.items():
             # folder == '' 是旧版平铺素材的重复入口，不应覆盖结构化分类。
             if folder == DIR_RANDOM or (folder and folder not in known):
@@ -608,6 +621,7 @@ def build_categories(names, manifest: dict | None = None, folder_map: dict | Non
         'moves': moves,
         'clicks': clicks,
         'drag': drag,
+        'events': events,
         'acts': acts,
     }
 
