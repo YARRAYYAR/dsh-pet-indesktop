@@ -400,7 +400,7 @@ PYTHONPATH=. .venv/bin/python scripts/verify_dsr_packaged_runtime.py --app "/Use
 
 全仓 Ruff 通过；完整 pytest **2914 通过、21 跳过**。构建出的 macOS 包通过源码字节码、106 个原素材/106 个高清素材哈希、图标、模块排除、版本及签名检查；包内真实动作目录/播放/错误/退出流程通过，子进程退出。证据分别为 [installed package](evidence/seeky4-quality/package-verification-4.2.1.5-installed.json) 与 [packaged IPC](evidence/seeky4-quality/packaged-ipc-4.2.1.5.json)。
 
-本次版本为 `4.2.1.5` / `4.2.1 · seeky.5`。没有强杀旧桌宠进程；确认旧版进程已退出后，旧 `.4` bundle 被可恢复地移入废纸篓，新版安装到 `/Users/ray/Applications/seeky· pet.app` 并已打开。
+本次版本为 `4.2.1.5` / `4.2.1 · seeky.5`。没有强杀旧桌宠进程；确认旧版进程已退出后，旧 `.4` bundle 已从应用目录移除并执行移入废纸篓操作。macOS 拒绝本次读取废纸篓内容，因此废纸篓中的可恢复状态未核验。新版安装到 `/Users/ray/Applications/seeky· pet.app`；安装包与启动验证见上方记录。
 
 ### 10.5 最终素材和原生尺寸切换验收
 
