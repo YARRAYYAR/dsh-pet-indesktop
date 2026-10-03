@@ -1,0 +1,20 @@
+{
+  "command": "Installed bundle + CUA right click/drag after fresh binding and AX Raise",
+  "setup": "Same installed dsr.2; temporarily disabled hidden-cursor passthrough to isolate native input",
+  "inputs": "Right clicks at screenshot and logical centres; screenshot-centre drag to ceiling",
+  "assertions": "Actual pointer input moves pet and triggers ceiling flip",
+  "actual": "CUA did not change normalized position; native Qt placement and rotation flow separately passed",
+  "before": {
+    "cursor_hidden_passthrough": true,
+    "rx": 0.11011904761904762,
+    "ry": 0.32638105975197296
+  },
+  "after": {
+    "cursor_hidden_passthrough": false,
+    "rx": 0.11011904761904762,
+    "ry": -0.05474040632054176
+  },
+  "reset": "Hidden-cursor passthrough restored to original value; no position change observed",
+  "exit_status": 1,
+  "scope": "OS pointer validation remains unverified; not a product crash"
+}

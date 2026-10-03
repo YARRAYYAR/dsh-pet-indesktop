@@ -1,0 +1,20 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "/Users/ray/Documents/New project/dsr-pet/scripts/verify_dsr_runtime.py",
+    "--root",
+    "/Users/ray/Library/Caches/dsr-pet-baseline-1c3a59c",
+    "--output",
+    "/Users/ray/Documents/New project/dsr-pet/docs/evidence/dsr-pet/baseline-2.json",
+    "--probe",
+    "/Users/ray/Documents/New project/dsr-pet/.scratch/dsr-pet/evidence/proc_mem"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "started_utc": "2026-10-03T06:15:10.156884+00:00",
+  "elapsed_seconds": 116.5642023749997,
+  "setup": "Same Python/Qt runtime and HD assets; isolated temporary Config, seed 42",
+  "inputs": "Single/three pets, continuous switching, eight sequential settings opens, return to single",
+  "assertions": "Complete samples and frames; all settings children exit 0; no callback errors",
+  "reset": "New temporary Config each run; application shutdown releases readers and Qt services",
+  "exit_status": 0
+}

@@ -1,0 +1,34 @@
+{
+  "command": ".venv/bin/python stdin: QCoreApplication([]); SettingsCommandClient(Config()).request(\"quit\", {}, callback); event loop; psutil.wait_procs(old app executables, timeout=10)",
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Current default instance, existing old app only",
+  "inputs": "Public quit command",
+  "assertions": "Old main process exits before replacing installation",
+  "checks": {
+    "preferences_before": {
+      "top_flip_enabled": true,
+      "top_flip_exposure": 0.5,
+      "codex_link_enabled": true,
+      "codex_task_appearance": {
+        "background": "#1c1c1e",
+        "accent": "#707078",
+        "scale": 100
+      },
+      "autostart_wanted": false
+    },
+    "old_app_quit_response": {
+      "ok": true,
+      "data": {}
+    },
+    "old_app_remaining_pids": [
+      27217
+    ],
+    "installed_app": "/Users/ray/Applications/seeky· pet.app",
+    "desktop_shortcut": "/Users/ray/Desktop/seeky· pet.app",
+    "old_app_trash": "/Users/ray/.Trash/dsr · pet-20261003-180326.app",
+    "old_installed_absent": true,
+    "old_desktop_absent": true,
+    "installed_signature_exit": 0
+  },
+  "exit_status": 1
+}

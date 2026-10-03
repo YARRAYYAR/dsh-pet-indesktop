@@ -81,7 +81,7 @@ def attach(win) -> None:
     sampler.start()
     _attached[tid] = sampler
     # 窗口销毁后停止采样线程（弱引用自清，不占 closeEvent 路径）
-    ref = weakref.ref(win, lambda _r: _attached.pop(tid, _GuiStallSampler()).stop()
+    ref = weakref.ref(win, lambda _r: _attached.pop(tid).stop()
                       if tid in _attached else None)
     sampler._win_ref = ref
 

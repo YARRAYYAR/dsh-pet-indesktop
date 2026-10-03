@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any
 
 from . import catalog
+from .task_bubble_style import DEFAULT_TASK_APPEARANCE, clean_task_appearance
 from .report_gates import (
     LEGACY_PERCENT_GATES,
     LEGACY_SWITCH_GATES,
@@ -452,21 +453,8 @@ def _default_base():
 
 
 def _app_dir_name() -> str:
-    """打包变体的独立数据目录名；源码运行时回退到共享目录。
-
-    构建脚本（scripts/build_onedir.ps1）会在打包前生成
-    packaging/build_variant.py（VARIANT = "webm-chat" 等），
-    使 Chat / 无 Chat 等变体各自使用独立的配置目录、会话与自启项。
-    """
-    try:
-        from build_variant import VARIANT  # 仅打包产物中存在
-
-        name = str(VARIANT).strip()
-        if name:
-            return f"dsh-pet-standalone-{name}"
-    except Exception:
-        pass
-    return "dsh-pet-standalone"
+    """The derivative never writes to an upstream build's data directory."""
+    return "dsr-pet"
 
 
 APP_DIR_NAME = _app_dir_name()
@@ -526,9 +514,9 @@ def _clean_self_talk_texts(value):
 
 
 def _default_dynamic_island_data() -> dict:
-    """灵动岛默认配置：默认开启常驻，位置留空由首次显示时自动定位。"""
+    """保留旧版灵动岛配置字段，dsr · pet 不再创建该界面。"""
     return {
-        "enabled": True,
+        "enabled": False,
         "show_icon": True,
         "show_name": True,
         "show_info": True,
@@ -729,6 +717,10 @@ class Config:
             "golden_spin_on_click": False,  # 点击回应动画结束后自动接一段黄金回旋
             "golden_spin_direct": False,  # 点击触发黄金回旋时跳过点击动画，直接回旋并逐圈加速
             "edge_probe_enabled": False,  # 拖到屏幕左右边缘后自动进入探头姿态
+            "top_flip_enabled": True,
+            "top_flip_exposure": 0.5,
+            "codex_link_enabled": False,
+            "codex_task_appearance": dict(DEFAULT_TASK_APPEARANCE),
             "autostart_wanted": False,  # 用户曾开启过开机自启（用于启动自检：被安全软件清理时提醒）
             "harness_autostart": False,  # 随桌宠启动自动拉起 dsh web 服务（只起服务，不开浏览器）
             # 手动指定 pnpm 入口（文件 / 目录 / 包装脚本都行，语义同 DSH_PNPM_BIN）。
@@ -989,6 +981,10 @@ class Config:
             "golden_spin_on_click",
             "golden_spin_direct",
             "edge_probe_enabled",
+            "top_flip_enabled",
+            "top_flip_exposure",
+            "codex_link_enabled",
+            "codex_task_appearance",
             "balance_tier_labels_mode",
             "balance_tier_label_peak",
             "balance_tier_label_idle",
@@ -1304,6 +1300,10 @@ class Config:
         self.data["golden_spin_on_click"] = _bool_or_default(self.data.get("golden_spin_on_click"), False)
         self.data["golden_spin_direct"] = _bool_or_default(self.data.get("golden_spin_direct"), False)
         self.data["edge_probe_enabled"] = _bool_or_default(self.data.get("edge_probe_enabled"), False)
+        self.data['top_flip_enabled'] = _bool_or_default(self.data.get('top_flip_enabled'), True)
+        self.data['top_flip_exposure'] = _float_or_default(self.data.get('top_flip_exposure'), 0.5, 0.0, 0.95)
+        self.data['codex_link_enabled'] = _bool_or_default(self.data.get('codex_link_enabled'), False)
+        self.data['codex_task_appearance'] = clean_task_appearance(self.data.get('codex_task_appearance'))
         self.data["agent_link"] = _clean_agent_link_data(self.data.get("agent_link"))
         # 音乐关联 / 消费统计（#129 新增的 5 键）：此前只在默认值与 reload 白名单
         # 里登记、没进归一化——手改成脏值后数值键会让设置页构造直接抛

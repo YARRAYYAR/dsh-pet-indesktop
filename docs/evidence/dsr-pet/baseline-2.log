@@ -1,0 +1,31 @@
+QSystemTrayIcon::setVisible: No Icon set
+WARNING:root:GUI 卡顿 209ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（209ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-110ms] verify_dsr_runtime.py:89:main <- app.py:1667:start <- app.py:1776:_create_ui_with_character_fallback <- app.py:562:_create_ui <- app.py:536:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-55ms] verify_dsr_runtime.py:256:<module> <- verify_dsr_runtime.py:249:main
+single
+multi
+WARNING:root:GUI 卡顿 247ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（247ms，4 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-265ms] verify_dsr_runtime.py:256:<module> <- verify_dsr_runtime.py:249:main
+WARNING:pet.gui_stall_sampler:  [t-214ms] <frozen importlib._bootstrap>:1322:_find_and_load_unlocked <- <frozen importlib._bootstrap>:1262:_find_spec <- <frozen importlib._bootstrap_external>:1559:find_spec <- <frozen importlib._bootstrap_external>:1533:_get_spec <- <frozen importlib._bootstrap_external>:1636:find_spec <- <frozen importlib._bootstrap_external>:1679:_fill_cache
+WARNING:pet.gui_stall_sampler:  [t-145ms] verify_dsr_runtime.py:249:main <- verify_dsr_runtime.py:161:<lambda> <- verify_dsr_runtime.py:142:set_stage <- app.py:2768:spawn_in_process_window <- app.py:2976:_refresh_tray_menu <- app.py:3190:_build_tray
+WARNING:pet.gui_stall_sampler:  [t-77ms] verify_dsr_runtime.py:249:main <- verify_dsr_runtime.py:161:<lambda> <- verify_dsr_runtime.py:142:set_stage <- app.py:2761:spawn_in_process_window <- app.py:536:_build_window <- file_eater.py:150:eventFilter
+WARNING:root:GUI 卡顿 203ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（203ms，4 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-221ms] <frozen importlib._bootstrap>:1322:_find_and_load_unlocked <- <frozen importlib._bootstrap>:1262:_find_spec <- <frozen importlib._bootstrap_external>:1559:find_spec <- <frozen importlib._bootstrap_external>:1533:_get_spec <- <frozen importlib._bootstrap_external>:1636:find_spec <- <frozen importlib._bootstrap_external>:1679:_fill_cache
+WARNING:pet.gui_stall_sampler:  [t-152ms] verify_dsr_runtime.py:249:main <- verify_dsr_runtime.py:161:<lambda> <- verify_dsr_runtime.py:142:set_stage <- app.py:2768:spawn_in_process_window <- app.py:2976:_refresh_tray_menu <- app.py:3190:_build_tray
+WARNING:pet.gui_stall_sampler:  [t-84ms] verify_dsr_runtime.py:249:main <- verify_dsr_runtime.py:161:<lambda> <- verify_dsr_runtime.py:142:set_stage <- app.py:2761:spawn_in_process_window <- app.py:536:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-6ms] verify_dsr_runtime.py:256:<module> <- verify_dsr_runtime.py:249:main
+WARNING:root:GUI 卡顿 134ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（134ms，3 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-154ms] verify_dsr_runtime.py:249:main <- verify_dsr_runtime.py:161:<lambda> <- verify_dsr_runtime.py:142:set_stage <- app.py:2768:spawn_in_process_window <- app.py:2976:_refresh_tray_menu <- app.py:3190:_build_tray
+WARNING:pet.gui_stall_sampler:  [t-86ms] verify_dsr_runtime.py:249:main <- verify_dsr_runtime.py:161:<lambda> <- verify_dsr_runtime.py:142:set_stage <- app.py:2761:spawn_in_process_window <- app.py:536:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-8ms] verify_dsr_runtime.py:256:<module> <- verify_dsr_runtime.py:249:main
+switch
+settings
+WARNING:root:GUI 卡顿 122ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（122ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-149ms] verify_dsr_runtime.py:256:<module> <- verify_dsr_runtime.py:249:main
+WARNING:pet.gui_stall_sampler:  [t-6ms] verify_dsr_runtime.py:249:main <- webm_clip.py:2389:_poll <- webm_clip.py:2640:_process_frame <- window.py:1594:<lambda> <- window.py:1918:_on_frame <- window.py:2107:_rebuild_frame
+return

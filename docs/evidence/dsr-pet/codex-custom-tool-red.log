@@ -1,0 +1,16 @@
+qt.multimedia.ffmpeg: Using Qt multimedia with FFmpeg version 7.1.5 LGPL version 2.1 or later
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/scripts/verify_dsr_features.py", line 61, in run
+    callback()
+    ~~~~~~~~^^
+  File "/Users/ray/Documents/New project/dsr-pet/scripts/verify_dsr_features.py", line 96, in question
+    assert checks['custom_tool_working'], 'Codex custom_tool_call did not show active work'
+           ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Codex custom_tool_call did not show active work
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/scripts/verify_dsr_features.py", line 166, in <module>
+    main()
+    ~~~~^^
+  File "/Users/ray/Documents/New project/dsr-pet/scripts/verify_dsr_features.py", line 162, in main
+    raise RuntimeError(errors)
+RuntimeError: ['Codex custom_tool_call did not show active work']

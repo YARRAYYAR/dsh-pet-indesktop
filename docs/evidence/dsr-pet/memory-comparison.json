@@ -1,0 +1,1593 @@
+{
+  "command": ".venv/bin/python scripts/summarize_dsr_memory.py",
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "metric": "Process-tree macOS physical footprint; first 5 seconds excluded for stable median",
+  "limits": "Six short native runs; ambient macOS pressure/cache and decoder transitions remain variable",
+  "growth_method": "Median last 5 samples minus median first 5 samples per phase",
+  "comparison": {
+    "single": {
+      "baseline": {
+        "stable_runs_mib": [
+          215.1346206665039,
+          195.5486602783203,
+          204.1580467224121
+        ],
+        "median_stable_mib": 204.1580467224121,
+        "peaks_mib": [
+          226.1893081665039,
+          207.0330352783203,
+          222.9392852783203
+        ],
+        "growth_runs_mib": [
+          -3.6562042236328125,
+          0.8750457763671875,
+          -15.015602111816406
+        ]
+      },
+      "optimized": {
+        "stable_runs_mib": [
+          193.06439971923828,
+          187.7518310546875,
+          169.7205581665039
+        ],
+        "median_stable_mib": 187.7518310546875,
+        "peaks_mib": [
+          214.0799789428711,
+          209.8299560546875,
+          187.86113739013672
+        ],
+        "growth_runs_mib": [
+          -8.90625,
+          2.1875228881835938,
+          -17.78118133544922
+        ]
+      },
+      "change_percent": -8.036036752463485
+    },
+    "multi": {
+      "baseline": {
+        "stable_runs_mib": [
+          306.79105377197266,
+          323.22850799560547,
+          299.9081726074219
+        ],
+        "median_stable_mib": 306.79105377197266,
+        "peaks_mib": [
+          539.0659103393555,
+          535.9877166748047,
+          540.9408416748047
+        ],
+        "growth_runs_mib": [
+          -143.6100845336914,
+          -128.12566375732422,
+          -173.6413345336914
+        ]
+      },
+      "optimized": {
+        "stable_runs_mib": [
+          317.86174392700195,
+          272.3768768310547,
+          315.81484603881836
+        ],
+        "median_stable_mib": 315.81484603881836,
+        "peaks_mib": [
+          1121.3356094360352,
+          644.0665740966797,
+          842.1635284423828
+        ],
+        "growth_runs_mib": [
+          -126.9538345336914,
+          -124.266357421875,
+          -206.64128875732422
+        ]
+      },
+      "change_percent": 2.9413479160812757
+    },
+    "switch": {
+      "baseline": {
+        "stable_runs_mib": [
+          581.5367889404297,
+          585.5681076049805,
+          574.7866744995117
+        ],
+        "median_stable_mib": 581.5367889404297,
+        "peaks_mib": [
+          705.7716445922852,
+          657.3030090332031,
+          704.9124298095703
+        ],
+        "growth_runs_mib": [
+          323.39412689208984,
+          284.89380645751953,
+          307.8630142211914
+        ]
+      },
+      "optimized": {
+        "stable_runs_mib": [
+          198.5642852783203,
+          221.37673950195312,
+          190.7908592224121
+        ],
+        "median_stable_mib": 198.5642852783203,
+        "peaks_mib": [
+          268.5025177001953,
+          278.6111145019531,
+          252.47071838378906
+        ],
+        "growth_runs_mib": [
+          -54.56263732910156,
+          -30.15631866455078,
+          -6.422080993652344
+        ]
+      },
+      "change_percent": -65.85524956381384
+    },
+    "settings": {
+      "baseline": {
+        "stable_runs_mib": [
+          354.7686576843262,
+          377.62024307250977,
+          349.61243057250977
+        ],
+        "median_stable_mib": 354.7686576843262,
+        "peaks_mib": [
+          856.2410354614258,
+          1038.4917449951172,
+          959.4916534423828
+        ],
+        "growth_runs_mib": [
+          -405.45623779296875,
+          -394.1122817993164,
+          -397.1278610229492
+        ]
+      },
+      "optimized": {
+        "stable_runs_mib": [
+          349.4326400756836,
+          334.6825942993164,
+          365.9013671875
+        ],
+        "median_stable_mib": 349.4326400756836,
+        "peaks_mib": [
+          376.5811462402344,
+          388.0967025756836,
+          387.2060317993164
+        ],
+        "growth_runs_mib": [
+          5.875091552734375,
+          -14.187454223632812,
+          8.609397888183594
+        ]
+      },
+      "change_percent": -1.5040837157014522
+    },
+    "return": {
+      "baseline": {
+        "stable_runs_mib": [
+          254.14266204833984,
+          251.29884338378906,
+          248.22078704833984
+        ],
+        "median_stable_mib": 251.29884338378906,
+        "peaks_mib": [
+          264.65828704833984,
+          268.11134338378906,
+          256.54893493652344
+        ],
+        "growth_runs_mib": [
+          -0.7968521118164062,
+          -6.8594207763671875,
+          5.8281707763671875
+        ]
+      },
+      "optimized": {
+        "stable_runs_mib": [
+          224.28317260742188,
+          214.78317260742188,
+          227.8925018310547
+        ],
+        "median_stable_mib": 224.28317260742188,
+        "peaks_mib": [
+          250.22067260742188,
+          222.20504760742188,
+          256.2206268310547
+        ],
+        "growth_runs_mib": [
+          -9.75,
+          0.65625,
+          -17.390625
+        ]
+      },
+      "change_percent": -10.7504158843693
+    }
+  },
+  "runs": {
+    "baseline": [
+      {
+        "stages": {
+          "single": {
+            "samples": 19,
+            "steady_samples": 14,
+            "stable_mib": 215.1346206665039,
+            "peak_mib": 226.1893081665039,
+            "rss_stable_mib": 419.71875,
+            "tail_minus_head_mib": -3.6562042236328125,
+            "components": {
+              "main": {
+                "stable_mib": 151.3682632446289,
+                "peak_mib": 155.2979507446289
+              },
+              "settings": {
+                "stable_mib": 0.0,
+                "peak_mib": 0.0
+              },
+              "ffmpeg": {
+                "stable_mib": 63.164794921875,
+                "peak_mib": 74.516357421875
+              }
+            },
+            "playback": [
+              {
+                "window": 4834954752,
+                "displayed_frames": 476,
+                "delivery_fps": 23.798429804652468,
+                "forward_source_gaps": 0
+              }
+            ]
+          },
+          "multi": {
+            "samples": 19,
+            "steady_samples": 14,
+            "stable_mib": 306.79105377197266,
+            "peak_mib": 539.0659103393555,
+            "rss_stable_mib": 407.4921875,
+            "tail_minus_head_mib": -143.6100845336914,
+            "components": {
+              "main": {
+                "stable_mib": 272.40753173828125,
+                "peak_mib": 333.23567962646484
+              },
+              "settings": {
+                "stable_mib": 0.0,
+                "peak_mib": 0.0
+              },
+              "ffmpeg": {
+                "stable_mib": 27.039794921875,
+                "peak_mib": 205.83023071289062
+              }
+            },
+            "playback": [
+              {
+                "window": 4834954752,
+                "displayed_frames": 470,
+                "delivery_fps": 23.77404016748279,
+                "forward_source_gaps": 1
+              },
+              {
+                "window": 4849246144,
+                "displayed_frames": 466,
+                "delivery_fps": 23.76328699918234,
+                "forward_source_gaps": 0
+              },
+              {
+                "window": 4901281344,
+                "displayed_frames": 467,
+                "delivery_fps": 23.818285901210338,
+                "forward_source_gaps": 0
+              }
+            ]
+          },
+          "switch": {
+            "samples": 20,
+            "steady_samples": 15,
+            "stable_mib": 581.5367889404297,
+            "peak_mib": 705.7716445922852,
+            "rss_stable_mib": 885.796875,
+            "tail_minus_head_mib": 323.39412689208984,
+            "components": {
+              "main": {
+                "stable_mib": 384.57945251464844,
+                "peak_mib": 391.78260040283203
+              },
+              "settings": {
+                "stable_mib": 0.0,
+                "peak_mib": 0.0
+              },
+              "ffmpeg": {
+                "stable_mib": 200.39474487304688,
+                "peak_mib": 321.0984191894531
+              }
+            },
+            "playback": [
+              {
+                "window": 4834954752,
+                "displayed_frames": 461,
+                "delivery_fps": 23.075804016193196,
+                "forward_source_gaps": 0
+              }
+            ]
+          },
+          "settings": {
+            "samples": 25,
+            "steady_samples": 20,
+            "stable_mib": 354.7686576843262,
+            "peak_mib": 856.2410354614258,
+            "rss_stable_mib": 498.859375,
+            "tail_minus_head_mib": -405.45623779296875,
+            "components": {
+              "main": {
+                "stable_mib": 196.50121307373047,
+                "peak_mib": 434.3451232910156
+              },
+              "settings": {
+                "stable_mib": 114.35260391235352,
+                "peak_mib": 116.34480285644531
+              },
+              "ffmpeg": {
+                "stable_mib": 46.08671569824219,
+                "peak_mib": 322.34867095947266
+              }
+            },
+            "playback": [
+              {
+                "window": 4834954752,
+                "displayed_frames": 621,
+                "delivery_fps": 23.759614021238026,
+                "forward_source_gaps": 0
+              }
+            ]
+          },
+          "return": {
+            "samples": 20,
+            "steady_samples": 15,
+            "stable_mib": 254.14266204833984,
+            "peak_mib": 264.65828704833984,
+            "rss_stable_mib": 358.921875,
+            "tail_minus_head_mib": -0.7968521118164062,
+            "components": {
+              "main": {
+                "stable_mib": 197.71996307373047,
+                "peak_mib": 197.76683807373047
+              },
+              "settings": {
+                "stable_mib": 0.0,
+                "peak_mib": 0.0
+              },
+              "ffmpeg": {
+                "stable_mib": 56.391448974609375,
+                "peak_mib": 67.46952819824219
+              }
+            },
+            "playback": [
+              {
+                "window": 4834954752,
+                "displayed_frames": 471,
+                "delivery_fps": 23.796504445389555,
+                "forward_source_gaps": 0
+              }
+            ]
+          }
+        },
+        "queue_drops": 1,
+        "perfstats": {
+          "rebuild.mask": {
+            "count": 3664,
+            "total": 2.275666193003417
+          },
+          "rebuild.calls": {
+            "count": 3686,
+            "total": 0.0
+          },
+          "paint.draw": {
+            "count": 3667,
+            "total": 0.5370269760260271
+          },
+          "jank.100ms+": {
+            "count": 4,
+            "total": 0.0
+          },
+          "webm.poll_empty": {
+            "count": 18,
+            "total": 0.0
+          },
+          "webm.first_frame": {
+            "count": 33,
+            "total": 3.6333224169993628
+          },
+          "webm.decode": {
+            "count": 5439,
+            "total": 17.890944655036037
+          },
+          "webm.queue_wait": {
+            "count": 5438,
+            "total": 203.37010484404163
+          },
+          "webm.consume": {
+            "count": 6092,
+            "total": 3.8365997460014114
+          },
+          "rebuild.scale": {
+            "count": 3655,
+            "total": 3.354280043973631
+          },
+          "rebuild.total": {
+            "count": 3656,
+            "total": 6.166533752009855
+          },
+          "jank.50_100ms": {
+            "count": 4,
+            "total": 0.0
+          },
+          "predict.made": {
+            "count": 13,
+            "total": 0.0
+          },
+          "prewarm.ff_ms": {
+            "count": 12,
+            "total": 1.0623564160014212
+          },
+          "webm.queue_drop": {
+            "count": 1,
+            "total": 0.0
+          },
+          "rebuild.skip": {
+            "count": 1,
+            "total": 0.0
+          }
+        }
+      },
+      {
+        "stages": {
+          "single": {
+            "samples": 19,
+            "steady_samples": 14,
+            "stable_mib": 195.5486602783203,
+            "peak_mib": 207.0330352783203,
+            "rss_stable_mib": 359.8671875,
+            "tail_minus_head_mib": 0.8750457763671875,
+            "components": {
+              "main": {
+                "stable_mib": 147.1416778564453,
+                "peak_mib": 155.4073028564453
+              },
+              "settings": {
+                "stable_mib": 0.0,
+                "peak_mib": 0.0
+              },
+              "ffmpeg": {
+                "stable_mib": 48.5241813659668,
+                "peak_mib": 59.485107421875
+              }
+            },
+            "playback": [
+              {
+                "window": 4849133888,
+                "displayed_frames": 476,
+                "delivery_fps": 23.79878751440453,
+                "forward_source_gaps": 0
+              }
+            ]
+          },
+          "multi": {
+            "samples": 19,
+            "steady_samples": 14,
+            "stable_mib": 323.22850799560547,
+            "peak_mib": 535.9877166748047,
+            "rss_stable_mib": 421.71875,
+            "tail_minus_head_mib": -128.12566375732422,
+            "components": {
+              "main": {
+                "stable_mib": 267.29814529418945,
+                "peak_mib": 334.47003173828125
+              },
+              "settings": {
+                "stable_mib": 0.0,
+                "peak_mib": 0.0
+              },
+              "ffmpeg": {
+                "stable_mib": 47.07881164550781,
+                "peak_mib": 213.39263916015625
+              }
+            },
+            "playback": [
+              {
+                "window": 4849133888,
+                "displayed_frames": 468,
+                "delivery_fps": 23.64748536590306,
+                "forward_source_gaps": 1
+              },
+              {
+                "window": 4874609152,
+                "displayed_frames": 465,
+                "delivery_fps": 23.68361951040242,
+                "forward_source_gaps": 0
+              },
+              {
+                "window": 4903919360,
+                "displayed_frames": 465,
+                "delivery_fps": 23.817956891551297,
+                "forward_source_gaps": 0
+              }
+            ]
+          },
+          "switch": {
+            "samples": 20,
+            "steady_samples": 15,
+            "stable_mib": 585.5681076049805,
+            "peak_mib": 657.3030090332031,
+            "rss_stable_mib": 946.8125,
+            "tail_minus_head_mib": 284.89380645751953,
+            "components": {
+              "main": {
+                "stable_mib": 382.12635040283203,
+                "peak_mib": 390.9701232910156
+              },
+              "settings": {
+                "stable_mib": 0.0,
+                "peak_mib": 0.0
+              },
+              "ffmpeg": {
+                "stable_mib": 200.30115509033203,
+                "peak_mib": 273.5204315185547
+              }
+            },
+            "playback": [
+              {
+                "window": 4849133888,
+                "displayed_frames": 461,
+                "delivery_fps": 23.07719321129176,
+                "forward_source_gaps": 0
+              }
+            ]
+          },
+          "settings": {
+            "samples": 25,
+            "steady_samples": 20,
+            "stable_mib": 377.62024307250977,
+            "peak_mib": 1038.4917449951172,
+            "rss_stable_mib": 522.4140625,
+            "tail_minus_head_mib": -394.1122817993164,
+            "components": {
+              "main": {
+                "stable_mib": 229.67315673828125,
+                "peak_mib": 430.5013732910156
+              },
+              "settings": {
+                "stable_mib": 114.36042785644531,
+                "peak_mib": 117.04792785644531
+              },
+              "ffmpeg": {
+                "stable_mib": 62.430397033691406,
+                "peak_mib": 493.33304595947266
+              }
+            },
+            "playback": [
+              {
+                "window": 4849133888,
+                "displayed_frames": 611,
+                "delivery_fps": 23.738826212334065,
+                "forward_source_gaps": 0
+              }
+            ]
+          },
+          "return": {
+            "samples": 20,
+            "steady_samples": 15,
+            "stable_mib": 251.29884338378906,
+            "peak_mib": 268.11134338378906,
+            "rss_stable_mib": 392.640625,
+            "tail_minus_head_mib": -6.8594207763671875,
+            "components": {
+              "main": {
+                "stable_mib": 200.59496307373047,
+                "peak_mib": 200.79813385009766
+              },
+              "settings": {
+                "stable_mib": 0.0,
+                "peak_mib": 0.0
+              },
+              "ffmpeg": {
+                "stable_mib": 50.719505310058594,
+                "peak_mib": 67.4695053100586
+              }
+            },
+            "playback": [
+              {
+                "window": 4849133888,
+                "displayed_frames": 481,
+                "delivery_fps": 23.797129471257524,
+                "forward_source_gaps": 0
+              }
+            ]
+          }
+        },
+        "queue_drops": 1,
+        "perfstats": {
+          "rebuild.mask": {
+            "count": 3658,
+            "total": 2.410806588970445
+          },
+          "rebuild.calls": {
+            "count": 3681,
+            "total": 0.0
+          },
+          "paint.draw": {
+            "count": 3661,
+            "total": 0.5322670979712711
+          },
+          "jank.100ms+": {
+            "count": 5,
+            "total": 0.0
+          },
+          "webm.poll_empty": {
+            "count": 24,
+            "total": 0.0
+          },
+          "webm.first_frame": {
+            "count": 33,
+            "total": 3.4090528319966324
+          },
+          "webm.decode": {
+            "count": 5439,
+            "total": 20.961381330017502
+          },
+          "webm.queue_wait": {
+            "count": 5438,
+            "total": 200.6711913260051
+          },
+          "webm.consume": {
+            "count": 6094,
+            "total": 3.9605966689896377
+          },
+          "rebuild.scale": {
+            "count": 3652,
+            "total": 3.482705654993879
+          },
+          "rebuild.total": {
+            "count": 3653,
+            "total": 6.463958325991371
+          },
+          "predict.made": {
+            "count": 13,
+            "total": 0.0
+          },
+          "prewarm.ff_ms": {
+            "count": 12,
+            "total": 1.1270762499998455
+          },
+          "webm.queue_drop": {
+            "count": 1,
+            "total": 0.0
+          },
+          "rebuild.skip": {
+            "count": 1,
+            "total": 0.0
+          },
+          "jank.50_100ms": {
+            "count": 3,
+            "total": 0.0
+          }
+        }
+      },
+      {
+        "stages": {
+          "single": {
+            "samples": 19,
+            "steady_samples": 14,
+            "stable_mib": 204.1580467224121,
+            "peak_mib": 222.9392852783203,
+            "rss_stable_mib": 389.890625,
+            "tail_minus_head_mib": -15.015602111816406,
+            "components": {
+              "main": {
+                "stable_mib": 144.1807632446289,
+                "peak_mib": 162.6729507446289
+              },
+              "settings": {
+                "stable_mib": 0.0,
+                "peak_mib": 0.0
+              },
+              "ffmpeg": {
+                "stable_mib": 59.7272834777832,
+                "peak_mib": 64.281982421875
+              }
+            },
+            "playback": [
+              {
+                "window": 4786845632,
+                "displayed_frames": 476,
+                "delivery_fps": 23.797356739912424,
+                "forward_source_gaps": 0
+              }
+            ]
+          },
+          "multi": {
+            "samples": 19,
+            "steady_samples": 14,
+            "stable_mib": 299.9081726074219,
+            "peak_mib": 540.9408416748047,
+            "rss_stable_mib": 341.1484375,
+            "tail_minus_head_mib": -173.6413345336914,
+            "components": {
+              "main": {
+                "stable_mib": 271.88409423828125,
+                "peak_mib": 323.78253173828125
+              },
+              "settings": {
+                "stable_mib": 0.0,
+                "peak_mib": 0.0
+              },
+              "ffmpeg": {
+                "stable_mib": 27.070953369140625,
+                "peak_mib": 221.34580993652344
+              }
+            },
+            "playback": [
+              {
+                "window": 4786845632,
+                "displayed_frames": 471,
+                "delivery_fps": 23.8197805539366,
+                "forward_source_gaps": 0
+              },
+              {
+                "window": 4811086528,
+                "displayed_frames": 465,
+                "delivery_fps": 23.724185887177182,
+                "forward_source_gaps": 0
+              },
+              {
+                "window": 4839449600,
+                "displayed_frames": 465,
+                "delivery_fps": 23.817223342932085,
+                "forward_source_gaps": 0
+              }
+            ]
+          },
+          "switch": {
+            "samples": 20,
+            "steady_samples": 15,
+            "stable_mib": 574.7866744995117,
+            "peak_mib": 704.9124298095703,
+            "rss_stable_mib": 906.859375,
+            "tail_minus_head_mib": 307.8630142211914,
+            "components": {
+              "main": {
+                "stable_mib": 383.6888961791992,
+                "peak_mib": 387.5170211791992
+              },
+              "settings": {
+                "stable_mib": 0.0,
+                "peak_mib": 0.0
+              },
+              "ffmpeg": {
+                "stable_mib": 191.1290512084961,
+                "peak_mib": 317.3954086303711
+              }
+            },
+            "playback": [
+              {
+                "window": 4786845632,
+                "displayed_frames": 463,
+                "delivery_fps": 23.168578993821708,
+                "forward_source_gaps": 0
+              }
+            ]
+          },
+          "settings": {
+            "samples": 25,
+            "steady_samples": 20,
+            "stable_mib": 349.61243057250977,
+            "peak_mib": 959.4916534423828,
+            "rss_stable_mib": 499.5390625,
+            "tail_minus_head_mib": -397.1278610229492,
+            "components": {
+              "main": {
+                "stable_mib": 193.28253173828125,
+                "peak_mib": 423.6888732910156
+              },
+              "settings": {
+                "stable_mib": 114.1807632446289,
+                "peak_mib": 116.81355285644531
+              },
+              "ffmpeg": {
+                "stable_mib": 48.23506164550781,
+                "peak_mib": 419.2704315185547
+              }
+            },
+            "playback": [
+              {
+                "window": 4786845632,
+                "displayed_frames": 613,
+                "delivery_fps": 23.804985822030503,
+                "forward_source_gaps": 0
+              }
+            ]
+          },
+          "return": {
+            "samples": 20,
+            "steady_samples": 15,
+            "stable_mib": 248.22078704833984,
+            "peak_mib": 256.54893493652344,
+            "rss_stable_mib": 374.203125,
+            "tail_minus_head_mib": 5.8281707763671875,
+            "components": {
+              "main": {
+                "stable_mib": 197.65753173828125,
+                "peak_mib": 197.73565673828125
+              },
+              "settings": {
+                "stable_mib": 0.0,
+                "peak_mib": 0.0
+              },
+              "ffmpeg": {
+                "stable_mib": 50.532005310058594,
+                "peak_mib": 58.81327819824219
+              }
+            },
+            "playback": [
+              {
+                "window": 4786845632,
+                "displayed_frames": 480,
+                "delivery_fps": 23.8006509155052,
+                "forward_source_gaps": 0
+              }
+            ]
+          }
+        },
+        "queue_drops": 0,
+        "perfstats": {
+          "rebuild.mask": {
+            "count": 3664,
+            "total": 2.3397819729852927
+          },
+          "rebuild.calls": {
+            "count": 3689,
+            "total": 0.0
+          },
+          "paint.draw": {
+            "count": 3667,
+            "total": 0.5521828570090292
+          },
+          "jank.100ms+": {
+            "count": 3,
+            "total": 0.0
+          },
+          "webm.poll_empty": {
+            "count": 19,
+            "total": 0.0
+          },
+          "webm.first_frame": {
+            "count": 33,
+            "total": 3.4964280009971844
+          },
+          "webm.decode": {
+            "count": 5440,
+            "total": 17.577785021991076
+          },
+          "webm.queue_wait": {
+            "count": 5439,
+            "total": 203.48224062501504
+          },
+          "webm.consume": {
+            "count": 6095,
+            "total": 4.016298177943099
+          },
+          "rebuild.scale": {
+            "count": 3658,
+            "total": 3.401072564010974
+          },
+          "rebuild.total": {
+            "count": 3659,
+            "total": 6.323818070995003
+          },
+          "predict.made": {
+            "count": 13,
+            "total": 0.0
+          },
+          "prewarm.ff_ms": {
+            "count": 12,
+            "total": 1.0835841259995505
+          },
+          "jank.50_100ms": {
+            "count": 2,
+            "total": 0.0
+          },
+          "rebuild.skip": {
+            "count": 1,
+            "total": 0.0
+          }
+        }
+      }
+    ],
+    "optimized": [
+      {
+        "stages": {
+          "single": {
+            "samples": 20,
+            "steady_samples": 15,
+            "stable_mib": 193.06439971923828,
+            "peak_mib": 214.0799789428711,
+            "rss_stable_mib": 413.734375,
+            "tail_minus_head_mib": -8.90625,
+            "components": {
+              "main": {
+                "stable_mib": 135.9698486328125,
+                "peak_mib": 145.0948257446289
+              },
+              "settings": {
+                "stable_mib": 0.0,
+                "peak_mib": 0.0
+              },
+              "ffmpeg": {
+                "stable_mib": 56.31330108642578,
+                "peak_mib": 77.45392608642578
+              }
+            },
+            "playback": [
+              {
+                "window": 4787831424,
+                "displayed_frames": 475,
+                "delivery_fps": 23.79422513152082,
+                "forward_source_gaps": 0
+              }
+            ]
+          },
+          "multi": {
+            "samples": 19,
+            "steady_samples": 14,
+            "stable_mib": 317.86174392700195,
+            "peak_mib": 1121.3356094360352,
+            "rss_stable_mib": 516.9921875,
+            "tail_minus_head_mib": -126.9538345336914,
+            "components": {
+              "main": {
+                "stable_mib": 250.28255462646484,
+                "peak_mib": 273.25130462646484
+              },
+              "settings": {
+                "stable_mib": 0.0,
+                "peak_mib": 0.0
+              },
+              "ffmpeg": {
+                "stable_mib": 64.0010871887207,
+                "peak_mib": 854.7405090332031
+              }
+            },
+            "playback": [
+              {
+                "window": 4787831424,
+                "displayed_frames": 469,
+                "delivery_fps": 23.750076122038855,
+                "forward_source_gaps": 0
+              },
+              {
+                "window": 4844928768,
+                "displayed_frames": 465,
+                "delivery_fps": 23.611188853890507,
+                "forward_source_gaps": 0
+              },
+              {
+                "window": 4814205888,
+                "displayed_frames": 462,
+                "delivery_fps": 23.514169710076924,
+                "forward_source_gaps": 0
+              }
+            ]
+          },
+          "switch": {
+            "samples": 20,
+            "steady_samples": 15,
+            "stable_mib": 198.5642852783203,
+            "peak_mib": 268.5025177001953,
+            "rss_stable_mib": 331.625,
+            "tail_minus_head_mib": -54.56263732910156,
+            "components": {
+              "main": {
+                "stable_mib": 157.9698944091797,
+                "peak_mib": 224.29806518554688
+              },
+              "settings": {
+                "stable_mib": 0.0,
+                "peak_mib": 0.0
+              },
+              "ffmpeg": {
+                "stable_mib": 40.65693664550781,
+                "peak_mib": 79.62628173828125
+              }
+            },
+            "playback": [
+              {
+                "window": 4787831424,
+                "displayed_frames": 462,
+                "delivery_fps": 23.147450767732156,
+                "forward_source_gaps": 0
+              }
+            ]
+          },
+          "settings": {
+            "samples": 25,
+            "steady_samples": 20,
+            "stable_mib": 349.4326400756836,
+            "peak_mib": 376.5811462402344,
+            "rss_stable_mib": 455.0234375,
+            "tail_minus_head_mib": 5.875091552734375,
+            "components": {
+              "main": {
+                "stable_mib": 174.0714569091797,
+                "peak_mib": 185.1730194091797
+              },
+              "settings": {
+                "stable_mib": 126.79011535644531,
+                "peak_mib": 134.4385528564453
+              },
+              "ffmpeg": {
+                "stable_mib": 52.43045425415039,
+                "peak_mib": 73.25119018554688
+              }
+            },
+            "playback": [
+              {
+                "window": 4787831424,
+                "displayed_frames": 603,
+                "delivery_fps": 23.760187871252935,
+                "forward_source_gaps": 0
+              }
+            ]
+          },
+          "return": {
+            "samples": 19,
+            "steady_samples": 14,
+            "stable_mib": 224.28317260742188,
+            "peak_mib": 250.22067260742188,
+            "rss_stable_mib": 375.46875,
+            "tail_minus_head_mib": -9.75,
+            "components": {
+              "main": {
+                "stable_mib": 169.9777069091797,
+                "peak_mib": 180.8448944091797
+              },
+              "settings": {
+                "stable_mib": 0.0,
+                "peak_mib": 0.0
+              },
+              "ffmpeg": {
+                "stable_mib": 53.69609069824219,
+                "peak_mib": 69.40702819824219
+              }
+            },
+            "playback": [
+              {
+                "window": 4787831424,
+                "displayed_frames": 466,
+                "delivery_fps": 23.797825953448392,
+                "forward_source_gaps": 0
+              }
+            ]
+          }
+        },
+        "queue_drops": 0,
+        "perfstats": {
+          "rebuild.mask": {
+            "count": 3643,
+            "total": 7.410920866017477
+          },
+          "rebuild.calls": {
+            "count": 3666,
+            "total": 0.0
+          },
+          "paint.draw": {
+            "count": 3645,
+            "total": 0.5334425729843133
+          },
+          "webm.first_frame": {
+            "count": 31,
+            "total": 3.5506269999987126
+          },
+          "jank.100ms+": {
+            "count": 4,
+            "total": 0.0
+          },
+          "webm.poll_empty": {
+            "count": 20,
+            "total": 0.0
+          },
+          "webm.decode": {
+            "count": 3000,
+            "total": 15.042341866991592
+          },
+          "webm.queue_wait": {
+            "count": 2999,
+            "total": 111.51640239696735
+          },
+          "webm.consume": {
+            "count": 3637,
+            "total": 2.3509760139995706
+          },
+          "rebuild.scale": {
+            "count": 3637,
+            "total": 3.2742250049777795
+          },
+          "rebuild.total": {
+            "count": 3638,
+            "total": 11.170235311015858
+          },
+          "jank.50_100ms": {
+            "count": 6,
+            "total": 0.0
+          },
+          "predict.made": {
+            "count": 11,
+            "total": 0.0
+          },
+          "prewarm.ff_ms": {
+            "count": 10,
+            "total": 0.8748320840013548
+          },
+          "rebuild.skip": {
+            "count": 1,
+            "total": 0.0
+          }
+        }
+      },
+      {
+        "stages": {
+          "single": {
+            "samples": 20,
+            "steady_samples": 15,
+            "stable_mib": 187.7518310546875,
+            "peak_mib": 209.8299560546875,
+            "rss_stable_mib": 389.5,
+            "tail_minus_head_mib": 2.1875228881835938,
+            "components": {
+              "main": {
+                "stable_mib": 129.4229507446289,
+                "peak_mib": 137.5479507446289
+              },
+              "settings": {
+                "stable_mib": 0.0,
+                "peak_mib": 0.0
+              },
+              "ffmpeg": {
+                "stable_mib": 58.860130310058594,
+                "peak_mib": 72.2820053100586
+              }
+            },
+            "playback": [
+              {
+                "window": 4859897920,
+                "displayed_frames": 476,
+                "delivery_fps": 23.803796580271413,
+                "forward_source_gaps": 0
+              }
+            ]
+          },
+          "multi": {
+            "samples": 19,
+            "steady_samples": 14,
+            "stable_mib": 272.3768768310547,
+            "peak_mib": 644.0665740966797,
+            "rss_stable_mib": 388.3359375,
+            "tail_minus_head_mib": -124.266357421875,
+            "components": {
+              "main": {
+                "stable_mib": 243.94659423828125,
+                "peak_mib": 279.39190673828125
+              },
+              "settings": {
+                "stable_mib": 0.0,
+                "peak_mib": 0.0
+              },
+              "ffmpeg": {
+                "stable_mib": 31.235027313232422,
+                "peak_mib": 366.59649658203125
+              }
+            },
+            "playback": [
+              {
+                "window": 4859897920,
+                "displayed_frames": 469,
+                "delivery_fps": 23.812188991441854,
+                "forward_source_gaps": 0
+              },
+              {
+                "window": 4914559872,
+                "displayed_frames": 467,
+                "delivery_fps": 23.776480672680517,
+                "forward_source_gaps": 0
+              },
+              {
+                "window": 4859733760,
+                "displayed_frames": 466,
+                "delivery_fps": 23.74217529384133,
+                "forward_source_gaps": 0
+              }
+            ]
+          },
+          "switch": {
+            "samples": 20,
+            "steady_samples": 15,
+            "stable_mib": 221.37673950195312,
+            "peak_mib": 278.6111145019531,
+            "rss_stable_mib": 340.140625,
+            "tail_minus_head_mib": -30.15631866455078,
+            "components": {
+              "main": {
+                "stable_mib": 174.2667694091797,
+                "peak_mib": 236.71994018554688
+              },
+              "settings": {
+                "stable_mib": 0.0,
+                "peak_mib": 0.0
+              },
+              "ffmpeg": {
+                "stable_mib": 43.719390869140625,
+                "peak_mib": 80.98561096191406
+              }
+            },
+            "playback": [
+              {
+                "window": 4859897920,
+                "displayed_frames": 459,
+                "delivery_fps": 22.956472923391534,
+                "forward_source_gaps": 0
+              }
+            ]
+          },
+          "settings": {
+            "samples": 25,
+            "steady_samples": 20,
+            "stable_mib": 334.6825942993164,
+            "peak_mib": 388.0967025756836,
+            "rss_stable_mib": 482.3984375,
+            "tail_minus_head_mib": -14.187454223632812,
+            "components": {
+              "main": {
+                "stable_mib": 177.8526840209961,
+                "peak_mib": 203.6573944091797
+              },
+              "settings": {
+                "stable_mib": 126.67292785644531,
+                "peak_mib": 134.5948486328125
+              },
+              "ffmpeg": {
+                "stable_mib": 42.29765319824219,
+                "peak_mib": 53.48517608642578
+              }
+            },
+            "playback": [
+              {
+                "window": 4859897920,
+                "displayed_frames": 604,
+                "delivery_fps": 23.787451429022276,
+                "forward_source_gaps": 0
+              }
+            ]
+          },
+          "return": {
+            "samples": 19,
+            "steady_samples": 14,
+            "stable_mib": 214.78317260742188,
+            "peak_mib": 222.20504760742188,
+            "rss_stable_mib": 353.3125,
+            "tail_minus_head_mib": 0.65625,
+            "components": {
+              "main": {
+                "stable_mib": 168.8839340209961,
+                "peak_mib": 174.8136215209961
+              },
+              "settings": {
+                "stable_mib": 0.0,
+                "peak_mib": 0.0
+              },
+              "ffmpeg": {
+                "stable_mib": 43.89142608642578,
+                "peak_mib": 55.28205108642578
+              }
+            },
+            "playback": [
+              {
+                "window": 4859897920,
+                "displayed_frames": 466,
+                "delivery_fps": 23.796729868734175,
+                "forward_source_gaps": 0
+              }
+            ]
+          }
+        },
+        "queue_drops": 0,
+        "perfstats": {
+          "rebuild.mask": {
+            "count": 3686,
+            "total": 7.3753348559976075
+          },
+          "rebuild.calls": {
+            "count": 3668,
+            "total": 0.0
+          },
+          "paint.draw": {
+            "count": 3688,
+            "total": 0.528087954973671
+          },
+          "webm.first_frame": {
+            "count": 31,
+            "total": 3.139070416999857
+          },
+          "jank.100ms+": {
+            "count": 4,
+            "total": 0.0
+          },
+          "webm.poll_empty": {
+            "count": 15,
+            "total": 0.0
+          },
+          "webm.decode": {
+            "count": 3001,
+            "total": 14.38470582102127
+          },
+          "webm.queue_wait": {
+            "count": 3000,
+            "total": 111.96399317500436
+          },
+          "webm.consume": {
+            "count": 3639,
+            "total": 2.322945873009303
+          },
+          "rebuild.scale": {
+            "count": 3639,
+            "total": 3.127209816989307
+          },
+          "rebuild.total": {
+            "count": 3640,
+            "total": 10.905398228946979
+          },
+          "predict.made": {
+            "count": 11,
+            "total": 0.0
+          },
+          "prewarm.ff_ms": {
+            "count": 10,
+            "total": 0.808087917001103
+          },
+          "jank.50_100ms": {
+            "count": 6,
+            "total": 0.0
+          },
+          "rebuild.skip": {
+            "count": 1,
+            "total": 0.0
+          }
+        }
+      },
+      {
+        "stages": {
+          "single": {
+            "samples": 20,
+            "steady_samples": 15,
+            "stable_mib": 169.7205581665039,
+            "peak_mib": 187.86113739013672,
+            "rss_stable_mib": 384.53125,
+            "tail_minus_head_mib": -17.78118133544922,
+            "components": {
+              "main": {
+                "stable_mib": 130.5791778564453,
+                "peak_mib": 144.3291778564453
+              },
+              "settings": {
+                "stable_mib": 0.0,
+                "peak_mib": 0.0
+              },
+              "ffmpeg": {
+                "stable_mib": 37.282005310058594,
+                "peak_mib": 56.500755310058594
+              }
+            },
+            "playback": [
+              {
+                "window": 4827436224,
+                "displayed_frames": 476,
+                "delivery_fps": 23.792350383682958,
+                "forward_source_gaps": 0
+              }
+            ]
+          },
+          "multi": {
+            "samples": 19,
+            "steady_samples": 14,
+            "stable_mib": 315.81484603881836,
+            "peak_mib": 842.1635284423828,
+            "rss_stable_mib": 549.09375,
+            "tail_minus_head_mib": -206.64128875732422,
+            "components": {
+              "main": {
+                "stable_mib": 233.05590057373047,
+                "peak_mib": 277.11058807373047
+              },
+              "settings": {
+                "stable_mib": 0.0,
+                "peak_mib": 0.0
+              },
+              "ffmpeg": {
+                "stable_mib": 79.1729850769043,
+                "peak_mib": 574.6309051513672
+              }
+            },
+            "playback": [
+              {
+                "window": 4827436224,
+                "displayed_frames": 464,
+                "delivery_fps": 23.586467582616315,
+                "forward_source_gaps": 0
+              },
+              {
+                "window": 4827800576,
+                "displayed_frames": 463,
+                "delivery_fps": 23.711520103468455,
+                "forward_source_gaps": 0
+              },
+              {
+                "window": 4884914048,
+                "displayed_frames": 462,
+                "delivery_fps": 23.752969121140147,
+                "forward_source_gaps": 0
+              }
+            ]
+          },
+          "switch": {
+            "samples": 19,
+            "steady_samples": 14,
+            "stable_mib": 190.7908592224121,
+            "peak_mib": 252.47071838378906,
+            "rss_stable_mib": 320.328125,
+            "tail_minus_head_mib": -6.422080993652344,
+            "components": {
+              "main": {
+                "stable_mib": 152.7667694091797,
+                "peak_mib": 218.81369018554688
+              },
+              "settings": {
+                "stable_mib": 0.0,
+                "peak_mib": 0.0
+              },
+              "ffmpeg": {
+                "stable_mib": 38.16469192504883,
+                "peak_mib": 54.71936798095703
+              }
+            },
+            "playback": [
+              {
+                "window": 4827436224,
+                "displayed_frames": 459,
+                "delivery_fps": 23.02699387119968,
+                "forward_source_gaps": 0
+              }
+            ]
+          },
+          "settings": {
+            "samples": 25,
+            "steady_samples": 20,
+            "stable_mib": 365.9013671875,
+            "peak_mib": 387.2060317993164,
+            "rss_stable_mib": 460.140625,
+            "tail_minus_head_mib": 8.609397888183594,
+            "components": {
+              "main": {
+                "stable_mib": 181.53241729736328,
+                "peak_mib": 191.18866729736328
+              },
+              "settings": {
+                "stable_mib": 132.6104393005371,
+                "peak_mib": 134.3760757446289
+              },
+              "ffmpeg": {
+                "stable_mib": 55.875732421875,
+                "peak_mib": 77.406982421875
+              }
+            },
+            "playback": [
+              {
+                "window": 4827436224,
+                "displayed_frames": 616,
+                "delivery_fps": 23.724380562209948,
+                "forward_source_gaps": 0
+              }
+            ]
+          },
+          "return": {
+            "samples": 20,
+            "steady_samples": 15,
+            "stable_mib": 227.8925018310547,
+            "peak_mib": 256.2206268310547,
+            "rss_stable_mib": 350.515625,
+            "tail_minus_head_mib": -17.390625,
+            "components": {
+              "main": {
+                "stable_mib": 167.6573715209961,
+                "peak_mib": 181.11054229736328
+              },
+              "settings": {
+                "stable_mib": 0.0,
+                "peak_mib": 0.0
+              },
+              "ffmpeg": {
+                "stable_mib": 60.094482421875,
+                "peak_mib": 77.219482421875
+              }
+            },
+            "playback": [
+              {
+                "window": 4827436224,
+                "displayed_frames": 476,
+                "delivery_fps": 23.794376512195246,
+                "forward_source_gaps": 0
+              }
+            ]
+          }
+        },
+        "queue_drops": 0,
+        "perfstats": {
+          "rebuild.mask": {
+            "count": 3658,
+            "total": 7.35930259102588
+          },
+          "rebuild.calls": {
+            "count": 3681,
+            "total": 0.0
+          },
+          "paint.draw": {
+            "count": 3660,
+            "total": 0.5358374469988121
+          },
+          "webm.first_frame": {
+            "count": 31,
+            "total": 3.546515457001078
+          },
+          "webm.decode": {
+            "count": 3017,
+            "total": 14.737740886994288
+          },
+          "webm.queue_wait": {
+            "count": 3016,
+            "total": 112.74523685297572
+          },
+          "jank.100ms+": {
+            "count": 4,
+            "total": 0.0
+          },
+          "webm.consume": {
+            "count": 3652,
+            "total": 2.3392099870015954
+          },
+          "rebuild.scale": {
+            "count": 3652,
+            "total": 3.267205942003784
+          },
+          "rebuild.total": {
+            "count": 3653,
+            "total": 11.073689372983608
+          },
+          "predict.made": {
+            "count": 11,
+            "total": 0.0
+          },
+          "prewarm.ff_ms": {
+            "count": 10,
+            "total": 0.8695960409977488
+          },
+          "webm.poll_empty": {
+            "count": 23,
+            "total": 0.0
+          },
+          "jank.50_100ms": {
+            "count": 7,
+            "total": 0.0
+          },
+          "rebuild.skip": {
+            "count": 1,
+            "total": 0.0
+          }
+        }
+      }
+    ]
+  },
+  "exit_status": 0
+}

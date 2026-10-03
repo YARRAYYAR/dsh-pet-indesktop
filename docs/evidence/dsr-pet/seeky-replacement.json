@@ -1,0 +1,48 @@
+{
+  "command": ".venv/bin/python stdin: QCoreApplication([]); SettingsCommandClient(Config()).request(\"quit\", {}, callback); event loop; psutil.wait_procs(old app executables, timeout=10)",
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Current default instance, existing old app only",
+  "inputs": "Public quit command",
+  "assertions": "Old main process exits before replacing installation",
+  "checks": {
+    "preferences_before": {
+      "top_flip_enabled": true,
+      "top_flip_exposure": 0.5,
+      "codex_link_enabled": true,
+      "codex_task_appearance": {
+        "background": "#1c1c1e",
+        "accent": "#707078",
+        "scale": 100
+      },
+      "autostart_wanted": false
+    },
+    "old_app_quit_response": {
+      "ok": true,
+      "data": {}
+    },
+    "old_app_remaining_pids": [],
+    "installed_app": "/Users/ray/Applications/seeky· pet.app",
+    "desktop_shortcut": "/Users/ray/Desktop/seeky· pet.app",
+    "old_app_trash": "/Users/ray/.Trash/dsr · pet-20261003-180326.app",
+    "old_installed_absent": true,
+    "old_desktop_absent": true,
+    "installed_signature_exit": 0,
+    "old_exit_recovery": "Public quit closed all decoder children but old process remained; targeted SIGTERM stopped the exact old executable after 10 seconds",
+    "preferences_after": {
+      "top_flip_enabled": true,
+      "top_flip_exposure": 0.5,
+      "codex_link_enabled": true,
+      "codex_task_appearance": {
+        "background": "#1c1c1e",
+        "accent": "#707078",
+        "scale": 100
+      },
+      "autostart_wanted": false
+    },
+    "settings_reopened_pid": 10026,
+    "new_main_reopened_pid": 14808,
+    "new_main_running": true,
+    "reopened_connection_page": "Codex working, appearance controls 100%, search cleared"
+  },
+  "exit_status": 0
+}

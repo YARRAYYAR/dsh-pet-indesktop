@@ -165,6 +165,8 @@ def test_petinstance_build_window_wires_file_eater(tmp_path, monkeypatch):
 
     class _SpyWindow:
         def __init__(self, *args, **kwargs):
+            from types import SimpleNamespace
+            self.action_changed = SimpleNamespace(connect=lambda callback: None)
             self.file_eater_install_calls = 0
             self.file_interpret_install_calls = 0
 

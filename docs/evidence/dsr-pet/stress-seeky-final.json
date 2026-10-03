@@ -1,0 +1,38 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_dsr_settings.py",
+    "tests/test_dsr_codex_and_ceiling.py",
+    "tests/test_webm_clip_lifecycle.py",
+    "tests/test_clip_restart_paths.py"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "8 CPU-bound Python processes during existing Qt/IPC/clip lifecycle families, QT_QPA_PLATFORM=offscreen",
+  "reset": "Terminate and wait for all owned workers in finally",
+  "inputs": "Three sequential runs after final UI fixes",
+  "assertions": "All three rounds exit zero",
+  "checks": [
+    {
+      "round": 1,
+      "exit_status": 0,
+      "elapsed_s": 4.432,
+      "log": "docs/evidence/dsr-pet/stress-seeky-final-1.log"
+    },
+    {
+      "round": 2,
+      "exit_status": 0,
+      "elapsed_s": 3.678,
+      "log": "docs/evidence/dsr-pet/stress-seeky-final-2.log"
+    },
+    {
+      "round": 3,
+      "exit_status": 0,
+      "elapsed_s": 3.87,
+      "log": "docs/evidence/dsr-pet/stress-seeky-final-3.log"
+    }
+  ],
+  "exit_status": 0
+}

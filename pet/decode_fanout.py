@@ -47,6 +47,7 @@ import logging
 import os
 import threading
 import time
+import weakref
 from collections import deque
 
 logger = logging.getLogger(__name__)
@@ -289,11 +290,17 @@ class FanoutFeed:
     """
 
     def __init__(self, session: _FanoutFeedSession,
-                 budget_ms: int = FEED_BUDGET_MS) -> None:
+                 budget_ms: int = FEED_BUDGET_MS, *, source_movie=None) -> None:
         self._session = session
         self.budget_ms = int(budget_ms)
         self._lock = threading.Lock()
         self._expired = False
+        self._source_movie = weakref.ref(source_movie) if source_movie is not None else None
+
+    @property
+    def source_size(self):
+        movie = self._source_movie() if self._source_movie is not None else None
+        return (movie._w, movie._h) if movie is not None else None
 
     @property
     def ready(self) -> bool:
@@ -324,7 +331,7 @@ class _Subscription:
         self.name = name
         self.ring = _RingBuffer()
         self.session = _FanoutFeedSession(self.ring)
-        self.feed = FanoutFeed(self.session)
+        self.feed = FanoutFeed(self.session, source_movie=source.publisher)
         # 本窗期望解码 divisor（窗口经 _report_desired_throttle 上报；1=全速）
         self.desired = int(getattr(movie, 'decode_throttle_divisor', 1) or 1)
 

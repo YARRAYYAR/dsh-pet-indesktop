@@ -1,0 +1,27 @@
+{
+  "command": "Installed --settings + CUA search Codex/Return + actual QLocalServer codex_status",
+  "setup": "Latest installed dsr.2 with user Config; no toggle changes in final UI flow",
+  "inputs": "Search Codex, open connection page",
+  "observed": {
+    "enabled": true,
+    "state": "working",
+    "project": "New project",
+    "text": "Codex 正在工作"
+  },
+  "preferences": {
+    "top_flip_enabled": true,
+    "top_flip_exposure": 0.5,
+    "codex_link_enabled": true,
+    "cursor_hidden_passthrough": true
+  },
+  "ui_observed": [
+    "Mac rounded supplied icon",
+    "Neutral black-gray sidebar/card layout",
+    "First-level semantic icons and secondary hierarchy",
+    "Codex search 1/1",
+    "Codex · 正在工作 / New project",
+    "Footer dsr · pet 4.2.1 · dsr.2"
+  ],
+  "reset": "Final application and settings left running for user; temporary passthrough change restored",
+  "exit_status": 0
+}

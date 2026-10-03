@@ -1,0 +1,75 @@
+{
+  "command": "QT_QPA_PLATFORM=cocoa PYTHONPATH=. .venv/bin/python scripts/verify_seeky_ceiling.py --label ceiling-notches-viewport",
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Fresh temporary config, real Cocoa PetWindow and unchanged HD WebM",
+  "reset": "New config on each run; normal app shutdown closes services",
+  "inputs": "Move to left, physical notch and right ceiling; half-body occlusion; 100 repeat moves each; pull down",
+  "assertions": "Actual notch detected; distinct attachment edge; half body hidden; 180 degrees; matching mask; no drift or running flip timer; pull down restores zero",
+  "checks": {
+    "screen": [
+      0,
+      0,
+      1512,
+      982
+    ],
+    "notch": {
+      "edge_y": 32,
+      "window": [
+        527,
+        33,
+        461,
+        281
+      ],
+      "body": [
+        153,
+        65,
+        156,
+        194
+      ],
+      "angle": 180.0,
+      "exposure": 0.5,
+      "mask_visible_top": 33
+    },
+    "left": {
+      "edge_y": 0,
+      "window": [
+        0,
+        33,
+        461,
+        281
+      ],
+      "body": [
+        153,
+        65,
+        156,
+        194
+      ],
+      "angle": 180.0,
+      "exposure": 0.5,
+      "mask_visible_top": 33
+    },
+    "right": {
+      "edge_y": 0,
+      "window": [
+        1051,
+        33,
+        461,
+        281
+      ],
+      "body": [
+        153,
+        65,
+        156,
+        194
+      ],
+      "angle": 180.0,
+      "exposure": 0.5,
+      "mask_visible_top": 33
+    },
+    "300_moves_mean_ms": 0.021114260077107854,
+    "300_moves_max_ms": 0.05833300019730814,
+    "pull_down_restored": true
+  },
+  "errors": [],
+  "exit_status": 0
+}

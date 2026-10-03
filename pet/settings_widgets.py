@@ -10,7 +10,7 @@ from pathlib import Path
 
 import shiboken6
 
-from PySide6.QtCore import QEvent, QFileInfo, QPoint, QPointF, QRect, QRectF, QSize, Qt, QTimer, Signal
+from PySide6.QtCore import QEvent, QEasingCurve, QFileInfo, QPoint, QPointF, QRect, QRectF, QSize, Qt, QTimer, QVariantAnimation, Signal
 from PySide6.QtGui import QAction, QColor, QFontDatabase, QImageReader, QPainter, QPainterPath, QPen, QPixmap
 from PySide6.QtWidgets import (
     QAbstractButton,
@@ -81,7 +81,7 @@ SETTINGS_DOMAIN_NAV = (
     ("桌宠", "pet"),
     ("互动", "interaction"),
     ("菜单", "application"),
-    ("桌面组件", "island"),
+    ('连接', 'link'),
     ("AI 与对话", "chat"),
     ("自动化与联动", "automation"),
     ("语音", "sound"),
@@ -164,18 +164,43 @@ class ToggleSwitch(QAbstractButton):
         self.setCheckable(True)
         self.setCursor(Qt.CursorShape.PointingHandCursor)
         self.setFixedSize(38, 22)
+        self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+        self._progress = 0.0
+        self._motion = QVariantAnimation(self)
+        self._motion.setDuration(140)
+        self._motion.setEasingCurve(QEasingCurve.Type.OutCubic)
+        self._motion.valueChanged.connect(self._advance)
+        self.toggled.connect(self._animate)
+
+    def _advance(self, value):
+        self._progress = float(value)
+        self.update()
+
+    def _animate(self, checked):
+        self._motion.stop()
+        target = 1.0 if checked else 0.0
+        if not self.isVisible():
+            self._advance(target)
+            return
+        self._motion.setStartValue(self._progress)
+        self._motion.setEndValue(target)
+        self._motion.start()
 
     def paintEvent(self, event) -> None:  # noqa: N802
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
-        track = "#0a84ff" if self.isChecked() else ("#3a3a42" if _widget_dark(self) else "#dedede")
+        track = "#bcb9b3" if self.isChecked() else ("#2c2c2e" if _widget_dark(self) else "#dedede")
         painter.setPen(Qt.PenStyle.NoPen)
         painter.setBrush(QColor(track))
         painter.drawRoundedRect(QRectF(0, 1, 38, 20), 10, 10)
-        knob_x = 19.0 if self.isChecked() else 2.0
+        knob_x = 2.0 + 17.0 * self._progress
         painter.setBrush(QColor("#ffffff"))
         painter.setPen(QPen(QColor("#c9c9c9"), 0.5))
         painter.drawEllipse(QRectF(knob_x, 2, 18, 18))
+        if self.hasFocus():
+            painter.setBrush(Qt.BrushStyle.NoBrush)
+            painter.setPen(QPen(QColor('#64b5ff'), 1))
+            painter.drawRoundedRect(QRectF(0.5, 0.5, 37, 21), 10, 10)
 
 IMAGE_NAME_FILTER = "图片文件 (*.png *.jpg *.jpeg *.webp *.bmp *.gif *.tif *.tiff)"
 
@@ -663,9 +688,9 @@ QMenu#SettingsPopup::indicator { width: 0; height: 0; }
 """
 
 _DARK_POPUP_OVERRIDE = """
-QMenu#ModernSelectPopup { background: #2a2a30; color: #e4e4e9; border: 1px solid #45454f; }
-QMenu#ModernSelectPopup::item { color: #e4e4e9; }
-QMenu#ModernSelectPopup::item:selected { background: #3a3a46; }
+QMenu#ModernSelectPopup { background: #242426; color: #d5d5d7; border: 1px solid #3a3a3c; }
+QMenu#ModernSelectPopup::item { color: #d5d5d7; }
+QMenu#ModernSelectPopup::item:selected { background: #343436; color: #ffffff; }
 """
 
 def settings_popup_stylesheet(widget: QWidget | None = None) -> str:
@@ -869,8 +894,8 @@ class ModernSelect(QAbstractButton):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
         dark = _widget_dark(self)
-        bg, border_idle, fg = ("#2e2e35", "#4a4a54", "#e4e4e9") if dark else ("#ffffff", "#cfd4da", "#202124")
-        hover_border = "#56565f" if dark else "#aeb6c0"
+        bg, border_idle, fg = ("#29292b", "#3a3a3c", "#d5d5d7") if dark else ("#ffffff", "#cfd4da", "#202124")
+        hover_border = "#5a5a5c" if dark else "#aeb6c0"
         border = "#0a84ff" if self.hasFocus() else (hover_border if self._hovered else border_idle)
         painter.setBrush(QColor(bg))
         painter.setPen(QPen(QColor(border), 1.5 if self.hasFocus() else 1.0))
@@ -906,6 +931,8 @@ class SettingRow(QFrame):
     def __init__(self, key: str, title: str, hint: str, control: QWidget, parent=None, *, stacked: bool = False):
         super().__init__(parent)
         self.setObjectName(f"settingRow_{key}")
+        self.setProperty('menuStyle', 'modern')
+        self.setProperty('modernDark', True)
         self.setFrameShape(QFrame.Shape.NoFrame)
         self.setProperty("stackedControl", stacked)
         label = QLabel(title, self)
@@ -915,6 +942,20 @@ class SettingRow(QFrame):
         hint_label.setObjectName("settingHint")
         hint_label.setWordWrap(True)
         label.setBuddy(control)
+        # Keep the icon beside the title so responsive controls retain their
+        # existing inline/stacked layout and their keyboard focus order.
+        # Icons identify destinations and distinct capabilities. Repeating a
+        # gear on every form row competes with the label and control.
+        icon_name = 'harness' if key == 'codex_link' else None
+        title_row = QHBoxLayout()
+        title_row.setContentsMargins(0, 0, 0, 0)
+        title_row.setSpacing(9)
+        if icon_name:
+            icon = QLabel(self)
+            icon.setPixmap(vector_widget_icon(self, icon_name, 18).pixmap(18, 18))
+            icon.setFixedSize(18, 18)
+            title_row.addWidget(icon, 0, Qt.AlignmentFlag.AlignTop)
+        title_row.addWidget(label, 1)
         if not control.accessibleName():
             control.setAccessibleName(title)
         if hint and not control.accessibleDescription():
@@ -923,7 +964,7 @@ class SettingRow(QFrame):
             row = QVBoxLayout(self)
             row.setContentsMargins(16, 10, 16, 10)
             row.setSpacing(0)
-            row.addWidget(label)
+            row.addLayout(title_row)
             row.addWidget(hint_label)
             row.addSpacing(7)
             row.addWidget(control)
@@ -936,7 +977,7 @@ class SettingRow(QFrame):
             copy = QVBoxLayout()
             copy.setContentsMargins(0, 0, 0, 0)
             copy.setSpacing(2)
-            copy.addWidget(label)
+            copy.addLayout(title_row)
             copy.addWidget(hint_label)
             copy.addStretch(1)
             row.addLayout(copy, 1)

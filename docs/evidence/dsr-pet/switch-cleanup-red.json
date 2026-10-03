@@ -1,0 +1,23 @@
+{
+  "command": "QT_QPA_PLATFORM=cocoa PYTHONPATH=. .venv/bin/python scripts/verify_dsr_switch_cleanup.py",
+  "setup": "Temporary Config; native main window; actual 106 HD assets; real QLocalServer request",
+  "reset": "Fresh temporary configuration; QApplication shutdown releases services",
+  "assertions": "Successful play request stops interrupted previous clip and its timer; new clip remains running",
+  "checks": {
+    "response": {
+      "ok": true,
+      "data": {
+        "requested": "点击回应-元气挥手",
+        "current": "点击回应-元气挥手"
+      }
+    },
+    "previous_running": true,
+    "previous_timer_active": true,
+    "current_running": true,
+    "current_action": "点击回应-元气挥手"
+  },
+  "errors": [
+    "Interrupted previous decoder or timer remained active"
+  ],
+  "exit_status": 1
+}

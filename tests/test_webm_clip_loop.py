@@ -796,6 +796,9 @@ def test_drain_boundary_marker_preserves_frames(app, tmp_path):
     """P3-7（清单 #6）：_drain_boundary_marker 只去结束标记，其前后的帧
     原序保留——绝不静默丢已交付帧。"""
     clip = _make_clip(tmp_path)
+    # This exercises marker filtering across three entries, independently of
+    # the production queue's two-frame memory budget.
+    clip._queue = queue.Queue(maxsize=4)
     try:
         clip._queue.put_nowait((b"f", 1))
         clip._queue.put_nowait(None)

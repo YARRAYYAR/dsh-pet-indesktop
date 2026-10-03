@@ -1,0 +1,256 @@
+.................................................s.s.................... [  2%]
+........................................................................ [  4%]
+........................................................................ [  7%]
+........................................................................ [  9%]
+........................................................................ [ 12%]
+........................................................................ [ 14%]
+........................................................................ [ 17%]
+..s..................................................................... [ 19%]
+..........s............................................................. [ 22%]
+........................................................................ [ 24%]
+........................................................................ [ 26%]
+........................................................................ [ 29%]
+........................................................................ [ 31%]
+........................................................................ [ 34%]
+........................................................................ [ 36%]
+........................................................................ [ 39%]
+.......................................ssss............................. [ 41%]
+...................ss..........................s........................ [ 44%]
+............................................ss.......................... [ 46%]
+........................................................................ [ 49%]
+...s.................................................................... [ 51%]
+........................................................................ [ 53%]
+........................................................................ [ 56%]
+........................................................................ [ 58%]
+.................................FF..................................... [ 61%]
+........................................................................ [ 63%]
+................................s....................................... [ 66%]
+........................................................................ [ 68%]
+.........................s.............................................. [ 71%]
+........................................................................ [ 73%]
+........................................................................ [ 76%]
+........................................................................ [ 78%]
+........................................................................ [ 80%]
+........................................................................ [ 83%]
+...s.................................................................... [ 85%]
+........................................................................ [ 88%]
+........................................................................ [ 90%]
+........................................................................ [ 93%]
+........................................................................ [ 95%]
+..................F.s.......................................s........... [ 98%]
+.........................s............................s                  [100%]
+=================================== FAILURES ===================================
+_____ TestWindowInstrumentation.test_sync_mask_timing_records_mask_segment _____
+
+self = <tests.test_perfstats.TestWindowInstrumentation object at 0x112995cd0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1129907c0>
+
+    def test_sync_mask_timing_records_mask_segment(self, monkeypatch):
+        """真实 _sync_mask（mask 段计时）挂在带最少属性的假窗口上运行。"""
+        _qapp()
+        fake = SimpleNamespace()
+        fake.scale = 0.1
+        fake._w = 64
+        fake._h = 36
+        fake._frame_pixmap = None
+        fake._mask_bounds = None
+        fake._collision_local_bounds = None
+        fake.setMask = lambda mask: None
+        fake.clearMask = lambda: None
+        fake.mask = lambda: QRegion()
+        monkeypatch.setattr(window_mod, "os", SimpleNamespace(name="posix"))
+        perfstats.enable()
+        try:
+>           window_mod.PetWindow._sync_mask(fake)
+
+tests/test_perfstats.py:341:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = namespace(scale=0.1, _w=64, _h=36, _frame_pixmap=None, _mask_bounds=PySide6.QtCore.QRect(0, 0, 0, 0), _collision_local... mask=<function TestWindowInstrumentation.test_sync_mask_timing_records_mask_segment.<locals>.<lambda> at 0x13ae60680>)
+
+    def _sync_mask(self) -> None:
+        """更新角色可见轮廓与窗口 mask。
+
+        - 非 Windows：继续用 QWidget.setMask 实现透明区域鼠标穿透，
+          _mask_bounds 取自真实 mask 的 boundingRect（行为不变）。
+        - Windows：不再 setMask（1-bit 裁剪会破坏半透明边缘），_mask_bounds
+          用 Qt C++ 路径（createAlphaMask→QBitmap→QRegion）计算。
+          教训：曾改成 Python 逐位扫描掩码，benchmark 实测比 Qt C++ 慢 3.5 倍
+          （1.11ms vs 0.32ms/帧），每帧都亏——不要为了"省 Qt 调用"用 Python 扫像素。
+        """
+        if perfstats.ENABLED:
+            _mask_t0 = perfstats.clock()
+        canvas = QImage(self._w, self._h, QImage.Format.Format_ARGB32_Premultiplied)
+        canvas.fill(Qt.GlobalColor.transparent)
+        p = QPainter(canvas)
+        if self._frame_pixmap is not None:
+            rect = self._frame_draw_rect()
+            effects_angle = getattr(self, '_effects_current_angle', None)
+            angle = effects_angle() if callable(effects_angle) else 0.0
+            if abs(angle) > 1e-6:
+                # 旋转路径必须与 paintEvent 普通帧分支完全一致：平移 PAD 后
+                # 围绕帧绘制矩形中心旋转，保证 mask/可见轮廓与画面逐像素一致。
+                p.translate(rect.topLeft())
+                draw_rect = QRect(0, 0, rect.width(), rect.height())
+                self._effects_paint(p, draw_rect)
+                p.drawPixmap(0, 0, self._frame_pixmap)
+                self._effects_paint_end(p, draw_rect)
+            else:
+                p.drawPixmap(rect, self._frame_pixmap)
+        p.end()
+        mask = QBitmap.fromImage(canvas.createAlphaMask())
+        self._mask_bounds = QRegion(mask).boundingRect()
+        if os.name != "nt":
+            # Preserve the old collision bounds; padding is only for native
+            # coverage and must not move placement/bubble/physics anchors.
+>           self.setMask(self._effects_coverage(canvas))
+                         ^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'types.SimpleNamespace' object has no attribute '_effects_coverage'
+
+pet/window.py:2275: AttributeError
+___________ TestWindowInstrumentation.test_paint_event_records_draw ____________
+
+self = <tests.test_perfstats.TestWindowInstrumentation object at 0x112995e00>
+
+    def test_paint_event_records_draw(self):
+        _qapp()
+
+        class _PaintWidget(QWidget):
+            paintEvent = window_mod.PetWindow.paintEvent  # noqa: N802
+
+        w = _PaintWidget()
+        w.scale = 0.5
+        w._w = 64
+        w._h = 36
+        w._frame_pixmap = None
+        perfstats.enable()
+        try:
+>           w.grab()  # 同步触发 paintEvent
+            ^^^^^^^^
+
+tests/test_perfstats.py:362:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <tests.test_perfstats._PaintWidget(0xc788c9f80) at 0x13ade68c0>
+event = <[RuntimeError('libshiboken: Internal C++ object (PySide6.QtGui.QPaintEvent) already deleted.') raised in repr()] QPaintEvent object at 0x13ade6700>
+
+    def paintEvent(self, event) -> None:  # noqa: N802 (Qt 命名)
+        if perfstats.ENABLED:
+            _paint_t0 = perfstats.clock()
+        painter = QPainter(self)
+>       self._effects_prepare_painter(painter)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: Error calling Python override of QWidget::paintEvent(): '_PaintWidget' object has no attribute '_effects_prepare_painter'
+
+pet/window.py:2371: AttributeError
+----------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: QPaintDevice: Cannot destroy paint device that is being painted
+_____________ test_sync_mask_updates_bounds_and_respects_platform ______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x113609da0>
+
+    def test_sync_mask_updates_bounds_and_respects_platform(monkeypatch):
+        _qapp()
+        fake = _fake_pet()
+        fake._frame_pixmap = _alpha_pixmap()
+        mask_sets = []
+
+        def set_mask(mask):
+            mask_sets.append(mask)
+
+        fake.setMask = set_mask
+
+        monkeypatch.setattr(window_mod, "os", SimpleNamespace(name="posix"))
+>       window_mod.PetWindow._sync_mask(fake)
+
+tests/test_window_rendering.py:71:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <tests.test_window_rendering._FakePet object at 0x113abbe00>
+
+    def _sync_mask(self) -> None:
+        """更新角色可见轮廓与窗口 mask。
+
+        - 非 Windows：继续用 QWidget.setMask 实现透明区域鼠标穿透，
+          _mask_bounds 取自真实 mask 的 boundingRect（行为不变）。
+        - Windows：不再 setMask（1-bit 裁剪会破坏半透明边缘），_mask_bounds
+          用 Qt C++ 路径（createAlphaMask→QBitmap→QRegion）计算。
+          教训：曾改成 Python 逐位扫描掩码，benchmark 实测比 Qt C++ 慢 3.5 倍
+          （1.11ms vs 0.32ms/帧），每帧都亏——不要为了"省 Qt 调用"用 Python 扫像素。
+        """
+        if perfstats.ENABLED:
+            _mask_t0 = perfstats.clock()
+        canvas = QImage(self._w, self._h, QImage.Format.Format_ARGB32_Premultiplied)
+        canvas.fill(Qt.GlobalColor.transparent)
+        p = QPainter(canvas)
+        if self._frame_pixmap is not None:
+            rect = self._frame_draw_rect()
+            effects_angle = getattr(self, '_effects_current_angle', None)
+            angle = effects_angle() if callable(effects_angle) else 0.0
+            if abs(angle) > 1e-6:
+                # 旋转路径必须与 paintEvent 普通帧分支完全一致：平移 PAD 后
+                # 围绕帧绘制矩形中心旋转，保证 mask/可见轮廓与画面逐像素一致。
+                p.translate(rect.topLeft())
+                draw_rect = QRect(0, 0, rect.width(), rect.height())
+                self._effects_paint(p, draw_rect)
+                p.drawPixmap(0, 0, self._frame_pixmap)
+                self._effects_paint_end(p, draw_rect)
+            else:
+                p.drawPixmap(rect, self._frame_pixmap)
+        p.end()
+        mask = QBitmap.fromImage(canvas.createAlphaMask())
+        self._mask_bounds = QRegion(mask).boundingRect()
+        if os.name != "nt":
+            # Preserve the old collision bounds; padding is only for native
+            # coverage and must not move placement/bubble/physics anchors.
+>           self.setMask(self._effects_coverage(canvas))
+                         ^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: '_FakePet' object has no attribute '_effects_coverage'
+
+pet/window.py:2275: AttributeError
+=============================== warnings summary ===============================
+tests/test_agent_link.py: 219 warnings
+tests/test_agent_link_threads.py: 1 warning
+tests/test_persona_presets.py: 7 warnings
+tests/test_persona_settings.py: 2 warnings
+tests/test_persona_template_rendering.py: 7 warnings
+tests/test_proactive.py: 3 warnings
+tests/test_single_process_shared.py: 1 warning
+tests/test_watchdog_control_wiring.py: 8 warnings
+  /Users/ray/Documents/New project/dsr-pet/pet/persona_phrases.py:122: DeprecationWarning: 'maxsplit' is passed as positional argument
+    root = re.split(r"[.\[]", field_name, 1)[0]
+
+tests/test_clip_current_image.py::test_mirror_then_scale_matches_old_chain_bytes
+  /Users/ray/Documents/New project/dsr-pet/tests/test_clip_current_image.py:144: DeprecationWarning: Function: 'QImage.mirrored(bool horizontally, bool vertically)' is marked as deprecated, please check the documentation for more information.
+    old = QPixmap.fromImage(src).toImage().mirrored(True, False)
+
+tests/test_clip_current_image.py::test_mirror_then_scale_matches_old_chain_bytes
+  /Users/ray/Documents/New project/dsr-pet/tests/test_clip_current_image.py:148: DeprecationWarning: Function: 'QImage.mirrored(bool horizontally, bool vertically)' is marked as deprecated, please check the documentation for more information.
+    new = clip_current_image(_ClipWithCurrentImage(src)).mirrored(True, False)
+
+tests/test_effects_integration.py::test_real_window_move_blocked_during_edge_probe
+tests/test_movement.py::test_idle_roll_stays_idle_when_already_facing_inward
+tests/test_movement.py::test_random_turn_downgrades_when_already_facing_inward
+tests/test_movement.py::test_try_move_walks_toward_reachable_side_not_current_facing
+tests/test_window_rendering.py::test_rebuild_frame_mirrors_regular_animation_when_facing_right
+tests/test_window_rendering.py::test_rebuild_frame_skips_when_same_movie_frame_unchanged
+tests/test_window_rendering.py::test_rebuild_frame_skips_when_same_movie_frame_unchanged
+tests/test_window_rendering.py::test_rebuild_frame_skips_when_same_movie_frame_unchanged
+  /Users/ray/Documents/New project/dsr-pet/pet/window.py:2104: DeprecationWarning: Function: 'QImage.mirrored(bool horizontally, bool vertically)' is marked as deprecated, please check the documentation for more information.
+    img = img.mirrored(True, False)
+
+tests/test_requested_regressions.py::test_chat_window_edge_hover_shows_resize_cursor
+tests/test_requested_regressions.py::test_chat_window_edge_hover_shows_resize_cursor
+  /Users/ray/Documents/New project/dsr-pet/tests/test_requested_regressions.py:495: DeprecationWarning: Function: 'QHoverEvent.QHoverEvent(QEvent.Type type, const QPointF &pos, const QPointF &oldPos, QFlags<Qt.KeyboardModifier> modifiers, const QPointingDevice *device)' is marked as deprecated, please check the documentation for more information.
+    win.event(QHoverEvent(QEvent.Type.HoverMove, QPointF(x, y), QPointF(x, y)))
+
+tests/test_requested_regressions.py::test_chat_window_edge_hover_shows_resize_cursor
+  /Users/ray/Documents/New project/dsr-pet/tests/test_requested_regressions.py:508: DeprecationWarning: Function: 'QHoverEvent.QHoverEvent(QEvent.Type type, const QPointF &pos, const QPointF &oldPos, QFlags<Qt.KeyboardModifier> modifiers, const QPointingDevice *device)' is marked as deprecated, please check the documentation for more information.
+    win.event(QHoverEvent(QEvent.Type.HoverLeave, QPointF(1, 1), QPointF(1, 1)))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_perfstats.py::TestWindowInstrumentation::test_sync_mask_timing_records_mask_segment
+FAILED tests/test_perfstats.py::TestWindowInstrumentation::test_paint_event_records_draw
+FAILED tests/test_window_rendering.py::test_sync_mask_updates_bounds_and_respects_platform
+3 failed, 2911 passed, 21 skipped, 261 warnings in 163.05s (0:02:43)

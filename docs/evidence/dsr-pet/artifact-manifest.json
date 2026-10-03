@@ -1,0 +1,777 @@
+{
+  "setup": "Public evidence; session identifiers redacted; logs normalize trailing whitespace, original raw patch gzip-compressed",
+  "count": 154,
+  "files": [
+    {
+      "path": "docs/evidence/dsr-pet/asset-manifest.json",
+      "bytes": 31980,
+      "sha256": "62283cfab4edad2c0c256d1702baaafcef533ec15babc739a81854422dafe9bf"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/baseline-1.json",
+      "bytes": 948479,
+      "sha256": "9993412a02e75c10120dd15f481ec4d9410e4a6526b2c72fc410da57911e45ce"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/baseline-1.log",
+      "bytes": 2995,
+      "sha256": "c34e3d999bf58b0e32f39b910d01bff0d7c09bf064dc5b5c9eb5af9a32874e8c"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/baseline-1.run.json",
+      "bytes": 996,
+      "sha256": "be4f2c9cb6688da989ee325f833f119f85eede6a2e18e9a77eeaa8a86ae5619f"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/baseline-1.settings.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/baseline-2.json",
+      "bytes": 947511,
+      "sha256": "501a9760420710867f583f36f138d173fd43c8b18d878fa90144e880a5c0d48e"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/baseline-2.log",
+      "bytes": 4175,
+      "sha256": "31a936e08dc65652f5b41f1bced18fa6bf553eed6abbd630f00363053c0e1254"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/baseline-2.run.json",
+      "bytes": 995,
+      "sha256": "09edb298a0848aedd822b01aed18484f0c82213937f2e2399c5359ea64e7fcb8"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/baseline-2.settings.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/baseline-3.json",
+      "bytes": 948996,
+      "sha256": "0cf11e1cc7f6e21c1ebaa1051eccafeaf6049a18910bfbdff3b3614c0ce9da95"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/baseline-3.log",
+      "bytes": 2435,
+      "sha256": "28498987f252c388e4908c02dec00d44e8d8315c0988b663f887c829c41d4c2c"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/baseline-3.run.json",
+      "bytes": 996,
+      "sha256": "0a4fc9e77cc0044c62ea7759941cd32152cd4487cce3bc95ed0356e818ae5cca"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/baseline-3.settings.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/baseline-compatibility.patch.gz",
+      "bytes": 1344,
+      "sha256": "d6fc3ad295ca3adc1772004ddaa03dd123e16d3157d75e878cfacd81b0e599e3"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/build-delivery.log",
+      "bytes": 16431,
+      "sha256": "a1ce53ea9c8c8a5ed30076d77db0f79e3663f24a6d9e26356685c76ce806f497"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/build-final.log",
+      "bytes": 16418,
+      "sha256": "8d08c18ae93f10d6dbf35cd01a715b226b66b0df8f9153a505c406429c59f8d9"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/build-seeky-final.json",
+      "bytes": 2406,
+      "sha256": "321b404078250688affeb6617e68f64f9c652885b73a66b04f46174075a11fbb"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/build-seeky-final.log",
+      "bytes": 16474,
+      "sha256": "409e42445f96044ad9dd071f28a9896b8364aff29c39c56eca063803382b1b2b"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/build-seeky.json",
+      "bytes": 2400,
+      "sha256": "d36a21c0c6ab4d34d72bd7cc98a738eded4de6ad24025dd7283940321b3d99cb"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/build-seeky.log",
+      "bytes": 16316,
+      "sha256": "d1d4d7c8acad553ea5820fec5761635a764df9db4bec02f1ddbeefa11b1647e6"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/ceiling-disable-red.json",
+      "bytes": 1800,
+      "sha256": "4349654246a919a7563f9107e05ecffc03f1929f919748f48f6049b2a4172f5f"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/ceiling-final.json",
+      "bytes": 1769,
+      "sha256": "b480d0ba8e11119d7f6ec292d79e3db0e8bf76a1cb039ce519fecf3febccc0b0"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/ceiling-head-red.json",
+      "bytes": 1276,
+      "sha256": "e6a0f129413e1c08d8864970a70b6f26806f07ca59097a0caa59e18f1940f766"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/ceiling-head.json",
+      "bytes": 1731,
+      "sha256": "88cf589de36f543c94b976beecbb89d6081935a4180acfc1be1513ff65835f67"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/ceiling-inverted.png",
+      "bytes": 74218,
+      "sha256": "e0e093a77efeef78c119dbba7636afc79e789c87d04fe15cdf3a3e0710ecee80"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/ceiling-left.png",
+      "bytes": 76627,
+      "sha256": "3b9cd4e7c44a6765299e281835ced03b2e115ff55f109d2917da5f43d2d58943"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/ceiling-notch.png",
+      "bytes": 75359,
+      "sha256": "e8b4cd55a5cd1a0e89508d6f7002e4ffa5c112eb35e7ce85734110b899b00d93"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/ceiling-notches-diagnostic.json",
+      "bytes": 1463,
+      "sha256": "00673d993ba791caf0212c966d7b17b8910bf597ffa08e25012e5231d3d0b08f"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/ceiling-notches-red.json",
+      "bytes": 746,
+      "sha256": "f3192d2768396646a46209b24d71288bb550c567dae96795870c14c7b7d26117"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/ceiling-notches-viewport.json",
+      "bytes": 1671,
+      "sha256": "8ae9eb37e5a7ff26caac4aa7047062a336dcc3d80442750b0db01bb8a88e111a"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/ceiling-notches.json",
+      "bytes": 826,
+      "sha256": "ccf272b7ac90579ebe6f25ee4a1a773ce8cdb82930a7a9b7f3653a6a1ce35a0d"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/ceiling-restored.png",
+      "bytes": 187417,
+      "sha256": "75703b23c4438ac272db78eaa740531c9a985ac80ece3215fa0203c450739979"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/ceiling-right.png",
+      "bytes": 76639,
+      "sha256": "171317cd5fdc2f987936529aae02ed5693acf151249d78b004965d566ab53eee"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/chat-scroll-rerun.log",
+      "bytes": 98,
+      "sha256": "c7a82a1acbc744ec410dfb95ad54738efc4c81739c4acaa9ea7d79fd5c953c6d"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/cleanup-final-focused.log",
+      "bytes": 99,
+      "sha256": "b055bc9ae649729c262830fb86c95d334129c35c1feea162757f4a942a9e9ee1"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/codex-complete-bubble.png",
+      "bytes": 18666,
+      "sha256": "f93dbbd135fb6c06fea7b617cc7a08238b94ee5845daf225aab7f0adf848975a"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/codex-custom-tool-red.json",
+      "bytes": 1140,
+      "sha256": "4c4e24ce3ec91429f9a8c962db8f5405b39324e7bf37115eaf46f67a5a28a325"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/codex-custom-tool-red.log",
+      "bytes": 915,
+      "sha256": "8f1616de13dbbded9281360c5f91280b8a62e3b69b5ae1fa48885f159d4b71ff"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/codex-disable-red.json",
+      "bytes": 1450,
+      "sha256": "b11034e07952be1db9e1549dc25fb617b51ef6ba5ad53ce4257c47389055ced6"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/codex-disable-red.log",
+      "bytes": 939,
+      "sha256": "fe68f9f58b9a505a02972fcb2ad1855a9a58b277ed87f02475a990511822c07b"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/codex-question-bubble.png",
+      "bytes": 25740,
+      "sha256": "e107dd94ba16db32d909a289b62d5f699d2fe64b02bd2e8f888e288c29f447b3"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/edge-checks.json",
+      "bytes": 3121,
+      "sha256": "7d00a867fa6269841ecd19f8a538bfcb64694067f09d490d52c712cf38969ec8"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/edge-comparison.png",
+      "bytes": 1033421,
+      "sha256": "0cf8a9755f1f1699e00345c7a92810998f05b70de9c7406a1ab1384293017fca"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/installed-final-ui.json",
+      "bytes": 916,
+      "sha256": "44b885f3654e993e6a0a8535b446962c1131e9614b4e54003c382ba6e942ec81"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/installed-seeky-main.log",
+      "bytes": 94,
+      "sha256": "42e10ab85203c037b3606270fbdd8e2809bee0150ca29671b7497646b4e66c0f"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/media-baseline.json",
+      "bytes": 46205,
+      "sha256": "368bb75ec9b3aa8e47a55310d5737506de8d47edcda84125189a098aa606b8c2"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/media-comparison.json",
+      "bytes": 384,
+      "sha256": "f776b1af09bbc53e7358b1824277c937079aad875346773db8b1af292b2928c6"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/media-optimized.json",
+      "bytes": 44732,
+      "sha256": "e76323f1ef0332e71e0df353b3beeab4c592fcf6d105d1c5c3aec4dd2c05f569"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/memory-batch-final.log",
+      "bytes": 69,
+      "sha256": "7fb96d171ca201c7810ee3ad27cf7a9d419609c52805253139c38c96a35bec25"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/memory-comparison.json",
+      "bytes": 46499,
+      "sha256": "f9cc0744289233f569180d2d61c80fb23d41e7e3ab080d6641e5cbeb1c2eebe0"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/missing-baseline-failed.json",
+      "bytes": 339,
+      "sha256": "b7b2f69cf4ed87e1223d6a9d1c1a7a07076b5318bf6c2e6012c288c1afe81547"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/missing-baseline-failed.log",
+      "bytes": 414,
+      "sha256": "bc59fd57b23b3d78e98d0cf9b627716bd143838501b1d3e8832ab39ced3390b8"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/modified-assets.json",
+      "bytes": 23853,
+      "sha256": "656b7083905bfe8f827c0b3227b8a1a56344acf8318761fc5e95871f04b4fd0d"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/native-features.json",
+      "bytes": 1653,
+      "sha256": "bb5747db50328a2ad73680939dcea2e1ac303638b87fa73655ab1f0351327f02"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/native-features.log",
+      "bytes": 94,
+      "sha256": "42e10ab85203c037b3606270fbdd8e2809bee0150ca29671b7497646b4e66c0f"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/native-mouse-unverified.json",
+      "bytes": 913,
+      "sha256": "c6f956e901693422aeffb01e565005d70583fdaeddc960799cb42b960f59e63d"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/native-ui-timing-failed.json",
+      "bytes": 592,
+      "sha256": "e7585c18e7731aebb9c036227d0948c72e2416985d59425470c18f943abb8106"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/native-ui-timing-failed.log",
+      "bytes": 468,
+      "sha256": "51c7c32ae70a218f14cea63d7ef42950e25cf5e529c1d4f41095b351b6cbf3fd"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/native-ui.json",
+      "bytes": 600,
+      "sha256": "5008cc39b3eca17ca3886d8900afa8fcec5aa2caf1ad260ab5ff7373b8ca53f8"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/native-ui.log",
+      "bytes": 63,
+      "sha256": "b25746e09296c4f277f86f2d3e3c400cae3f73e1320c1c6ee477dd0e78b98d83"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/native-ui.mp4",
+      "bytes": 254909,
+      "sha256": "5e32b1ee3b00855d8415ca6350c8231ba972777014dc99b7ee0a558b9c795761"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/notch-native-probe.json",
+      "bytes": 758,
+      "sha256": "2192c00f229d6df7e86b87a222a8554115e4700c6bd3f8492b1d37f6668e47d8"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/optimized-1.json",
+      "bytes": 893007,
+      "sha256": "4b6c1865a49f28d55261aa535d8242bdcfb3a8969b62305d1ba40c3deb4b1656"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/optimized-1.log",
+      "bytes": 3643,
+      "sha256": "d3f465b207a929e6a2fa604b6395ce89f25a1ec37d26b9b1eeb9238dde725193"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/optimized-1.run.json",
+      "bytes": 986,
+      "sha256": "ffe2279bff5c94e4d3ab78cc2778439bd1871909416f7623d32023c833ae37d3"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/optimized-1.settings.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/optimized-2.json",
+      "bytes": 892501,
+      "sha256": "8c8c30c58c4e7de7d80c39f5fbc16398065ab9511039cb8f07b29a39161a1c29"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/optimized-2.log",
+      "bytes": 4234,
+      "sha256": "1d9dc3e78e82fd11747684be7d91e362eab0d7b7eaedab8962c0ebe7b21e9be7"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/optimized-2.run.json",
+      "bytes": 987,
+      "sha256": "8ae5996ef18b463a7742f49f0b78c987d1dca8b6e83545b0ef7556acf9560fb7"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/optimized-2.settings.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/optimized-3.json",
+      "bytes": 896810,
+      "sha256": "0edd35d3e2ec15f9dd98a06aacf72479c6ce53580a8f66e80ec7de3d38b31784"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/optimized-3.log",
+      "bytes": 3548,
+      "sha256": "1a17f153d12a19f0f6621293967e4b1bc5d6981bb33b56398df03dd3e98c82bd"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/optimized-3.run.json",
+      "bytes": 986,
+      "sha256": "24881edd4c5ec05ee0f8255c9226f3f1620ea189af00654b6b58d1b4254eddb6"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/optimized-3.settings.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/package-verification.json",
+      "bytes": 23647,
+      "sha256": "67a536188355c51a41e29d23be85f8e6cd7a93552cbd3713086709f4f7688041"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/package-verification.log",
+      "bytes": 5,
+      "sha256": "c26de83abdc9496cd1301470918ec39ecca1cf389ef0ae1c6504da1800d1c431"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/packaged-features.json",
+      "bytes": 3369,
+      "sha256": "4f8365eeefef8704b5fb90a8517cd26e74909b0b4123381920fe49ef11f402e0"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/packaged-instance-argument-failed.json",
+      "bytes": 977,
+      "sha256": "059fb92329640ca3ef80362534c61f40de41bf577cb0ca7519321dadb1574878"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/packaged-instance-argument-failed.log",
+      "bytes": 94,
+      "sha256": "42e10ab85203c037b3606270fbdd8e2809bee0150ca29671b7497646b4e66c0f"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/packaged-ipc.json",
+      "bytes": 1123,
+      "sha256": "196241aee74379546f2890fc79eef1414697bd97955dabfb548cf44917d17a7a"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/packaged-ipc.log",
+      "bytes": 94,
+      "sha256": "42e10ab85203c037b3606270fbdd8e2809bee0150ca29671b7497646b4e66c0f"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/packaged-runtime.log",
+      "bytes": 5,
+      "sha256": "c26de83abdc9496cd1301470918ec39ecca1cf389ef0ae1c6504da1800d1c431"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/packaged-seeky-cache.log",
+      "bytes": 5,
+      "sha256": "c26de83abdc9496cd1301470918ec39ecca1cf389ef0ae1c6504da1800d1c431"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/packaged-seeky-installed.log",
+      "bytes": 5,
+      "sha256": "c26de83abdc9496cd1301470918ec39ecca1cf389ef0ae1c6504da1800d1c431"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/pre-seeky-package-verification.json",
+      "bytes": 22953,
+      "sha256": "31d70791238c7279b01df88fdebf7e7e5a4fb0db948dde5498ff8213dcbda9ef"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/pre-seeky-packaged-ipc.json",
+      "bytes": 1120,
+      "sha256": "ae60cddbc8fa64245940d2e5b56c9e041f19bbd1c3de2063fa3da9e08a920834"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/pre-seeky-packaged-ipc.log",
+      "bytes": 94,
+      "sha256": "42e10ab85203c037b3606270fbdd8e2809bee0150ca29671b7497646b4e66c0f"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/publication-format.json",
+      "bytes": 1475,
+      "sha256": "e29ab28700257d672d69a2b86de199a5f3d59f5348d6cdea85f97380cd2d2e8e"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/report-seeky-check.json",
+      "bytes": 466,
+      "sha256": "51dedf9e815db42afff26e121063475e2a8d694bbec866adb7634f8f552bb635"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/report-seeky-check.log",
+      "bytes": 99,
+      "sha256": "8daee30494d67efb19b3ea2fdd4aec3420031d27d78dfc3f40cb7bacbac225b2"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/ruff-delivery.log",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/ruff-final.log",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/ruff-seeky.json",
+      "bytes": 5028,
+      "sha256": "4da72781f57395127a76ae8f91667262a3e8a6c83f06ec366615cc3464cc78aa"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/seeky-icon-source.json",
+      "bytes": 387,
+      "sha256": "cc79c9a7aca05a52be6499947c84c1251c740a492e844c669ae5e62d88cf0971"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/seeky-installed-native.json",
+      "bytes": 884,
+      "sha256": "5eb0e73d0139b4b20f13de8b337508bb44255ec3d95666db9c0d8939c331b3c0"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/seeky-old-quit-failed.json",
+      "bytes": 1166,
+      "sha256": "b0f5c211fceb9190270a02bc5b5385266c9a96d523dcbd2a56c4ab6f8937c4a9"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/seeky-replacement-system-python-failed.json",
+      "bytes": 380,
+      "sha256": "946f8f96d88330bfee653cf28e583b271de74ff30cf133d554ebd85429ecb401"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/seeky-replacement.json",
+      "bytes": 1792,
+      "sha256": "dfd07a0d04534da4281384574f067da6185b71b91221d309d07f454ce968149b"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/settings-actions-minimum.png",
+      "bytes": 109228,
+      "sha256": "11cecdc2179099ac46ace5a0399db510384fc6508bd419d336a694faaf9a620f"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/settings-actions-playing.png",
+      "bytes": 137277,
+      "sha256": "b93e7d5c038f5518d1246c57efa65d06197aacef12d818f34f858036115801b5"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/settings-actions.png",
+      "bytes": 172298,
+      "sha256": "7b4c61091ce58ef252c489fea1a8dddc35d44885a63b9617f38f0102a81edbff"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/settings-codex-minimum.png",
+      "bytes": 137352,
+      "sha256": "f13fedc090abc3e3c82b944f07884d190fc7392edc0abfb00913c74f90f7d5ac"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/settings-codex.png",
+      "bytes": 151043,
+      "sha256": "af60603b8d8605b5bf0bb1b26fc8f3d04feb770f3d990a42f98c6acbfea40dda"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/settings-general.png",
+      "bytes": 178530,
+      "sha256": "e7f5949a5cee8d959ae40dd1e6f68416ec0f41f825560417b75989dedfe20569"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/settings-minimum.png",
+      "bytes": 193889,
+      "sha256": "ff31fedbd4e933376d10462f751a15f524bd700403a47f6628002fc7dcc61223"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/settings-pet.png",
+      "bytes": 264226,
+      "sha256": "126b9ed90d5204a872ce012afa447f2910ae032d431043b93be6e022b803b764"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/shared-baseline-path-failed.json",
+      "bytes": 606549,
+      "sha256": "97428e7cfa4464032501433acf7ca04db33f68bb31a3da2a3b84a649ec21735b"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/shared-baseline.json",
+      "bytes": 702586,
+      "sha256": "9160d60597b108f02229a7395c1a3af877b028d240a551ccb3876cb654792083"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/shared-optimized.json",
+      "bytes": 687579,
+      "sha256": "9ba00fb5ac23f5b40252642bbb993fc15e0bea7b5762c3bdea8710a3b0dbc142"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/stress-seeky-1.log",
+      "bytes": 99,
+      "sha256": "1cfa09f19354c6d4b3b0e8d9264ac3bab37b7d525b671bbd5ffc132d032ce9d5"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/stress-seeky-2.log",
+      "bytes": 99,
+      "sha256": "1707e425018d166a508a795905569ea6c7c429d4588318fbfd0491e0dc07875b"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/stress-seeky-3.log",
+      "bytes": 99,
+      "sha256": "f53db16344c73eff7865b0e955bbd6e42fc377d72d838bcaf4fd96e9b13e3468"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/stress-seeky-final-1.log",
+      "bytes": 99,
+      "sha256": "0ef62d99f95436348a157b0f742210d1be1bec3127e8611c3595cada5246e735"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/stress-seeky-final-2.log",
+      "bytes": 99,
+      "sha256": "ce32ea5e3f32917c9ea02f5e744388122f635e360fd8e403fb569f3d445b69f2"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/stress-seeky-final-3.log",
+      "bytes": 99,
+      "sha256": "f7c5872f2b5f6ec7945fd87dfd157b187424fc39e338431cf805d62dc15da455"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/stress-seeky-final.json",
+      "bytes": 1043,
+      "sha256": "34f5dd3930f9ebe5cadc955c88e3ac711151222311fdc99ec62f8ad10072a3e1"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/stress-seeky.json",
+      "bytes": 1051,
+      "sha256": "82856087df86674850e72a12e7427d82ecfc1ca502bb2a64581bce1d5fb2601b"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/switch-cleanup-red.json",
+      "bytes": 833,
+      "sha256": "cdef74b357bde5908e3c28abeed4b89fcab52e310a1ce5a35a2ca5ac7bac21c3"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/switch-cleanup-red.log",
+      "bytes": 94,
+      "sha256": "42e10ab85203c037b3606270fbdd8e2809bee0150ca29671b7497646b4e66c0f"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/switch-cleanup.json",
+      "bytes": 959,
+      "sha256": "20b748bc2f4863f523f073d481bdfae8a6f9cdc02cb820b22c06524aa8a847f3"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/switch-cleanup.log",
+      "bytes": 94,
+      "sha256": "42e10ab85203c037b3606270fbdd8e2809bee0150ca29671b7497646b4e66c0f"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/switch-queue-detached-failed.json",
+      "bytes": 1179,
+      "sha256": "24201e8e83965a296ed1deb4c314b66ebb81446517078ad35cc1da0dfe55b902"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/switch-queue-detached.log",
+      "bytes": 94,
+      "sha256": "42e10ab85203c037b3606270fbdd8e2809bee0150ca29671b7497646b4e66c0f"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/switch-queue-green.log",
+      "bytes": 94,
+      "sha256": "42e10ab85203c037b3606270fbdd8e2809bee0150ca29671b7497646b4e66c0f"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/switch-queue-red.json",
+      "bytes": 911,
+      "sha256": "51e12469ed3376302e97401ac80f1d7c577176c611d2ab5afbc68d4f9b9dbce1"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/switch-queue-red.log",
+      "bytes": 94,
+      "sha256": "42e10ab85203c037b3606270fbdd8e2809bee0150ca29671b7497646b4e66c0f"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/task-color-control.png",
+      "bytes": 6007,
+      "sha256": "467adca9332bc2f55f200cdb0f50fdc8f8538fafcc6ab063d57c3ae7ebea93e4"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/task-frame-completion.png",
+      "bytes": 21019,
+      "sha256": "1e67642fd819e2b957abbdc6364c54d9a1b11bcfc6e837f362a47859c21e4ee6"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/task-frame-controls-final.json",
+      "bytes": 1852,
+      "sha256": "97e37da39f38cb03e8f5bbfd7886bf6befebf824e0ecf3cb61f0013335964a5b"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/task-frame-controls-final.log",
+      "bytes": 2066,
+      "sha256": "a502d00637d5db2399907ae0394fdf4fecfe084bc8203323fd26da6ee9368eb1"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/task-frame-controls-red.json",
+      "bytes": 1342,
+      "sha256": "b7412e7d5a4644f615deea59e553c6218c54bb32be80cb777c5d7a4d894e97b7"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/task-frame-controls-red.log",
+      "bytes": 2213,
+      "sha256": "04fa8fd9172f9ef13e6b967005229713d46e40c374ee3bc43d13a293820f257d"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/task-frame-final.json",
+      "bytes": 1653,
+      "sha256": "28a6e65e4a8e816d23c81f00f2d8b9f099f1c954816bb8e14e2fe735ef463dfe"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/task-frame-first-failed.json",
+      "bytes": 665,
+      "sha256": "f52146c9f8cc9479ee3432cc09efc8e1243c0744942c9fb8fd4990fe534b44bf"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/task-frame-question.png",
+      "bytes": 168176,
+      "sha256": "e9e3b8f32867b233d531bfa7ca9f696c0c64ddd210ca83deeab0c88df261887d"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/task-frame-red.json",
+      "bytes": 816,
+      "sha256": "cfc11fb0b0bc0e1cb177e195d1f1fa37d9ded7304da3f1538a38002e5b8ad617"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/task-frame-save-error.png",
+      "bytes": 239169,
+      "sha256": "7018efa7d26cb259296c4e392e153e335f267a09d0f9913aa9fb004557d1ab1c"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/task-frame-second-failed.json",
+      "bytes": 537,
+      "sha256": "75eb2dfbb088b94cefd6557c92ca709b91f322ac0caadb64d5500bfc334a8d51"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/task-frame-settings-minimum.png",
+      "bytes": 189753,
+      "sha256": "bdee76ab981774e7ea80160a70ffb736f72cafbdbc8cfe6cb411e8614e2bcee7"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/task-frame-settings-preview.png",
+      "bytes": 253590,
+      "sha256": "0a21f8c8902bb647420e97fc58c58200de5e21527fc08205196f2b0e519206c3"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/task-frame-settings.png",
+      "bytes": 242064,
+      "sha256": "366a90049305dd1853728ad36c39c1d3d7d12d7b7635f0ff2e49b05438b8cb30"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/task-frame-third.json",
+      "bytes": 1870,
+      "sha256": "69872c2b26129095f1f4324e96e4f0f2150646554c9f8387e3addd7c6cc70f48"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/task-frame.json",
+      "bytes": 1644,
+      "sha256": "50e38664e2e8063dc207ef3e6903d38d9bceb9d8c453f0ae7dd9045487585b7a"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/tests-delivery.log",
+      "bytes": 6888,
+      "sha256": "801443441cac6cb2167b0f17548ffde6c391b8ef0cd806b08173a82f6d9f1e53"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/tests-final.log",
+      "bytes": 6889,
+      "sha256": "b69773179eadfbf2e5308479f8f693f484058c75578e7619ef5f9fac8192a21a"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/tests-final.run.json",
+      "bytes": 558,
+      "sha256": "cd600c59cd3bbde0d40261b92fc8eab9ab5e68b590523ab4e1eea666b75ffd2d"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/tests-natural-stop-failed.log",
+      "bytes": 10944,
+      "sha256": "cbb407828a356993d514a9ede3e384790262b54d8eaeaccb669306a4457db70b"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/tests-parallel-failed.log",
+      "bytes": 9482,
+      "sha256": "9946e2a6c58f9dbf73b3b19516624a87fae7f5ae4933b2f18342069f6610e8de"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/tests-seeky-complete.json",
+      "bytes": 5539,
+      "sha256": "680cc4f76732f0ab02c754b2d4dcc0c8d843f9a9ce4bd2c318b63075f4c2128f"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/tests-seeky-complete.log",
+      "bytes": 7027,
+      "sha256": "ad34f1782ca3d927e9ec49fbb09b6c52965a57c33865e6e35d70ff2782dc5c51"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/tests-seeky-final.log",
+      "bytes": 15301,
+      "sha256": "5c0b697633a11644900e48d7ad13d0efc94e0f1828861120dccf06d2c68f6ee5"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/tests-seeky-pre-ceiling.log",
+      "bytes": 8343,
+      "sha256": "c686237ddf83e05f0fb0466746db1ac5c5957f0b82bc62b126338828decb10e9"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/upscale-comparison.json",
+      "bytes": 1139,
+      "sha256": "d7ba1213294b976c700f1d761051ac410256bdc294c4c9086850929a85b81b22"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/upscale-comparison.png",
+      "bytes": 532410,
+      "sha256": "f566b35c6868abdca55ff53747caa4845a244975d425a784a0c7d1d97b322f8a"
+    }
+  ],
+  "excludes": "Self and original private copies in ignored .scratch"
+}

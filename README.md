@@ -1,3 +1,34 @@
+# seeky· pet
+
+macOS Apple Silicon 桌宠，基于上游 v4.2.1 纯桌宠修复提交 `1c3a59c`。
+
+- 使用新的 Seeky 原图与 Mac 圆角图标，固定中性黑灰设置界面。
+- 「连接 → Codex」显示本地工作状态、提问和本轮完成消息；问题在 Codex 中回答。
+- Codex 任务框支持配色预设、自定义背景/边框、80–160% 大小、实时预览和恢复默认。
+- 顶部倒立按原生屏幕刘海与菜单栏边界分别吸附，默认藏入约半个身体。
+- 解码队列、缩略图缓存和动作切换资源释放经过内存验收；保留 106 个高清动作。
+
+## 从源码运行与构建
+
+```bash
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt pyinstaller
+.venv/bin/python -m pet
+PYTHON_BIN=.venv/bin/python scripts/build_macos.sh --variants webm
+```
+
+构建产物默认位于 `~/Library/Caches/dsr-pet-build/macos/seeky· pet.app`。
+沿用 `~/Library/Application Support/dsr-pet` 配置目录和原 bundle identifier，改名后保留已有偏好。
+
+验收数据、已知限制及逐文件说明见 [优化报告](docs/PR-REPORT-DSR-PET-2026-10-02.md)。
+macOS 构建为本地 ad-hoc 签名；没有 Developer ID 公证。Windows、Linux 的本轮原生运行尚未核验。
+
+---
+
+## 上游项目与原有文档
+
+以下保留上游说明、许可证和贡献者归属；上游发布版本不代表本分支的 Seeky 交付版本。
+
 # dsh-pet-indesktop
 
 <p align="center">

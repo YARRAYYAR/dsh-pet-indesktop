@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/scripts/verify_dsr_runtime.py", line 239, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/Users/ray/Documents/New project/dsr-pet/scripts/verify_dsr_runtime.py", line 32, in main
+    os.chdir(args.root)
+    ~~~~~~~~^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/dsr-pet-baseline-20261002'

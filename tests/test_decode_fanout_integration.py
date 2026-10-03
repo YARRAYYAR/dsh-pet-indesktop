@@ -67,8 +67,13 @@ def test_two_clips_share_single_decode(app):
         # P1-3（复审）：订阅者绝不拉起 ffmpeg——reader 进程句柄恒为 None。
         assert sub._reader_proc is None, "订阅者不得拉起 ffmpeg（G-53-2 在库断言）"
         # 有界消费：双方都出帧（订阅者从共享环进食，不拉 ffmpeg）
-        _consume(pub, pubs, cap=30)
-        _consume(sub, subs, cap=30)
+        # Both visible windows consume concurrently in production. Sequential
+        # pumping starves the publisher once its bounded queue fills.
+        deadline = time.monotonic() + 20
+        while time.monotonic() < deadline and (len(pubs) < 30 or len(subs) < 30):
+            pub._poll()
+            sub._poll()
+            time.sleep(0.005)
         assert len(pubs) >= 30, f"发布者出帧不足: {len(pubs)} errors={errors}"
         assert len(subs) >= 30, f"订阅者出帧不足: {len(subs)} errors={errors}"
         # 订阅者源帧号单调不减（帧序协议：drop-oldest 允许跳帧，绝不乱序）

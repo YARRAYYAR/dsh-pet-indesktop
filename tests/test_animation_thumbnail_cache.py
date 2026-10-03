@@ -109,7 +109,7 @@ def test_decode_result_is_bounded_to_thumbnail_size(monkeypatch, tmp_path):
     assert not image.isNull()
     assert max(image.width(), image.height()) <= thumbnail._THUMBNAIL_MAX_SIDE
     # 内存缓存里的副本也是缩略图
-    cached = next(iter(thumbnail._image_cache.values()))
+    cached = thumbnail._image_cache.get(next(iter(thumbnail._image_cache)))
     assert max(cached.width(), cached.height()) <= thumbnail._THUMBNAIL_MAX_SIDE
 
 

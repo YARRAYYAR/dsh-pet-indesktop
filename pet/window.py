@@ -68,6 +68,8 @@ from . import autostart as autostart_mod
 from . import catalog
 from . import gui_stall_sampler
 from . import perfstats
+from .frame_cache import ByteBudgetLru
+from .task_bubble import create_speech_bubble
 from .config import (
     DEFAULT_SELF_TALK_BUBBLE_STYLE,
     DEFAULT_SELF_TALK_DURATION_SECONDS,
@@ -96,7 +98,7 @@ from .click_sound import (
     play_press_sound, play_release_sound,
 )
 from .proactive import effective_proactive_config
-from .window_optional_services import WindowFeatureGateMixin
+from .window_optional_services import WindowFeatureGateMixin, effects_coverage, prepare_effects_painter
 
 from . import platform_win
 from .platform_mac import _keep_macos_tool_window_visible, _mac_set_window_level
@@ -342,6 +344,7 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
     look_done = Signal(str, str, bool)
     fullscreen_changed = Signal(bool)  # 全屏 watcher 线程 → 主线程（隐藏/恢复桌宠）
     cursor_visibility_changed = Signal(str)
+    action_changed = Signal(str)
 
     # 类级兜底默认值：测试里有绕过 __init__ 的轻量子类桩（_SignalPet 等），
     # 它们继承真实 moveEvent/_on_squash_tick——这些属性必须有类级默认。
@@ -449,9 +452,7 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
         self._animation_gap_timer = QTimer(self)
         self._animation_gap_timer.setSingleShot(True)
         self._animation_gap_timer.timeout.connect(self._on_animation_gap_timeout)
-        self._speech_bubble = PetSpeechBubble(
-            style_id=str(config.get('self_talk_bubble_style', DEFAULT_SELF_TALK_BUBBLE_STYLE))
-        )
+        self._speech_bubble = create_speech_bubble(self, config)
         self._speech_bubble.clicked.connect(self._on_speech_bubble_clicked)
         self._look_busy = False
         self._last_look_ts = 0.0
@@ -1622,6 +1623,7 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
             return False
         prev_anim = self.anim
         prev_movie = self.movie
+        prev_ended = bool(self._ended_fired)
         prev_click_hold = self._click_hold
         prev_bounds = self._collision_local_bounds
         # 共享解码：离开上一个可共享素材（idle 类）时通知 facade 解注册——
@@ -1632,7 +1634,7 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
         # 按注册身份判定。
         if prev_movie is not None:
             self._broker_unregister(prev_anim, prev_movie,
-                                    natural=bool(self._ended_fired))
+                                    natural=prev_ended)
 
         self.anim = name
         # 点击回应动画播放中持有让路闸门；切到非点击动画即视为点击结束。
@@ -1680,10 +1682,11 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
                 is_link=_link_request,
             )
             return False
-        # 批12（A1，复审修订）：切走成功 —— 旧 clip 不再是显示对象，清空其
-        # 显示槽（~1.84MB/段原生位图）。park 续圈不切窗不经此处；hold 路径
-        #（不切走）绝不清——窗口是唯一权威显示判定（REVIEW_batch12 P1-1）。
+        # 新动作启动成功后才停旧 clip，启动失败时仍可回退此前播放器。
+        # broker 已完成发布者交接；自然圈末仍沿用 stop 的驻留/排空语义。
         if prev_movie is not None and prev_movie is not movie:
+            if not prev_ended:
+                prev_movie.stop()
             _clear = getattr(prev_movie, 'clear_display_frame', None)
             if callable(_clear):  # 测试替身可无此方法（纯优化，非正确性调用）
                 _clear()
@@ -1699,6 +1702,7 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
         # 动画切换是让路闸门的唯一事实来源之一：点击动画开始播放时持有、
         # 播完（_on_anim_ended 切走）时释放，覆盖所有早期返回路径。
         self._update_interaction_hold()
+        self.action_changed.emit(name)
         return True
 
     def switch_clip(self, name: str, link_request: bool = False) -> bool:
@@ -2245,7 +2249,7 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
         """
         if perfstats.ENABLED:
             _mask_t0 = perfstats.clock()
-        canvas = QImage(self._w, self._h, QImage.Format.Format_ARGB32)
+        canvas = QImage(self._w, self._h, QImage.Format.Format_ARGB32_Premultiplied)
         canvas.fill(Qt.GlobalColor.transparent)
         p = QPainter(canvas)
         if self._frame_pixmap is not None:
@@ -2266,7 +2270,9 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
         mask = QBitmap.fromImage(canvas.createAlphaMask())
         self._mask_bounds = QRegion(mask).boundingRect()
         if os.name != "nt":
-            self.setMask(mask)
+            # Preserve the old collision bounds; padding is only for native
+            # coverage and must not move placement/bubble/physics anchors.
+            self.setMask(effects_coverage(self, canvas))
         elif not self.mask().isEmpty():
             self.clearMask()  # Windows：清掉历史遗留 mask（本路径不 setMask）
         if not self._mask_bounds.isEmpty():
@@ -2362,7 +2368,7 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
         if perfstats.ENABLED:
             _paint_t0 = perfstats.clock()
         painter = QPainter(self)
-        painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
+        prepare_effects_painter(self, painter)
         if self._frame_pixmap is not None:
             if getattr(self, "_interaction_state", "IDLE") == "SLINGSHOT_AIMING":
                 base_rect = _content_frame_rect(self)
@@ -2516,7 +2522,7 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
         if lock is None:
             lock = threading.Lock()
             self._animation_icon_cache_lock = lock
-            self._animation_icon_image_cache = {}
+            self._animation_icon_image_cache = ByteBudgetLru(8 * 1024 * 1024)
             self._animation_icon_inflight = {}
         with lock:
             cached = self._animation_icon_image_cache.get(name)
@@ -2532,17 +2538,14 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
                 # 解码线程病态卡死的逃生口：不永久挂起等待线程（审查 GLM-L5）
                 return QImage()
             with lock:
-                return QImage(self._animation_icon_image_cache.get(name, QImage()))
+                return QImage(self._animation_icon_image_cache.get(name) or QImage())
         path = self.lib.clip_path(name)  # 不在 worker 线程构造 WebMClip（Qt 线程亲和）
         try:
             image = decode_representative_frame(path) if path is not None else QImage()
             with lock:
                 if not image.isNull():
                     cache = self._animation_icon_image_cache
-                    # 简单上限：动画名数量有限，超限全清后按需重新解码
-                    if len(cache) >= 128:
-                        cache.clear()
-                    cache[name] = QImage(image)
+                    cache.put(name, QImage(image), byte_size=image.sizeInBytes())
             return image
         finally:
             with lock:
@@ -2556,7 +2559,7 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
         if lock is None:
             return QImage()
         with lock:
-            return QImage(self._animation_icon_image_cache.get(name, QImage()))
+            return QImage(self._animation_icon_image_cache.get(name) or QImage())
 
     def _on_clip_finished(self, name: str) -> None:
         """WebMClip 播完兜底：正常路径在末尾帧处由 _on_frame 提前 stop，
@@ -2810,6 +2813,8 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
         被拒——此时 _switch 已回退到可播放动画并安排重试，移动计划绝不建立
         （B7 审查 P1-1 / 复审 R2）。
         """
+        if self._top_flip is not None and self._top_flip.active:
+            return False
         if (self._physics_mode is not None
                 or self._interaction_state in (THROWN, DRAGGING)):
             return False
@@ -3360,7 +3365,14 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
             self._flush_drag_move()  # 拖拽结束：强制处理最后一次目标位置并停止合帧 timer
             self._just_dragged = True  # 抑制拖拽结束后的幽灵点击
             QTimer.singleShot(150, self, self._clear_just_dragged)
-            if self.drag_physics:
+            top_docked = (self._top_flip.enabled and self._virtual_pos().y()
+                          <= self._top_flip.reference_limit() + 40)
+            if top_docked:
+                # Release in the ceiling snap zone must not turn into a throw.
+                self._stop_physics()
+                self._cancel_move()
+                self._save_position()
+            elif self.drag_physics:
                 rvx, rvy = physics_mod.estimate_release_velocity(
                     self._trail, time.monotonic(), cap=self._throw_speed_cap
                 )
@@ -4567,6 +4579,10 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
             event.accept()
             return
         self._close_event_done = True
+        if self._top_flip is not None:
+            self._top_flip.cancel('close')
+        if self._codex_link is not None:
+            self._codex_link.stop()
         self._closing = True  # 关闭后丢弃迟到的动画事件（生命周期守卫）
         bubble = getattr(self, '_speech_bubble', None)
         if bubble is not None:

@@ -906,7 +906,7 @@ class WebMClip(QObject):
         self.playback_speed = 1.0
 
         # 播放状态
-        self._queue: queue.Queue = queue.Queue(maxsize=8)
+        self._queue: queue.Queue = queue.Queue(maxsize=2)
         self._stop_evt = threading.Event()
         self._thread: threading.Thread | None = None
         # 当前 active reader 持有的 ffmpeg 进程句柄（_reader_lock 保护，reader 线程
@@ -1554,7 +1554,7 @@ class WebMClip(QObject):
         ready_evt = threading.Event()
         self._stop_evt = stop_evt
         self._reader_ready = ready_evt
-        self._queue = queue.Queue(maxsize=8)
+        self._queue = queue.Queue(maxsize=2)
         self._frame_index = 0
         self._current_frame_index = 0  # 新一轮播放从头计时（P1 复审）
         self._ended_fired = False
@@ -1641,6 +1641,11 @@ class WebMClip(QObject):
         stop_evt = self._stop_evt
         if stop_evt is not None:
             stop_evt.set()
+        # An interrupted cached clip must not retain queued RGBA frames.
+        # Retired readers keep their own queue until they exit; replacing this
+        # reference avoids racing their final put or blocking the GUI on join.
+        # Natural loop parking returns before this path and keeps its queue.
+        self._queue = queue.Queue(maxsize=2)
         # 唤醒圈边界驻留的 reader（批8），让它立刻看到停止信号退出。
         self._loop_gate.set()
         # 主动 terminate 底层 ffmpeg：不能只是 set 事件等 reader 自己退（B7）。
@@ -1847,6 +1852,8 @@ class WebMClip(QObject):
                 self._fps = float(meta['fps'])
             if meta.get('duration'):
                 self._duration = float(meta['duration'])
+            if meta.get('size'):
+                self._w, self._h = meta['size']
             if self._frame_count <= 0 and self._fps > 0 and self._duration > 0:
                 self._frame_count = int(round(self._fps * self._duration))
             expect = self._w * self._h * self._bpp
@@ -2036,10 +2043,10 @@ class WebMClip(QObject):
         """reader 线程入口：feed 模式（进程内扇出）与本地解码的分派。
 
         - ``_feed_source`` 为 None（默认/灰度关）：逐位走 ``_reader_local``，
-          与历史行为零差异；
+          解码和帧序不变，队列满时可中断地等待；
         - ``_feed_source`` 已置（消费端，facade 在 start() 前设置）：经
           FanoutFeed 立即就绪（ready 恒 True），从订阅环取帧入队（沿用本地
-          同款有界 put/丢帧契约）；断流/超时/中止 → **同一 reader 线程内**回退
+          同款可中断的背压契约）；断流/超时/中止 → **同一 reader 线程内**回退
           本地 ffmpeg 解码（帧 0 起播，重入 _reader_local 的拉起序列——
           capture/登记/兜底全复用，绝不复刻一个绕过追踪的新拉起，P1-1）。
         """
@@ -2152,6 +2159,8 @@ class WebMClip(QObject):
                     input_params=input_params,
                 )
                 meta = next(gen)  # ffmpeg 进程在此拉起；capture 即时登记句柄
+                if meta.get('size'):
+                    self._w, self._h = meta['size']
                 if proc is None:
                     proc = capture.process
             if proc is not None:
@@ -2192,7 +2201,9 @@ class WebMClip(QObject):
                 gen,
                 q,
                 lambda: stop_evt.is_set() or self._generation != generation,
-                throttled=lambda: self._decode_throttle_divisor > 1,
+                # A small queue must apply backpressure at full frame rate too:
+                # timeout dropping would trade animation quality for memory.
+                throttled=lambda: True,
                 # 共享解码：发布镜像（发布端播放时置 _publish_sink）。
                 # reader 只做每帧回调（逐帧读当前 sink——续圈后 facade 重建
                 # 会话换 sink，不换 reader/进程仍发布到新会话）；节拍/收尾由
@@ -2274,7 +2285,7 @@ class WebMClip(QObject):
 
         只在该 WebMClip 以消费端身份、facade 在 start() 前设置了
         ``_feed_source`` 时进入。feed 等待/读取期间不持有任何锁；有界 put
-        沿用本地同款丢帧契约（队列满丢帧、源帧号照常推进）。
+        沿用本地同款背压契约，当前帧成功入队后才读取下一帧。
         """
         # 1) feed-pending：有界等待 feed 就绪（reader 线程内，≤SUBSCRIBE_BUDGET_MS）
         budget_ms = getattr(feed, 'budget_ms', None) or _SUBSCRIBE_BUDGET_MS
@@ -2312,12 +2323,15 @@ class WebMClip(QObject):
                 # 'stop_all'|'watchdog'）；兼容外部 feed 会话（测试桩）只返回 3 元组。
                 reason = result[3] if len(result) > 3 else None
                 if kind == 'frame':
-                    try:
-                        q.put((data, src), timeout=0.2)
-                    except queue.Full:
-                        if perfstats.ENABLED:
-                            perfstats.note('webm.queue_drop')
-                        pass  # 队列满丢帧：源帧号照常推进（本地同款契约）
+                    size = getattr(feed, 'source_size', None)
+                    if size is not None:
+                        self._w, self._h = size
+                    while not (stop_evt.is_set() or self._generation != generation):
+                        try:
+                            q.put((data, src), timeout=0.05)
+                            break
+                        except queue.Full:
+                            continue  # Keep this frame until consumed or cancelled.
                 elif kind == 'end':
                     # 源帧号回绕合成 end：结束标记 → finished
                     self._put_end_marker(q, stop_evt, generation)

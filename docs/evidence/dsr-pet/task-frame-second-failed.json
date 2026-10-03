@@ -1,0 +1,9 @@
+{
+  "command": "QT_QPA_PLATFORM=cocoa PYTHONPATH=. .venv/bin/python scripts/verify_seeky_task_frame.py --label task-frame-second",
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Temporary config and Cocoa app",
+  "inputs": "Warm theme, 140%, Codex question",
+  "assertions": "Main applies settings colors",
+  "actual": "Harness passed Config.dir as constructor root, creating nested dsr-pet path; main correctly kept its own default style; final close attempted an already deleted settings object",
+  "exit_status": 1
+}

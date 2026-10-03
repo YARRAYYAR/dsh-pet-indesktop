@@ -1,0 +1,13 @@
+{
+  "command": "QT_QPA_PLATFORM=cocoa PYTHONPATH=. .venv/bin/python scripts/verify_seeky_ceiling.py --label ceiling-notches-red",
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Fresh temporary config, real Cocoa PetWindow and unchanged HD WebM",
+  "reset": "New config on each run; normal app shutdown closes services",
+  "inputs": "Move to left, physical notch and right ceiling; half-body occlusion; 100 repeat moves each; pull down",
+  "assertions": "Actual notch detected; distinct attachment edge; half body hidden; 180 degrees; matching mask; no drift or running flip timer; pull down restores zero",
+  "checks": {},
+  "errors": [
+    "ModuleNotFoundError: No module named 'pet.ceiling_geometry'"
+  ],
+  "exit_status": 1
+}

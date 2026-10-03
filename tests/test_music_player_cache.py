@@ -490,15 +490,17 @@ def test_launch_player_survives_bridge_destroyed_midflight(monkeypatch):
         shared._launch_player_and_play("netease", pet)
         assert ready.wait(15.0), "解析线程没跑起来"
         assert bridges, "没有建出信号桥"
-        # 模拟宿主窗口销毁：桥是窗口的 QObject 子对象，一起被 C++ 侧销毁。
-        shiboken6.delete(bridges[0])
+        # 宿主先销毁，独立桥继续保活直到后台完成，避免跨线程 emit 竞争析构。
+        shiboken6.delete(pet)
+        assert shiboken6.isValid(bridges[0])
         release.set()
         worker_threads[0].join(15.0)
         assert not worker_threads[0].is_alive(), "worker 没有收工"
     finally:
         release.set()
         threading.excepthook = original_hook
-        shiboken6.delete(pet)
+        if shiboken6.isValid(pet):
+            shiboken6.delete(pet)
 
     assert errors == [], f"桥销毁后 worker 抛了未捕获异常：{errors}"
 

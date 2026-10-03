@@ -152,7 +152,8 @@ def test_config_v4_migrates_legacy_chat_fields(tmp_path: Path, monkeypatch):
     assert _FakeStore.shared["provider/openai-main"] == "secret-value"
     assert cfg.resolve_api_key(settings.active_config) == "secret-value"
     cfg.save()
-    assert json.loads((cfg_dir / "config.json").read_text(encoding="utf-8"))["version"] == 4
+    assert json.loads(cfg.path.read_text(encoding="utf-8"))["version"] == 4
+    assert json.loads((cfg_dir / 'config.json').read_text(encoding='utf-8'))['version'] == 2
 
 
 def test_chat_window_offscreen_smoke(tmp_path: Path, monkeypatch):
@@ -2203,7 +2204,7 @@ def test_config_shared_dir_when_no_variant_marker(tmp_path):
     from pet import config as config_mod
 
     cfg = config_mod.Config(tmp_path)
-    assert cfg.dir == tmp_path / "dsh-pet-standalone"
+    assert cfg.dir == tmp_path / "dsr-pet"
 
 
 def test_provider_config_verify_ssl_roundtrip():

@@ -1,0 +1,11 @@
+QSystemTrayIcon::setVisible: No Icon set
+played AssertionError
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/.scratch/dsr-pet/native_actions.py", line 24, in run
+    try: fn()
+         ~~^^
+  File "/Users/ray/Documents/New project/dsr-pet/.scratch/dsr-pet/native_actions.py", line 45, in played
+    assert checks['current']==checks['selected']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+settings child exit 0

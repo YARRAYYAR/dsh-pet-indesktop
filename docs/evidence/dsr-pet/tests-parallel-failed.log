@@ -1,0 +1,127 @@
+.................................................s.s.................... [  2%]
+........................................................................ [  4%]
+........................................................................ [  7%]
+........................................................................ [  9%]
+........................................................................ [ 12%]
+........................................................................ [ 14%]
+.....................................................F.................. [ 17%]
+..s..................................................................... [ 19%]
+..........s............................................................. [ 22%]
+........................................................................ [ 24%]
+........................................................................ [ 26%]
+........................................................................ [ 29%]
+........................................................................ [ 31%]
+........................................................................ [ 34%]
+........................................................................ [ 36%]
+........................................................................ [ 39%]
+.......................................ssss............................. [ 41%]
+...................ss..........................s........................ [ 44%]
+............................................ss.......................... [ 46%]
+........................................................................ [ 49%]
+...s.................................................................... [ 51%]
+........................................................................ [ 53%]
+........................................................................ [ 56%]
+........................................................................ [ 58%]
+........................................................................ [ 61%]
+........................................................................ [ 63%]
+................................s....................................... [ 66%]
+........................................................................ [ 68%]
+.........................s.............................................. [ 71%]
+........................................................................ [ 73%]
+........................................................................ [ 76%]
+........................................................................ [ 78%]
+........................................................................ [ 80%]
+........................................................................ [ 83%]
+...s.................................................................... [ 85%]
+........................................................................ [ 88%]
+........................................................................ [ 90%]
+........................................................................ [ 93%]
+........................................................................ [ 95%]
+....................s.......................................s........... [ 98%]
+.........................s............................s                  [100%]
+=================================== FAILURES ===================================
+____________ test_sent_message_stays_visible_without_manual_scroll _____________
+
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-42/test_sent_message_stays_visibl0')
+
+    def test_sent_message_stays_visible_without_manual_scroll(tmp_path: Path):
+        """用户自己发的那条消息必须入视——回归：_add 只更新高度、从不贴底。
+
+        实机取证（probe-chat-baseline2.py，1180x720、单条超长用户消息）：
+        修复前 value=2433 max=5206 gap=2773 → 整条用户气泡落在视口下方，
+        用户必须先手动滚轮才看得见自己发的内容。
+        """
+        from PySide6.QtWidgets import QApplication
+
+        from pet.chat.widgets import ChatWindow
+        from pet.config import Config
+
+        app = QApplication.instance() or QApplication([])
+        window = ChatWindow(Config(tmp_path), "shenshen")
+        window.resize(1180, 720)
+        for index in range(12):
+            window._add("assistant", f"历史第 {index} 条。" * 40)
+        window.show()
+        app.processEvents()
+        _settle(app)
+
+        window._add("user", "这是一条非常长的用户输入。" * 120)
+        _settle(app)
+        bar = window.scroll.verticalScrollBar()
+        assert bar.maximum() > 0, "超长用户消息应让内容溢出（否则本用例失去意义）"
+>       assert bar.value() >= bar.maximum() - 24, (
+            f"发出的消息必须可见：value={bar.value()} max={bar.maximum()}"
+        )
+E       AssertionError: 发出的消息必须可见：value=2478 max=5971
+E       assert 2478 >= (5971 - 24)
+E        +  where 2478 = <built-in method value of PySide6.QtWidgets.QScrollBar object at 0x13840f780>()
+E        +    where <built-in method value of PySide6.QtWidgets.QScrollBar object at 0x13840f780> = <PySide6.QtWidgets.QScrollBar(0xb354cb390) at 0x13840f780>.value
+E        +  and   5971 = <built-in method maximum of PySide6.QtWidgets.QScrollBar object at 0x13840f780>()
+E        +    where <built-in method maximum of PySide6.QtWidgets.QScrollBar object at 0x13840f780> = <PySide6.QtWidgets.QScrollBar(0xb354cb390) at 0x13840f780>.maximum
+
+tests/test_chat_subsystem.py:1429: AssertionError
+=============================== warnings summary ===============================
+tests/test_agent_link.py: 219 warnings
+tests/test_agent_link_threads.py: 1 warning
+tests/test_persona_presets.py: 7 warnings
+tests/test_persona_settings.py: 2 warnings
+tests/test_persona_template_rendering.py: 7 warnings
+tests/test_proactive.py: 3 warnings
+tests/test_single_process_shared.py: 1 warning
+tests/test_watchdog_control_wiring.py: 8 warnings
+  /Users/ray/Documents/New project/dsr-pet/pet/persona_phrases.py:122: DeprecationWarning: 'maxsplit' is passed as positional argument
+    root = re.split(r"[.\[]", field_name, 1)[0]
+
+tests/test_clip_current_image.py::test_mirror_then_scale_matches_old_chain_bytes
+  /Users/ray/Documents/New project/dsr-pet/tests/test_clip_current_image.py:144: DeprecationWarning: Function: 'QImage.mirrored(bool horizontally, bool vertically)' is marked as deprecated, please check the documentation for more information.
+    old = QPixmap.fromImage(src).toImage().mirrored(True, False)
+
+tests/test_clip_current_image.py::test_mirror_then_scale_matches_old_chain_bytes
+  /Users/ray/Documents/New project/dsr-pet/tests/test_clip_current_image.py:148: DeprecationWarning: Function: 'QImage.mirrored(bool horizontally, bool vertically)' is marked as deprecated, please check the documentation for more information.
+    new = clip_current_image(_ClipWithCurrentImage(src)).mirrored(True, False)
+
+tests/test_effects_integration.py::test_real_window_move_blocked_during_edge_probe
+tests/test_movement.py::test_idle_roll_stays_idle_when_already_facing_inward
+tests/test_movement.py::test_random_turn_downgrades_when_already_facing_inward
+tests/test_movement.py::test_try_move_walks_toward_reachable_side_not_current_facing
+tests/test_switch_start_failure_window.py::test_try_move_success_still_builds_plan_and_moves
+tests/test_window_rendering.py::test_rebuild_frame_mirrors_regular_animation_when_facing_right
+tests/test_window_rendering.py::test_rebuild_frame_skips_when_same_movie_frame_unchanged
+tests/test_window_rendering.py::test_rebuild_frame_skips_when_same_movie_frame_unchanged
+tests/test_window_rendering.py::test_rebuild_frame_skips_when_same_movie_frame_unchanged
+  /Users/ray/Documents/New project/dsr-pet/pet/window.py:2104: DeprecationWarning: Function: 'QImage.mirrored(bool horizontally, bool vertically)' is marked as deprecated, please check the documentation for more information.
+    img = img.mirrored(True, False)
+
+tests/test_requested_regressions.py::test_chat_window_edge_hover_shows_resize_cursor
+tests/test_requested_regressions.py::test_chat_window_edge_hover_shows_resize_cursor
+  /Users/ray/Documents/New project/dsr-pet/tests/test_requested_regressions.py:495: DeprecationWarning: Function: 'QHoverEvent.QHoverEvent(QEvent.Type type, const QPointF &pos, const QPointF &oldPos, QFlags<Qt.KeyboardModifier> modifiers, const QPointingDevice *device)' is marked as deprecated, please check the documentation for more information.
+    win.event(QHoverEvent(QEvent.Type.HoverMove, QPointF(x, y), QPointF(x, y)))
+
+tests/test_requested_regressions.py::test_chat_window_edge_hover_shows_resize_cursor
+  /Users/ray/Documents/New project/dsr-pet/tests/test_requested_regressions.py:508: DeprecationWarning: Function: 'QHoverEvent.QHoverEvent(QEvent.Type type, const QPointF &pos, const QPointF &oldPos, QFlags<Qt.KeyboardModifier> modifiers, const QPointingDevice *device)' is marked as deprecated, please check the documentation for more information.
+    win.event(QHoverEvent(QEvent.Type.HoverLeave, QPointF(1, 1), QPointF(1, 1)))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_chat_subsystem.py::test_sent_message_stays_visible_without_manual_scroll
+1 failed, 2913 passed, 21 skipped, 262 warnings in 200.05s (0:03:20)

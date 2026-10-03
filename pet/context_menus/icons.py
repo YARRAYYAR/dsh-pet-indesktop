@@ -229,6 +229,13 @@ def vector_menu_icon(menu: QMenu, name: str, size: int | None = None) -> QIcon:
     elif name == "harness":
         painter.drawRoundedRect(QRectF(1.5, 2.5, 13.0, 11.0), 1.5, 1.5)
         painter.drawLine(QPointF(4.0, 6.0), QPointF(6.0, 8.0)); painter.drawLine(QPointF(6.0, 8.0), QPointF(4.0, 10.0)); painter.drawLine(QPointF(8.0, 10.0), QPointF(11.5, 10.0))
+    elif name == 'link':
+        painter.save()
+        painter.translate(8, 8)
+        painter.rotate(-40)
+        painter.drawRoundedRect(QRectF(-6.5, -2.5, 7, 5), 2.5, 2.5)
+        painter.drawRoundedRect(QRectF(-0.5, -2.5, 7, 5), 2.5, 2.5)
+        painter.restore()
     elif name == "web":
         painter.drawEllipse(QPointF(8.0, 8.0), 6.0, 6.0)
         painter.drawEllipse(QPointF(8.0, 8.0), 2.7, 6.0)
@@ -340,6 +347,9 @@ def vector_menu_icon(menu: QMenu, name: str, size: int | None = None) -> QIcon:
         painter.drawPath(path)
         painter.drawArc(QRectF(10.0, 5.5, 4.0, 5.0), -60 * 16, 120 * 16)
         painter.drawArc(QRectF(9.0, 3.5, 7.0, 9.0), -60 * 16, 120 * 16)
+    elif name == "power":
+        painter.drawArc(QRectF(2.5, 2.5, 11.0, 11.0), 135 * 16, 270 * 16)
+        painter.drawLine(QPointF(8.0, 1.0), QPointF(8.0, 7.0))
     elif name == "exit":
         painter.drawLine(QPointF(3.0, 3.0), QPointF(13.0, 13.0)); painter.drawLine(QPointF(13.0, 3.0), QPointF(3.0, 13.0))
     else:

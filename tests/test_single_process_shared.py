@@ -267,43 +267,6 @@ def test_flag_on_tray_per_window_submenu_exists_and_routes(tmp_path, app, monkey
         slot_manager_mod._unlock_file(primary_handle)
 
 
-def test_flag_on_island_toggle_all_windows(tmp_path, app, monkeypatch):
-    """§③.4 / 验收③：灵动岛单击 toggle 全部窗，并按聚合可见态同步 set_pet_visible。"""
-    shell, config, primary_handle = _make_flag_on_shell(tmp_path)
-    try:
-        primary_win = _make_primary_record_win(shell, config)
-        second = _make_second_record_win(shell, tmp_path, monkeypatch)
-        second_win = second.win
-
-        island = _FakeIsland()
-        shell.island = island
-        # 启用灵动岛，让 _sync_dynamic_island 走向聚合可见态分支
-        config.set("dynamic_island", {"enabled": True})
-        config.save()
-
-        # 初始：两窗都可见 → 单击 → 全部隐藏，island 同步为 False
-        assert primary_win.is_shown and second_win.is_shown
-        shell._toggle_pet_from_island()
-        assert primary_win.is_shown is False
-        assert second_win.is_shown is False
-        assert island.pet_visible is False
-
-        # 再单击 → 全部显示，island 同步为 True
-        shell._toggle_pet_from_island()
-        assert primary_win.is_shown is True
-        assert second_win.is_shown is True
-        assert island.pet_visible is True
-
-        # 聚合可见态：只隐藏第二窗 → 主窗仍可见 → island 仍为可见
-        second_win.hide()
-        shell._sync_dynamic_island()
-        assert island.pet_visible is True, "任一窗可见即聚合可见"
-    finally:
-        _stop_sessions(*getattr(shell, "instances", []))
-        if getattr(shell, "_shared", None) is not None:
-            shell._shared.stop_all()
-        slot_manager_mod._unlock_file(primary_handle)
-
 
 def test_flag_on_shared_proactive_broadcasts_bubble(tmp_path, app, monkeypatch):
     """§③.2：共享 proactive watcher 单一实例（限流器全局）；

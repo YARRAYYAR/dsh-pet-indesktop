@@ -47,6 +47,8 @@ def test_find_launch_command_fallback_without_dsh(monkeypatch):
         return  # 本机没有 node，跳过该场景
     monkeypatch.setattr(hl, "_supports_no_open", lambda base: False)
     monkeypatch.setenv("PATH", str(Path(node).parent))
+    monkeypatch.setattr(hl, '_which', lambda name: shutil.which(name, path=str(Path(node).parent)))
+    monkeypatch.setattr(hl, '_npm_global_roots', lambda: [])
     command = hl._find_launch_command()
     assert command is not None and "web" in command
     allowed = ("node", "node.exe", "npx", "npx.cmd")

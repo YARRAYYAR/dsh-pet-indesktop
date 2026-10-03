@@ -106,7 +106,7 @@ def test_exec_settings_builds_standalone_dialog(tmp_path, monkeypatch):
         app.setQuitOnLastWindowClosed(previous)
     assert _AutoCloseDialog.captured["standalone"] is True
     assert _AutoCloseDialog.captured["parent"] is None
-    assert _AutoCloseDialog.captured["include_ai"] is True
+    assert _AutoCloseDialog.captured["include_ai"] is False
     # 锁文件用完即释放（QLockFile 解锁会删文件），主进程据此判定设置页已关闭
     assert not (config.dir / "settings.lock").exists()
 

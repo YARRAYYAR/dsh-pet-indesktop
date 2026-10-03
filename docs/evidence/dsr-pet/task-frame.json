@@ -1,0 +1,47 @@
+{
+  "command": "QT_QPA_PLATFORM=cocoa PYTHONPATH=. .venv/bin/python scripts/verify_seeky_task_frame.py --label task-frame",
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Fresh temporary config and Codex JSONL fixture; real Cocoa app, standalone settings, file watcher and local IPC",
+  "reset": "Fresh temporary directory per run; main app shut down after run",
+  "inputs": "Warm colors, 140%; 100 previews across 80/160%; unwritable config path; reset; long question; completion; invalid stored colors/NaN",
+  "assertions": "Controls persist; failure rolls back and displays error; defaults recover; full question and Open button remain; completion expires",
+  "platform": "cocoa",
+  "checks": {
+    "saved_style": {
+      "background": "#f3e7d0",
+      "accent": "#805c40",
+      "scale": 140
+    },
+    "preview_100_median_ms": 4.895041000054334,
+    "preview_100_max_ms": 14.88545900065219,
+    "preview_100_rss_delta_bytes": 8372224,
+    "preview_decoder_children": 1,
+    "save_failure_reverted": true,
+    "question_color_actual": "#f3e7d0",
+    "disk_style_before_question": {
+      "background": "#f3e7d0",
+      "accent": "#805c40",
+      "scale": 140
+    },
+    "main_style_before_question": {
+      "background": "#f3e7d0",
+      "accent": "#805c40",
+      "scale": 140
+    },
+    "question_size": [
+      448,
+      381
+    ],
+    "question_color": "#f3e7d0",
+    "completion_timeout_ms": 6924,
+    "completion_hidden": true,
+    "reopened_style": {
+      "background": "#f3e7d0",
+      "accent": "#805c40",
+      "scale": 140
+    },
+    "invalid_config_recovered": true
+  },
+  "errors": [],
+  "exit_status": 0
+}

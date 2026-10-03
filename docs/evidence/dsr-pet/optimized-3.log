@@ -1,0 +1,36 @@
+QSystemTrayIcon::setVisible: No Icon set
+WARNING:root:GUI 卡顿 311ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（311ms，4 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-196ms] verify_dsr_runtime.py:89:main <- app.py:1703:start <- app.py:1812:_create_ui_with_character_fallback <- app.py:572:_create_ui <- app.py:537:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-122ms] verify_dsr_runtime.py:126:main <- verify_dsr_runtime.py:123:steady <- window.py:1712:switch_clip <- window.py:1675:_switch <- window.py:2075:_rebuild_frame <- window.py:1997:_frame_signature
+WARNING:pet.gui_stall_sampler:  [t-60ms] verify_dsr_runtime.py:256:<module> <- verify_dsr_runtime.py:249:main
+single
+ERROR:root:启动设置控制通道失败
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/pet/app.py", line 548, in _build_window
+    self.settings_commands = SettingsCommandServer(
+                             ~~~~~~~~~~~~~~~~~~~~~^
+        self.config, self._dispatch_settings_command, self.shell.app)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ray/Documents/New project/dsr-pet/pet/settings_commands.py", line 27, in __init__
+    raise RuntimeError('桌宠控制通道已被占用')
+RuntimeError: 桌宠控制通道已被占用
+multi
+WARNING:root:GUI 卡顿 286ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（286ms，5 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-303ms] verify_dsr_runtime.py:256:<module> <- verify_dsr_runtime.py:249:main
+WARNING:pet.gui_stall_sampler:  [t-243ms] app.py:504:_build_window <- app.py:404:_create_library <- library.py:139:__init__ <- catalog.py:206:resolve_character_video_dir <- _abc.py:465:is_dir <- _local.py:515:stat
+WARNING:pet.gui_stall_sampler:  [t-183ms] verify_dsr_runtime.py:249:main <- verify_dsr_runtime.py:161:<lambda> <- verify_dsr_runtime.py:142:set_stage <- app.py:2768:spawn_in_process_window <- app.py:537:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-2ms] verify_dsr_runtime.py:256:<module> <- verify_dsr_runtime.py:249:main
+WARNING:root:GUI 卡顿 323ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（323ms，4 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-329ms] app.py:504:_build_window <- app.py:404:_create_library <- library.py:139:__init__ <- catalog.py:206:resolve_character_video_dir <- _abc.py:465:is_dir <- _local.py:515:stat
+WARNING:pet.gui_stall_sampler:  [t-268ms] verify_dsr_runtime.py:249:main <- verify_dsr_runtime.py:161:<lambda> <- verify_dsr_runtime.py:142:set_stage <- app.py:2768:spawn_in_process_window <- app.py:537:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-87ms] verify_dsr_runtime.py:256:<module> <- verify_dsr_runtime.py:249:main
+WARNING:root:GUI 卡顿 228ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（228ms，3 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-269ms] verify_dsr_runtime.py:249:main <- verify_dsr_runtime.py:161:<lambda> <- verify_dsr_runtime.py:142:set_stage <- app.py:2768:spawn_in_process_window <- app.py:537:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-88ms] verify_dsr_runtime.py:256:<module> <- verify_dsr_runtime.py:249:main
+switch
+settings
+return

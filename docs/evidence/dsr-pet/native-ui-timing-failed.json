@@ -1,0 +1,12 @@
+{
+  "command": "QT_QPA_PLATFORM=cocoa PYTHONPATH=. .venv/bin/python .scratch/dsr-pet/native_actions.py",
+  "setup": "Temporary Config, real main + separate settings child, actual HD assets, Cocoa, seed defaults",
+  "assertions": [
+    "106 actions",
+    "play wave and observe live current action"
+  ],
+  "actual": "At fixed two-second sample current action did not equal requested action; failed callback exited child with 0 and left older JSON untouched. The older JSON is not evidence for this run.",
+  "exit_status": 0,
+  "behavioral_pass": false,
+  "log": "native-ui-timing-failed.log"
+}

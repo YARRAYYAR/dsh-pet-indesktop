@@ -1,0 +1,17 @@
+{
+  "command": "QT_QPA_PLATFORM=cocoa PYTHONPATH=. .venv/bin/python scripts/verify_dsr_actions.py",
+  "setup": "Temporary Config, real main and separate settings process; 106 HD actions",
+  "reset": "Fresh temporary Config per run; input passes through verification windows",
+  "platform": "cocoa",
+  "dpr": 2.0,
+  "checks": {
+    "actions": 106,
+    "selected": "点击回应-元气挥手",
+    "status": "已播放：点击回应-元气挥手",
+    "current": "点击回应-元气挥手",
+    "minimum_footer_visible": true,
+    "island_entry_absent": true
+  },
+  "errors": [],
+  "exit_status": 0
+}

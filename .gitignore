@@ -27,6 +27,8 @@ assets/prompt/
 
 # Windows 安装包图标（本地生成，入库保证克隆后可构建）
 !assets/icon.ico
+!assets/brand/
+!assets/brand/**
 
 # PyInstaller 构建产物
 build/
@@ -56,6 +58,7 @@ packaging/build_variant.py
 **/.DS_Store
 .serena/
 .scratch/
+.venv
 
 # Node 依赖树：桥接插件为零依赖红线，本地 pnpm install 残留不许入库——
 # 否则原地 import 门禁蹭到它假绿，且 PyInstaller --add-data 会把 junction 垃圾带进产物

@@ -1,0 +1,25 @@
+QSystemTrayIcon::setVisible: No Icon set
+WARNING:root:GUI 卡顿 233ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（233ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-117ms] verify_dsr_runtime.py:89:main <- app.py:1667:start <- app.py:1776:_create_ui_with_character_fallback <- app.py:562:_create_ui <- app.py:536:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-65ms] verify_dsr_runtime.py:256:<module> <- verify_dsr_runtime.py:249:main
+single
+multi
+WARNING:root:GUI 卡顿 253ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（253ms，4 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-280ms] verify_dsr_runtime.py:256:<module> <- verify_dsr_runtime.py:249:main
+WARNING:pet.gui_stall_sampler:  [t-218ms] verify_dsr_runtime.py:142:set_stage <- app.py:2761:spawn_in_process_window <- app.py:536:_build_window <- window.py:1125:showEvent <- window.py:2173:_arm_dpr_change_watch <- window.py:2188:_wire_screen_dpi_signals
+WARNING:pet.gui_stall_sampler:  [t-147ms] app.py:2733:spawn_in_process_window <- slot_manager.py:196:acquire_pet_slot <- slot_manager.py:125:_try_acquire_slot_lock <- _local.py:731:mkdir <- _abc.py:465:is_dir <- _local.py:515:stat
+WARNING:pet.gui_stall_sampler:  [t-27ms] window.py:1706:switch_clip <- window.py:1675:_switch <- webm_clip.py:1590:start <- threading.py:979:start <- threading.py:659:wait <- threading.py:359:wait
+WARNING:root:GUI 卡顿 222ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（222ms，3 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-218ms] verify_dsr_runtime.py:142:set_stage <- app.py:2761:spawn_in_process_window <- app.py:536:_build_window <- window.py:1125:showEvent <- window.py:2173:_arm_dpr_change_watch <- window.py:2188:_wire_screen_dpi_signals
+WARNING:pet.gui_stall_sampler:  [t-148ms] app.py:2733:spawn_in_process_window <- slot_manager.py:196:acquire_pet_slot <- slot_manager.py:125:_try_acquire_slot_lock <- _local.py:731:mkdir <- _abc.py:465:is_dir <- _local.py:515:stat
+WARNING:pet.gui_stall_sampler:  [t-27ms] window.py:1706:switch_clip <- window.py:1675:_switch <- webm_clip.py:1590:start <- threading.py:979:start <- threading.py:659:wait <- threading.py:359:wait
+WARNING:root:GUI 卡顿 165ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（165ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-170ms] app.py:2733:spawn_in_process_window <- slot_manager.py:196:acquire_pet_slot <- slot_manager.py:125:_try_acquire_slot_lock <- _local.py:731:mkdir <- _abc.py:465:is_dir <- _local.py:515:stat
+WARNING:pet.gui_stall_sampler:  [t-50ms] window.py:1706:switch_clip <- window.py:1675:_switch <- webm_clip.py:1590:start <- threading.py:979:start <- threading.py:659:wait <- threading.py:359:wait
+switch
+settings
+return

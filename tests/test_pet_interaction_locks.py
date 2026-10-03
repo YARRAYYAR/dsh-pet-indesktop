@@ -371,6 +371,9 @@ def test_tray_menu_syncs_mouse_through_from_config(tmp_path):
         def go_default_corner(self):
             self.corner_calls += 1
 
+        def hide_speech_bubble(self):
+            self._speech_bubble.hide()
+
         def _speech_bubble(self):  # pragma: no cover - 占位
             raise NotImplementedError
 

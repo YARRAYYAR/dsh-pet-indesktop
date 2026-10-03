@@ -18,9 +18,11 @@ PYTHON_BIN="${PYTHON_BIN:-$(command -v python3 || echo python3)}"
 # 本机构建隔离依赖目录（scripts/ 下无安装脚本时用系统 python）；CI 走 pip
 # install 的系统环境，该目录不存在时直接用系统环境，不设 PYTHONPATH。
 BUILD_DEPS="$ROOT/build/.build-deps"
-DIST_DIR="$ROOT/build/macos"
+# FileProvider injects FinderInfo into Documents frameworks during signing.
+# Keep generated macOS bundles in the local cache, outside synced folders.
+DIST_DIR="$HOME/Library/Caches/dsr-pet-build/macos"
 WORK_DIR="$ROOT/build/.pyinstaller/macos"
-VARIANTS="webm-chat,webm,gif-chat,gif"
+VARIANTS="webm"
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -36,7 +38,7 @@ if [[ -d "$BUILD_DEPS/PyInstaller" ]]; then
     export PYINSTALLER_CONFIG_DIR="$ROOT/build/.pyinstaller/config"
 fi
 
-"$PYTHON_BIN" scripts/make_icon.py --icns
+"$PYTHON_BIN" scripts/make_icon.py --icns --source pet/resources/app-icon.png
 
 # 仅当要构建 gif 变体时才生成 GIF 素材（convert_to_gif 默认幂等：只转换
 # 缺失/过期的，CI 只构建 webm 变体时不会触发）。
@@ -50,12 +52,15 @@ IFS=',' read -ra variant_list <<< "$VARIANTS"
 for variant in "${variant_list[@]}"; do
     case "$variant" in
         webm-chat)  entry="packaging/pet_entry.py";            assets="assets/characters";       excludes="" ;;
-        webm)       entry="packaging/pet_entry_no_chat.py";    assets="assets/characters";       excludes="pet.chat,keyring" ;;
+        webm)       entry="packaging/pet_entry_no_chat.py";    assets="assets/characters";       excludes="pet.chat,keyring,pet.dynamic_island,pet.island_collision" ;;
         gif-chat)   entry="packaging/pet_entry.py";            assets="assets/characters_gif";   excludes="" ;;
-        gif)        entry="packaging/pet_entry_no_chat.py";    assets="assets/characters_gif";   excludes="pet.chat,keyring" ;;
+        gif)        entry="packaging/pet_entry_no_chat.py";    assets="assets/characters_gif";   excludes="pet.chat,keyring,pet.dynamic_island,pet.island_collision" ;;
         *) echo "未知变体: $variant" >&2; exit 1 ;;
     esac
     name="dsh-pet-standalone-$variant"
+    if [[ "$variant" == "webm" ]]; then
+        name="seeky· pet"
+    fi
     printf "VARIANT = '%s'\n" "$variant" > packaging/build_variant.py
 
     args=(
@@ -63,6 +68,8 @@ for variant in "${variant_list[@]}"; do
         --clean
         --onedir
         --windowed
+        --target-arch arm64
+        --osx-bundle-identifier com.ray.dsr-pet
         --paths .
         --distpath "$DIST_DIR"
         --workpath "$WORK_DIR"
@@ -80,6 +87,8 @@ for variant in "${variant_list[@]}"; do
         --add-data "pet/menu_templates:pet/menu_templates"
         --add-data "pet/persona_presets:pet/persona_presets"
         --add-data "integrations:integrations"
+        --add-data "pet/resources:pet/resources"
+        --add-data "THIRD_PARTY_NOTICES:."
     )
     # 设置页样式表：已在 modern_settings_dialog.py 内联（_settings_stylesheet）
     if [[ "$name" == *-chat ]]; then
@@ -102,6 +111,21 @@ for variant in "${variant_list[@]}"; do
     # dsh 插件树加载失败）：剥掉 --add-data 可能带入的 node_modules 残留，
     # 校验 dist 副本清单零依赖并跑 hermetic 冒烟（见 fix_bridge_bundle.py）。
     "$PYTHON_BIN" scripts/fix_bridge_bundle.py --app-dir "$DIST_DIR/$name.app"
+    "$PYTHON_BIN" - "$DIST_DIR/$name.app/Contents/Info.plist" <<'PY'
+import plistlib
+import sys
+from pathlib import Path
+from pet import __version__
+path = Path(sys.argv[1])
+data = plistlib.loads(path.read_bytes())
+data['CFBundleShortVersionString'] = __version__
+data['CFBundleVersion'] = '4.2.1.3'
+data['CFBundleDisplayName'] = 'seeky· pet'
+path.write_bytes(plistlib.dumps(data))
+PY
+    # Finder metadata inherited by this generated bundle prevents ad-hoc signing.
+    xattr -cr "$DIST_DIR/$name.app"
+    chflags -R nohidden "$DIST_DIR/$name.app"
     codesign --force --deep --sign - "$DIST_DIR/$name.app"
 done
 

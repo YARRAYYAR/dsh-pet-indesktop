@@ -1,0 +1,36 @@
+{
+  "command": "Cocoa QApplication plus typed objc_msgSend NSScreen read-only probe",
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Real built-in Mac screen",
+  "inputs": "NSScreen.frame/safeAreaInsets/auxiliaryTopLeftArea/RightArea",
+  "assertions": "Geometry query completes; nonzero top inset indicates physical notch",
+  "actual": [
+    {
+      "frame": [
+        0.0,
+        0.0,
+        1512.0,
+        982.0
+      ],
+      "auxiliaryTopLeftArea": [
+        0.0,
+        950.0,
+        665.0,
+        32.0
+      ],
+      "auxiliaryTopRightArea": [
+        850.0,
+        950.0,
+        662.0,
+        32.0
+      ],
+      "safeAreaInsets": [
+        32.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  ],
+  "exit_status": 0
+}

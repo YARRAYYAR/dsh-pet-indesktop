@@ -249,11 +249,21 @@ class ModernSettingsDialog(QDialog):
         # 没有桌宠窗口/AppShell 可依附。只影响下面几处显式分支，默认 False 时
         # 全部行为与改动前逐位一致。
         self.standalone = bool(standalone)
+        from .branding import NAME, brand_icon
+        from .settings_commands import SettingsCommandClient
+        from .settings_brand import add_identity, add_footer, expand_domain_navigation
+        self.command_client = SettingsCommandClient(config, self)
+        self.finished.connect(lambda _result: self.command_client.close())
         self.ai_page = None
         self.setProperty("modernStyle", True)
         self.setProperty("menuStyle", "modern")
-        self.setWindowTitle("桌宠设置")
-        self.resize(800, 560)
+        self.setProperty("modernDark", True)
+        # The native macOS title bar must use the same fixed dark appearance.
+        QApplication.instance().styleHints().setColorScheme(Qt.ColorScheme.Dark)
+        self.setWindowTitle(f"{NAME} · 设置")
+        self.setWindowIcon(brand_icon())
+        self.setProperty("settingsDark", True)
+        self.resize(1000, 680)
         self.setMinimumSize(720, 500)
         self._positioned_away = False
         self.setModal(False)
@@ -282,7 +292,7 @@ class ModernSettingsDialog(QDialog):
         self.save_exit_button.clicked.connect(self._save)
         self.save_exit_button.setAutoDefault(False)
         self.save_exit_button.setDefault(False)
-        sidebar_layout.addWidget(self.save_exit_button)
+        add_identity(self, sidebar_layout)
         self.search_edit = QLineEdit(sidebar_pane)
         self.search_edit.setObjectName("settingsSearch")
         self.search_edit.setPlaceholderText("搜索设置…")
@@ -302,6 +312,7 @@ class ModernSettingsDialog(QDialog):
         self.sidebar.setIconSize(QSize(18, 18))
         self.sidebar.setSpacing(2)
         sidebar_layout.addWidget(self.sidebar, 1)
+        add_footer(self, sidebar_layout)
 
         self.pages = QStackedWidget(self)
         body.addWidget(sidebar_pane)
@@ -310,7 +321,8 @@ class ModernSettingsDialog(QDialog):
 
         self._build_pet_controls()
         # 「文件识别」域控件在本模块构建（行数预算原因），见 settings_file_interpret。
-        self._build_file_interpret_controls()
+        if self.include_ai:
+            self._build_file_interpret_controls()
         # 「音乐播放器路径」控件同样在本模块构建（行数预算原因），见 settings_music。
         settings_music.create_music_player_controls(self)
         # 「随桌宠启动 dsh 服务」开关（origin/main #80 合入带回）：构建留在
@@ -321,91 +333,6 @@ class ModernSettingsDialog(QDialog):
         if self.config.instance_id:
             self.harness_autostart_check.setEnabled(False)
             self.harness_autostart_check.setToolTip("仅主桌宠可设置")
-
-        # 灵动岛控件构建保留在对话框本体，便于上游直接修改后上传。
-        island_cfg = self.config.get("dynamic_island", {})
-        if not isinstance(island_cfg, dict):
-            island_cfg = {}
-        self.island_enabled_check = ToggleSwitch(self)
-        self.island_enabled_check.setChecked(bool(island_cfg.get("enabled", False)))
-        self.island_icon_check = ToggleSwitch(self)
-        self.island_icon_check.setChecked(bool(island_cfg.get("show_icon", True)))
-        self.island_name_check = ToggleSwitch(self)
-        self.island_name_check.setChecked(bool(island_cfg.get("show_name", True)))
-        self.island_info_check = ToggleSwitch(self)
-        self.island_info_check.setChecked(bool(island_cfg.get("show_info", True)))
-        self.island_status_check = ToggleSwitch(self)
-        self.island_status_check.setChecked(bool(island_cfg.get("show_status", True)))
-        self.island_info_mode_select = ModernSelect(self, width=160)
-        for label, value in (
-            ("当前时间", "time"),
-            ("余额峰谷", "balance_tier"),
-            ("余额数值", "balance"),
-            ("自定义短文本", "custom"),
-        ):
-            self.island_info_mode_select.addItem(label, value)
-        self.island_info_mode_select.setCurrentData(str(island_cfg.get("info_mode") or "time"))
-        self.island_style_select = ModernSelect(self, width=160)
-        for label, value in (
-            ("黑色", "dark"),
-            ("白色", "light"),
-            ("玻璃质感", "glass"),
-        ):
-            self.island_style_select.addItem(label, value)
-        self.island_style_select.setCurrentData(str(island_cfg.get("style") or "dark"))
-        self.island_opacity_spin = BrowserDoubleSpinBox(self)
-        self.island_opacity_spin.setRange(0.4, 1.0)
-        self.island_opacity_spin.setSingleStep(0.05)
-        self.island_opacity_spin.setDecimals(2)
-        try:
-            _island_opacity = float(island_cfg.get("opacity", 1.0))
-        except (TypeError, ValueError):
-            _island_opacity = 1.0
-        self.island_opacity_spin.setValue(max(0.4, min(1.0, _island_opacity)))
-        self.island_accent_select = ModernSelect(self, width=160)
-        for label, value in (
-            ("海洋蓝", "blue"),
-            ("草绿", "green"),
-            ("葡萄紫", "purple"),
-            ("樱花粉", "pink"),
-            ("落日橙", "orange"),
-        ):
-            self.island_accent_select.addItem(label, value)
-        self.island_accent_select.setCurrentData(str(island_cfg.get("accent") or "blue"))
-        self.island_icon_select = ModernSelect(self, width=160)
-        # 标签用中文而不是 emoji 字符：下拉框自己也会渲染 emoji，一样要付
-        # DirectWrite 彩色字体栈的一次性税额（约 33MB），data 才是存的图标值
-        self.island_icon_select.addItem("鱼本体头像（推荐）", "auto")
-        for label, emoji in (
-            ("鲸鱼", "🐳"),
-            ("小鱼", "🐟"),
-            ("章鱼", "🐙"),
-            ("海豹", "🦭"),
-            ("企鹅", "🐧"),
-            ("小猫", "🐱"),
-            ("小狗", "🐶"),
-            ("星星", "🌟"),
-            ("闪电", "⚡"),
-            ("爱心", "❤️"),
-        ):
-            self.island_icon_select.addItem(label, emoji)
-        self.island_icon_select.setCurrentData(str(island_cfg.get("icon") or "auto"))
-        self.island_custom_text_edit = _line_edit(str(island_cfg.get("custom_text") or ""), width=220)
-        self.island_click_action_select = ModernSelect(self, width=160)
-        for label, value in (
-            ("展开快捷卡片", "expand"),
-            ("切换桌宠显隐", "toggle_pet"),
-        ):
-            self.island_click_action_select.addItem(label, value)
-        self.island_click_action_select.setCurrentData(str(island_cfg.get("click_action") or "expand"))
-        self.island_event_effects_check = ToggleSwitch(self)
-        self.island_event_effects_check.setChecked(bool(island_cfg.get("event_effects", True)))
-        self.island_hidden_chat_check = ToggleSwitch(self)
-        self.island_hidden_chat_check.setChecked(bool(island_cfg.get("hidden_chat", True)))
-        self.island_edge_dock_check = ToggleSwitch(self)
-        self.island_edge_dock_check.setChecked(bool(island_cfg.get("edge_dock", True)))
-        self.island_collision_check = ToggleSwitch(self)
-        self.island_collision_check.setChecked(bool(island_cfg.get("collision_enabled", True)))
 
         if include_ai:
             # 延迟 import：no-chat 打包变体 excludes=['pet.chat']，顶层导入会在
@@ -485,69 +412,6 @@ class ModernSettingsDialog(QDialog):
         general_layout.addStretch(1)
         self._add_page("常规", "settings", self._page_shell("常规", general_content))
 
-        island_content = QWidget()
-        island_layout = QVBoxLayout(island_content)
-        island_layout.setContentsMargins(0, 0, 0, 0)
-        island_layout.setSpacing(18)
-        island_layout.addWidget(
-            SettingsSection(
-                "灵动岛",
-                [
-                    SettingRow("dynamic_island_enabled", "启用灵动岛", "显示独立胶囊小窗；桌宠隐藏后仍可常驻。", self.island_enabled_check),
-                    SettingRow("dynamic_island_icon", "显示图标", "在胶囊左侧显示角色图标。", self.island_icon_check),
-                    SettingRow("dynamic_island_name", "显示名称", "显示当前角色名称。", self.island_name_check),
-                    SettingRow("dynamic_island_info", "显示信息槽", "显示时间/余额/自定义短文本等信息。", self.island_info_check),
-                    SettingRow("dynamic_island_status", "显示状态灯", "显示右侧状态圆点。", self.island_status_check),
-                    SettingRow("dynamic_island_info_mode", "信息槽内容", "选择信息槽显示的内容；自定义文本在下方填写。", self.island_info_mode_select),
-                    SettingRow(
-                        "dynamic_island_style",
-                        "背景风格",
-                        "黑色 / 白色 / 苹果式玻璃质感；配合下方不透明度可调出半透明质感（纯自绘，低占用）。",
-                        self.island_style_select,
-                    ),
-                    SettingRow("dynamic_island_opacity", "背景不透明度", "越低越透（0.4~1.0）；配合深色底在低占用下做出半透明质感。", self.island_opacity_spin),
-                    SettingRow("dynamic_island_accent", "主题色", "图标底圈、事件闪光、停靠描边共用的点缀色。", self.island_accent_select),
-                    SettingRow("dynamic_island_icon_value", "图标", "默认显示鱼本体头像；可选 emoji 图标，首次绘制会多占约 30MB 内存。", self.island_icon_select),
-                    SettingRow(
-                        "dynamic_island_custom_text", "自定义短文本", "信息槽选择“自定义短文本”时显示的内容。", self.island_custom_text_edit, stacked=True
-                    ),
-                    SettingRow(
-                        "dynamic_island_click_action",
-                        "单击行为",
-                        "单击胶囊：展开快捷卡片（余额/最近消息/快捷按钮）或直接切换桌宠显隐。",
-                        self.island_click_action_select,
-                    ),
-                    SettingRow(
-                        "dynamic_island_hidden_chat",
-                        "隐藏时对话气泡",
-                        "桌宠隐藏后岛变成对话入口：单击灵动岛弹出对话气泡，AI 回复到达时也会在岛上弹出预览（不抢焦点，超时自动收回）。",
-                        self.island_hidden_chat_check,
-                    ),
-                    SettingRow(
-                        "dynamic_island_event_effects",
-                        "事件动效",
-                        "AI 回复到达、余额刷新、峰谷切换时果冻弹跳提示；dsh 工作时状态灯变蓝。静止时零额外开销。",
-                        self.island_event_effects_check,
-                    ),
-                    SettingRow(
-                        "dynamic_island_edge_dock",
-                        "靠边半隐藏",
-                        "拖到屏幕任意边缘（上下左右）收成细条，鼠标靠近自动滑出；顶部被占时可停靠侧边。",
-                        self.island_edge_dock_check,
-                    ),
-                    SettingRow(
-                        "dynamic_island_collision",
-                        "果冻墙（参与碰撞）",
-                        "岛注册为静态碰撞体：肥鱼被甩到岛上会弹开，岛原地果冻摆动。岛的位置不会被撞动。",
-                        self.island_collision_check,
-                    ),
-                ],
-                island_content,
-            )
-        )
-        island_layout.addStretch(1)
-        self._add_page("灵动岛", "island", self._page_shell("灵动岛", island_content))
-
         behavior_content = QWidget()
         behavior_layout = QVBoxLayout(behavior_content)
         behavior_layout.setContentsMargins(0, 0, 0, 0)
@@ -601,6 +465,8 @@ class ModernSettingsDialog(QDialog):
                     SettingRow(
                         "edge_probe", "边缘探头", "拖到屏幕左/右边缘后自动以 45° 探头姿态窥视；点击真实角色会拉直约 5 秒后自动退回。", self.edge_probe_check
                     ),
+                    SettingRow('top_flip_enabled', '贴顶吸附与倒立', '拖到屏幕顶端后翻转并停留；向下拖动即可回正。', self.top_flip_check),
+                    SettingRow('top_flip_exposure', '倒立时藏入顶部', '50% 藏入约半个身体，露出头部附近；自动区分刘海下沿与普通顶部。', self.top_flip_exposure_spin),
                 ],
                 behavior_content,
             )
@@ -616,12 +482,6 @@ class ModernSettingsDialog(QDialog):
                         self.spawn_inherit_size_check,
                     ),
                     SettingRow("spawn_scale", "小肥鱼大小", "关闭“继承大小”时，新生成小肥鱼使用的桌面尺寸。", self.spawn_scale_combo, stacked=True),
-                    SettingRow(
-                        "spawn_inherit_dynamic_island",
-                        "生小肥鱼继承灵动岛",
-                        "默认关闭：新生成的小肥鱼不打开自己的灵动岛。开启后小肥鱼继承主肥鱼的灵动岛设置。",
-                        self.spawn_inherit_dynamic_island_check,
-                    ),
                     SettingRow(
                         "clear_spawned_pets", "一键退出子肥鱼", "关闭所有已生成的小肥鱼，并删除它们的配置、会话与待办数据。", self.clear_spawned_pets_btn
                     ),
@@ -924,6 +784,7 @@ class ModernSettingsDialog(QDialog):
         self.festival_page = FestivalSettingsPage(self.config, self)
         self._rebuild_domain_navigation()
         self.sidebar.currentRowChanged.connect(self.pages.setCurrentIndex)
+        self.sidebar.currentRowChanged.connect(lambda row: expand_domain_navigation(self, row))
         self.sidebar.setCurrentRow(0)
         self._search_rows = self.findChildren(SettingRow)
         self._search_matches: list[SettingRow] = []
@@ -932,10 +793,6 @@ class ModernSettingsDialog(QDialog):
 
         self.self_talk_check.toggled.connect(self._update_self_talk_controls)
         self.menu_translucent_check.toggled.connect(self._update_translucency_controls)
-        self.island_enabled_check.toggled.connect(self._update_island_controls)
-        self.island_icon_check.toggled.connect(self._update_island_icon_controls)
-        self.island_info_check.toggled.connect(self._update_island_info_controls)
-        self.island_info_mode_select.currentIndexChanged.connect(self._update_island_custom_text)
         self.egg_enabled_check.toggled.connect(self._update_egg_controls)
         self.egg_enabled_check.toggled.connect(self._sync_menu_action_states)
         self.quick_launch_editor.changed.connect(self._sync_menu_action_states)
@@ -950,7 +807,6 @@ class ModernSettingsDialog(QDialog):
         self._update_self_talk_controls(self.self_talk_check.isChecked())
         self._update_click_self_talk_controls(self.click_self_talk_check.isChecked())
         self._update_translucency_controls(self.menu_translucent_check.isChecked())
-        self._update_island_controls(self.island_enabled_check.isChecked())
         self._update_egg_controls(self.egg_enabled_check.isChecked())
         self._sync_menu_action_states()
         self._update_collision_controls(self.collision_enabled_check.isChecked())
@@ -1258,18 +1114,6 @@ class ModernSettingsDialog(QDialog):
             "click_talk_bindings",
         )
         self._set_setting_rows_visible(keys, enabled, dependency="click_self_talk")
-
-    def _update_island_controls(self, enabled: bool) -> None:
-        settings_pet_controls._update_island_controls(self, enabled)
-
-    def _update_island_icon_controls(self, enabled: bool) -> None:
-        settings_pet_controls._update_island_icon_controls(self, enabled)
-
-    def _update_island_info_controls(self, enabled: bool) -> None:
-        settings_pet_controls._update_island_info_controls(self, enabled)
-
-    def _update_island_custom_text(self, _index: int | None = None) -> None:
-        settings_pet_controls._update_island_custom_text(self, _index)
 
     def _update_egg_controls(self, enabled: bool) -> None:
         self._set_setting_rows_visible(
@@ -1588,18 +1432,14 @@ class ModernSettingsDialog(QDialog):
         layout = QVBoxLayout(page)
         layout.setContentsMargins(30, 24, 28, 20)
         layout.setSpacing(12)
-        heading_host = QWidget(page)
-        heading_host.setObjectName("pageHeader")
-        heading_host.setMaximumWidth(content_max_width)
-        heading_host.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
-        heading_layout = QVBoxLayout(heading_host)
-        heading_layout.setContentsMargins(0, 0, 0, 0)
-        heading_layout.setSpacing(0)
-        heading = QLabel(title, heading_host)
-        heading.setObjectName("pageTitle")
-        heading_layout.addWidget(heading)
+        from .settings_brand import page_heading
+        heading_host = page_heading(page, title, content_max_width)
         page.heading_host = heading_host
         layout.addWidget(heading_host, 0, Qt.AlignmentFlag.AlignHCenter)
+        divider = QFrame(page)
+        divider.setObjectName('pageHeaderDivider')
+        divider.setFixedHeight(1)
+        layout.addWidget(divider)
         scroll = QScrollArea(page)
         scroll.setObjectName("settingsScroll")
         scroll.setWidgetResizable(True)
@@ -1681,12 +1521,18 @@ class ModernSettingsDialog(QDialog):
                 ("音乐关联", claim("music_sing", "music_lyric", "music_lyric_lead")
                  + settings_music.build_music_player_rows(self)),
                 ("拖拽与弹射", claim("drag_physics", "throw_strength", "slingshot_enabled", "lock_position", "shift_drag")),
-                ("边缘探头", claim("edge_probe")),
-                ("生小肥鱼", claim("spawn_inherit_size", "spawn_scale", "spawn_inherit_dynamic_island", "clear_spawned_pets")),
+                ("屏幕边缘", claim("edge_probe", "top_flip_enabled", "top_flip_exposure")),
+                ("生小肥鱼", claim("spawn_inherit_size", "spawn_scale", "clear_spawned_pets")),
                 ("多开碰撞", collision_primary),
                 ("碰撞参数（高级）", collision_advanced, True),
             ]
         )
+        from .settings_actions import ActionLibrary
+        self.pet_tabs = SettingsTabContainer(self)
+        self.pet_tabs.addTab("controls", "常用控制", pet)
+        self.action_library = ActionLibrary(self.command_client, self)
+        self.pet_tabs.addTab("actions", "动作库", self.action_library)
+        pet = self.pet_tabs
         # 「互动」域（2026-09-22 分页）：整页在本模块构建（settings_interaction，
         # 行数预算原因），页内用任务标签分成「点击与音效 / 自言自语」两个同级任务；
         # 行不进 all_rows 快照，因此不需要 claim，也不会掉进「待分类（开发期）」。
@@ -1735,10 +1581,6 @@ class ModernSettingsDialog(QDialog):
             ),
         )
         menu.setProperty("contentMaxWidth", 1240)
-        island_rows = list(old_pages.get("灵动岛", QWidget()).findChildren(SettingRow))
-        claimed.update(island_rows)
-        desktop_components = page_content([("桌面胶囊（灵动岛）", island_rows)])
-
         ai_sections = None
         if self.ai_page is not None:
             balance_rows = claim_prefix("balance_")
@@ -1894,7 +1736,7 @@ class ModernSettingsDialog(QDialog):
 
         # 「文件识别」域（2026-09-19 新增）：拖文件解读的设置集中在此独立页。
         # 行在本模块构建（settings_file_interpret，行数预算原因），不走 claim。
-        file_interpret = settings_file_interpret.build_file_interpret_page(self)
+        file_interpret = settings_file_interpret.build_file_interpret_page(self) if self.include_ai else None
 
         # Preserve any newly added row until it receives an explicit domain decision.
         leftovers = [row for row in all_rows if row not in claimed and (self.ai_page is None or not self.ai_page.isAncestorOf(row))]
@@ -1910,12 +1752,14 @@ class ModernSettingsDialog(QDialog):
             "桌宠": pet,
             "互动": interaction,
             "菜单": menu,
-            "桌面组件": desktop_components,
             "AI 与对话": ai_sections,
             "自动化与联动": automation,
             "语音": voice,
             "文件识别": file_interpret,
         }
+        from .settings_codex import CodexConnectionPage
+        self.codex_page = CodexConnectionPage(self.config, self.command_client, self)
+        domain_content['连接'] = self.codex_page
         for label, icon in SETTINGS_DOMAIN_NAV:
             content = domain_content.get(label)
             if content is None:
@@ -1984,10 +1828,10 @@ class ModernSettingsDialog(QDialog):
         return super().eventFilter(watched, event)
 
     def _apply_selected_theme(self, *_args) -> None:
-        theme = str(self.menu_theme_select.currentData() or "system")
-        dark = theme == "dark" or (theme == "system" and _system_dark())
-        self.setProperty("settingsDark", dark)
-        self.setStyleSheet(_settings_stylesheet(theme))
+        from .settings_brand import apply_dark_palette
+        self.setProperty("settingsDark", True)
+        apply_dark_palette(self)
+        self.setStyleSheet(_settings_stylesheet("dark"))
         for control in self.findChildren(ModernSelect):
             if control._popup is not None:
                 control._popup.setStyleSheet(control.popupStyleSheet())
@@ -2050,7 +1894,6 @@ class ModernSettingsDialog(QDialog):
         self.config.set("scale", float(self.scale_combo.currentData()))
         self.config.set("spawn_inherit_size", self.spawn_inherit_size_check.isChecked())
         self.config.set("spawn_scale", float(self.spawn_scale_combo.currentData()))
-        self.config.set("spawn_inherit_dynamic_island", self.spawn_inherit_dynamic_island_check.isChecked())
         self.config.set("on_top", self.on_top_check.isChecked())
         if self.dock_icon_check is not None:
             self.config.set("show_dock_icon", self.dock_icon_check.isChecked())
@@ -2085,34 +1928,7 @@ class ModernSettingsDialog(QDialog):
                 click_sound_pack,
                 data_dir=self.config.dir,
             )
-        existing_island = self.config.get("dynamic_island", {})
-        if not isinstance(existing_island, dict):
-            existing_island = {}
-        self.config.set(
-            "dynamic_island",
-            {
-                "enabled": self.island_enabled_check.isChecked(),
-                "show_icon": self.island_icon_check.isChecked(),
-                "show_name": self.island_name_check.isChecked(),
-                "show_info": self.island_info_check.isChecked(),
-                "info_mode": str(self.island_info_mode_select.currentData() or "time"),
-                "custom_text": self.island_custom_text_edit.text().strip(),
-                "show_status": self.island_status_check.isChecked(),
-                "style": str(self.island_style_select.currentData() or "dark"),
-                "opacity": float(self.island_opacity_spin.value()),
-                "accent": str(self.island_accent_select.currentData() or "blue"),
-                "icon": str(self.island_icon_select.currentData() or "auto"),
-                "click_action": str(self.island_click_action_select.currentData() or "expand"),
-                "hidden_chat": self.island_hidden_chat_check.isChecked(),
-                "event_effects": self.island_event_effects_check.isChecked(),
-                "edge_dock": self.island_edge_dock_check.isChecked(),
-                "collision_enabled": self.island_collision_check.isChecked(),
-                # 拖拽落点写入的停靠边与位置：设置页不回写，原样保留。
-                "dock_edge": existing_island.get("dock_edge", "none"),
-                "x": existing_island.get("x"),
-                "y": existing_island.get("y"),
-            },
-        )
+        self.config.set("dynamic_island", {**self.config.get("dynamic_island"), "enabled": False})
         if self.click_balance_check is not None:
             self.config.set("click_show_balance", self.click_balance_check.isChecked())
         self.config.set("click_show_self_talk", self.click_self_talk_check.isChecked())
@@ -2131,6 +1947,8 @@ class ModernSettingsDialog(QDialog):
         self.config.set("golden_spin_on_click", self.golden_spin_click_check.isChecked())
         self.config.set("golden_spin_direct", self.golden_spin_direct_check.isChecked())
         self.config.set("edge_probe_enabled", self.edge_probe_check.isChecked())
+        self.config.set('top_flip_enabled', self.top_flip_check.isChecked())
+        self.config.set('top_flip_exposure', self.top_flip_exposure_spin.value() / 100)
         if self.balance_refresh_spin is not None:
             self.config.set("balance_refresh_minutes", int(self.balance_refresh_spin.value()))
             self.config.set(

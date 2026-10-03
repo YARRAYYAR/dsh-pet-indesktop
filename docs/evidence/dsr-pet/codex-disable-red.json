@@ -1,0 +1,42 @@
+{
+  "command": "QT_QPA_PLATFORM=cocoa PYTHONPATH=. .venv/bin/python scripts/verify_dsr_features.py",
+  "setup": "Temporary Config and CODEX_HOME; real main window and QLocalServer; no user configuration writes",
+  "reset": "Fresh temporary directories on each run; QApplication shutdown closes services",
+  "platform": "cocoa",
+  "dpr": 2.0,
+  "codex_events_are_local_fixture": true,
+  "checks": {
+    "ceiling_angle": 180.0,
+    "ceiling_x_preserved": true,
+    "ceiling_timer_stopped": true,
+    "visible_ceiling_window_height": 119,
+    "drag_down_angle": 0.0,
+    "question_sticky": true,
+    "question_button": "打开 Codex",
+    "disabled_question_cleared": false,
+    "disabled_polling_stopped": true,
+    "codex_events": [
+      {
+        "state": "working",
+        "text": "Codex 正在工作"
+      },
+      {
+        "state": "question",
+        "text": "联动验收：选择灰色还是蓝色？"
+      }
+    ],
+    "real_local_codex_state": {
+      "state": "working",
+      "session_id": "redacted-local-session",
+      "project": "New project"
+    },
+    "poll_100_calls_median_ms": 0.014250000049287337,
+    "poll_100_calls_max_ms": 0.023541000018667546,
+    "initial_local_discovery_ms": 5.469542000014371
+  },
+  "errors": [
+    "Disabling Codex left its question bubble visible"
+  ],
+  "exit_status": 1,
+  "publication_note": "Real local session identifiers redacted; original evidence preserved privately in ignored .scratch."
+}

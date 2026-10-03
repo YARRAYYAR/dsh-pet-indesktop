@@ -1,0 +1,30 @@
+{
+  "command": "QT_QPA_PLATFORM=cocoa PYTHONPATH=. .venv/bin/python scripts/verify_dsr_switch_cleanup.py",
+  "setup": "Temporary Config; native main window; actual 106 HD assets; real QLocalServer request",
+  "reset": "Fresh temporary configuration; QApplication shutdown releases services",
+  "assertions": "Successful play stops the interrupted clip/timer and releases its queued buffers; new clip runs",
+  "checks": {
+    "response": {
+      "ok": true,
+      "data": {
+        "requested": "点击回应-元气挥手",
+        "current": "点击回应-元气挥手"
+      }
+    },
+    "previous_running": false,
+    "previous_timer_active": false,
+    "current_running": true,
+    "current_action": "点击回应-元气挥手",
+    "previous_queued_bytes": 0,
+    "original_queue_released": false,
+    "original_queued_bytes": 7372800,
+    "retired_reader_alive": [
+      true
+    ]
+  },
+  "errors": [
+    "Interrupted decoder retained its queued frame buffers"
+  ],
+  "exit_status": 1,
+  "note": "Recovered from the tool-returned JSON of the detached-queue diagnostic; fixed 300ms was too early for asynchronous retirement. Final probe waits for actual reader completion."
+}

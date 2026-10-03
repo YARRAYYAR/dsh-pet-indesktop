@@ -1,0 +1,21 @@
+QSystemTrayIcon::setVisible: No Icon set
+WARNING:root:GUI 卡顿 212ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（212ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-111ms] verify_dsr_runtime.py:89:main <- app.py:1667:start <- app.py:1776:_create_ui_with_character_fallback <- app.py:562:_create_ui <- app.py:536:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-56ms] verify_dsr_runtime.py:256:<module> <- verify_dsr_runtime.py:249:main
+single
+multi
+WARNING:root:GUI 卡顿 205ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（205ms，4 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-209ms] verify_dsr_runtime.py:256:<module> <- verify_dsr_runtime.py:249:main
+WARNING:pet.gui_stall_sampler:  [t-148ms] verify_dsr_runtime.py:142:set_stage <- app.py:2761:spawn_in_process_window <- app.py:536:_build_window <- window.py:1125:showEvent <- window.py:2173:_arm_dpr_change_watch <- window.py:2188:_wire_screen_dpi_signals
+WARNING:pet.gui_stall_sampler:  [t-84ms] verify_dsr_runtime.py:249:main <- verify_dsr_runtime.py:161:<lambda> <- verify_dsr_runtime.py:142:set_stage <- app.py:2768:spawn_in_process_window <- app.py:2976:_refresh_tray_menu <- app.py:3233:_build_tray
+WARNING:pet.gui_stall_sampler:  [t-7ms] window.py:1706:switch_clip <- window.py:1675:_switch <- webm_clip.py:1590:start <- threading.py:979:start <- threading.py:659:wait <- threading.py:359:wait
+WARNING:root:GUI 卡顿 187ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（187ms，3 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-180ms] verify_dsr_runtime.py:142:set_stage <- app.py:2761:spawn_in_process_window <- app.py:536:_build_window <- window.py:1125:showEvent <- window.py:2173:_arm_dpr_change_watch <- window.py:2188:_wire_screen_dpi_signals
+WARNING:pet.gui_stall_sampler:  [t-116ms] verify_dsr_runtime.py:249:main <- verify_dsr_runtime.py:161:<lambda> <- verify_dsr_runtime.py:142:set_stage <- app.py:2768:spawn_in_process_window <- app.py:2976:_refresh_tray_menu <- app.py:3233:_build_tray
+WARNING:pet.gui_stall_sampler:  [t-38ms] window.py:1706:switch_clip <- window.py:1675:_switch <- webm_clip.py:1590:start <- threading.py:979:start <- threading.py:659:wait <- threading.py:359:wait
+switch
+settings
+return

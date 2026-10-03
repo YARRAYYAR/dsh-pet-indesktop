@@ -773,6 +773,7 @@ class TestHarnessGlobalRoots:
         # 全局 dsh，故此缺陷只在本地暴露）。与同文件 POSIX 用例一致地清空静态
         # 候选，保证断言只反映「版本管理器根也能被找到」这一条产品语义。
         monkeypatch.setattr(node_runtime, "_WINDOWS_NODE_MODULES", ())
+        monkeypatch.setattr(hl, 'static_node_modules_roots', lambda: [])
         monkeypatch.setattr(
             hl, "_which", lambda name: "C:/nodejs/node.exe" if name == "node" else None
         )

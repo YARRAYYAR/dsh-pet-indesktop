@@ -124,6 +124,9 @@ class FakeLibrary:
 
 
 class _FakeScreen:
+    def geometry(self):
+        return self.availableGeometry()
+
     def availableGeometry(self):
         return QRect(0, 0, 4000, 2000)
 

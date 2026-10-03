@@ -101,9 +101,10 @@ def prepare_icon_image(source_img, side: int = 256):
 def main() -> int:
     parser = argparse.ArgumentParser(description="生成应用图标")
     parser.add_argument("--icns", action="store_true", help="额外生成 macOS .icns（需 iconutil）")
+    parser.add_argument('--source', type=Path, help='Use an existing square image without cropping')
     args = parser.parse_args()
 
-    if not IDLE_WEBM.is_file():
+    if args.source is None and not IDLE_WEBM.is_file():
         print(f"未找到待机动画: {IDLE_WEBM}")
         return 1
     try:
@@ -112,21 +113,34 @@ def main() -> int:
         print(f"缺少 Pillow: {exc}")
         return 1
 
-    print(f"提取首帧: {IDLE_WEBM.name}")
-    try:
-        frame, frame_w, frame_h = extract_frame(IDLE_WEBM)
-    except ImportError as exc:  # pragma: no cover
-        print(f"缺少 imageio-ffmpeg: {exc}")
-        return 1
-    if len(frame) != frame_w * frame_h * 4:
-        print(f"帧尺寸异常: {len(frame)} bytes（期望 {frame_w}x{frame_h}）")
-        return 1
+    if args.source is not None:
+        from PySide6.QtCore import QByteArray, QBuffer, QIODevice
+        from PySide6.QtGui import QImage
+        from pet.branding import mac_icon_image
+        import io
 
-    try:
-        img = prepare_icon_image(Image.frombytes("RGBA", (frame_w, frame_h), frame))
-    except ValueError as exc:
-        print(str(exc))
-        return 1
+        rounded = mac_icon_image(QImage(str(args.source)))
+        rounded.save(str(ROOT / 'pet' / 'resources' / 'app-icon-mac.png'))
+        encoded = QByteArray()
+        buffer = QBuffer(encoded)
+        buffer.open(QIODevice.OpenModeFlag.WriteOnly)
+        rounded.save(buffer, 'PNG')
+        img = Image.open(io.BytesIO(bytes(encoded))).convert('RGBA')
+    else:
+        print(f"提取首帧: {IDLE_WEBM.name}")
+        try:
+            frame, frame_w, frame_h = extract_frame(IDLE_WEBM)
+        except ImportError as exc:  # pragma: no cover
+            print(f"缺少 imageio-ffmpeg: {exc}")
+            return 1
+        if len(frame) != frame_w * frame_h * 4:
+            print(f"帧尺寸异常: {len(frame)} bytes（期望 {frame_w}x{frame_h}）")
+            return 1
+        try:
+            img = prepare_icon_image(Image.frombytes("RGBA", (frame_w, frame_h), frame))
+        except ValueError as exc:
+            print(str(exc))
+            return 1
 
     # 生成多尺寸 ICO（手工构造以控制帧顺序：Pillow 会强制升序，首帧必为 16x16，
     # 导致看图软件/资源管理器预览显示成小图标；这里让 256 排第一）

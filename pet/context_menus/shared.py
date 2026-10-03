@@ -593,9 +593,8 @@ class _MusicLaunchBridge(QObject):
     """「打开播放器」worker → GUI 的气泡桥（与 proactive 的 _WatcherBridge 同款）。
 
     后台线程只 emit；槽在 GUI 线程执行——跨线程直接碰 Qt 控件是未定义行为。
-    真实宿主（PetWindow 是 QObject）走 Qt 父子关系保活；非 QObject 宿主（测试
-    替身/最小外壳）没有 parent，由 :func:`_music_launch_bridge` 留一份强引用，
-    等 queued 信号投递完成后在槽里自删。
+    桥独立于宿主窗口保活，直到 worker 收工：窗口先被销毁时不能让后台
+    emit 与 QObject 析构竞争（原生 Qt 会崩溃，不能靠 RuntimeError 捕获）。
     """
 
     notice = Signal(str)
@@ -604,15 +603,15 @@ class _MusicLaunchBridge(QObject):
     _worker_done = Signal()
 
     def __init__(self, pet) -> None:
-        parent = pet if isinstance(pet, QObject) else None
-        super().__init__(parent)
+        super().__init__()
         self._pet = pet
         self.notice.connect(self._show_notice)
         self._worker_done.connect(self._release)
 
     @Slot(str)
     def _show_notice(self, text: str) -> None:
-        _LAUNCH_BRIDGES.discard(self)
+        if isinstance(self._pet, QObject) and not shiboken6.isValid(self._pet):
+            return
         show = getattr(self._pet, "show_bubble", None)
         if callable(show):
             try:
@@ -627,14 +626,13 @@ class _MusicLaunchBridge(QObject):
         self.deleteLater()
 
 
-# 非 QObject 宿主的强引用兜底：没有 Qt parent，不留住就被 GC 掉、queued 信号丢失。
+# 在途 worker 拥有桥；只有 GUI 线程的完成槽解除保活。
 _LAUNCH_BRIDGES: set = set()
 
 
 def _music_launch_bridge(pet) -> _MusicLaunchBridge:
     bridge = _MusicLaunchBridge(pet)
-    if bridge.parent() is None:
-        _LAUNCH_BRIDGES.add(bridge)
+    _LAUNCH_BRIDGES.add(bridge)
     return bridge
 
 
@@ -663,9 +661,8 @@ def _launch_player_and_play(player_key: str, pet) -> None:
         try:
             exe = music_players.find_player(player_key, manual)
             if not exe:
-                # 桥的生命周期挂在宿主窗口上：浅扫期间窗口被销毁（切换形象/退出）
-                # 时它已经是个死对象，emit 会抛 RuntimeError（同 agent_link 的
-                # 防护写法）。这里必须吞掉——否则 daemon 线程以未捕获异常收尾。
+                # 桥独立持有到 worker 完成；窗口已关闭时 GUI 槽跳过提示。
+                # 进程退出中的 Qt teardown 仍可能让 emit 抛 RuntimeError。
                 try:
                     bridge.notice.emit(f"找不到{label}：可在 设置 → 桌宠 → 音乐关联 里指定它的程序位置")
                 except RuntimeError:
@@ -692,7 +689,7 @@ def _launch_player_and_play(player_key: str, pet) -> None:
             try:
                 bridge._worker_done.emit()
             except RuntimeError:
-                pass  # 宿主窗口已销毁，桥随之一并没了
+                pass  # 进程退出时 Qt teardown 可以先于 daemon worker 完成
 
     threading.Thread(target=worker, name="music-launch", daemon=True).start()
 

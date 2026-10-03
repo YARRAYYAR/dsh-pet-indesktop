@@ -1,0 +1,28 @@
+{
+  "checks": [
+    {
+      "path": "docs/evidence/dsr-pet/tests-seeky-final.log",
+      "original_sha256": "1c8132473775d6152d3ce1a1418056ef66e5b3790967bffa74ae69c4c3c6b321",
+      "published_sha256": "5c0b697633a11644900e48d7ad13d0efc94e0f1828861120dccf06d2c68f6ee5",
+      "transform": "Remove trailing whitespace from log lines; original private copy retained"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/tests-parallel-failed.log",
+      "original_sha256": "96688b5bcba5aadc4d86472d1e6abfbe7b9e34a5d7d38fbfe28c409787d6f3d3",
+      "published_sha256": "9946e2a6c58f9dbf73b3b19516624a87fae7f5ae4933b2f18342069f6610e8de",
+      "transform": "Remove trailing whitespace from log lines; original private copy retained"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/native-ui-timing-failed.log",
+      "original_sha256": "fe6631d38a5ad670886ddf591881fee97adc5ed46723f82e650c35ecc66887e5",
+      "published_sha256": "51c7c32ae70a218f14cea63d7ef42950e25cf5e529c1d4f41095b351b6cbf3fd",
+      "transform": "Remove trailing whitespace from log lines; original private copy retained"
+    },
+    {
+      "path": "docs/evidence/dsr-pet/baseline-compatibility.patch.gz",
+      "original_sha256": "82e0963ee91ff3483b3cc52ab47c21684c7a92ef56c58492e0901c29aed0e009",
+      "transform": "Gzip exact raw patch to preserve structural context whitespace"
+    }
+  ],
+  "assertions": "No semantic log content or patch bytes changed; original copies in ignored .scratch/raw-evidence"
+}

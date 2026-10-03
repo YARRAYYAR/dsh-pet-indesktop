@@ -89,10 +89,20 @@ def move_window_towards(host, x: float, y: float,
     avail = scr.availableGeometry()
     sbr = stable_body_local_rect(host)
     bounds = avail if body_bounds is None else body_bounds
+    top = getattr(host, '_top_flip', None)
+    if body_bounds is None and top is not None and top.enabled:
+        # Select by body centre, not the mostly transparent video canvas.
+        top.update_screen_edge(scr, x, sbr)
+        bounds = QRect(avail)
+        bounds.setTop(top.edge_y)
     xi, yi = int(round(x)), int(round(y))
     # 1. 身体框（= 虚拟位置 + 局部偏移）钳进工作区
     xi = clamp_span(xi + sbr.x(), bounds.left(), bounds.right(), sbr.width()) - sbr.x()
     yi = clamp_span(yi + sbr.y(), bounds.top(), bounds.bottom(), sbr.height()) - sbr.y()
+    if top is not None and body_bounds is None:
+        top.on_position(yi)
+        if top.enabled and yi <= top.reference_limit() + 40:
+            yi = top.reference_limit() - top.top_offset_px(sbr.height())
     # 1b. 灵动岛同步硬墙（可选）：身体框不得进入岛碰撞区（像屏幕边界一样
     #     同步钳制，杜绝 30Hz 采样下"钻进区→被弹→再钻回"的抽搐）。hook 由
     #     岛碰撞体注册（IslandCollisionBody.start），无岛时是 no-op。
@@ -102,6 +112,9 @@ def move_window_towards(host, x: float, y: float,
     # 2. 窗口钳进工作区
     wx = clamp_span(xi, avail.left(), avail.right(), host._w)
     wy = clamp_span(yi, avail.top(), avail.bottom(), host._h)
+    # Cocoa can constrain a Tool window back below the menu bar after move().
+    # Keep the native viewport legal and hide the body using the shared draw
+    # offset; virtual position, rotation, mask and pointer mapping stay aligned.
     # 3. 绘制偏移；变化时同步派生量
     delta = QPoint(xi - wx, yi - wy)
     old_delta = getattr(host, "_draw_delta", None)

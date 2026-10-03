@@ -1,0 +1,50 @@
+{
+  "command": "QT_QPA_PLATFORM=cocoa PYTHONPATH=. .venv/bin/python scripts/verify_dsr_features.py",
+  "setup": "Temporary Config and CODEX_HOME; real main window and QLocalServer; no user configuration writes",
+  "reset": "Fresh temporary directories on each run; QApplication shutdown closes services",
+  "platform": "cocoa",
+  "dpr": 2.0,
+  "codex_events_are_local_fixture": true,
+  "checks": {
+    "ceiling_angle": 180.0,
+    "ceiling_x_preserved": true,
+    "ceiling_timer_stopped": true,
+    "visible_ceiling_window_height": 119,
+    "drag_down_angle": 0.0,
+    "custom_tool_working": true,
+    "question_sticky": true,
+    "question_button": "打开 Codex",
+    "disabled_question_cleared": true,
+    "disabled_polling_stopped": true,
+    "completion_not_sticky": true,
+    "codex_events": [
+      {
+        "state": "working",
+        "text": "Codex 正在工作"
+      },
+      {
+        "state": "question",
+        "text": "联动验收：选择灰色还是蓝色？"
+      },
+      {
+        "state": "working",
+        "text": "Codex 正在处理你的回复"
+      },
+      {
+        "state": "complete",
+        "text": "联动验收：本轮工作完成。"
+      }
+    ],
+    "real_local_codex_state": {
+      "state": "working",
+      "session_id": "redacted-local-session",
+      "project": "New project"
+    },
+    "poll_100_calls_median_ms": 0.014500000361294951,
+    "poll_100_calls_max_ms": 0.02579200008767657,
+    "initial_local_discovery_ms": 7.297291999748268
+  },
+  "errors": [],
+  "exit_status": 0,
+  "publication_note": "Real local session identifiers redacted; original evidence preserved privately in ignored .scratch."
+}

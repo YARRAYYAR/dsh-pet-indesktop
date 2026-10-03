@@ -5,17 +5,8 @@ import sys
 
 
 def _chat_available() -> bool:
-    """打包变体是否带 AI 聊天（no-chat 变体 excludes=['pet.chat']）。
-
-    只做 find_spec 探测，不 import pet.chat——设置进程启动不该白付聊天模块的
-    导入成本；真的缺模块时 include_ai 传 False，避免设置页在构造期炸掉。
-    """
-    import importlib.util
-
-    try:
-        return importlib.util.find_spec("pet.chat") is not None
-    except (ImportError, ValueError):
-        return False
+    """seeky· pet is always the pure-pet variant, including source runs."""
+    return False
 
 
 def _exec_settings(app, config, *, include_ai: bool = True) -> int:
@@ -104,7 +95,7 @@ def _main() -> int:
     if "--settings" in sys.argv:
         return _run_settings()
     from .app import main as app_main
-    return app_main()
+    return app_main(enable_chat=False)
 
 
 if __name__ == "__main__":

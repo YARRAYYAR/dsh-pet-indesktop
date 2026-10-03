@@ -1,0 +1,18 @@
+{
+  "command": "CUA getApp(installed app); search 任务框; edit size with keyboard to 120; restore defaults; open QColorDialog and Cancel; scroll; click footer 退出 seeky· pet; psutil wait 10s",
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Installed native arm64 app, existing preserved user configuration, main and separate settings processes",
+  "inputs": "Task appearance search, keyboard size edit, reset, native picker cancel, footer quit",
+  "assertions": "Seeky name/icon/version visible; size 120 then 100; Codex working state visible; main and settings exit",
+  "checks": {
+    "brand": "seeky· pet",
+    "version": "4.2.1 · seeky.3",
+    "size_keyboard_actual": 120,
+    "restored_size": 100,
+    "native_color_picker_open_cancel": true,
+    "codex_live_state": "working",
+    "settings_quit": true,
+    "main_quit": true
+  },
+  "exit_status": 0
+}

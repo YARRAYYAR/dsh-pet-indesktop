@@ -1,0 +1,30 @@
+{
+  "command": "QT_QPA_PLATFORM=cocoa PYTHONPATH=. .venv/bin/python scripts/verify_dsr_features.py",
+  "setup": "Temporary Config and CODEX_HOME; real main window and QLocalServer; no user configuration writes",
+  "reset": "Fresh temporary directories on each run; QApplication shutdown closes services",
+  "platform": "cocoa",
+  "dpr": 2.0,
+  "codex_events_are_local_fixture": true,
+  "checks": {
+    "ceiling_angle": 180.0,
+    "ceiling_x_preserved": true,
+    "ceiling_timer_stopped": true,
+    "visible_ceiling_window_height": 119,
+    "drag_down_angle": 0.0,
+    "custom_tool_working": false,
+    "codex_events": [],
+    "real_local_codex_state": {
+      "state": "idle",
+      "session_id": "redacted-local-session",
+      "project": "New project"
+    },
+    "poll_100_calls_median_ms": 0.013520500033337157,
+    "poll_100_calls_max_ms": 0.01874999998108251,
+    "initial_local_discovery_ms": 7.349749999775668
+  },
+  "errors": [
+    "Codex custom_tool_call did not show active work"
+  ],
+  "exit_status": 1,
+  "publication_note": "Real local session identifiers redacted; original evidence preserved privately in ignored .scratch."
+}

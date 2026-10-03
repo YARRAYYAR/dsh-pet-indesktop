@@ -1,0 +1,9 @@
+{
+  "command": "python3 - <<PY [SettingsCommandClient quit flow]",
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "System Python chosen before any application mutation",
+  "inputs": "Import psutil before installation",
+  "assertions": "Runtime dependencies import",
+  "actual": "ModuleNotFoundError: No module named psutil; no state changed",
+  "exit_status": 1
+}

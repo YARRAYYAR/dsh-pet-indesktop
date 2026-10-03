@@ -228,156 +228,18 @@ def _teardown_shell(shell) -> None:
         QApplication.processEvents()
 
 
-def test_island_chat_availability_gates(tmp_path):
-    """可用性判定：岛未建 / hidden_chat 关 → 不可用；岛建好 → 可用。"""
-    _qapp()
-    shell = _make_shell(tmp_path, hidden_chat=False)
-    try:
-        assert shell._island_chat_available() is False  # 岛未创建
-        shell._sync_dynamic_island()
-        assert shell._island_chat_available() is False  # hidden_chat 关
-        cfg = dict(shell.config.get("dynamic_island"))
-        cfg["hidden_chat"] = True
-        shell.config.set("dynamic_island", cfg)
-        assert shell._island_chat_available() is True
-        shell.enable_chat = False  # no-chat 打包变体（setter 缓存 _enable_chat）
-        assert shell._island_chat_available() is False
-    finally:
-        _teardown_shell(shell)
 
 
-def test_shell_click_toggles_island_chat_bubble(tmp_path):
-    """桌宠隐藏时 _chat_from_island：首次弹出（激活、锚定岛），再次收起。"""
-    app = _qapp()
-    shell = _make_shell(tmp_path)
-    try:
-        shell._sync_dynamic_island()
-        shell.island.set_pet_visible(False)
-        shell._chat_from_island()
-        bubble = shell.island_chat
-        assert bubble is not None and bubble.isVisible()
-        assert bubble._anchor is shell.island
-        # 再点一次 → 收起（开关语义）
-        shell._chat_from_island()
-        QApplication.processEvents()
-        assert not bubble.isVisible()
-    finally:
-        _teardown_shell(shell)
 
 
-def test_shell_click_when_no_chat_reshows_pets(tmp_path):
-    """纯桌宠版（打包时排除 `pet.chat`）：桌宠隐藏时单击岛必须把桌宠叫回来。
-
-    旧行为：岛按 `hidden_chat` 发 `chat_requested` → `_chat_from_island` →
-    `_show_island_chat` 因 `_island_chat_available()` 为假**直接返回**，整次点击
-    静默无响应（用户反馈「桌宠隐藏后点灵动岛没反应」，2026-09-23 修复）。
-    岛是纯桌宠版隐藏后唯一的常驻交互面，此时单击的合理语义就是「显示桌宠」。
-    """
-    _qapp()
-    shell = _make_shell(tmp_path)
-    try:
-        shell._sync_dynamic_island()
-        shell.island.set_pet_visible(False)   # 桌宠已隐藏（隐藏时由 on_hidden 同步）
-        shell.enable_chat = False             # 无 chat 的打包变体
-        assert shell._island_chat_available() is False
-
-        shell._chat_from_island()
-
-        assert shell.island._pet_visible is True, "点击后桌宠仍未恢复可见"
-        assert shell.island_chat is None, "无 chat 变体不该去建对话气泡"
-    finally:
-        _teardown_shell(shell)
 
 
-def test_shell_show_pets_from_island_chat(tmp_path):
-    """气泡内「显示桌宠」：调 set_pet_visible(True) 并收起气泡（无实例时不出错）。"""
-    _qapp()
-    shell = _make_shell(tmp_path)
-    try:
-        shell._sync_dynamic_island()
-        shell.island.set_pet_visible(False)
-        shell._show_island_chat(activate=True)
-        bubble = shell.island_chat
-        assert bubble is not None and bubble.isVisible()
-        shell._show_pets_from_island_chat()
-        QApplication.processEvents()
-        assert shell.island._pet_visible is True
-        assert not bubble.isVisible()
-    finally:
-        _teardown_shell(shell)
 
 
-def test_shell_auto_pop_on_global_chat_finished_when_hidden(tmp_path):
-    """桌宠隐藏 + 回复到达：自动弹预览气泡（不激活）；回复文本进展示层。"""
-    _qapp()
-    shell = _make_shell(tmp_path)
-    try:
-        shell._sync_dynamic_island()
-        shell.island.set_pet_visible(False)
-        shell._on_global_chat_finished("半夜好呀")
-        bubble = shell.island_chat
-        assert bubble is not None and bubble.isVisible()
-        assert QApplication.activeWindow() is not bubble  # 预览态不抢焦点
-        assert bubble._reply_full == "半夜好呀"
-        assert bubble._auto_collapse.isActive()  # 超时自动收回已排程
-        # 岛气泡在场（多半自己刚回完话）：不重复弹、不重置锚定状态
-        shell._on_global_chat_finished("第二条")
-        assert bubble._reply_full == "半夜好呀"
-    finally:
-        _teardown_shell(shell)
 
 
-def test_shell_no_auto_pop_when_pet_visible(tmp_path):
-    """桌宠可见：回复到达只推动效，不弹岛气泡。"""
-    _qapp()
-    shell = _make_shell(tmp_path)
-
-    class _Win:
-        @staticmethod
-        def isVisible():
-            return True
-
-    class _Inst:
-        win = _Win()
-
-    shell._instances = [_Inst()]
-    try:
-        shell._sync_dynamic_island()
-        shell.island.set_pet_visible(True)
-        shell._on_global_chat_finished("在的")
-        assert shell.island_chat is None
-    finally:
-        _teardown_shell(shell)
 
 
-def test_shell_no_auto_pop_when_full_chat_window_open(tmp_path):
-    """桌宠隐藏但完整聊天窗开着：回复已有去处，不弹岛预览。"""
-    _qapp()
-    shell = _make_shell(tmp_path)
-
-    class _Win:
-        @staticmethod
-        def isVisible():
-            return False  # 桌宠隐藏
-
-    class _ChatWin:
-        @staticmethod
-        def isVisible():
-            return True  # 聊天窗开着
-
-    class _Inst:
-        win = _Win()
-        modern_chat_window = _ChatWin()
-        legacy_chat_window = None
-
-    shell._instances = [_Inst()]
-    try:
-        shell._sync_dynamic_island()
-        shell.island.set_pet_visible(False)
-        shell._on_global_chat_finished("看聊天窗就好")
-        assert shell.island_chat is None
-    finally:
-        _teardown_shell(shell)
 
 
 # ------------------------------------------------------ 隐藏期 DSH 反馈改道
@@ -496,3 +358,12 @@ def test_appshell_island_feedback_available(tmp_path):
         assert shell._island_feedback_available() is False
     finally:
         _teardown_shell(shell)
+
+def test_removed_island_never_creates_chat_proxy(tmp_path):
+    app = _qapp()
+    shell = AppShell(app, Config(tmp_path), enable_chat=False)
+    shell.config.set("dynamic_island", {"enabled": True, "hidden_chat": True})
+    shell._sync_dynamic_island()
+    assert shell.island is None
+    assert shell.island_chat is None
+    assert shell._island_chat_available() is False

@@ -662,7 +662,7 @@ class ChatComposer(QFrame):
         self.notice.emit(message)
         if getattr(self, "hint", None) is not None:
             self.hint.setText(message)
-            QTimer.singleShot(5000, lambda: self.hint.setText("内容会保存到当前角色的本地会话"))
+            QTimer.singleShot(5000, self.hint, lambda: self.hint.setText("内容会保存到当前角色的本地会话"))
 
     def _refresh_attachments(self) -> None:
         while self.attachment_layout.count():

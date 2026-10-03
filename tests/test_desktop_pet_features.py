@@ -1403,14 +1403,14 @@ def test_modern_settings_panel_uses_sidebar_and_includes_ai_settings(tmp_path, m
     monkeypatch.setattr(settings_mod.autostart_mod, "is_enabled", lambda: False)
     monkeypatch.setattr(settings_mod.autostart_mod, "set_enabled", autostart_values.append)
     dialog = ModernSettingsDialog(config, include_ai=True)
-    assert dialog.size() == QSize(800, 560)
+    assert dialog.size() == QSize(1000, 680)
     assert dialog.minimumSize() == QSize(720, 500)
     assert dialog.font().pixelSize() == 13
     assert dialog.findChild(settings_mod.QFrame, "sidebarPane").width() == 200
     assert isinstance(dialog.sidebar, QListWidget)
     assert isinstance(dialog.pages, QStackedWidget)
     # 2026-09-19 新增「文件识别」域（拖文件解读，settings_file_interpret）。
-    expected_pages = ["常规", "桌宠", "互动", "菜单", "桌面组件", "AI 与对话", "自动化与联动", "语音", "文件识别"]
+    expected_pages = ["常规", "桌宠", "互动", "菜单", "连接", "AI 与对话", "自动化与联动", "语音", "文件识别"]
     assert [dialog.sidebar.item(i).text() for i in range(dialog.sidebar.count())] == expected_pages
     assert dialog.pages.count() == len(expected_pages)
     assert dialog.search_edit.placeholderText() == "搜索设置…"
@@ -1482,8 +1482,8 @@ def test_modern_settings_panel_uses_sidebar_and_includes_ai_settings(tmp_path, m
     assert page_index(dialog.findChild(settings_mod.SettingRow, "settingRow_playback_speed")) == 1
     assert page_index(dialog.findChild(settings_mod.SettingRow, "settingRow_self_talk_texts")) == 2
     assert page_index(dialog.findChild(settings_mod.SettingRow, "settingRow_scale")) == 1
-    assert page_index(dialog.findChild(settings_mod.SettingRow, "settingRow_chat_ui_style")) == 5
-    assert page_index(dialog.findChild(settings_mod.SettingRow, "settingRow_api_url")) == 5
+    assert page_index(dialog.findChild(settings_mod.SettingRow, "settingRow_chat_ui_style")) == sidebar_index('AI 与对话')
+    assert page_index(dialog.findChild(settings_mod.SettingRow, "settingRow_api_url")) == sidebar_index('AI 与对话')
     if settings_mod.sys.platform != "win32":
         assert dialog.auto_hide_fullscreen_check is None
         assert dialog.stream_capture_check is None
@@ -1642,30 +1642,7 @@ def test_modern_settings_toggle_dependencies_hide_complete_setting_groups(tmp_pa
         assert result is not None
         return result
 
-    island_children = [
-        row(key) for key in (
-            "dynamic_island_icon", "dynamic_island_name", "dynamic_island_info",
-            "dynamic_island_status", "dynamic_island_info_mode",
-            "dynamic_island_style", "dynamic_island_opacity",
-            "dynamic_island_accent", "dynamic_island_icon_value",
-            "dynamic_island_custom_text", "dynamic_island_click_action",
-            "dynamic_island_event_effects", "dynamic_island_edge_dock",
-            "dynamic_island_collision",
-        )
-    ]
-    dialog.island_enabled_check.setChecked(False)
-    assert all(child.isHidden() for child in island_children)
-    dialog.island_enabled_check.setChecked(True)
-    assert not row("dynamic_island_icon_value").isHidden()
-    assert row("dynamic_island_custom_text").isHidden()
-    dialog.island_icon_check.setChecked(False)
-    assert row("dynamic_island_icon_value").isHidden()
-    dialog.island_info_check.setChecked(False)
-    assert row("dynamic_island_info_mode").isHidden()
-    dialog.island_info_mode_select.setCurrentData("custom")
-    assert row("dynamic_island_custom_text").isHidden()
-    dialog.island_info_check.setChecked(True)
-    assert not row("dynamic_island_custom_text").isHidden()
+    assert dialog.findChild(settings_mod.SettingRow, "settingRow_dynamic_island_enabled") is None
 
     egg_children = [row(key) for key in ("egg_title", "egg_hint", "egg_avatar", "egg_image_dir")]
     dialog.egg_enabled_check.setChecked(False)
@@ -2013,7 +1990,7 @@ def test_modern_settings_search_locates_rows_and_return_does_not_close(tmp_path,
     dialog.search_edit.setFocus()
     dialog.search_edit.setText("API 地址")
     app.processEvents()
-    assert dialog.sidebar.currentRow() == 5  # 稳定的“AI 与对话”能力域
+    assert dialog.sidebar.item(dialog.sidebar.currentRow()).text() == "AI 与对话"  # 稳定的“AI 与对话”能力域
     api_row = dialog.findChild(settings_mod.SettingRow, "settingRow_api_url")
     assert api_row.property("searchMatch") is True
     QTest.keyClick(dialog.search_edit, Qt.Key.Key_Return)
@@ -2733,28 +2710,10 @@ def test_dock_icon_visibility_defaults_on_and_is_saved_by_modern_settings(tmp_pa
     app.processEvents()
 
 
-def test_product_copy_has_no_external_brand_reference():
-    forbidden = ("co" + "dex").lower()
-    roots = [Path("pet"), Path("tests"), Path("docs"), Path("README.md")]
-    hits = []
-    for root in roots:
-        paths = [root] if root.is_file() else list(root.rglob("*"))
-        for path in paths:
-            if not path.is_file() or path.suffix.lower() not in {".py", ".qss", ".md", ".json"}:
-                continue
-            # Competitive research records source names by design; they are
-            # evidence, not user-facing product copy.
-            if (
-                path.name in {"agent_link.py", "test_agent_link.py"}
-                or path.name.endswith("-RESEARCH.md")
-                # Contributor/change reports are repository evidence, not
-                # user-facing product copy and may mention external brands.
-                or path.name.startswith("README-CHANGE-")
-            ):
-                continue
-            if forbidden in path.read_text(encoding="utf-8", errors="ignore").lower():
-                hits.append(str(path))
-    assert hits == []
+def test_product_identity_is_distinct_from_codex_connection():
+    # Codex is now an explicitly requested integration, not the app identity.
+    from pet.branding import NAME
+    assert NAME == "seeky· pet"
 
 
 def test_return_corner_cancels_all_position_writers_before_move():

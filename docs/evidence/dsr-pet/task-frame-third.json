@@ -1,0 +1,36 @@
+{
+  "command": "QT_QPA_PLATFORM=cocoa PYTHONPATH=. .venv/bin/python scripts/verify_seeky_task_frame.py --label task-frame-third",
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Fresh temporary config and Codex JSONL fixture; real Cocoa app, standalone settings, file watcher and local IPC",
+  "reset": "Fresh temporary directory per run; main app shut down after run",
+  "inputs": "Warm colors, 140%; 100 previews across 80/160%; unwritable config path; reset; long question; completion; invalid stored colors/NaN",
+  "assertions": "Controls persist; failure rolls back and displays error; defaults recover; full question and Open button remain; completion expires",
+  "platform": "cocoa",
+  "checks": {
+    "saved_style": {
+      "background": "#f3e7d0",
+      "accent": "#805c40",
+      "scale": 140
+    },
+    "preview_100_median_ms": 5.271979500321322,
+    "preview_100_max_ms": 12.360167000224465,
+    "preview_100_rss_delta_bytes": -14630912,
+    "preview_decoder_children": 1,
+    "save_failure_reverted": true,
+    "question_color_actual": "#1c1c1e",
+    "disk_style_before_question": {
+      "background": "#f3e7d0",
+      "accent": "#805c40",
+      "scale": 140
+    },
+    "main_style_before_question": {
+      "background": "#1c1c1e",
+      "accent": "#707078",
+      "scale": 100
+    }
+  },
+  "errors": [
+    "AssertionError: {'saved_style': {'background': '#f3e7d0', 'accent': '#805c40', 'scale': 140}, 'preview_100_median_ms': 5.271979500321322, 'preview_100_max_ms': 12.360167000224465, 'preview_100_rss_delta_bytes': -14630912, 'preview_decoder_children': 1, 'save_failure_reverted': True, 'question_color_actual': '#1c1c1e', 'disk_style_before_question': {'background': '#f3e7d0', 'accent': '#805c40', 'scale': 140}, 'main_style_before_question': {'background': '#1c1c1e', 'accent': '#707078', 'scale': 100}}"
+  ],
+  "exit_status": 1
+}

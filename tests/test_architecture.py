@@ -112,7 +112,11 @@ PET_DIR = Path(__file__).resolve().parents[1] / "pet"
 # duration 退化值守卫 + 注释，+9）与 A2 飞行加速按用户「播放速率」复合
 # （表达式改写 + getattr 防御测试替身，+2）。净增为守卫与注释，未拆控制器
 # （守卫必须贴着 _try_move 的建计划点才有效），按预算规则校准。实测 4648。
-WINDOW_PY_LINE_BUDGET = 4648
+# 2026-10-02: dsr mask/cache wiring and one action-state signal; algorithms
+# live in frame_edges/settings_commands rather than expanding this owner.
+# 2026-10-03: ceiling release hooks and optional Codex cleanup; algorithms live in controllers.
+# 2026-10-03：切换成功后停掉被打断的旧clip；自然结束不重复stop，薄接线净增2行。
+WINDOW_PY_LINE_BUDGET = 4666
 
 # modern_settings_dialog.py 行数预算：按结构线拆分后实测 1857 行（拆分前 4811 行）。
 # 主对话框 ModernSettingsDialog + 对话框装配/配置写回 + 为 pet/ 与 tests/ 保留的
@@ -188,7 +192,8 @@ WINDOW_PY_LINE_BUDGET = 4648
 # pet/settings_interaction.py（页内任务标签「点击与音效 / 自言自语」），
 # 本文件净减 94 行（2441 → 2347）。这是本文件第一次**因拆分而下调**预算：
 # 靠搬代码而不是压行宽解决预算，正是预算作为「绊线」的预期用法。
-MODERN_SETTINGS_DIALOG_PY_LINE_BUDGET = 2347
+# 2026-10-02: brand/navigation/IPC wiring (+8); separate modules own new UI.
+MODERN_SETTINGS_DIALOG_PY_LINE_BUDGET = 2355
 
 
 def _read(name: str) -> str:

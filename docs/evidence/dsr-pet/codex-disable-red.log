@@ -1,0 +1,16 @@
+qt.multimedia.ffmpeg: Using Qt multimedia with FFmpeg version 7.1.5 LGPL version 2.1 or later
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/scripts/verify_dsr_features.py", line 61, in run
+    callback()
+    ~~~~~~~~^^
+  File "/Users/ray/Documents/New project/dsr-pet/scripts/verify_dsr_features.py", line 108, in capture_question
+    assert checks['disabled_question_cleared'], 'Disabling Codex left its question bubble visible'
+           ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Disabling Codex left its question bubble visible
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/scripts/verify_dsr_features.py", line 163, in <module>
+    main()
+    ~~~~^^
+  File "/Users/ray/Documents/New project/dsr-pet/scripts/verify_dsr_features.py", line 159, in main
+    raise RuntimeError(errors)
+RuntimeError: ['Disabling Codex left its question bubble visible']

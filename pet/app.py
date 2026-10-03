@@ -357,6 +357,7 @@ class PetInstance:
         self.modern_chat_window = None
         self.chat_settings_dialog = None
         self.modern_settings_dialog = None
+        self.settings_commands = None
         self.quick_chat = None
         self._pending_dialog_opens: set[str] = set()
         # E2（REVIEW_batch51）：enable_chat 单源在 AppShell（进程级），本类只读转发。
@@ -541,6 +542,15 @@ class PetInstance:
         old_win = self.win
         old_tray = self.shell.tray
         self.win = win
+        if self.settings_commands is None:
+            from .settings_commands import SettingsCommandServer
+            try:
+                self.settings_commands = SettingsCommandServer(
+                    self.config, self._dispatch_settings_command, self.shell.app)
+            except RuntimeError:
+                logging.exception("启动设置控制通道失败")
+        if self.settings_commands is not None:
+            win.action_changed.connect(self.settings_commands.publish_action)
         if build_tray:
             self.shell.tray = tray
         # 批5.2a（复审 P1-1）：接入共享联动链必须在 self.win = win 之后——
@@ -844,6 +854,32 @@ class PetInstance:
             self.modern_settings_dialog,
             before_present=self.modern_settings_dialog.move_away_from_pet,
         )
+
+    def _dispatch_settings_command(self, command, args):
+        win = self.win
+        if not isinstance(args, dict):
+            raise ValueError("无效的命令参数")
+        if command == "quit":
+            QTimer.singleShot(100, self.shell.app.quit)
+            return {}
+        if win is None:
+            raise ValueError("桌宠窗口尚未就绪")
+        if command == "list_actions":
+            return {"actions": [{"name": name, "category": win.lib.folder_map.get(name, "")}
+                                for name in sorted(win.lib.names())], "current": win.anim}
+        if command == "watch_actions":
+            return {"current": win.anim}
+        if command == 'codex_status':
+            return win.codex_status()
+        if command == "play_action":
+            name = args.get("name")
+            if name not in win.lib.names():
+                raise ValueError("动作不存在，请刷新动作库")
+            if not win.isVisible():
+                win.show()
+            win.request_link_anim(name)
+            return {"requested": name, "current": win.anim}
+        raise ValueError("不支持的桌宠命令")
 
     def _try_open_settings_process(self) -> bool:
         """尝试走独立设置进程；True = 已交给独立进程（不要再开进程内对话框）。"""
@@ -1856,13 +1892,18 @@ class AppShell:
         各停一次——多窗下任一窗退出不许停进程级资源，只有「全部退出」才收口
         （这也是「退出这只」与「全部退出」的核心差异）。
         """
-        from .chat import session_store as _session_store
+        _session_store = None
+        if self.enable_chat:
+            from .chat import session_store as _session_store
         # issue #111：先关 ffmpeg spawn 闸门，再走正常退出收口——正常退出路径
         # （托盘退出/最后窗口关闭）同样落在关机前后，绝不能在里面再派生 reader。
         self._mark_session_ending()
         # 窗级收口：逐窗保存位置、停本窗预热与 Agent、提交本窗会话、释放本窗 slot 锁
         for inst in self._instances:
             win = inst.win
+            control = getattr(inst, "settings_commands", None)
+            if control is not None:
+                control.close()
             if win is not None:
                 try:
                     win.save_position()
@@ -1954,7 +1995,7 @@ class AppShell:
         except Exception:
             logging.exception("退出时停止 DSH 状态跟踪器失败")
         try:
-            if not _session_store.close_all_writers(permanent=True):
+            if _session_store is not None and not _session_store.close_all_writers(permanent=True):
                 logging.warning("退出时会话写盘 worker 未干净关闭")
         except Exception:
             logging.exception("退出时关闭会话写盘 worker 失败")
@@ -2047,6 +2088,10 @@ class AppShell:
                     _ChatService.unregister_global_finished(shell._on_global_chat_finished)
                 except Exception:
                     pass
+                for inst in shell._instances:
+                    control = getattr(inst, "settings_commands", None)
+                    if control is not None:
+                        control.close()
                 shell._instances = []
             except Exception:
                 logging.debug("测试收口 AppShell 失败", exc_info=True)
@@ -2102,52 +2147,14 @@ class AppShell:
             logging.exception("把窗口接入共享 Agent 联动链失败")
 
     def _sync_dynamic_island(self) -> None:
-        """按配置创建/隐藏灵动岛；桌宠隐藏后灵动岛仍可常驻。"""
-        island_cfg = self.config.get("dynamic_island", {})
-        enabled = bool(island_cfg.get("enabled", True)) if isinstance(island_cfg, dict) else False
-        if not enabled:
-            if getattr(self, "island", None) is not None:
-                self.island.hide()
-            body = getattr(self, "island_collision", None)
-            if body is not None and body.has_local_island:
-                body.stop()
-            # 本进程无岛 ≠ 岛上没有墙：多进程下 slot 配置只对主进程开岛
-            # （子宠进程 enabled=False），但岛在别的进程真实存在——远端
-            # 硬墙照样要挂（几何经碰撞快照回喂），否则子肥鱼直接穿岛。
-            self._sync_island_collision(island_cfg)
-            return
-        if getattr(self, "island", None) is None:
-            from .dynamic_island import DynamicIsland
-
-            self.island = DynamicIsland(self.config)
-            # 岛图标默认取鱼本体头像（图片路径不碰 emoji 字体栈，见 dynamic_island
-            # 的 _icon_pixmap 注释）；帧未就绪时岛侧只画底圈并稍后重试
-            self.island.set_icon_provider(self._island_icon_pixmap)
-            self.island.clicked.connect(self._toggle_pet_from_island)
-            self.island.toggle_pet_requested.connect(self._toggle_pet_from_island)
-            self.island.open_chat_requested.connect(self._open_chat_from_island)
-            self.island.open_settings_requested.connect(self._open_settings_from_island)
-            # 桌宠隐藏时单击岛：弹/收锚定岛的对话气泡（hidden_chat 开启时）
-            self.island.chat_requested.connect(self._chat_from_island)
-            # 卡片展开 → 静默刷新余额（不冒泡、不播动画，只更新岛卡片）
-            self.island.card_expanded.connect(self._quiet_balance_refresh)
-            # 进程级聊天完成订阅：AI 回复到达 → 岛播事件动效并记录最近消息。
-            # 无聊天功能的打包变体会排除 pet.chat（参照 config.py 的同款守卫），
-            # 那里跳过订阅即可，灵动岛本体照常可用。
-            try:
-                from .chat.service import ChatService
-            except ImportError as exc:
-                if str(getattr(exc, "name", "") or "").startswith("pet.chat"):
-                    ChatService = None  # 无聊天打包变体：跳过订阅，岛本体照常
-                else:
-                    raise
-            if ChatService is not None:
-                ChatService.register_global_finished(self._on_global_chat_finished)
-        self.island.refresh_from_config()
-        # 批5.2a：灵动岛按**聚合**可见态同步（任一窗可见 = 可见），替代只看主窗。
-        self.island.set_pet_visible(self._aggregate_pet_visible())
-        self.island.show()
-        self._sync_island_collision(island_cfg)
+        """dsr · pet 移除了灵动岛；旧配置不能重新创建胶囊或碰撞墙。"""
+        if self.island_collision is not None:
+            self.island_collision.stop()
+            self.island_collision = None
+        if self.island is not None:
+            self.island.close()
+            self.island.deleteLater()
+            self.island = None
 
     def _sync_island_collision(self, island_cfg) -> None:
         """果冻墙：按配置创建/启停岛的碰撞体（island_collision.py）。
@@ -2832,6 +2839,10 @@ class AppShell:
         # 批5.2 P1-5：关闭/隐藏本窗的聊天窗与设置窗并断开引用，防止孤儿顶层窗
         # 在 writer 关闭后经 store 提交、复活写盘 worker（常驻到进程结束）。
         self._close_instance_subwindows(instance)
+        if instance.settings_commands is not None:
+            instance.settings_commands.close()
+            instance.settings_commands.deleteLater()
+            instance.settings_commands = None
         if win is not None:
             marker_remover = getattr(win, 'remove_runtime_marker', None)
             if callable(marker_remover):
@@ -3098,7 +3109,7 @@ class AppShell:
     def _prune_toasts(self) -> None:
         self._toast_windows = [
             w for w in self._toast_windows
-            if not (hasattr(w, "is_closed") and w.is_closed())
+            if shiboken6.isValid(w) and not w.is_closed()
         ]
         position_stack(self._toast_windows)
 
@@ -3356,6 +3367,9 @@ def main(argv: list[str] | None = None, enable_chat: bool = True) -> int:
             return 1
 
     app = QApplication(argv)
+    from .branding import NAME, brand_icon
+    app.setApplicationDisplayName(NAME)
+    app.setWindowIcon(brand_icon())
     app.setApplicationName(APP_DIR_NAME)
     app.setQuitOnLastWindowClosed(False)
 

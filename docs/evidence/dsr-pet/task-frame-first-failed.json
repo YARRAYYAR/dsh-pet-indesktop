@@ -1,0 +1,14 @@
+{
+  "command": "QT_QPA_PLATFORM=cocoa PYTHONPATH=. .venv/bin/python scripts/verify_seeky_task_frame.py --label task-frame-first",
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Temporary config, Codex JSONL and actual Cocoa app",
+  "inputs": "Open connection settings",
+  "assertions": "Settings constructs and task controls exist",
+  "actual": "ModernSelect does not implement addItems; cleanup harness used nonexistent _shutdown",
+  "errors": [
+    "AttributeError: ModernSelect.addItems",
+    "AttributeError: AppShell._shutdown"
+  ],
+  "exit_status": 1,
+  "source": "Captured tool output; no screenshot available because construction failed"
+}

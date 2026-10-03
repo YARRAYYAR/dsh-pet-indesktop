@@ -1,0 +1,40 @@
+{
+  "command": "QT_QPA_PLATFORM=cocoa PYTHONPATH=. .venv/bin/python scripts/verify_seeky_task_frame.py --label task-frame-controls-red",
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Fresh temporary config and Codex JSONL fixture; real Cocoa app, standalone settings, file watcher and local IPC",
+  "reset": "Fresh temporary directory per run; main app shut down after run",
+  "inputs": "Warm colors, 140%; 100 previews across 80/160%; unwritable config path; reset; long question; completion; invalid stored colors/NaN",
+  "assertions": "Controls persist; failure rolls back and displays error; defaults recover; full question and Open button remain; completion expires",
+  "platform": "cocoa",
+  "checks": {
+    "saved_style": {
+      "background": "#f3e7d0",
+      "accent": "#805c40",
+      "scale": 140
+    },
+    "preview_100_median_ms": 5.790749999505351,
+    "preview_100_max_ms": 14.488083001197083,
+    "preview_100_rss_delta_bytes": -28491776,
+    "preview_decoder_children": 1,
+    "save_failure_reverted": true,
+    "color_control_height": 24,
+    "color_child_rects": [
+      [
+        0,
+        0,
+        96,
+        30
+      ],
+      [
+        102,
+        0,
+        53,
+        30
+      ]
+    ]
+  },
+  "errors": [
+    "AssertionError: Color controls clipped by their container"
+  ],
+  "exit_status": 1
+}

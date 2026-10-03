@@ -1,0 +1,26 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "/Users/ray/Documents/New project/dsr-pet/scripts/verify_dsr_packaged_runtime.py",
+    "--app",
+    "/Users/ray/Applications/dsr · pet.app"
+  ],
+  "bundle_command": [
+    "/Users/ray/Applications/dsr · pet.app/Contents/MacOS/dsr · pet",
+    "--instance",
+    "acceptance-b9cddf46deda411bb40a1ced68a65c16"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Unique temporary instance Config; actual installed bundle, 106 HD assets",
+  "assertions": "Directory/play/error/quit through real QLocalServer; child processes exit",
+  "reset": "Test instance config removed; packaged process and its children stopped",
+  "checks": {
+    "remaining_child_pids": []
+  },
+  "errors": [
+    "AssertionError: {'ok': False, 'error': '无法连接桌宠，请确认 dsr · pet 正在运行'}",
+    "Bundle did not exit after quit",
+    "Bundle exited -15"
+  ],
+  "exit_status": 1
+}

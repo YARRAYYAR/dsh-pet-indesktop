@@ -1,0 +1,35 @@
+QSystemTrayIcon::setVisible: No Icon set
+WARNING:root:GUI 卡顿 301ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（301ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-78ms] verify_dsr_runtime.py:89:main <- app.py:1703:start <- app.py:1812:_create_ui_with_character_fallback <- app.py:572:_create_ui <- app.py:537:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-22ms] verify_dsr_runtime.py:256:<module> <- verify_dsr_runtime.py:249:main
+single
+ERROR:root:启动设置控制通道失败
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/pet/app.py", line 548, in _build_window
+    self.settings_commands = SettingsCommandServer(
+                             ~~~~~~~~~~~~~~~~~~~~~^
+        self.config, self._dispatch_settings_command, self.shell.app)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ray/Documents/New project/dsr-pet/pet/settings_commands.py", line 27, in __init__
+    raise RuntimeError('桌宠控制通道已被占用')
+RuntimeError: 桌宠控制通道已被占用
+multi
+WARNING:root:GUI 卡顿 287ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（287ms，5 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-319ms] verify_dsr_runtime.py:256:<module> <- verify_dsr_runtime.py:249:main
+WARNING:pet.gui_stall_sampler:  [t-260ms] <frozen importlib._bootstrap>:1322:_find_and_load_unlocked <- <frozen importlib._bootstrap>:1262:_find_spec <- <frozen importlib._bootstrap_external>:1559:find_spec <- <frozen importlib._bootstrap_external>:1533:_get_spec <- <frozen importlib._bootstrap_external>:1632:find_spec <- <frozen importlib._bootstrap_external>:152:_path_stat
+WARNING:pet.gui_stall_sampler:  [t-178ms] verify_dsr_runtime.py:249:main <- verify_dsr_runtime.py:161:<lambda> <- verify_dsr_runtime.py:142:set_stage <- app.py:2768:spawn_in_process_window <- app.py:537:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-15ms] verify_dsr_runtime.py:256:<module> <- verify_dsr_runtime.py:249:main
+WARNING:root:GUI 卡顿 235ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（235ms，4 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-260ms] <frozen importlib._bootstrap>:1322:_find_and_load_unlocked <- <frozen importlib._bootstrap>:1262:_find_spec <- <frozen importlib._bootstrap_external>:1559:find_spec <- <frozen importlib._bootstrap_external>:1533:_get_spec <- <frozen importlib._bootstrap_external>:1632:find_spec <- <frozen importlib._bootstrap_external>:152:_path_stat
+WARNING:pet.gui_stall_sampler:  [t-178ms] verify_dsr_runtime.py:249:main <- verify_dsr_runtime.py:161:<lambda> <- verify_dsr_runtime.py:142:set_stage <- app.py:2768:spawn_in_process_window <- app.py:537:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-15ms] verify_dsr_runtime.py:256:<module> <- verify_dsr_runtime.py:249:main
+WARNING:root:GUI 卡顿 134ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（134ms，3 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-179ms] verify_dsr_runtime.py:249:main <- verify_dsr_runtime.py:161:<lambda> <- verify_dsr_runtime.py:142:set_stage <- app.py:2768:spawn_in_process_window <- app.py:537:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-16ms] verify_dsr_runtime.py:256:<module> <- verify_dsr_runtime.py:249:main
+switch
+settings
+return

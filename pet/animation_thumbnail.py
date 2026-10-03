@@ -12,6 +12,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QImage, QImageReader
 
 from . import catalog
+from .frame_cache import ByteBudgetLru
 
 try:
     import imageio_ffmpeg
@@ -20,7 +21,6 @@ except Exception:  # pragma: no cover - optional dependency in GIF-only installs
 
 
 REPRESENTATIVE_FRACTION = 0.62
-_CACHE_LIMIT = 128
 _DISK_CACHE_LIMIT = 256
 # 缓存只存 128px 缩略图：菜单图标槽位 ~18 逻辑像素（HiDPI ×2~3 也够），
 # 原尺寸（640×390+ RGBA ≈1MB/张）整帧缓存 106 段动画就是 100MB+ 常驻
@@ -29,7 +29,7 @@ _THUMBNAIL_MAX_SIDE = 128
 _DISK_CACHE_DIR = Path(tempfile.gettempdir()) / "dsh-pet-thumbs"
 _DECODE_SEMAPHORE = threading.BoundedSemaphore(2)
 _cache_lock = threading.Lock()
-_image_cache: dict[tuple[str, int, int], QImage] = {}
+_image_cache = ByteBudgetLru(8 * 1024 * 1024)
 _inflight: dict[tuple[str, int, int], threading.Event] = {}
 
 
@@ -175,7 +175,7 @@ def decode_representative_frame(path: str | Path) -> QImage:
             return QImage(cached)
         disk_cached = _as_thumbnail(_read_disk_cache(key))
         if not disk_cached.isNull():
-            _image_cache[key] = QImage(disk_cached)
+            _image_cache.put(key, QImage(disk_cached), byte_size=disk_cached.sizeInBytes())
             return disk_cached
         event = _inflight.get(key)
         owner = event is None
@@ -186,16 +186,14 @@ def decode_representative_frame(path: str | Path) -> QImage:
     if not owner:
         event.wait()
         with _cache_lock:
-            return QImage(_image_cache.get(key, QImage()))
+            return QImage(_image_cache.get(key) or QImage())
 
     try:
         with _DECODE_SEMAPHORE:
             image = _as_thumbnail(_decode_representative_frame(path))
         if not image.isNull():
             with _cache_lock:
-                if len(_image_cache) >= _CACHE_LIMIT:
-                    _image_cache.pop(next(iter(_image_cache)))
-                _image_cache[key] = QImage(image)
+                _image_cache.put(key, QImage(image), byte_size=image.sizeInBytes())
             _write_disk_cache(key, image)
         return image
     finally:

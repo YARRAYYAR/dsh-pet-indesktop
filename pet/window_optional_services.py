@@ -18,6 +18,32 @@ from .window_effects import (
 )
 
 
+def _ceiling_clip_rect(host, width, height):
+    from PySide6.QtCore import QRect
+    top = getattr(host, '_top_flip', None)
+    if top is None or not top.active or top.edge_y is None:
+        return None
+    start = max(0, min(height, top.edge_y - host.y()))
+    return QRect(0, start, width, height - start)
+
+
+def prepare_effects_painter(host, painter):
+    from PySide6.QtGui import QPainter
+    painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
+    viewport = painter.viewport()
+    clip = _ceiling_clip_rect(host, viewport.width(), viewport.height())
+    if clip is not None:
+        painter.setClipRect(clip)
+
+
+def effects_coverage(host, canvas):
+    from PySide6.QtGui import QRegion
+    from .frame_edges import coverage_region
+    coverage = coverage_region(canvas)
+    clip = _ceiling_clip_rect(host, canvas.width(), canvas.height())
+    return coverage.intersected(QRegion(clip)) if clip is not None else coverage
+
+
 class WindowFeatureGateMixin:
     """供 PetWindow 混入的可选服务/效果懒装配能力。"""
 
@@ -52,6 +78,8 @@ class WindowFeatureGateMixin:
     _broker_facade: Any = None
     _golden_spin: Any = None
     _edge_probe: Any = None
+    _top_flip: Any = None
+    _codex_link: Any = None
     _throw_egg: Any = None
     _music_lyric: Any = None
 
@@ -108,6 +136,9 @@ class WindowFeatureGateMixin:
     # ------------------------------------------------------------ 黄金回旋/边缘探头
     def _install_effect_services(self):
         """安装效果控制器（幂等）。PetWindow 构造末尾调用一次。"""
+        if getattr(self, '_top_flip', None) is None:
+            from .top_flip import TopFlipController
+            self._top_flip = TopFlipController(self)
         if self._edge_probe is None:
             from .edge_probe import EdgeProbeController
             self._edge_probe = EdgeProbeController(self)
@@ -197,6 +228,9 @@ class WindowFeatureGateMixin:
     def _effects_current_angle(self) -> float:
         if self._effects_probe_active():
             return float(self._edge_probe.current_angle_deg())
+        top = getattr(self, '_top_flip', None)
+        if top is not None and top.active:
+            return top.current_angle_deg()
         egg = getattr(self, "_throw_egg", None)
         if egg is not None and egg.active:
             return float(egg.current_angle_deg())
@@ -209,7 +243,7 @@ class WindowFeatureGateMixin:
         """paintEvent / _sync_mask 共用：进入旋转坐标系。"""
         angle = self._effects_current_angle()
         if abs(angle) > 1e-6:
-            begin_rotation(painter, rect, angle)
+            begin_rotation(painter, self._effects_rotation_rect(rect), angle)
 
     def _effects_paint_end(self, painter, rect) -> None:
         angle = self._effects_current_angle()
@@ -218,7 +252,17 @@ class WindowFeatureGateMixin:
 
     def _effects_untransform(self, point, rect):
         """命中测试逆变换：把窗口逻辑点映射回未旋转坐标系。"""
-        return unrotate_point(point, rect, self._effects_current_angle())
+        return unrotate_point(point, self._effects_rotation_rect(rect), self._effects_current_angle())
+
+    def _effects_rotation_rect(self, rect):
+        top = getattr(self, '_top_flip', None)
+        if top is not None and top.active and not self._effects_probe_active():
+            # The stable body centre keeps ceiling exposure unchanged at 180°.
+            # Paint/mask pass frame-local coordinates; hit testing passes window
+            # coordinates. Translate the same pivot into the caller's space.
+            body = self._stable_body_local_rect()
+            return body.translated(rect.topLeft() - self._frame_draw_rect().topLeft() + self._draw_delta)
+        return rect
 
     def _effects_filter_switch(self, name: str) -> str:
         """边缘探头/彩蛋飞行会话期间只允许待机/转向动画；其它请求降级到随机待机。"""
@@ -279,6 +323,9 @@ class WindowFeatureGateMixin:
             edge.on_release(bool(was_dragging))
 
     def _effects_on_hidden(self) -> None:
+        top = getattr(self, '_top_flip', None)
+        if top is not None:
+            top.pause()
         edge = getattr(self, "_edge_probe", None)
         if edge is not None:
             edge.pause()
@@ -290,6 +337,9 @@ class WindowFeatureGateMixin:
         self.pause_music_lyric()
 
     def _effects_on_shown(self) -> None:
+        top = getattr(self, '_top_flip', None)
+        if top is not None:
+            top.resume()
         edge = getattr(self, "_edge_probe", None)
         if edge is not None:
             edge.resume()
@@ -362,4 +412,59 @@ class WindowFeatureGateMixin:
             self.agent_link_manager.apply_config()
         self._install_effect_services()
         self._edge_probe.set_enabled(bool(self.cfg.get("edge_probe_enabled", False)))
+        self._top_flip.set_enabled(bool(self.cfg.get('top_flip_enabled', True)))
+        self.sync_codex_link()
         self.sync_music_lyric()
+
+    def sync_codex_link(self) -> None:
+        bubble = getattr(self, '_speech_bubble', None)
+        refresh = getattr(bubble, 'refresh_task_appearance', None)
+        if callable(refresh):
+            refresh()
+        enabled = bool(self.cfg.get('codex_link_enabled', False)) and not self.cfg.instance_id
+        if enabled and self._codex_link is None:
+            from .codex_link import CodexMonitor
+            self._codex_link = CodexMonitor(parent=self)
+            self._codex_link.event.connect(self._on_codex_event)
+        monitor = self._codex_link
+        if monitor is not None:
+            if enabled and not monitor.timer.isActive():
+                monitor.start()
+            elif not enabled:
+                monitor.stop()
+                self.resolve_alert('dsr-codex')
+
+    def codex_status(self) -> dict:
+        monitor = self._codex_link
+        if monitor is not None:
+            return monitor.snapshot()
+        return {'enabled': False, 'state': 'disconnected', 'session_id': '', 'text': '', 'project': ''}
+
+    def _on_codex_event(self, event: dict) -> None:
+        from .codex_link import open_codex
+        state = event['state']
+        self.resolve_alert('dsr-codex')
+        if state in {'question', 'complete'}:
+            self.show_alert(event['text'], subtitle='Codex · 需要你回答' if state == 'question' else 'Codex · 本轮完成',
+                            buttons=[('打开 Codex', lambda: open_codex(event['session_id']))],
+                            sticky=state == 'question', duration_ms=0 if state == 'question' else 8000,
+                            alert_id='dsr-codex', priority=1 if state == 'question' else 3,
+                            alert_type='question' if state == 'question' else 'task_complete')
+        elif state == 'working':
+            self.show_alert('正在处理当前任务。', subtitle='Codex · 正在工作',
+                            duration_ms=2400, sticky=False, alert_id='dsr-codex', priority=3)
+        else:
+            self.show_bubble(event['text'], duration_ms=2400)
+
+    def _workspace_screen_top(self) -> int:
+        return self._screen_available().geometry().top()
+
+    def character_local_region_unrotated(self):
+        # Use the stable placement anchor, independent of rotation and the
+        # off-screen draw delta; otherwise flipping feeds back into its trigger.
+        from .window_placement import stable_body_local_rect
+        return stable_body_local_rect(self)
+
+    @property
+    def top_flip_exposure(self) -> float:
+        return float(self.cfg.get('top_flip_exposure', 0.5))

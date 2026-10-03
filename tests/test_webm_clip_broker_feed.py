@@ -157,11 +157,12 @@ class _PacedFeedSession:
 class _CountingSink:
     """发布 sink 钩子（记录每帧回调的 src）。"""
 
-    def __init__(self) -> None:
+    def __init__(self, frame_bytes=FRAME_BYTES) -> None:
         self.srcs: list = []
+        self.frame_bytes = frame_bytes
 
     def on_frame(self, data: bytes, src: int) -> None:
-        assert len(data) == FRAME_BYTES  # 回调必须是整帧 RGBA
+        assert len(data) == self.frame_bytes  # Both standard and HD asset packs.
         self.srcs.append(int(src))
 
 
@@ -376,7 +377,8 @@ def test_feed_watchdog_abort_still_warns(app, caplog):
 def test_publish_sink_on_frame_called_exactly_once_per_frame(app):
     assert SAMPLE_WEBM.exists()
     clip = WebMClip(SAMPLE_WEBM)
-    sink = _CountingSink()
+    clip.warm_first_frame()
+    sink = _CountingSink(clip._w * clip._h * clip._bpp)
     clip._publish_sink = sink  # coordinator 角色：movie reader 逐帧镜像
     finished: list = []
     errors: list = []

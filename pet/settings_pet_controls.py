@@ -84,10 +84,6 @@ def build_pet_controls(host) -> None:
     for scale in spawn_scales:
         host.spawn_scale_combo.addItem(f"{int(round(catalog.CANVAS_W * scale))} px", scale)
     host.spawn_scale_combo.setCurrentIndex(host.spawn_scale_combo.findData(current_spawn_scale))
-    host.spawn_inherit_dynamic_island_check = ToggleSwitch(host)
-    host.spawn_inherit_dynamic_island_check.setChecked(
-        bool(host.config.get("spawn_inherit_dynamic_island", False))
-    )
     host.clear_spawned_pets_btn = QPushButton("一键退出…", host)
     host.clear_spawned_pets_btn.clicked.connect(host._on_clear_spawned_pets)
     if host.config.instance_id:
@@ -228,6 +224,14 @@ def build_pet_controls(host) -> None:
     host.golden_spin_direct_check.setChecked(bool(host.config.get("golden_spin_direct", False)))
     host.edge_probe_check = ToggleSwitch(host)
     host.edge_probe_check.setChecked(bool(host.config.get("edge_probe_enabled", False)))
+    host.top_flip_check = ToggleSwitch(host)
+    host.top_flip_check.setChecked(bool(host.config.get('top_flip_enabled', True)))
+    host.top_flip_exposure_spin = BrowserSpinBox(host)
+    host.top_flip_exposure_spin.setRange(0, 95)
+    host.top_flip_exposure_spin.setSuffix(' %')
+    host.top_flip_exposure_spin.setValue(round(float(host.config.get('top_flip_exposure', 0.5)) * 100))
+    host.top_flip_exposure_spin.setEnabled(host.top_flip_check.isChecked())
+    host.top_flip_check.toggled.connect(host.top_flip_exposure_spin.setEnabled)
     host.balance_refresh_spin = None
     host.balance_tier_mode_select = None
     host.balance_tier_peak_edit = None
@@ -558,48 +562,6 @@ def build_pet_controls(host) -> None:
 # ------------------------------------------------------------ 主动识屏
     if sys.platform == "win32" and host.include_ai:
         host._build_proactive_controls()
-
-
-# ------------------------------------------------------------ 灵动岛联动控制器
-
-
-def _update_island_controls(host, enabled: bool) -> None:
-    host._set_setting_rows_visible((
-        "dynamic_island_icon", "dynamic_island_name", "dynamic_island_info",
-        "dynamic_island_status", "dynamic_island_info_mode",
-        "dynamic_island_style", "dynamic_island_opacity", "dynamic_island_accent",
-        "dynamic_island_icon_value",
-        "dynamic_island_custom_text", "dynamic_island_click_action",
-        "dynamic_island_event_effects", "dynamic_island_edge_dock",
-        "dynamic_island_collision", "dynamic_island_hidden_chat",
-    ), enabled, dependency="island_enabled")
-    _update_island_icon_controls(host, host.island_icon_check.isChecked())
-    _update_island_info_controls(host, host.island_info_check.isChecked())
-
-
-def _update_island_icon_controls(host, enabled: bool) -> None:
-    host._set_setting_rows_visible(
-        ("dynamic_island_icon_value",),
-        enabled,
-        dependency="island_show_icon",
-    )
-
-
-def _update_island_info_controls(host, enabled: bool) -> None:
-    host._set_setting_rows_visible(
-        ("dynamic_island_info_mode", "dynamic_island_custom_text"),
-        enabled,
-        dependency="island_show_info",
-    )
-    _update_island_custom_text(host)
-
-
-def _update_island_custom_text(host, _index: int | None = None) -> None:
-    host._set_setting_rows_visible(
-        ("dynamic_island_custom_text",),
-        host.island_info_mode_select.currentData() == "custom",
-        dependency="island_info_mode",
-    )
 
 
 # ------------------------------------------------------------ 台词模板控制器

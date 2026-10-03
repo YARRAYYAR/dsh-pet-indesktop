@@ -1,0 +1,14 @@
+{
+  "command": "QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest -q",
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Serial full suite after interrupted queue ownership and Codex custom tool event fixes",
+  "assertions": "All existing tests and added regression contracts pass",
+  "result": {
+    "passed": 2914,
+    "skipped": 21,
+    "warnings": 261,
+    "seconds": 154.88
+  },
+  "exit_status": 0,
+  "previous_failure": "Natural clip-end tests detected redundant stop; product now stops only interrupted clips; failure log retained"
+}

@@ -69,6 +69,7 @@ jobs:
         run: |
           for VARIANT in webm-chat webm; do
             APP="dsh-pet-standalone-$VARIANT"
+            if [ "$VARIANT" = webm ]; then APP="seeky· pet"; fi
             WARN="$(find build -name "warn-$APP.txt" | head -1)"
             if [ -n "$WARN" ] && grep -q "missing module named pet" "$WARN"; then
               echo "::error::$APP pet 模块未被 PyInstaller 收集"; cat "$WARN"; exit 1
@@ -84,17 +85,23 @@ jobs:
         run: |
           cd dist
           for VARIANT in webm-chat webm; do
-            ditto -c -k --keepParent "dsh-pet-standalone-$VARIANT.app" \
-              "dsh-pet-standalone-$VARIANT-macos-arm64.zip"
+            APP="dsh-pet-standalone-$VARIANT"
+            ZIP="$APP-macos-arm64.zip"
+            if [ "$VARIANT" = webm ]; then
+              APP="seeky· pet"
+              ZIP="seeky-pet-macos-arm64.zip"
+            fi
+            ditto -c -k --keepParent "$APP.app" "$ZIP"
           done
 
       - name: Verify zip preserves executable permission
         run: |
-          for ZIP in dist/dsh-pet-standalone-*-macos-arm64.zip; do
+          for ZIP in dist/*-macos-arm64.zip; do
             rm -rf /tmp/verify && mkdir -p /tmp/verify
             cd /tmp/verify
             unzip -q "$GITHUB_WORKSPACE/$ZIP"
             APP="${ZIP##*/}"; APP="${APP%-macos-arm64.zip}.app"
+            if [ "${ZIP##*/}" = seeky-pet-macos-arm64.zip ]; then APP="seeky· pet.app"; fi
             BIN="$APP/Contents/MacOS/${APP%.app}"
             ls -l "$BIN"
             if [ ! -x "$BIN" ]; then
