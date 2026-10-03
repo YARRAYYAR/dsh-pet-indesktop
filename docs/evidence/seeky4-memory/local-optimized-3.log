@@ -1,0 +1,28 @@
+QSystemTrayIcon::setVisible: No Icon set
+WARNING:root:GUI 卡顿 849ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（849ms，9 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-771ms] verify_seeky_multi.py:50:main <- app.py:1703:start <- app.py:1812:_create_ui_with_character_fallback <- app.py:572:_create_ui <- app.py:537:_build_window <- enum.py:695:__call__
+WARNING:pet.gui_stall_sampler:  [t-666ms] verify_seeky_multi.py:50:main <- app.py:1703:start <- app.py:1812:_create_ui_with_character_fallback <- app.py:572:_create_ui <- app.py:537:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-484ms] verify_seeky_multi.py:70:play <- window.py:1701:switch_clip <- window.py:1692:_switch <- window.py:1450:_submit_collision_state <- collision_client.py:255:_submit_collision_state <- collision_ipc.py:1261:submit_state
+WARNING:pet.gui_stall_sampler:  [t-421ms] <frozen importlib._bootstrap>:1331:_find_and_load_unlocked <- <frozen importlib._bootstrap>:935:_load_unlocked <- <frozen importlib._bootstrap_external>:1026:exec_module <- <frozen importlib._bootstrap>:488:_call_with_frames_removed <- __init__.py:324:<module> <- __init__.py:324:FileHash
+WARNING:pet.gui_stall_sampler:  [t-352ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:77:main <- app.py:2627:spawn_pet <- app.py:2768:spawn_in_process_window <- app.py:537:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-212ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:139:main
+WARNING:root:GUI 卡顿 409ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（409ms，6 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-424ms] <frozen importlib._bootstrap>:1331:_find_and_load_unlocked <- <frozen importlib._bootstrap>:935:_load_unlocked <- <frozen importlib._bootstrap_external>:1026:exec_module <- <frozen importlib._bootstrap>:488:_call_with_frames_removed <- __init__.py:324:<module> <- __init__.py:324:FileHash
+WARNING:pet.gui_stall_sampler:  [t-356ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:77:main <- app.py:2627:spawn_pet <- app.py:2768:spawn_in_process_window <- app.py:537:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-216ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:139:main
+WARNING:root:GUI 卡顿 330ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（330ms，5 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-356ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:77:main <- app.py:2627:spawn_pet <- app.py:2768:spawn_in_process_window <- app.py:537:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-216ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:139:main
+WARNING:root:GUI 卡顿 115ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（115ms，3 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-122ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:139:main
+WARNING:root:GUI 卡顿 115ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（115ms，3 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-122ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:139:main
+WARNING:root:GUI 卡顿 115ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（115ms，3 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-122ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:139:main
+{'max_first_frame_decoders': 2, 'steady_mib': 309.9174499511719, 'peak_mib': 569.5203857421875, 'growth_mib': -43.79768753051758, 'playback': {0: {'fps': 23.8037145696586, 'forward_gaps': 0, 'frames': 401}, 1: {'fps': 23.675696100890352, 'forward_gaps': 0, 'frames': 402}, 2: {'fps': 23.800524438354874, 'forward_gaps': 0, 'frames': 404}}, 'queue_drops': 0, 'duplicate_first_images': [], 'lifecycle': {}, 'shared_process_enabled': True} []

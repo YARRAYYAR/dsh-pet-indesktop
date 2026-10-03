@@ -81,6 +81,7 @@ for variant in "${variant_list[@]}"; do
         --collect-all edge_tts
         --collect-all psutil
         --add-data "$assets:$assets"
+        --add-data "assets/characters_hq:assets/characters_hq"
         --add-data "assets/big_blue_fat_fish:assets/big_blue_fat_fish"
         --add-data "assets/chat:assets/chat"
         --add-data "assets/sounds:assets/sounds"
@@ -119,7 +120,7 @@ from pet import __version__
 path = Path(sys.argv[1])
 data = plistlib.loads(path.read_bytes())
 data['CFBundleShortVersionString'] = __version__
-data['CFBundleVersion'] = '4.2.1.3'
+data['CFBundleVersion'] = '4.2.1.5'
 data['CFBundleDisplayName'] = 'seeky· pet'
 path.write_bytes(plistlib.dumps(data))
 PY

@@ -48,6 +48,11 @@ MOVE_STRIDE_DEFAULT_PX = 120
 # 拖拽判定阈值（像素，缩放前逻辑像素）
 DRAG_THRESHOLD = 5
 
+# 角色在鼠标附近看向指针：沿用旧版 120ms 节拍、280px 反应半径与 16px 中心死区。
+CURSOR_POLL_MS = 120
+CURSOR_REACTION_RADIUS = 280
+CURSOR_DEAD_ZONE = 16
+
 # 默认显示缩放与右下角边距
 # 目标显示宽度 ≈ 462px（与 DSH web 端一致）→ 462 / 640 ≈ 0.72
 DEFAULT_SCALE = 0.72

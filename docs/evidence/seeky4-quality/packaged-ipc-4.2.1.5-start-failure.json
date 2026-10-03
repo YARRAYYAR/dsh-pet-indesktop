@@ -1,0 +1,9 @@
+{
+  "command": "HOME=<fresh /tmp/seeky-pkg.XXXXXX> .venv/bin/python scripts/verify_dsr_packaged_runtime.py --app '/Users/ray/Library/Caches/dsr-pet-build/macos/seeky· pet.app' --output docs/evidence/seeky4-quality/packaged-ipc-4.2.1.5.json",
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Temporary HOME; command omitted PYTHONPATH needed by the source harness",
+  "actual_result": "ModuleNotFoundError: No module named 'pet'",
+  "app_launched": false,
+  "exit_status": 1,
+  "recovery": "Rerun with PYTHONPATH=. so the source verification harness can import pet."
+}

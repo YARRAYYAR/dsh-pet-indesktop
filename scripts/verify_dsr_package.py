@@ -14,7 +14,7 @@ from PyInstaller.archive.readers import CArchiveReader
 MODULES = (
     'app', 'animation_thumbnail', 'branding', 'ceiling_geometry', 'codex_link', 'config',
     'context_menus.icons', 'context_menus.shared', 'decode_fanout', 'frame_edges',
-    'gui_stall_sampler', 'modern_settings_dialog', 'settings_actions',
+    'gui_stall_sampler', 'library', 'modern_settings_dialog', 'settings_actions',
     'settings_brand', 'settings_codex', 'settings_task_appearance', 'task_bubble', 'task_bubble_style', 'settings_commands', 'settings_navigation',
     'settings_pet_controls', 'settings_theme_qss', 'settings_widgets', 'top_flip',
     'webm_clip', 'window', 'window_optional_services', 'window_placement',
@@ -49,10 +49,11 @@ def digest(path):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--app', type=Path, required=True)
+    parser.add_argument('--output', type=Path)
     args = parser.parse_args()
     root = Path(__file__).resolve().parent.parent
     bundle = args.app.resolve()
-    output = root / 'docs/evidence/dsr-pet/package-verification.json'
+    output = args.output or root / 'docs/evidence/dsr-pet/package-verification.json'
     checks, errors = {}, []
     try:
         info = plistlib.loads((bundle / 'Contents/Info.plist').read_bytes())
@@ -96,6 +97,16 @@ def main():
             assert digest(packaged) == value, str(relative)
             checks['assets'].append({'path': str(relative), 'sha256': value})
         assert len(checks['assets']) == 106
+        checks['hq_assets'] = []
+        for source in sorted((root / 'assets/characters_hq').rglob('*.webm')):
+            relative = source.relative_to(root)
+            value = digest(source)
+            assert digest(bundle / 'Contents/Resources' / relative) == value, str(relative)
+            checks['hq_assets'].append({'path': str(relative), 'sha256': value})
+        assert len(checks['hq_assets']) == 106
+        index = Path('assets/characters_hq/shenshen/videos/quality-index.json')
+        assert digest(root / index) == digest(bundle / 'Contents/Resources' / index)
+        assert info['CFBundleVersion'] == '4.2.1.5'
         result = subprocess.run(['codesign', '--verify', '--deep', '--strict', str(bundle)],
                                 capture_output=True, text=True)
         checks['codesign'] = {'exit_status': result.returncode, 'output': result.stdout + result.stderr}
@@ -104,9 +115,9 @@ def main():
         errors.append(f'{type(exc).__name__}: {exc}')
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps({'command': [sys.executable, str(Path(__file__).resolve()),
-                                 '--app', str(bundle)], 'cwd': str(root),
+                                 '--app', str(bundle), '--output', str(output)], 'cwd': str(root),
                                  'setup': 'Completed arm64 bundle and source tree; read-only verification',
-                                 'assertions': 'Source bytecode matches; 106 HD hashes match; pure modules excluded; signature valid',
+                                 'assertions': 'Source bytecode matches; 106 source and 106 HQ hashes plus index match; pure modules excluded; signature valid; bundle version 4.2.1.5',
                                  'reset': 'Read-only; no configuration or application state changed',
                                  'checks': checks, 'errors': errors, 'exit_status': int(bool(errors))},
                                 ensure_ascii=False, indent=2))

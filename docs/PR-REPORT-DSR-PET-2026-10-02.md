@@ -1,7 +1,7 @@
 # seeky· pet：内存、透明边缘与设置 UI 交付报告
 
 > 基线：v4.2.1 纯桌宠修复提交 `1c3a59cd4a03730c86250172c118b561ab2c5d24`
-> 当前分支：`codex/seeky-pet`；初版：2026-10-02；最新：2026-10-03（seeky.3）；下方保留前阶段记录
+> 当前分支：`codex/seeky-pet`；初版：2026-10-02；最新：2026-10-03（seeky.5）；下方保留前阶段记录
 > 独立源码：`/Users/ray/Documents/New project/dsr-pet`
 > 当前 App：`/Users/ray/Applications/seeky· pet.app`；桌面同名符号链接指向此 App。旧安装版及桌面入口已移除。
 
@@ -320,3 +320,90 @@ PYTHONPATH=. .venv/bin/python scripts/verify_dsr_packaged_runtime.py --app "/Use
 - 发布证据去除真实本地会话标识，原记录存放忽略目录 .scratch/private-evidence；无需 API 密钥。Codex 本地 rollout 格式兼容性及打开目标会话可见性限制仍见第5节。
 - 原素材放大像素感仍受源分辨率限制；未交付实时 ML 超分或完整1440p替换。三宠内存采样没有改善、真实 OS 点击穿透/拖放尚未完整核验；未把所有功能描述为无条件保证。
 - 本机 ad-hoc 签名，无 Developer ID 公证；本轮 Windows/Linux 原生运行与 GitHub Actions 构建未核验。
+
+## 十、seeky.4：最新图标、放大素材与多宠实测（2026-10-03）
+
+### 10.1 本轮实现
+
+- 最新用户原图 SHA256：`f94c0056d3f5e467d904b18f9a6dda1b0bd3dd80ba61bf5785115c5db2653f2a`。源 PNG 原样保留，Mac 派生图保持圆角、透明角和外留白；之前两张图移入品牌归档。
+- 多窗的元数据/首帧后台预热共用两路信号量；等待可因关闭、隐藏、会话结束、换代而退出。预测预热也计入同一预算。播放 reader 不受此预算限制。
+- 同路径、mtime、大小的首帧 QImage 共享只读像素存储。弱池不强持有图像；关闭某子窗后，从仍存活的首帧 LRU 登记中找到同一缓冲，防止重生子窗重复分配。Qt 绘制隔离副本继续保留。
+- 放大时只在下一动作开始选用 2560×1440 变体；当前动作不中断、不改变帧序。回到常规尺寸，在下一动作开始恢复 1280×720 并清理旧高清播放器。外部角色包沿用自己的素材和 manifest。
+- 91 个高清变体来自用户原项目保留的母版；其余 15 个复用原项目的离线 [Real-ESRGAN NCNN](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan) / `realesr-animevideov3` 流程补齐。固定视频可见区域加 64 源像素上下文做推理，然后恢复原画布；Alpha 独立由原帧平滑缩放，不腐蚀或提高阈值。引擎、模型不随 App 分发，也不在运行时执行。
+- 实际用户配置原先关闭 `experimental_single_process_spawn`，因此多宠走独立进程。本机交付启用已经存在的单进程多窗与同角色共享解码；源码保留原默认和独立进程回退。每个桌宠仍有自己的设置和退出入口。
+
+### 10.2 多宠内存和播放性能
+
+环境：M3、8 GiB、macOS Cocoa、Retina DPR=2；相同运行时与 106 个原素材；随机种子 42；三宠同角色待机动作，真实 `AppShell.spawn_pet()` 入口。基线为上一版 `f483c72`（seeky.3），两端均启用共享模式，以隔离本轮代码收益。物理占用统计包含主进程和 FFmpeg 子进程，每 0.5 秒采样。
+
+| 轮次 | 基线 12–32 秒占用中位数 MiB | 新版占用中位数 MiB | 基线采样峰值 MiB | 新版采样峰值 MiB |
+|---|---:|---:|---:|---:|
+| 1 | 417.6 | 339.8 | 680.7 | 631.6 |
+| 2 | 376.8 | 347.6 | 648.1 | 564.3 |
+| 3 | 419.5 | 309.9 | 674.1 | 569.5 |
+| 三轮中位数 | **417.6** | **339.8** | **674.1** | **569.5** |
+
+采样占用中位数下降 **18.63%**，采样峰值中位数下降 **15.51%**。这不是整机所有负载的保证；12–32 秒内仍可能包含预热。三次两端均约 23.68–23.81 fps，没有前向源帧缺口，队列丢帧计数 0。首帧缓冲重复从 7 个动作降为 0；新版首帧后台解码同时最多 2 路。
+
+补充原生流程：
+
+- **80 秒三宠观察**：45–80 秒占用中位数 275.2 MiB，后段相对前段下降 23.1 MiB；23.77–23.80 fps，帧缺口/队列丢帧均 0。该时长不能证明任意长时间无增长。
+- **关闭第二子窗再重新新增**：窗口数 3 → 2 → 3，共享首帧重复 0，23.16–23.48 fps，帧缺口/队列丢帧均 0；其他桌宠继续播放。
+- **三个放大桌宠**：三个源宽均 2560，23.53–23.63 fps，帧缺口/队列丢帧均 0。12–32 秒占用中位数 **943.5 MiB**，采样峰值 **1958.2 MiB**，预热收尾时下降。高清解码和图像占用明显更高，不能套用常规尺寸的内存降幅。
+
+失败证据保留：早期 Documents 源码路径存在数秒文件读取卡顿，关闭重生流程一轮约 12.8 fps；另一次叠加测试和离线推理负载低于验收帧率。相同源码复制到非同步本地缓存后，真实新增/关闭流程和上述三次交替比较通过。此结果区分了运行位置及负载，没有证明某一个后台进程是唯一原因。读取不存在 `_size` 字段的观测脚本失败也保留，修复采样脚本后重跑，失败轮不计入收益。
+
+证据：[三轮汇总](evidence/seeky4-memory/summary.json)、[80 秒观察](evidence/seeky4-memory/long-observation.json)、[实际新增与关闭](evidence/seeky4-memory/public-spawn-local.json)、[三宠高清成本](evidence/seeky4-memory/large-three.json)。每次 JSON 包含命令、目录、输入、检查、退出状态，日志同目录保留。
+
+### 10.3 画质与资源成本
+
+- [原素材完整性](evidence/seeky4-quality/source-integrity.json)确认原 106 个 WebM 的 SHA256 全部与基线相同；最新图标与用户文件逐字节相同。
+- [同帧视觉比较](evidence/seeky4-quality/comparison-idle.png)在白、灰、彩色背景比较相同头部局部、同尺寸、相同预乘 Alpha / Qt 平滑缩放。高清版本改善头发和眼睛轮廓，原画缺失的细节仍有上限。
+- [原生放大首轮](evidence/seeky4-quality/native-green-first.json)核验当前动作不重启、源宽 1280 → 2560 → 1280、时长相同、旧高清队列清空，放大播放约 23.82 fps。
+- [遮罩诊断](evidence/seeky4-quality/coverage-diagnostic.json)使用真实素材，在三种尺寸、三种旋转、每例八次检查精确区域及画面字节；单帧遮罩约 0.6–4.4 ms。没有足够证据把之前全部卡顿归因于遮罩，因此本轮不改遮罩算法。
+
+新增运行成本：首次读取 HQ 索引一次，动作边界检查候选文件；没有新增网络请求、实时模型推理或额外播放线程。后台等待最多每 50 ms 检查一次退出条件，沿用原有预热线程。首帧共享键在首帧路径做 stat，池失效时扫描存活登记；每帧绘制路径不扫描该池。高清像素数量是原图四倍，画质收益有对应的解码、缓存和包体成本。
+
+### 10.4 逐文件说明与检查
+
+| 文件 | 改动及原因 |
+|---|---|
+| `.gitignore` | 允许独立 HQ 目录纳入源码，保留其他素材忽略规则。 |
+| `pet/branding.py` | 派生版本升级为 seeky.4，软件名保持 seeky· pet。 |
+| `pet/resources/app-icon.png` | 最新用户原图，原样保留。 |
+| `pet/resources/app-icon-mac.png`、`assets/icon.ico` | 派生平台图标，Mac 采用圆角留白。 |
+| `assets/brand/archive/seeky-source-v3.png`、`seeky-source-v4-first.png` | 保存本轮替换的两张旧图。 |
+| `pet/library.py` | 两路后台预热、动作边界 HQ 选择、旧播放器清理；避免默认尺寸加载高清队列。 |
+| `pet/webm_clip.py` | 首帧弱共享与存活登记回找；子窗关闭和重生不重复保存同一像素。 |
+| `pet/window.py` | 切换/回退动作使用按尺寸选择；成功后释放退役变体。 |
+| `pet/window_optional_services.py` | 连接按播放器对象识别、忽略旧对象帧、清理迟到完成；移到已有 mixin，满足 window 行数预算。 |
+| `scripts/build_macos.sh` | 包含 HQ 数据；bundle 版本 4.2.1.4。 |
+| `scripts/superres_webm_assets.py` | 复用离线流程，固定上下文裁切和原 Alpha 回填；输出验证失败时拒绝提交素材。 |
+| `scripts/verify_seeky_media.py` | 全部素材的精确帧数/帧率/时长/透明标记及哈希核验，成功才写 HQ 索引。 |
+| `scripts/verify_seeky_multi.py` | 真正多窗公共入口、关闭重生、FPS、帧缺口和进程树内存测量。 |
+| `scripts/verify_seeky_quality.py` | 原生尺寸切换、动作不断播、高清播放器释放检查，支持本地非同步源码目录。 |
+| `scripts/compare_seeky_quality.py` | 真实 Qt 同帧同背景视觉比较。 |
+| `scripts/verify_seeky_coverage.py` | 真实素材遮罩区域、画面不变和耗时诊断；不构造新的单元测试。 |
+| `scripts/verify_dsr_package.py` | 新增 library 字节码匹配、106 HQ/索引哈希与版本校验；单独输出保留上一版证据。 |
+| `scripts/verify_dsr_packaged_runtime.py` | 单独输出原生包运行证据，保留上一轮记录。 |
+| `README.md` | 说明共享模式启用、实测范围及高清放大成本。 |
+| `THIRD_PARTY_NOTICES` | 补充离线引擎与模型软件出处及原许可证。 |
+| `assets/characters_hq/**`、`docs/evidence/seeky4-*/**` | 每一项的路径、用途、增删数见本轮 change-files 清单；素材哈希和证据哈希分别可核验。 |
+
+已完成门禁：全仓 Ruff 通过；全量 pytest **2914 通过、21 跳过**；8 个自有 CPU 负载进程下，相关时序族复跑三遍，分别 **171/171/171 通过**。没有新增单元测试，沿用已有门禁与原生验收流程。日志和重跑命令在 `evidence/seeky4-memory`。
+
+## 十一、seeky.5：恢复鼠标位置驱动的身体转向（2026-10-03）
+
+对照项目 GitHub 历史提交 [`910e773`](https://github.com/YARRAYYAR/dsh-pet-indesktop/blob/910e773f2be8259b38251195c60c9dfc8f7a0c1f/pet/window.py)，恢复原有行为：每 120ms 检查鼠标与桌宠窗口中心的位置；横向差小于 16px 或距离超过 280px 时维持当前朝向，其余情况直接更新整帧左右镜像。没有眼球追踪或渐变过渡。当前 v4.2.1 官方稳定源码已不含这段轮询，因此以该仓库保留的原提交作为行为依据。
+
+原生 Cocoa 验收实际移动系统指针到 -320、-140、0、+140、+320px 五处；方向外、左、死区、右、方向外五例全部通过，测试结束恢复原光标位置。可复跑：`.venv/bin/python scripts/verify_seeky_cursor.py`。结果见 [cursor-facing.json](evidence/seeky4-quality/cursor-facing.json)。此前模拟点击没有移动系统指针的失效记录及 macOS 指针事件延迟的首轮失败均单独保留，不计为通过。
+
+全仓 Ruff 通过；完整 pytest **2914 通过、21 跳过**。构建出的 macOS 包通过源码字节码、106 个原素材/106 个高清素材哈希、图标、模块排除、版本及签名检查；包内真实动作目录/播放/错误/退出流程通过，子进程退出。证据分别为 [installed package](evidence/seeky4-quality/package-verification-4.2.1.5-installed.json) 与 [packaged IPC](evidence/seeky4-quality/packaged-ipc-4.2.1.5.json)。
+
+本次版本为 `4.2.1.5` / `4.2.1 · seeky.5`。没有强杀旧桌宠进程；确认旧版进程已退出后，旧 `.4` bundle 被可恢复地移入废纸篓，新版安装到 `/Users/ray/Applications/seeky· pet.app` 并已打开。
+
+### 10.5 最终素材和原生尺寸切换验收
+
+[全部素材检查](evidence/seeky4-quality/media-final.json) **106/106 通过**：尺寸正好两倍、逐文件精确帧数及帧率一致、时长差小于 5 ms、AlphaMode=1；索引包含全部哈希及源时间线。91 个旧母版的哈希也原样保留（[来源记录](evidence/seeky4-quality/hq-provenance.json)）。高清目录合计约 **1000.7 MiB**，最大单文件约 17.3 MiB。
+
+[最终 Cocoa 尺寸切换](evidence/seeky4-quality/native-final.json)通过：源宽 1280 → 2560 → 1280，动作时长均 10.04 秒，放大约 23.81 fps，源帧缺口 0，旧高清队列为 0。两张原生截图见 [放大前](evidence/seeky4-quality/native-final-before.png) / [放大后](evidence/seeky4-quality/native-final-after.png)。[忙碌动作同帧对比](evidence/seeky4-quality/comparison-busy.png)包含白、灰、彩色背景；新生成版本改善轮廓清晰度，推理可能产生细微线条变化，不声称与原画 RGB 逐像素相同。内存优化本身没有改原帧像素。

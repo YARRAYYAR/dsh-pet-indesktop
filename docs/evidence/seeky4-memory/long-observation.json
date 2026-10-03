@@ -1,0 +1,1141 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky_multi.py",
+    "--root",
+    "/Users/ray/Library/Caches/seeky-native-v4",
+    "--output",
+    "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky4-memory/long-observation.json",
+    "--probe",
+    "/Users/ray/Library/Caches/seeky-native-v4/.scratch/seeky-proc-memory",
+    "--spawn-api",
+    "--expect-shared-first-frames",
+    "--expect-warm-limit",
+    "2",
+    "--scale",
+    "0.5203125",
+    "--duration",
+    "80",
+    "--steady-after",
+    "45"
+  ],
+  "cwd": "/Users/ray/Library/Caches/seeky-native-v4",
+  "setup": "Real Cocoa AppShell, three same-character windows, same idle clip, isolated config, seed 42",
+  "inputs": "45.0s startup + 35.0s observation; .5s footprint and 40ms first-frame process sampling; churn=False",
+  "assertions": "All three pets >=22 delivered fps, no forward source gaps; optional process-wide warm cap",
+  "reset": "aboutToQuit performs actual per-window cleanup; sampler stopped and joined",
+  "checks": {
+    "max_first_frame_decoders": 2,
+    "steady_mib": 275.2447395324707,
+    "peak_mib": 663.6921691894531,
+    "growth_mib": -23.11773681640625,
+    "playback": {
+      "0": {
+        "fps": 23.800364667873882,
+        "forward_gaps": 0,
+        "frames": 762
+      },
+      "1": {
+        "fps": 23.769386906195365,
+        "forward_gaps": 0,
+        "frames": 761
+      },
+      "2": {
+        "fps": 23.76916388838501,
+        "forward_gaps": 0,
+        "frames": 761
+      }
+    },
+    "queue_drops": 0,
+    "duplicate_first_images": [],
+    "lifecycle": {},
+    "shared_process_enabled": true,
+    "source_widths": [
+      1280,
+      1280,
+      1280
+    ]
+  },
+  "samples": [
+    {
+      "time": 1.321,
+      "stage": "startup",
+      "footprint": 566152504,
+      "ffmpeg_count": 3,
+      "rss": 393527296
+    },
+    {
+      "time": 1.836,
+      "stage": "startup",
+      "footprint": 553979216,
+      "ffmpeg_count": 3,
+      "rss": 601030656
+    },
+    {
+      "time": 2.347,
+      "stage": "startup",
+      "footprint": 553389416,
+      "ffmpeg_count": 3,
+      "rss": 624164864
+    },
+    {
+      "time": 2.865,
+      "stage": "startup",
+      "footprint": 541216128,
+      "ffmpeg_count": 3,
+      "rss": 574816256
+    },
+    {
+      "time": 3.379,
+      "stage": "startup",
+      "footprint": 552406400,
+      "ffmpeg_count": 3,
+      "rss": 612614144
+    },
+    {
+      "time": 3.891,
+      "stage": "startup",
+      "footprint": 542739840,
+      "ffmpeg_count": 3,
+      "rss": 590086144
+    },
+    {
+      "time": 4.401,
+      "stage": "startup",
+      "footprint": 553651608,
+      "ffmpeg_count": 3,
+      "rss": 607485952
+    },
+    {
+      "time": 4.919,
+      "stage": "startup",
+      "footprint": 554732952,
+      "ffmpeg_count": 3,
+      "rss": 541147136
+    },
+    {
+      "time": 5.43,
+      "stage": "startup",
+      "footprint": 551226776,
+      "ffmpeg_count": 3,
+      "rss": 602652672
+    },
+    {
+      "time": 5.95,
+      "stage": "startup",
+      "footprint": 550079920,
+      "ffmpeg_count": 3,
+      "rss": 550076416
+    },
+    {
+      "time": 6.464,
+      "stage": "startup",
+      "footprint": 555453872,
+      "ffmpeg_count": 3,
+      "rss": 564559872
+    },
+    {
+      "time": 6.98,
+      "stage": "startup",
+      "footprint": 551964080,
+      "ffmpeg_count": 3,
+      "rss": 572145664
+    },
+    {
+      "time": 7.493,
+      "stage": "startup",
+      "footprint": 534400432,
+      "ffmpeg_count": 3,
+      "rss": 561758208
+    },
+    {
+      "time": 8.005,
+      "stage": "startup",
+      "footprint": 547425712,
+      "ffmpeg_count": 3,
+      "rss": 580960256
+    },
+    {
+      "time": 8.519,
+      "stage": "startup",
+      "footprint": 541396424,
+      "ffmpeg_count": 3,
+      "rss": 612139008
+    },
+    {
+      "time": 9.035,
+      "stage": "startup",
+      "footprint": 536350152,
+      "ffmpeg_count": 3,
+      "rss": 614416384
+    },
+    {
+      "time": 9.55,
+      "stage": "startup",
+      "footprint": 498781640,
+      "ffmpeg_count": 3,
+      "rss": 665403392
+    },
+    {
+      "time": 10.066,
+      "stage": "startup",
+      "footprint": 553323976,
+      "ffmpeg_count": 3,
+      "rss": 538836992
+    },
+    {
+      "time": 10.577,
+      "stage": "startup",
+      "footprint": 526290376,
+      "ffmpeg_count": 3,
+      "rss": 596475904
+    },
+    {
+      "time": 11.099,
+      "stage": "startup",
+      "footprint": 695931680,
+      "ffmpeg_count": 5,
+      "rss": 701972480
+    },
+    {
+      "time": 11.615,
+      "stage": "startup",
+      "footprint": 683217792,
+      "ffmpeg_count": 5,
+      "rss": 659472384
+    },
+    {
+      "time": 12.127,
+      "stage": "startup",
+      "footprint": 656249728,
+      "ffmpeg_count": 5,
+      "rss": 590839808
+    },
+    {
+      "time": 12.642,
+      "stage": "startup",
+      "footprint": 656806808,
+      "ffmpeg_count": 5,
+      "rss": 533102592
+    },
+    {
+      "time": 13.152,
+      "stage": "startup",
+      "footprint": 388287872,
+      "ffmpeg_count": 3,
+      "rss": 546029568
+    },
+    {
+      "time": 13.685,
+      "stage": "startup",
+      "footprint": 414715288,
+      "ffmpeg_count": 3,
+      "rss": 493895680
+    },
+    {
+      "time": 14.202,
+      "stage": "startup",
+      "footprint": 411192728,
+      "ffmpeg_count": 3,
+      "rss": 516276224
+    },
+    {
+      "time": 14.719,
+      "stage": "startup",
+      "footprint": 453217688,
+      "ffmpeg_count": 3,
+      "rss": 486670336
+    },
+    {
+      "time": 15.231,
+      "stage": "startup",
+      "footprint": 464981400,
+      "ffmpeg_count": 3,
+      "rss": 482459648
+    },
+    {
+      "time": 15.749,
+      "stage": "startup",
+      "footprint": 440356272,
+      "ffmpeg_count": 3,
+      "rss": 463355904
+    },
+    {
+      "time": 16.272,
+      "stage": "startup",
+      "footprint": 440274352,
+      "ffmpeg_count": 3,
+      "rss": 476495872
+    },
+    {
+      "time": 16.787,
+      "stage": "startup",
+      "footprint": 449629616,
+      "ffmpeg_count": 3,
+      "rss": 457654272
+    },
+    {
+      "time": 17.302,
+      "stage": "startup",
+      "footprint": 444796336,
+      "ffmpeg_count": 3,
+      "rss": 446447616
+    },
+    {
+      "time": 17.818,
+      "stage": "startup",
+      "footprint": 434294216,
+      "ffmpeg_count": 3,
+      "rss": 466157568
+    },
+    {
+      "time": 18.332,
+      "stage": "startup",
+      "footprint": 407162312,
+      "ffmpeg_count": 3,
+      "rss": 505561088
+    },
+    {
+      "time": 18.848,
+      "stage": "startup",
+      "footprint": 436489672,
+      "ffmpeg_count": 3,
+      "rss": 483835904
+    },
+    {
+      "time": 19.362,
+      "stage": "startup",
+      "footprint": 404590024,
+      "ffmpeg_count": 3,
+      "rss": 513277952
+    },
+    {
+      "time": 19.876,
+      "stage": "startup",
+      "footprint": 417336776,
+      "ffmpeg_count": 3,
+      "rss": 484950016
+    },
+    {
+      "time": 20.389,
+      "stage": "startup",
+      "footprint": 422284744,
+      "ffmpeg_count": 3,
+      "rss": 528826368
+    },
+    {
+      "time": 20.914,
+      "stage": "startup",
+      "footprint": 452840904,
+      "ffmpeg_count": 3,
+      "rss": 423215104
+    },
+    {
+      "time": 21.429,
+      "stage": "startup",
+      "footprint": 520212512,
+      "ffmpeg_count": 4,
+      "rss": 534118400
+    },
+    {
+      "time": 21.95,
+      "stage": "startup",
+      "footprint": 614043680,
+      "ffmpeg_count": 4,
+      "rss": 533479424
+    },
+    {
+      "time": 22.466,
+      "stage": "startup",
+      "footprint": 595709984,
+      "ffmpeg_count": 4,
+      "rss": 549339136
+    },
+    {
+      "time": 22.976,
+      "stage": "startup",
+      "footprint": 360974904,
+      "ffmpeg_count": 2,
+      "rss": 407011328
+    },
+    {
+      "time": 23.49,
+      "stage": "startup",
+      "footprint": 357124664,
+      "ffmpeg_count": 2,
+      "rss": 436387840
+    },
+    {
+      "time": 24.003,
+      "stage": "startup",
+      "footprint": 352668216,
+      "ffmpeg_count": 2,
+      "rss": 407044096
+    },
+    {
+      "time": 24.515,
+      "stage": "startup",
+      "footprint": 346933840,
+      "ffmpeg_count": 2,
+      "rss": 418447360
+    },
+    {
+      "time": 25.031,
+      "stage": "startup",
+      "footprint": 337201792,
+      "ffmpeg_count": 2,
+      "rss": 407404544
+    },
+    {
+      "time": 25.542,
+      "stage": "startup",
+      "footprint": 345393816,
+      "ffmpeg_count": 2,
+      "rss": 430145536
+    },
+    {
+      "time": 26.055,
+      "stage": "startup",
+      "footprint": 358288024,
+      "ffmpeg_count": 2,
+      "rss": 412893184
+    },
+    {
+      "time": 26.568,
+      "stage": "startup",
+      "footprint": 347982488,
+      "ffmpeg_count": 2,
+      "rss": 403210240
+    },
+    {
+      "time": 27.077,
+      "stage": "startup",
+      "footprint": 346802840,
+      "ffmpeg_count": 2,
+      "rss": 377667584
+    },
+    {
+      "time": 27.591,
+      "stage": "startup",
+      "footprint": 337726104,
+      "ffmpeg_count": 2,
+      "rss": 400261120
+    },
+    {
+      "time": 28.105,
+      "stage": "startup",
+      "footprint": 357567128,
+      "ffmpeg_count": 2,
+      "rss": 374538240
+    },
+    {
+      "time": 28.619,
+      "stage": "startup",
+      "footprint": 352651928,
+      "ffmpeg_count": 2,
+      "rss": 398786560
+    },
+    {
+      "time": 29.131,
+      "stage": "startup",
+      "footprint": 344558232,
+      "ffmpeg_count": 2,
+      "rss": 394395648
+    },
+    {
+      "time": 29.643,
+      "stage": "startup",
+      "footprint": 359107224,
+      "ffmpeg_count": 2,
+      "rss": 409436160
+    },
+    {
+      "time": 30.154,
+      "stage": "startup",
+      "footprint": 365415088,
+      "ffmpeg_count": 2,
+      "rss": 390660096
+    },
+    {
+      "time": 30.673,
+      "stage": "startup",
+      "footprint": 349276848,
+      "ffmpeg_count": 2,
+      "rss": 379781120
+    },
+    {
+      "time": 31.199,
+      "stage": "startup",
+      "footprint": 504959056,
+      "ffmpeg_count": 4,
+      "rss": 553156608
+    },
+    {
+      "time": 31.716,
+      "stage": "startup",
+      "footprint": 432704776,
+      "ffmpeg_count": 3,
+      "rss": 475955200
+    },
+    {
+      "time": 32.231,
+      "stage": "startup",
+      "footprint": 477826288,
+      "ffmpeg_count": 3,
+      "rss": 443006976
+    },
+    {
+      "time": 32.744,
+      "stage": "startup",
+      "footprint": 464882928,
+      "ffmpeg_count": 3,
+      "rss": 464011264
+    },
+    {
+      "time": 33.259,
+      "stage": "startup",
+      "footprint": 234899208,
+      "ffmpeg_count": 1,
+      "rss": 247169024
+    },
+    {
+      "time": 33.77,
+      "stage": "startup",
+      "footprint": 244614968,
+      "ffmpeg_count": 1,
+      "rss": 261980160
+    },
+    {
+      "time": 34.278,
+      "stage": "startup",
+      "footprint": 245253992,
+      "ffmpeg_count": 1,
+      "rss": 255606784
+    },
+    {
+      "time": 34.792,
+      "stage": "startup",
+      "footprint": 233260904,
+      "ffmpeg_count": 1,
+      "rss": 222773248
+    },
+    {
+      "time": 35.306,
+      "stage": "startup",
+      "footprint": 221333352,
+      "ffmpeg_count": 1,
+      "rss": 220315648
+    },
+    {
+      "time": 35.821,
+      "stage": "startup",
+      "footprint": 225888104,
+      "ffmpeg_count": 1,
+      "rss": 225705984
+    },
+    {
+      "time": 36.338,
+      "stage": "startup",
+      "footprint": 216041320,
+      "ffmpeg_count": 1,
+      "rss": 225558528
+    },
+    {
+      "time": 36.853,
+      "stage": "startup",
+      "footprint": 218793832,
+      "ffmpeg_count": 1,
+      "rss": 232079360
+    },
+    {
+      "time": 37.365,
+      "stage": "startup",
+      "footprint": 217155432,
+      "ffmpeg_count": 1,
+      "rss": 226836480
+    },
+    {
+      "time": 37.876,
+      "stage": "startup",
+      "footprint": 231507816,
+      "ffmpeg_count": 1,
+      "rss": 223182848
+    },
+    {
+      "time": 38.44,
+      "stage": "startup",
+      "footprint": 225494912,
+      "ffmpeg_count": 1,
+      "rss": 227508224
+    },
+    {
+      "time": 38.959,
+      "stage": "startup",
+      "footprint": 236881792,
+      "ffmpeg_count": 1,
+      "rss": 218152960
+    },
+    {
+      "time": 39.468,
+      "stage": "startup",
+      "footprint": 213059456,
+      "ffmpeg_count": 1,
+      "rss": 226918400
+    },
+    {
+      "time": 39.98,
+      "stage": "startup",
+      "footprint": 215746432,
+      "ffmpeg_count": 1,
+      "rss": 221364224
+    },
+    {
+      "time": 40.498,
+      "stage": "startup",
+      "footprint": 213878656,
+      "ffmpeg_count": 1,
+      "rss": 231063552
+    },
+    {
+      "time": 41.013,
+      "stage": "startup",
+      "footprint": 214091648,
+      "ffmpeg_count": 1,
+      "rss": 238616576
+    },
+    {
+      "time": 41.525,
+      "stage": "startup",
+      "footprint": 248514408,
+      "ffmpeg_count": 1,
+      "rss": 236814336
+    },
+    {
+      "time": 42.171,
+      "stage": "startup",
+      "footprint": 265783840,
+      "ffmpeg_count": 2,
+      "rss": 369967104
+    },
+    {
+      "time": 42.681,
+      "stage": "startup",
+      "footprint": 262064672,
+      "ffmpeg_count": 2,
+      "rss": 389234688
+    },
+    {
+      "time": 43.199,
+      "stage": "startup",
+      "footprint": 254724640,
+      "ffmpeg_count": 2,
+      "rss": 389349376
+    },
+    {
+      "time": 43.714,
+      "stage": "startup",
+      "footprint": 270584352,
+      "ffmpeg_count": 2,
+      "rss": 405356544
+    },
+    {
+      "time": 44.227,
+      "stage": "startup",
+      "footprint": 266013240,
+      "ffmpeg_count": 2,
+      "rss": 420315136
+    },
+    {
+      "time": 44.741,
+      "stage": "startup",
+      "footprint": 262343224,
+      "ffmpeg_count": 2,
+      "rss": 427786240
+    },
+    {
+      "time": 45.259,
+      "stage": "startup",
+      "footprint": 258722360,
+      "ffmpeg_count": 2,
+      "rss": 431603712
+    },
+    {
+      "time": 45.774,
+      "stage": "steady",
+      "footprint": 255969848,
+      "ffmpeg_count": 2,
+      "rss": 432635904
+    },
+    {
+      "time": 46.285,
+      "stage": "steady",
+      "footprint": 262474296,
+      "ffmpeg_count": 2,
+      "rss": 440074240
+    },
+    {
+      "time": 46.799,
+      "stage": "steady",
+      "footprint": 258624056,
+      "ffmpeg_count": 2,
+      "rss": 443645952
+    },
+    {
+      "time": 47.316,
+      "stage": "steady",
+      "footprint": 255101496,
+      "ffmpeg_count": 2,
+      "rss": 443662336
+    },
+    {
+      "time": 47.831,
+      "stage": "steady",
+      "footprint": 255035960,
+      "ffmpeg_count": 2,
+      "rss": 443662336
+    },
+    {
+      "time": 48.344,
+      "stage": "steady",
+      "footprint": 255068728,
+      "ffmpeg_count": 2,
+      "rss": 443727872
+    },
+    {
+      "time": 48.86,
+      "stage": "steady",
+      "footprint": 260786744,
+      "ffmpeg_count": 2,
+      "rss": 432553984
+    },
+    {
+      "time": 49.378,
+      "stage": "steady",
+      "footprint": 298945080,
+      "ffmpeg_count": 2,
+      "rss": 401506304
+    },
+    {
+      "time": 49.889,
+      "stage": "steady",
+      "footprint": 275925560,
+      "ffmpeg_count": 2,
+      "rss": 397017088
+    },
+    {
+      "time": 50.405,
+      "stage": "steady",
+      "footprint": 275302968,
+      "ffmpeg_count": 2,
+      "rss": 409665536
+    },
+    {
+      "time": 50.922,
+      "stage": "steady",
+      "footprint": 260459064,
+      "ffmpeg_count": 2,
+      "rss": 405110784
+    },
+    {
+      "time": 51.95,
+      "stage": "steady",
+      "footprint": 348671120,
+      "ffmpeg_count": 3,
+      "rss": 511705088
+    },
+    {
+      "time": 52.463,
+      "stage": "steady",
+      "footprint": 366513368,
+      "ffmpeg_count": 3,
+      "rss": 517488640
+    },
+    {
+      "time": 52.98,
+      "stage": "steady",
+      "footprint": 350637272,
+      "ffmpeg_count": 3,
+      "rss": 531726336
+    },
+    {
+      "time": 53.494,
+      "stage": "steady",
+      "footprint": 291293704,
+      "ffmpeg_count": 2,
+      "rss": 425541632
+    },
+    {
+      "time": 54.009,
+      "stage": "steady",
+      "footprint": 271239712,
+      "ffmpeg_count": 2,
+      "rss": 424755200
+    },
+    {
+      "time": 54.525,
+      "stage": "steady",
+      "footprint": 269355576,
+      "ffmpeg_count": 2,
+      "rss": 432013312
+    },
+    {
+      "time": 55.041,
+      "stage": "steady",
+      "footprint": 302484024,
+      "ffmpeg_count": 2,
+      "rss": 420429824
+    },
+    {
+      "time": 55.558,
+      "stage": "steady",
+      "footprint": 297536056,
+      "ffmpeg_count": 2,
+      "rss": 435486720
+    },
+    {
+      "time": 56.074,
+      "stage": "steady",
+      "footprint": 318048848,
+      "ffmpeg_count": 2,
+      "rss": 407961600
+    },
+    {
+      "time": 56.591,
+      "stage": "steady",
+      "footprint": 291310184,
+      "ffmpeg_count": 2,
+      "rss": 428326912
+    },
+    {
+      "time": 57.109,
+      "stage": "steady",
+      "footprint": 284035688,
+      "ffmpeg_count": 2,
+      "rss": 439418880
+    },
+    {
+      "time": 57.624,
+      "stage": "steady",
+      "footprint": 275237480,
+      "ffmpeg_count": 2,
+      "rss": 436879360
+    },
+    {
+      "time": 58.138,
+      "stage": "steady",
+      "footprint": 278088296,
+      "ffmpeg_count": 2,
+      "rss": 424280064
+    },
+    {
+      "time": 58.655,
+      "stage": "steady",
+      "footprint": 290130536,
+      "ffmpeg_count": 2,
+      "rss": 432685056
+    },
+    {
+      "time": 59.171,
+      "stage": "steady",
+      "footprint": 274598504,
+      "ffmpeg_count": 2,
+      "rss": 427671552
+    },
+    {
+      "time": 59.686,
+      "stage": "steady",
+      "footprint": 278055528,
+      "ffmpeg_count": 2,
+      "rss": 433143808
+    },
+    {
+      "time": 60.204,
+      "stage": "steady",
+      "footprint": 285575784,
+      "ffmpeg_count": 2,
+      "rss": 439058432
+    },
+    {
+      "time": 60.718,
+      "stage": "steady",
+      "footprint": 300812904,
+      "ffmpeg_count": 2,
+      "rss": 381222912
+    },
+    {
+      "time": 61.233,
+      "stage": "steady",
+      "footprint": 311626344,
+      "ffmpeg_count": 2,
+      "rss": 408485888
+    },
+    {
+      "time": 61.749,
+      "stage": "steady",
+      "footprint": 330844776,
+      "ffmpeg_count": 2,
+      "rss": 430260224
+    },
+    {
+      "time": 62.266,
+      "stage": "steady",
+      "footprint": 373869856,
+      "ffmpeg_count": 3,
+      "rss": 532594688
+    },
+    {
+      "time": 62.779,
+      "stage": "steady",
+      "footprint": 379948344,
+      "ffmpeg_count": 3,
+      "rss": 555499520
+    },
+    {
+      "time": 63.292,
+      "stage": "steady",
+      "footprint": 291752528,
+      "ffmpeg_count": 2,
+      "rss": 394362880
+    },
+    {
+      "time": 63.807,
+      "stage": "steady",
+      "footprint": 305318480,
+      "ffmpeg_count": 2,
+      "rss": 406159360
+    },
+    {
+      "time": 64.319,
+      "stage": "steady",
+      "footprint": 313641552,
+      "ffmpeg_count": 2,
+      "rss": 404619264
+    },
+    {
+      "time": 64.84,
+      "stage": "steady",
+      "footprint": 307399272,
+      "ffmpeg_count": 2,
+      "rss": 401145856
+    },
+    {
+      "time": 65.354,
+      "stage": "steady",
+      "footprint": 295619176,
+      "ffmpeg_count": 2,
+      "rss": 406470656
+    },
+    {
+      "time": 65.867,
+      "stage": "steady",
+      "footprint": 312707688,
+      "ffmpeg_count": 2,
+      "rss": 421199872
+    },
+    {
+      "time": 66.382,
+      "stage": "steady",
+      "footprint": 294603392,
+      "ffmpeg_count": 2,
+      "rss": 428851200
+    },
+    {
+      "time": 66.896,
+      "stage": "steady",
+      "footprint": 302631552,
+      "ffmpeg_count": 2,
+      "rss": 432799744
+    },
+    {
+      "time": 67.412,
+      "stage": "steady",
+      "footprint": 298125952,
+      "ffmpeg_count": 2,
+      "rss": 440188928
+    },
+    {
+      "time": 67.925,
+      "stage": "steady",
+      "footprint": 287099520,
+      "ffmpeg_count": 2,
+      "rss": 440287232
+    },
+    {
+      "time": 68.438,
+      "stage": "steady",
+      "footprint": 294505088,
+      "ffmpeg_count": 2,
+      "rss": 447774720
+    },
+    {
+      "time": 68.957,
+      "stage": "steady",
+      "footprint": 298093184,
+      "ffmpeg_count": 2,
+      "rss": 427884544
+    },
+    {
+      "time": 69.468,
+      "stage": "steady",
+      "footprint": 301632128,
+      "ffmpeg_count": 2,
+      "rss": 420823040
+    },
+    {
+      "time": 69.983,
+      "stage": "steady",
+      "footprint": 310086272,
+      "ffmpeg_count": 2,
+      "rss": 400752640
+    },
+    {
+      "time": 70.499,
+      "stage": "steady",
+      "footprint": 309463704,
+      "ffmpeg_count": 2,
+      "rss": 410451968
+    },
+    {
+      "time": 71.017,
+      "stage": "steady",
+      "footprint": 310610584,
+      "ffmpeg_count": 2,
+      "rss": 432832512
+    },
+    {
+      "time": 71.529,
+      "stage": "steady",
+      "footprint": 306940568,
+      "ffmpeg_count": 2,
+      "rss": 442007552
+    },
+    {
+      "time": 72.045,
+      "stage": "steady",
+      "footprint": 391744896,
+      "ffmpeg_count": 3,
+      "rss": 528236544
+    },
+    {
+      "time": 72.56,
+      "stage": "steady",
+      "footprint": 421580160,
+      "ffmpeg_count": 3,
+      "rss": 556531712
+    },
+    {
+      "time": 73.077,
+      "stage": "steady",
+      "footprint": 416091544,
+      "ffmpeg_count": 3,
+      "rss": 531415040
+    },
+    {
+      "time": 73.592,
+      "stage": "steady",
+      "footprint": 243779504,
+      "ffmpeg_count": 1,
+      "rss": 273678336
+    },
+    {
+      "time": 74.109,
+      "stage": "steady",
+      "footprint": 232671152,
+      "ffmpeg_count": 1,
+      "rss": 276955136
+    },
+    {
+      "time": 74.626,
+      "stage": "steady",
+      "footprint": 236406704,
+      "ffmpeg_count": 1,
+      "rss": 280723456
+    },
+    {
+      "time": 75.142,
+      "stage": "steady",
+      "footprint": 232736688,
+      "ffmpeg_count": 1,
+      "rss": 280805376
+    },
+    {
+      "time": 75.655,
+      "stage": "steady",
+      "footprint": 236570592,
+      "ffmpeg_count": 1,
+      "rss": 284655616
+    },
+    {
+      "time": 76.173,
+      "stage": "steady",
+      "footprint": 232900576,
+      "ffmpeg_count": 1,
+      "rss": 284721152
+    },
+    {
+      "time": 76.693,
+      "stage": "steady",
+      "footprint": 236685304,
+      "ffmpeg_count": 1,
+      "rss": 288473088
+    },
+    {
+      "time": 77.208,
+      "stage": "steady",
+      "footprint": 233048056,
+      "ffmpeg_count": 1,
+      "rss": 288571392
+    },
+    {
+      "time": 77.721,
+      "stage": "steady",
+      "footprint": 236750840,
+      "ffmpeg_count": 1,
+      "rss": 292290560
+    },
+    {
+      "time": 78.238,
+      "stage": "steady",
+      "footprint": 233048056,
+      "ffmpeg_count": 1,
+      "rss": 292290560
+    },
+    {
+      "time": 78.754,
+      "stage": "steady",
+      "footprint": 233064440,
+      "ffmpeg_count": 1,
+      "rss": 292454400
+    },
+    {
+      "time": 79.27,
+      "stage": "steady",
+      "footprint": 233097208,
+      "ffmpeg_count": 1,
+      "rss": 292487168
+    },
+    {
+      "time": 79.785,
+      "stage": "steady",
+      "footprint": 236750840,
+      "ffmpeg_count": 1,
+      "rss": 296239104
+    },
+    {
+      "time": 80.305,
+      "stage": "steady",
+      "footprint": 232982520,
+      "ffmpeg_count": 1,
+      "rss": 296255488
+    },
+    {
+      "time": 80.821,
+      "stage": "steady",
+      "footprint": 232753120,
+      "ffmpeg_count": 1,
+      "rss": 311738368
+    }
+  ],
+  "errors": [],
+  "exit_status": 0
+}

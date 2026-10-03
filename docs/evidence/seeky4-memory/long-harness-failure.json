@@ -1,0 +1,8 @@
+{
+  "command": "QT_QPA_PLATFORM=cocoa .venv/bin/python scripts/verify_seeky_multi.py --root /Users/ray/Library/Caches/seeky-native-v4 --spawn-api --scale 0.5203125",
+  "setup": "Real Cocoa, three windows; offline GPU conversion paused at a clip boundary",
+  "inputs": "80 second observation",
+  "assertions": "Playback >=22 fps, no gaps, source size recorded",
+  "actual": "Harness tried to read nonexistent WebMClip._size after application cleanup; no measurements accepted",
+  "exit_status": 1
+}

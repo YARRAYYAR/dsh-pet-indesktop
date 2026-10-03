@@ -47,6 +47,41 @@ def effects_coverage(host, canvas):
 class WindowFeatureGateMixin:
     """供 PetWindow 混入的可选服务/效果懒装配能力。"""
 
+    def _connect_movie(self, name: str, movie) -> None:
+        """按需连接 clip 信号（懒加载）：同一动画只连接一次。
+
+        兜底说明：主线程被阻塞导致队列溢出、最后一帧被丢弃时，
+        frameChanged 永远到不了末尾帧；finished 信号保证动画链一定继续。
+        """
+        connected = getattr(self, '_connected_movie_refs', None)
+        if connected is None:
+            connected = self._connected_movie_refs = {}
+        if connected.get(name) is movie:
+            return
+        movie.frameChanged.connect(lambda n, name=name, movie=movie:
+                                   self._on_frame(name, n) if self.movie is movie else None)
+        movie.finished.connect(lambda name=name, movie=movie:
+                               self._on_movie_finished(name, movie))
+        connected[name] = movie
+        self._connected_movies.add(name)
+
+    def _on_movie_finished(self, name, movie):
+        if self.movie is movie:
+            self._on_clip_finished(name)
+        else:
+            clear = getattr(movie, 'clear_display_frame', None)
+            if callable(clear):
+                clear()  # Late completion must still release abandoned display buffers.
+
+    def _movie_for_render(self, name):
+        select = getattr(self.lib, 'movie_for_render', None)
+        if not callable(select):
+            return self.lib.movie(name)
+        screen = self._screen_available()
+        dpr = screen.devicePixelRatio() if screen is not None else 1.0
+        from . import catalog
+        return select(name, round(catalog.CANVAS_W * self.scale * dpr))
+
     cfg: Any
     proactive_watcher: Any = None
     agent_link_manager: Any = None
@@ -82,6 +117,7 @@ class WindowFeatureGateMixin:
     _codex_link: Any = None
     _throw_egg: Any = None
     _music_lyric: Any = None
+    _cursor_facing_timer: Any = None
 
     # ------------------------------------------------------------ 判定
     def _proactive_wanted(self) -> bool:
@@ -136,6 +172,12 @@ class WindowFeatureGateMixin:
     # ------------------------------------------------------------ 黄金回旋/边缘探头
     def _install_effect_services(self):
         """安装效果控制器（幂等）。PetWindow 构造末尾调用一次。"""
+        if self._cursor_facing_timer is None:
+            from PySide6.QtCore import QTimer
+            from . import catalog
+            self._cursor_facing_timer = QTimer(self)
+            self._cursor_facing_timer.setInterval(catalog.CURSOR_POLL_MS)
+            self._cursor_facing_timer.timeout.connect(self._on_cursor_facing_tick)
         if getattr(self, '_top_flip', None) is None:
             from .top_flip import TopFlipController
             self._top_flip = TopFlipController(self)
@@ -149,6 +191,29 @@ class WindowFeatureGateMixin:
             from .throw_egg import ThrowEggController
             self._throw_egg = ThrowEggController(self)
         return self
+
+    def _on_cursor_facing_tick(self) -> None:
+        """在鼠标反应范围内让角色朝向指针；拖拽时不争抢朝向。"""
+        if (self._hidden_paused or getattr(self, '_closing', False)
+                or not self.isVisible() or self._dragging):
+            return
+        from PySide6.QtGui import QCursor
+        from . import catalog
+        from .interaction import cursor_facing
+
+        cursor = QCursor.pos()
+        center = (self.x() + self._w / 2.0, self.y() + self._h / 2.0)
+        target = cursor_facing(
+            center,
+            (float(cursor.x()), float(cursor.y())),
+            catalog.CURSOR_REACTION_RADIUS,
+            catalog.CURSOR_DEAD_ZONE,
+        )
+        if target is None or target == self.facing:
+            return
+        self.facing = target
+        self._rebuild_frame()
+        self.update()
 
     # ------------------------------------------------------------ 歌词显示
     def install_music_lyric(self):
@@ -323,6 +388,9 @@ class WindowFeatureGateMixin:
             edge.on_release(bool(was_dragging))
 
     def _effects_on_hidden(self) -> None:
+        timer = getattr(self, '_cursor_facing_timer', None)
+        if timer is not None:
+            timer.stop()
         top = getattr(self, '_top_flip', None)
         if top is not None:
             top.pause()
@@ -337,6 +405,9 @@ class WindowFeatureGateMixin:
         self.pause_music_lyric()
 
     def _effects_on_shown(self) -> None:
+        timer = getattr(self, '_cursor_facing_timer', None)
+        if timer is not None and not getattr(self, '_closing', False):
+            timer.start()
         top = getattr(self, '_top_flip', None)
         if top is not None:
             top.resume()

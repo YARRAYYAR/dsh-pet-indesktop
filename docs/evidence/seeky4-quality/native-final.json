@@ -1,0 +1,28 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky_quality.py",
+    "--root",
+    "/Users/ray/Library/Caches/seeky-native-v4",
+    "--output",
+    "docs/evidence/seeky4-quality/native-final.json"
+  ],
+  "cwd": "/Users/ray/Library/Caches/seeky-native-v4",
+  "setup": "Cocoa, Retina DPR=2, actual AppShell; isolated config; .72 -> 1.3 -> .72",
+  "inputs": "Resize while playing; explicitly start next idle; return to default size",
+  "assertions": "No mid-action restart; 1280 -> 2560 -> 1280 sources; unchanged duration; >=22 fps; no gaps; old HQ reader cleanup",
+  "reset": "Real AppShell aboutToQuit shuts down all libraries and decoders",
+  "checks": {
+    "small_source": 1280,
+    "large_source": 2560,
+    "render_width": 1664,
+    "duration": 10.04,
+    "small_duration": 10.04,
+    "returned_source": 1280,
+    "old_high_queue": 0,
+    "fps": 23.80513676663348,
+    "forward_gaps": 0
+  },
+  "errors": [],
+  "exit_status": 0
+}

@@ -1,0 +1,41 @@
+{
+  "command": "RealESRGAN full source and crop padded by 64 source pixels, -n realesr-animevideov3 -s 2 -t 256 -j 1:1:1",
+  "cwd": "/Users/ray/Documents/New project/dsh-pet-indesktop/tools/realesrgan-20220424",
+  "setup": "Same first busy-action frame and same local engine/models; preserved full source",
+  "inputs": {
+    "full": [
+      1280,
+      720
+    ],
+    "crop": [
+      368,
+      56,
+      912,
+      720
+    ]
+  },
+  "assertions": "Compare visible RGB (alpha>32) between full and padded-crop enhancement; mean < 1 channel level",
+  "checks": {
+    "rgb_mean_abs": [
+      0.0341937057171438,
+      0.03212502965323548,
+      0.03803742860413304
+    ],
+    "rgb_extrema": [
+      [
+        0,
+        5
+      ],
+      [
+        0,
+        5
+      ],
+      [
+        0,
+        4
+      ]
+    ]
+  },
+  "exit_status": 0,
+  "reset": "Only temporary PNGs created; source media untouched"
+}

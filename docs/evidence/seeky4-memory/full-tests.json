@@ -1,0 +1,15 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "-q"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Existing full repository suite, PySide6 6.11.2, Python 3.13, QT_QPA_PLATFORM=offscreen",
+  "inputs": "All existing tests, originals preserved",
+  "assertions": "All required existing tests pass",
+  "reset": "Existing repository fixtures clean up Qt/media/IPC resources",
+  "elapsed_s": 199.143,
+  "exit_status": 1
+}

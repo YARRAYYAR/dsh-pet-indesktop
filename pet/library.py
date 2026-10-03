@@ -35,6 +35,10 @@ from .webm_clip import WebMClip, session_ending
 
 _LIVE_MOVIE_LIBRARIES: weakref.WeakSet = weakref.WeakSet()
 
+# First-frame/meta prewarm is background work; three windows must not spawn
+# nine decoders at once. Playback readers never acquire this budget.
+_PREWARM_SLOTS = threading.BoundedSemaphore(2)
+
 
 # QMovie 播放速度补偿（%）：GIF 路线使用，校准 QMovie 偏慢问题
 PLAYBACK_SPEED = 120
@@ -142,6 +146,8 @@ class MovieLibrary(QObject):
         self.folder_map: dict[str, str] = {}
         self.folder_files: dict[str, list[str]] = {}
         self._movies: dict[str, object] = {}
+        self._superseded_movies: set = set()
+        self._hq_paths: dict[str, dict] = {}
         self._paths: dict[str, Path] = {}
         # 随机动作池延迟预热：启动后 2s 再以 1 个 worker 慢慢补，避免多开时
         # ffmpeg 进程洪峰；只在高优先级（idle/turn/click/drag/move）就绪后触发。
@@ -193,6 +199,17 @@ class MovieLibrary(QObject):
         self.move_strides, self.move_curves = self._load_move_sidecar()
 
         self._load_all()
+        # Only verified built-in variants may override built-in media. External
+        # character packs keep their own source and manifest unchanged.
+        if self._asset_dir.resolve() == catalog.character_video_dir(self.character_id).resolve():
+            import json
+            self._hq_dir = catalog.characters_dir().parent / 'characters_hq' / self.character_id / 'videos'
+            index = self._hq_dir / 'quality-index.json'
+            if index.is_file():
+                try:
+                    self._hq_paths = json.loads(index.read_text(encoding='utf-8'))['clips']
+                except (OSError, ValueError, KeyError):
+                    logging.exception('读取高清素材索引失败: %s', index)
 
     def _load_no_mirror(self) -> set[str]:
         '''加载 text_clips.json：内含文字的动画在朝向翻转时不镜像（防文字反显）。'''
@@ -442,10 +459,21 @@ class MovieLibrary(QObject):
                         continue
                     if cancelled is not None and cancelled():
                         continue
-                    try:
-                        warm(clip)
-                    except Exception:
-                        pass  # 单个素材预热失败不拖垮整批（与顶层 try/except 一致）
+                    while not _PREWARM_SLOTS.acquire(timeout=0.05):
+                        if (self._shutdown or self._warm_paused or session_ending()
+                                or generation != self._warm_generation):
+                            break
+                    else:
+                        try:
+                            if (self._shutdown or self._warm_paused or session_ending()
+                                    or generation != self._warm_generation
+                                    or (cancelled is not None and cancelled())):
+                                continue
+                            warm(clip)
+                        except Exception:
+                            logging.exception('动画后台预热失败: %s', getattr(clip, 'path', clip))
+                        finally:
+                            _PREWARM_SLOTS.release()
 
             threads = [
                 threading.Thread(target=_work, daemon=True) for _ in range(nworkers)
@@ -528,7 +556,7 @@ class MovieLibrary(QObject):
             return
         self._shutdown = True
         self.pause_warm()
-        for clip in tuple(self._movies.values()):
+        for clip in (*tuple(self._movies.values()), *tuple(self._superseded_movies)):
             try:
                 cleanup = getattr(clip, 'cleanup', None)
                 if callable(cleanup):
@@ -541,6 +569,7 @@ class MovieLibrary(QObject):
                 logging.getLogger(__name__).debug(
                     '素材库关闭时收口 clip 失败', exc_info=True,
                 )
+        self._superseded_movies.clear()
 
     @classmethod
     def _shutdown_live_for_tests(cls) -> None:
@@ -814,17 +843,27 @@ class MovieLibrary(QObject):
                 warm = getattr(clip, 'warm_first_frame', None)
                 if not callable(warm):
                     return
-                t0 = perfstats.clock() if perfstats.ENABLED else 0.0
-                warm()
-                if perfstats.ENABLED:
-                    perfstats.time('prewarm.ff_ms', perfstats.clock() - t0)
+                while not _PREWARM_SLOTS.acquire(timeout=0.05):
+                    if (self._shutdown or self._warm_paused or session_ending()
+                            or generation != self._warm_generation):
+                        return
+                try:
+                    if (self._shutdown or self._warm_paused or session_ending()
+                            or generation != self._warm_generation):
+                        return
+                    t0 = perfstats.clock() if perfstats.ENABLED else 0.0
+                    warm()
+                    if perfstats.ENABLED:
+                        perfstats.time('prewarm.ff_ms', perfstats.clock() - t0)
+                finally:
+                    _PREWARM_SLOTS.release()
             except Exception:
-                pass  # 预热失败不致命，后续播放按需同步解码
+                logging.exception('预测动画预热失败: %s', name)
 
         try:
             threading.Thread(target=_run, daemon=True).start()
         except Exception:
-            pass
+            logging.exception('启动预测动画预热线程失败: %s', name)
 
     def movie(self, name: str):
         """按需创建并缓存 clip（懒加载）：启动时只创建实际用到/预热的动画。
@@ -839,6 +878,46 @@ class MovieLibrary(QObject):
             else:
                 self._movies[name] = WebMClip(path, parent=self)
         return self._movies[name]
+
+    def movie_for_render(self, name: str, pixel_width: int):
+        """Select resolution at an action boundary, never during playback.
+
+        The logical canvas, action names and timeline stay unchanged. Default
+        rendering keeps the existing source; enlargement uses verified 1440p.
+        """
+        base = self._paths[name]
+        entry = self._hq_paths.get(base.relative_to(self._asset_dir).as_posix())
+        path = base
+        if entry and pixel_width > int(entry['base_width']):
+            candidate = self._hq_dir / base.relative_to(self._asset_dir)
+            if candidate.is_file():
+                path = candidate
+            else:
+                logging.warning('高清素材缺失，使用原素材: %s', candidate)
+        previous = self._movies.get(name)
+        if previous is None:
+            previous = self.movie(name)
+        if Path(previous.path) == path:
+            return previous
+        movie = WebMClip(path, parent=self)
+        if entry:
+            movie._frame_count = int(entry['frames'])
+            movie._duration = float(entry['duration'])
+            movie._fps = float(entry['fps'])
+            movie._frame_count_exact = True
+        # HQ first frames remain under the ordinary LRU, avoiding fourfold
+        # pinned caches. The old player stays usable until start succeeds.
+        self._superseded_movies.add(previous)
+        self._movies[name] = movie
+        return movie
+
+    def release_superseded_movies(self, current) -> None:
+        for movie in tuple(self._superseded_movies):
+            if movie is current:
+                continue
+            movie.cleanup()
+            movie.deleteLater()
+            self._superseded_movies.discard(movie)
 
     def clip_path(self, name: str) -> Path | None:
         """只取素材路径、不创建 clip——供工作线程解码缩略图用。

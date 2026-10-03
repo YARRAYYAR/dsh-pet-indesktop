@@ -1,0 +1,18 @@
+QSystemTrayIcon::setVisible: No Icon set
+WARNING:root:GUI 卡顿 883ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（883ms，9 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-812ms] verify_seeky_multi.py:50:main <- app.py:1703:start <- app.py:1812:_create_ui_with_character_fallback <- app.py:572:_create_ui <- app.py:537:_build_window <- enum.py:695:__call__
+WARNING:pet.gui_stall_sampler:  [t-722ms] app.py:1707:start <- multi_window_shared.py:442:start <- multi_window_shared.py:354:start <- threading.py:979:start <- threading.py:659:wait <- threading.py:359:wait
+WARNING:pet.gui_stall_sampler:  [t-671ms] <frozen importlib._bootstrap>:1360:_find_and_load <- <frozen importlib._bootstrap>:1331:_find_and_load_unlocked <- <frozen importlib._bootstrap>:935:_load_unlocked <- <frozen importlib._bootstrap_external>:1022:exec_module <- <frozen importlib._bootstrap_external>:1118:get_code <- <frozen importlib._bootstrap_external>:1218:get_data
+WARNING:pet.gui_stall_sampler:  [t-573ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:77:main <- app.py:2627:spawn_pet <- app.py:2768:spawn_in_process_window <- app.py:537:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-452ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:139:main
+WARNING:root:GUI 卡顿 668ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（668ms，7 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-695ms] <frozen importlib._bootstrap>:1360:_find_and_load <- <frozen importlib._bootstrap>:1331:_find_and_load_unlocked <- <frozen importlib._bootstrap>:935:_load_unlocked <- <frozen importlib._bootstrap_external>:1022:exec_module <- <frozen importlib._bootstrap_external>:1118:get_code <- <frozen importlib._bootstrap_external>:1218:get_data
+WARNING:pet.gui_stall_sampler:  [t-596ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:77:main <- app.py:2627:spawn_pet <- app.py:2768:spawn_in_process_window <- app.py:537:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-476ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:139:main
+WARNING:root:GUI 卡顿 573ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（573ms，6 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-597ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:77:main <- app.py:2627:spawn_pet <- app.py:2768:spawn_in_process_window <- app.py:537:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-477ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:139:main
+{'max_first_frame_decoders': 5, 'steady_mib': 376.8158416748047, 'peak_mib': 648.1296920776367, 'growth_mib': -100.13410568237305, 'playback': {0: {'fps': 23.794481805782706, 'forward_gaps': 0, 'frames': 404}, 1: {'fps': 23.79434131595107, 'forward_gaps': 0, 'frames': 404}, 2: {'fps': 23.80108669974014, 'forward_gaps': 0, 'frames': 404}}, 'queue_drops': 0, 'duplicate_first_images': ['assets/characters/shenshen/videos/click/点击回应-傲娇生气.webm', 'assets/characters/shenshen/videos/click/点击回应-元气挥手.webm', 'assets/characters/shenshen/videos/click/点击回应-害羞惊讶.webm', 'assets/characters/shenshen/videos/click/点击回应-开心跃动.webm', 'assets/characters/shenshen/videos/click/点击回应-挠痒咯咯笑.webm', 'assets/characters/shenshen/videos/turn/东张西望.webm', 'assets/characters/shenshen/videos/drag/被鼠标拖拽悬空反馈.webm'], 'lifecycle': {}, 'shared_process_enabled': True} []

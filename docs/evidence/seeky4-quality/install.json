@@ -1,0 +1,18 @@
+{
+  "command": "Copy verified bundle to staging, verify signature, replace installed seeky.3; atomically enable existing single-process spawn key",
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Old app not running; old package and configuration preserved locally",
+  "inputs": "Verified seeky.4 arm64 bundle, existing user preferences",
+  "assertions": "Installed 4.2.1.4; desktop link resolves; only requested optimization key changed; original configuration retained",
+  "actual": {
+    "installed_app": "/Users/ray/Applications/seeky· pet.app",
+    "bundle_version": "4.2.1.4",
+    "shared_spawn_before": false,
+    "shared_spawn_after": true,
+    "shared_decode": true,
+    "other_config_values_unchanged": true,
+    "old_installed_app_in_trash": true
+  },
+  "exit_status": 0,
+  "reset": "Installed app is current; rollback package/config private cache; old installed version in normal Trash recovery"
+}

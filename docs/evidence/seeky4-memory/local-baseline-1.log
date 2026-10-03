@@ -1,0 +1,40 @@
+QSystemTrayIcon::setVisible: No Icon set
+WARNING:root:GUI 卡顿 1156ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（1156ms，9 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-1033ms] verify_seeky_multi.py:50:main <- app.py:1703:start <- app.py:1812:_create_ui_with_character_fallback <- app.py:572:_create_ui <- app.py:537:_build_window <- enum.py:695:__call__
+WARNING:pet.gui_stall_sampler:  [t-891ms] app.py:1707:start <- multi_window_shared.py:442:start <- multi_window_shared.py:354:start <- threading.py:979:start <- threading.py:659:wait <- threading.py:359:wait
+WARNING:pet.gui_stall_sampler:  [t-839ms] <frozen importlib._bootstrap_external>:1559:find_spec <- <frozen importlib._bootstrap_external>:1533:_get_spec <- <frozen importlib._bootstrap_external>:1651:find_spec <- <frozen importlib._bootstrap_external>:166:_path_isfile <- <frozen importlib._bootstrap_external>:158:_path_is_mode_type <- <frozen importlib._bootstrap_external>:152:_path_stat
+WARNING:pet.gui_stall_sampler:  [t-784ms] inspect.py:1074:findsource <- linecache.py:41:getlines <- linecache.py:148:updatecache <- tokenize.py:457:open <- tokenize.py:426:detect_encoding <- tokenize.py:384:read_or_stop
+WARNING:pet.gui_stall_sampler:  [t-679ms] app.py:2768:spawn_in_process_window <- app.py:548:_build_window <- settings_commands.py:28:__init__ <- settings_commands.py:12:endpoint <- _local.py:670:resolve <- <frozen posixpath>:445:realpath
+WARNING:pet.gui_stall_sampler:  [t-613ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:77:main <- app.py:2627:spawn_pet <- app.py:2768:spawn_in_process_window <- app.py:537:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-551ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:111:main <- threading.py:979:start <- threading.py:659:wait <- threading.py:359:wait
+WARNING:pet.gui_stall_sampler:  [t-147ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:139:main
+WARNING:root:GUI 卡顿 813ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（813ms，7 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-825ms] inspect.py:1074:findsource <- linecache.py:41:getlines <- linecache.py:148:updatecache <- tokenize.py:457:open <- tokenize.py:426:detect_encoding <- tokenize.py:384:read_or_stop
+WARNING:pet.gui_stall_sampler:  [t-719ms] app.py:2768:spawn_in_process_window <- app.py:548:_build_window <- settings_commands.py:28:__init__ <- settings_commands.py:12:endpoint <- _local.py:670:resolve <- <frozen posixpath>:445:realpath
+WARNING:pet.gui_stall_sampler:  [t-653ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:77:main <- app.py:2627:spawn_pet <- app.py:2768:spawn_in_process_window <- app.py:537:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-591ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:111:main <- threading.py:979:start <- threading.py:659:wait <- threading.py:359:wait
+WARNING:pet.gui_stall_sampler:  [t-188ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:139:main
+WARNING:pet.gui_stall_sampler:  [t-39ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:139:main <- window.py:1089:apply_current_native_window <- platform_mac.py:78:_mac_set_window_level
+WARNING:root:GUI 卡顿 708ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（708ms，6 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-720ms] app.py:2768:spawn_in_process_window <- app.py:548:_build_window <- settings_commands.py:28:__init__ <- settings_commands.py:12:endpoint <- _local.py:670:resolve <- <frozen posixpath>:445:realpath
+WARNING:pet.gui_stall_sampler:  [t-654ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:77:main <- app.py:2627:spawn_pet <- app.py:2768:spawn_in_process_window <- app.py:537:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-592ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:111:main <- threading.py:979:start <- threading.py:659:wait <- threading.py:359:wait
+WARNING:pet.gui_stall_sampler:  [t-188ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:139:main
+WARNING:pet.gui_stall_sampler:  [t-40ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:139:main <- window.py:1089:apply_current_native_window <- platform_mac.py:78:_mac_set_window_level
+WARNING:root:GUI 卡顿 226ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（226ms，3 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-224ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:139:main <- window.py:1089:apply_current_native_window <- platform_mac.py:78:_mac_set_window_level
+WARNING:pet.gui_stall_sampler:  [t-107ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:139:main
+WARNING:root:GUI 卡顿 203ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（203ms，3 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-242ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:139:main <- window.py:1089:apply_current_native_window <- platform_mac.py:78:_mac_set_window_level
+WARNING:pet.gui_stall_sampler:  [t-125ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:139:main
+WARNING:root:GUI 卡顿 203ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（203ms，4 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-250ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:139:main <- window.py:1089:apply_current_native_window <- platform_mac.py:78:_mac_set_window_level
+WARNING:pet.gui_stall_sampler:  [t-133ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:139:main
+WARNING:pet.gui_stall_sampler:  [t-2ms] __init__.py:1531:warning <- __init__.py:1664:_log <- __init__.py:1680:handle <- __init__.py:1736:callHandlers <- __init__.py:1026:handle <- __init__.py:1153:emit
+{'max_first_frame_decoders': 4, 'steady_mib': 417.5658531188965, 'peak_mib': 680.6767501831055, 'growth_mib': -119.98574829101562, 'playback': {0: {'fps': 23.797432475523486, 'forward_gaps': 0, 'frames': 404}, 1: {'fps': 23.7942008277784, 'forward_gaps': 0, 'frames': 404}, 2: {'fps': 23.79883781357774, 'forward_gaps': 0, 'frames': 404}}, 'queue_drops': 0, 'duplicate_first_images': ['assets/characters/shenshen/videos/click/点击回应-傲娇生气.webm', 'assets/characters/shenshen/videos/click/点击回应-元气挥手.webm', 'assets/characters/shenshen/videos/click/点击回应-害羞惊讶.webm', 'assets/characters/shenshen/videos/click/点击回应-开心跃动.webm', 'assets/characters/shenshen/videos/click/点击回应-挠痒咯咯笑.webm', 'assets/characters/shenshen/videos/turn/东张西望.webm', 'assets/characters/shenshen/videos/drag/被鼠标拖拽悬空反馈.webm'], 'lifecycle': {}, 'shared_process_enabled': True} []

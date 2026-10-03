@@ -1,0 +1,20 @@
+{
+  "command": "realesrgan-ncnn-vulkan -i source.png -o upscaled.png -n realesr-animevideov3 -s 2 -m <engine-root>/models",
+  "setup": "Owned offline probe before asset generation",
+  "inputs": "Real first source RGBA frame",
+  "assertions": "2x RGBA dimensions, alpha preserved; engine must resolve its models",
+  "actual": {
+    "wrong_cwd_exit": 139,
+    "engine_cwd_exit": 0,
+    "output_dimensions": [
+      2560,
+      1440
+    ],
+    "alpha_range": [
+      0,
+      255
+    ]
+  },
+  "reset": "Probe files retained locally; original source unchanged",
+  "exit_status": 0
+}

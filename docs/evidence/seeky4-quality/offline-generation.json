@@ -1,0 +1,149 @@
+{
+  "setup": "Existing offline anime super resolution pipeline; no runtime inference",
+  "runs": [
+    {
+      "command": [
+        "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+        "/Users/ray/Documents/New project/dsr-pet/scripts/superres_webm_assets.py",
+        "--input-root",
+        "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-offline-one/工作状态-垂头叹气冒汗",
+        "--output-root",
+        "/Users/ray/Documents/New project/dsr-pet/assets/characters_hq/shenshen/videos",
+        "--engine-root",
+        "/Users/ray/Documents/New project/dsh-pet-indesktop/tools/realesrgan-20220424"
+      ],
+      "cwd": "/Users/ray/Documents/New project/dsr-pet",
+      "inputs": "random/工作状态-垂头叹气冒汗.webm",
+      "assertions": "2x size, original fps/duration, retained alpha; separate final all-frame verifier",
+      "reset": "Temporary decoded frames removed; original source unchanged",
+      "elapsed_s": 100.18,
+      "exit_status": 0
+    },
+    {
+      "command": [
+        "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+        "/Users/ray/Documents/New project/dsr-pet/scripts/superres_webm_assets.py",
+        "--input-root",
+        "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-offline-one/工作状态-忙碌点按",
+        "--output-root",
+        "/Users/ray/Documents/New project/dsr-pet/assets/characters_hq/shenshen/videos",
+        "--engine-root",
+        "/Users/ray/Documents/New project/dsh-pet-indesktop/tools/realesrgan-20220424"
+      ],
+      "cwd": "/Users/ray/Documents/New project/dsr-pet",
+      "inputs": "random/工作状态-忙碌点按.webm",
+      "assertions": "2x size, original fps/duration, retained alpha; separate final all-frame verifier",
+      "reset": "Temporary decoded frames removed; original source unchanged",
+      "elapsed_s": 116.55,
+      "exit_status": 0
+    },
+    {
+      "command": [
+        "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+        "/Users/ray/Documents/New project/dsr-pet/scripts/superres_webm_assets.py",
+        "--input-root",
+        "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-offline-one/工作状态-思考冒泡",
+        "--output-root",
+        "/Users/ray/Documents/New project/dsr-pet/assets/characters_hq/shenshen/videos",
+        "--engine-root",
+        "/Users/ray/Documents/New project/dsh-pet-indesktop/tools/realesrgan-20220424"
+      ],
+      "cwd": "/Users/ray/Documents/New project/dsr-pet",
+      "inputs": "random/工作状态-思考冒泡.webm",
+      "assertions": "2x size, original fps/duration, retained alpha; separate final all-frame verifier",
+      "reset": "Temporary decoded frames removed; original source unchanged",
+      "elapsed_s": 110.32,
+      "exit_status": 0
+    },
+    {
+      "command": [
+        "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+        "/Users/ray/Documents/New project/dsr-pet/scripts/superres_webm_assets.py",
+        "--input-root",
+        "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-offline-one/工作状态-清点归档",
+        "--output-root",
+        "/Users/ray/Documents/New project/dsr-pet/assets/characters_hq/shenshen/videos",
+        "--engine-root",
+        "/Users/ray/Documents/New project/dsh-pet-indesktop/tools/realesrgan-20220424"
+      ],
+      "cwd": "/Users/ray/Documents/New project/dsr-pet",
+      "inputs": "random/工作状态-清点归档.webm",
+      "assertions": "2x size, original fps/duration, retained alpha; separate final all-frame verifier",
+      "reset": "Temporary decoded frames removed; original source unchanged",
+      "elapsed_s": 98.29,
+      "exit_status": 0
+    },
+    {
+      "command": [
+        "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+        "/Users/ray/Documents/New project/dsr-pet/scripts/superres_webm_assets.py",
+        "--input-root",
+        "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-offline-one/工作状态-雀跃庆祝",
+        "--output-root",
+        "/Users/ray/Documents/New project/dsr-pet/assets/characters_hq/shenshen/videos",
+        "--engine-root",
+        "/Users/ray/Documents/New project/dsh-pet-indesktop/tools/realesrgan-20220424"
+      ],
+      "cwd": "/Users/ray/Documents/New project/dsr-pet",
+      "inputs": "random/工作状态-雀跃庆祝.webm",
+      "assertions": "2x size, original fps/duration, retained alpha; separate final all-frame verifier",
+      "reset": "Temporary decoded frames removed; original source unchanged",
+      "elapsed_s": 128.54,
+      "exit_status": 0
+    },
+    {
+      "command": [
+        "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+        "/Users/ray/Documents/New project/dsr-pet/scripts/superres_webm_assets.py",
+        "--input-root",
+        "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-offline-one/碎碎念-发呆碎碎念",
+        "--output-root",
+        "/Users/ray/Documents/New project/dsr-pet/assets/characters_hq/shenshen/videos",
+        "--engine-root",
+        "/Users/ray/Documents/New project/dsh-pet-indesktop/tools/realesrgan-20220424"
+      ],
+      "cwd": "/Users/ray/Documents/New project/dsr-pet",
+      "inputs": "random/碎碎念-发呆碎碎念.webm",
+      "assertions": "2x size, original fps/duration, retained alpha; separate final all-frame verifier",
+      "reset": "Temporary decoded frames removed; original source unchanged",
+      "elapsed_s": 108.1,
+      "exit_status": 0
+    },
+    {
+      "command": [
+        "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+        "/Users/ray/Documents/New project/dsr-pet/scripts/superres_webm_assets.py",
+        "--input-root",
+        "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-offline-one/碎碎念-对屏碎碎念",
+        "--output-root",
+        "/Users/ray/Documents/New project/dsr-pet/assets/characters_hq/shenshen/videos",
+        "--engine-root",
+        "/Users/ray/Documents/New project/dsh-pet-indesktop/tools/realesrgan-20220424"
+      ],
+      "cwd": "/Users/ray/Documents/New project/dsr-pet",
+      "inputs": "random/碎碎念-对屏碎碎念.webm",
+      "assertions": "2x size, original fps/duration, retained alpha; separate final all-frame verifier",
+      "reset": "Temporary decoded frames removed; original source unchanged",
+      "elapsed_s": 114.65,
+      "exit_status": 0
+    },
+    {
+      "command": [
+        "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+        "/Users/ray/Documents/New project/dsr-pet/scripts/superres_webm_assets.py",
+        "--input-root",
+        "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-offline-one/碎碎念-擦桌碎碎念",
+        "--output-root",
+        "/Users/ray/Documents/New project/dsr-pet/assets/characters_hq/shenshen/videos",
+        "--engine-root",
+        "/Users/ray/Documents/New project/dsh-pet-indesktop/tools/realesrgan-20220424"
+      ],
+      "cwd": "/Users/ray/Documents/New project/dsr-pet",
+      "inputs": "random/碎碎念-擦桌碎碎念.webm",
+      "assertions": "2x size, original fps/duration, retained alpha; separate final all-frame verifier",
+      "reset": "Temporary decoded frames removed; original source unchanged",
+      "elapsed_s": 125.05,
+      "exit_status": 0
+    }
+  ]
+}

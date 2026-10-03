@@ -1,0 +1,220 @@
+{
+  "setup": "M3 8GiB, Cocoa, Retina DPR2; 3 same-character pets, public spawn API, scale .5203125; shared-process/decode enabled in both; same sources/runtime; local non-synced snapshots",
+  "baseline_commit": "f483c72ed44c523c491eb62a1b9b0b39543c968a",
+  "sample_window_s": [
+    12,
+    32
+  ],
+  "repetitions": 3,
+  "measurement": "Sum of process-tree physical footprint, sampled every .5s; warm-up may continue inside window",
+  "pairs": [
+    {
+      "run": 1,
+      "baseline": {
+        "max_first_frame_decoders": 4,
+        "steady_mib": 417.5658531188965,
+        "peak_mib": 680.6767501831055,
+        "growth_mib": -119.98574829101562,
+        "playback": {
+          "0": {
+            "fps": 23.797432475523486,
+            "forward_gaps": 0,
+            "frames": 404
+          },
+          "1": {
+            "fps": 23.7942008277784,
+            "forward_gaps": 0,
+            "frames": 404
+          },
+          "2": {
+            "fps": 23.79883781357774,
+            "forward_gaps": 0,
+            "frames": 404
+          }
+        },
+        "queue_drops": 0,
+        "duplicate_first_images": [
+          "assets/characters/shenshen/videos/click/\u70b9\u51fb\u56de\u5e94-\u50b2\u5a07\u751f\u6c14.webm",
+          "assets/characters/shenshen/videos/click/\u70b9\u51fb\u56de\u5e94-\u5143\u6c14\u6325\u624b.webm",
+          "assets/characters/shenshen/videos/click/\u70b9\u51fb\u56de\u5e94-\u5bb3\u7f9e\u60ca\u8bb6.webm",
+          "assets/characters/shenshen/videos/click/\u70b9\u51fb\u56de\u5e94-\u5f00\u5fc3\u8dc3\u52a8.webm",
+          "assets/characters/shenshen/videos/click/\u70b9\u51fb\u56de\u5e94-\u6320\u75d2\u54af\u54af\u7b11.webm",
+          "assets/characters/shenshen/videos/turn/\u4e1c\u5f20\u897f\u671b.webm",
+          "assets/characters/shenshen/videos/drag/\u88ab\u9f20\u6807\u62d6\u62fd\u60ac\u7a7a\u53cd\u9988.webm"
+        ],
+        "lifecycle": {},
+        "shared_process_enabled": true
+      },
+      "optimized": {
+        "max_first_frame_decoders": 2,
+        "steady_mib": 339.7766876220703,
+        "peak_mib": 631.6140213012695,
+        "growth_mib": 44.62513732910156,
+        "playback": {
+          "0": {
+            "fps": 23.746094003815912,
+            "forward_gaps": 0,
+            "frames": 403
+          },
+          "1": {
+            "fps": 23.74651481498984,
+            "forward_gaps": 0,
+            "frames": 403
+          },
+          "2": {
+            "fps": 23.802070721090523,
+            "forward_gaps": 0,
+            "frames": 404
+          }
+        },
+        "queue_drops": 0,
+        "duplicate_first_images": [],
+        "lifecycle": {},
+        "shared_process_enabled": true
+      }
+    },
+    {
+      "run": 2,
+      "baseline": {
+        "max_first_frame_decoders": 5,
+        "steady_mib": 376.8158416748047,
+        "peak_mib": 648.1296920776367,
+        "growth_mib": -100.13410568237305,
+        "playback": {
+          "0": {
+            "fps": 23.794481805782706,
+            "forward_gaps": 0,
+            "frames": 404
+          },
+          "1": {
+            "fps": 23.79434131595107,
+            "forward_gaps": 0,
+            "frames": 404
+          },
+          "2": {
+            "fps": 23.80108669974014,
+            "forward_gaps": 0,
+            "frames": 404
+          }
+        },
+        "queue_drops": 0,
+        "duplicate_first_images": [
+          "assets/characters/shenshen/videos/click/\u70b9\u51fb\u56de\u5e94-\u50b2\u5a07\u751f\u6c14.webm",
+          "assets/characters/shenshen/videos/click/\u70b9\u51fb\u56de\u5e94-\u5143\u6c14\u6325\u624b.webm",
+          "assets/characters/shenshen/videos/click/\u70b9\u51fb\u56de\u5e94-\u5bb3\u7f9e\u60ca\u8bb6.webm",
+          "assets/characters/shenshen/videos/click/\u70b9\u51fb\u56de\u5e94-\u5f00\u5fc3\u8dc3\u52a8.webm",
+          "assets/characters/shenshen/videos/click/\u70b9\u51fb\u56de\u5e94-\u6320\u75d2\u54af\u54af\u7b11.webm",
+          "assets/characters/shenshen/videos/turn/\u4e1c\u5f20\u897f\u671b.webm",
+          "assets/characters/shenshen/videos/drag/\u88ab\u9f20\u6807\u62d6\u62fd\u60ac\u7a7a\u53cd\u9988.webm"
+        ],
+        "lifecycle": {},
+        "shared_process_enabled": true
+      },
+      "optimized": {
+        "max_first_frame_decoders": 2,
+        "steady_mib": 347.6127166748047,
+        "peak_mib": 564.3014984130859,
+        "growth_mib": 37.88325881958008,
+        "playback": {
+          "0": {
+            "fps": 23.741494594833426,
+            "forward_gaps": 0,
+            "frames": 404
+          },
+          "1": {
+            "fps": 23.743288977089495,
+            "forward_gaps": 0,
+            "frames": 403
+          },
+          "2": {
+            "fps": 23.803757804147644,
+            "forward_gaps": 0,
+            "frames": 404
+          }
+        },
+        "queue_drops": 0,
+        "duplicate_first_images": [],
+        "lifecycle": {},
+        "shared_process_enabled": true
+      }
+    },
+    {
+      "run": 3,
+      "baseline": {
+        "max_first_frame_decoders": 3,
+        "steady_mib": 419.4721145629883,
+        "peak_mib": 674.0517044067383,
+        "growth_mib": 53.711246490478516,
+        "playback": {
+          "0": {
+            "fps": 23.745691306013022,
+            "forward_gaps": 0,
+            "frames": 404
+          },
+          "1": {
+            "fps": 23.803912326184303,
+            "forward_gaps": 0,
+            "frames": 405
+          },
+          "2": {
+            "fps": 23.805034411237866,
+            "forward_gaps": 0,
+            "frames": 405
+          }
+        },
+        "queue_drops": 0,
+        "duplicate_first_images": [
+          "assets/characters/shenshen/videos/click/\u70b9\u51fb\u56de\u5e94-\u50b2\u5a07\u751f\u6c14.webm",
+          "assets/characters/shenshen/videos/click/\u70b9\u51fb\u56de\u5e94-\u5143\u6c14\u6325\u624b.webm",
+          "assets/characters/shenshen/videos/click/\u70b9\u51fb\u56de\u5e94-\u5bb3\u7f9e\u60ca\u8bb6.webm",
+          "assets/characters/shenshen/videos/click/\u70b9\u51fb\u56de\u5e94-\u5f00\u5fc3\u8dc3\u52a8.webm",
+          "assets/characters/shenshen/videos/click/\u70b9\u51fb\u56de\u5e94-\u6320\u75d2\u54af\u54af\u7b11.webm",
+          "assets/characters/shenshen/videos/turn/\u4e1c\u5f20\u897f\u671b.webm",
+          "assets/characters/shenshen/videos/drag/\u88ab\u9f20\u6807\u62d6\u62fd\u60ac\u7a7a\u53cd\u9988.webm"
+        ],
+        "lifecycle": {},
+        "shared_process_enabled": true
+      },
+      "optimized": {
+        "max_first_frame_decoders": 2,
+        "steady_mib": 309.9174499511719,
+        "peak_mib": 569.5203857421875,
+        "growth_mib": -43.79768753051758,
+        "playback": {
+          "0": {
+            "fps": 23.8037145696586,
+            "forward_gaps": 0,
+            "frames": 401
+          },
+          "1": {
+            "fps": 23.675696100890352,
+            "forward_gaps": 0,
+            "frames": 402
+          },
+          "2": {
+            "fps": 23.800524438354874,
+            "forward_gaps": 0,
+            "frames": 404
+          }
+        },
+        "queue_drops": 0,
+        "duplicate_first_images": [],
+        "lifecycle": {},
+        "shared_process_enabled": true
+      }
+    }
+  ],
+  "statistics": {
+    "steady_mib": {
+      "baseline_median": 417.5658531188965,
+      "optimized_median": 339.7766876220703,
+      "reduction_percent": 18.629197027439098
+    },
+    "peak_mib": {
+      "baseline_median": 674.0517044067383,
+      "optimized_median": 569.5203857421875,
+      "reduction_percent": 15.507908070131394
+    }
+  },
+  "limits": "Results apply to this native same-character workload and observation windows. Not all characters or arbitrary long-term runs. High-resolution enlargement has a separate memory cost."
+}

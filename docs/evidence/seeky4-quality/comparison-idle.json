@@ -1,0 +1,37 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "/Users/ray/Documents/New project/dsr-pet/scripts/compare_seeky_quality.py",
+    "--output",
+    "docs/evidence/seeky4-quality/comparison-idle.png"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Real Cocoa Qt renderer, same source frame zero, .72 -> 1.3 scale at Retina DPR2",
+  "inputs": {
+    "clip": "idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+    "backgrounds": [
+      "#ffffff",
+      "#707070",
+      "#c05a44"
+    ],
+    "display_physical_size": [
+      1664,
+      936
+    ]
+  },
+  "assertions": "1280x720 versus 2560x1440; both premultiplied and Qt SmoothTransformation, same crop",
+  "checks": {
+    "source_dimensions": [
+      [
+        1280,
+        720
+      ],
+      [
+        2560,
+        1440
+      ]
+    ]
+  },
+  "reset": "Decode generators closed; source unchanged; comparison PNG only",
+  "exit_status": 0
+}

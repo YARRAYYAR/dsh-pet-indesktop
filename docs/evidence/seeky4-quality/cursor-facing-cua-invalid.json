@@ -1,0 +1,24 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky_cursor.py"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Fresh temporary config; real Cocoa AppShell; cursor-transparent native pet window",
+  "inputs": "Five attempted UI clicks at left, dead zone, right and range controls",
+  "assertions": "The attempted run intended to verify 120ms mouse polling, 280px reaction radius and 16px horizontal dead zone",
+  "reset": "Temporary config; AppShell pet window closed; no user preferences written",
+  "checks": [
+    {"input":"范围外左","cursor":[573,745],"window_center":[755.5,490.5],"requested_facing":null,"before":"left","actual":"left","expected":"left","pass":true},
+    {"input":"左侧","cursor":[573,745],"window_center":[755.5,490.5],"requested_facing":null,"before":"left","actual":"left","expected":"left","pass":true},
+    {"input":"死区","cursor":[573,745],"window_center":[755.5,490.5],"requested_facing":null,"before":"left","actual":"left","expected":"left","pass":true},
+    {"input":"右侧","cursor":[573,745],"window_center":[755.5,490.5],"requested_facing":null,"before":"left","actual":"left","expected":"left","pass":true},
+    {"input":"范围外右","cursor":[573,745],"window_center":[755.5,490.5],"requested_facing":null,"before":"left","actual":"left","expected":"left","pass":true}
+  ],
+  "errors": [],
+  "exit_status": 0,
+  "in_progress": false,
+  "verification_status": "invalid_pointer_input",
+  "evidence_valid": false,
+  "evidence_issue": "All five samples reported the same global cursor position (573,745), outside the 280px reaction radius. The simulated clicks did not establish the requested pointer locations, so the pass result did not verify directional behavior."
+}

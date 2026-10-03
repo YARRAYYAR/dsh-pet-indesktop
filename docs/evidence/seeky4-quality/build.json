@@ -1,0 +1,20 @@
+{
+  "command": "QT_QPA_PLATFORM=offscreen PYTHON_BIN=.venv/bin/python bash scripts/build_macos.sh --variants webm",
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Local arm64 PyInstaller onedir; original sources plus 106 verified HQ variants",
+  "inputs": "Current source/icon/assets/index/licenses",
+  "assertions": "Build, encoding check, dependency-free bridge smoke, ad-hoc signature complete",
+  "actual": [
+    "39850 INFO: Build complete! The results are available in: /Users/ray/Library/Caches/dsr-pet-build/macos",
+    "[encoding-check] 扫描产物目录: /Users/ray/Library/Caches/dsr-pet-build/macos/seeky· pet.app",
+    "[encoding-check] PASS: 中文编码检查全部通过（字面量/资源/文件名原样保持 UTF-8）",
+    "bridge zero-dependency smoke: import + envelope + source bans OK",
+    "[bridge] running zero-dependency import smoke on bundle copy...",
+    "[bridge] zero-dependency bundle OK",
+    "/Users/ray/Library/Caches/dsr-pet-build/macos/seeky· pet.app: replacing existing signature",
+    "macOS 构建完成：/Users/ray/Library/Caches/dsr-pet-build/macos"
+  ],
+  "elapsed_s": 47.36,
+  "reset": "Generated bundle in non-synced local cache; old installed app backed up before replacement",
+  "exit_status": 0
+}

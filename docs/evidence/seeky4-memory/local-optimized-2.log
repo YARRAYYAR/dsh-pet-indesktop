@@ -1,0 +1,20 @@
+QSystemTrayIcon::setVisible: No Icon set
+WARNING:root:GUI 卡顿 664ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（664ms，8 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-570ms] verify_seeky_multi.py:50:main <- app.py:1703:start <- app.py:1812:_create_ui_with_character_fallback <- app.py:572:_create_ui <- app.py:537:_build_window <- enum.py:695:__call__
+WARNING:pet.gui_stall_sampler:  [t-471ms] verify_seeky_multi.py:50:main <- app.py:1703:start <- app.py:1812:_create_ui_with_character_fallback <- app.py:572:_create_ui <- app.py:539:_build_window <- app.py:3250:_build_tray
+WARNING:pet.gui_stall_sampler:  [t-420ms] <frozen importlib._bootstrap>:1360:_find_and_load <- <frozen importlib._bootstrap>:1331:_find_and_load_unlocked <- <frozen importlib._bootstrap>:935:_load_unlocked <- <frozen importlib._bootstrap_external>:1022:exec_module <- <frozen importlib._bootstrap_external>:1118:get_code <- <frozen importlib._bootstrap_external>:1218:get_data
+WARNING:pet.gui_stall_sampler:  [t-363ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:77:main <- app.py:2627:spawn_pet <- app.py:2768:spawn_in_process_window <- app.py:537:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-259ms] app.py:2768:spawn_in_process_window <- app.py:537:_build_window <- window.py:1131:showEvent <- window.py:1094:_schedule_macos_window_level <- window.py:1089:apply_current_native_window <- platform_mac.py:78:_mac_set_window_level
+WARNING:pet.gui_stall_sampler:  [t-202ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:139:main
+WARNING:root:GUI 卡顿 403ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（403ms，6 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-429ms] <frozen importlib._bootstrap>:1360:_find_and_load <- <frozen importlib._bootstrap>:1331:_find_and_load_unlocked <- <frozen importlib._bootstrap>:935:_load_unlocked <- <frozen importlib._bootstrap_external>:1022:exec_module <- <frozen importlib._bootstrap_external>:1118:get_code <- <frozen importlib._bootstrap_external>:1218:get_data
+WARNING:pet.gui_stall_sampler:  [t-372ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:77:main <- app.py:2627:spawn_pet <- app.py:2768:spawn_in_process_window <- app.py:537:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-267ms] app.py:2768:spawn_in_process_window <- app.py:537:_build_window <- window.py:1131:showEvent <- window.py:1094:_schedule_macos_window_level <- window.py:1089:apply_current_native_window <- platform_mac.py:78:_mac_set_window_level
+WARNING:pet.gui_stall_sampler:  [t-210ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:139:main
+WARNING:root:GUI 卡顿 321ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（321ms，4 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-268ms] app.py:2768:spawn_in_process_window <- app.py:537:_build_window <- window.py:1131:showEvent <- window.py:1094:_schedule_macos_window_level <- window.py:1089:apply_current_native_window <- platform_mac.py:78:_mac_set_window_level
+WARNING:pet.gui_stall_sampler:  [t-211ms] verify_seeky_multi.py:174:<module> <- verify_seeky_multi.py:139:main
+{'max_first_frame_decoders': 2, 'steady_mib': 347.6127166748047, 'peak_mib': 564.3014984130859, 'growth_mib': 37.88325881958008, 'playback': {0: {'fps': 23.741494594833426, 'forward_gaps': 0, 'frames': 404}, 1: {'fps': 23.743288977089495, 'forward_gaps': 0, 'frames': 403}, 2: {'fps': 23.803757804147644, 'forward_gaps': 0, 'frames': 404}}, 'queue_drops': 0, 'duplicate_first_images': [], 'lifecycle': {}, 'shared_process_enabled': True} []

@@ -1,0 +1,18 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "-m",
+    "pytest",
+    "-q"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Existing full repository suite; Qt offscreen; no new isolated tests",
+  "inputs": "All existing tests on final source changes",
+  "assertions": "Repository accumulated branch gate",
+  "actual": [
+    "2914 passed, 21 skipped, 261 warnings in 198.66s (0:03:18)"
+  ],
+  "reset": "Existing fixture teardown",
+  "elapsed_s": 199.59,
+  "exit_status": 0
+}

@@ -1,0 +1,27 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_library_priority_warm.py",
+    "tests/test_predictive_prewarm.py",
+    "tests/test_first_frame_budget.py",
+    "tests/test_webm_clip_lifecycle.py",
+    "tests/test_clip_restart_paths.py",
+    "tests/test_session_end_ffmpeg_guard.py",
+    "tests/test_single_process_spawn.py",
+    "tests/test_single_process_shared.py",
+    "tests/test_switch_start_failure_window.py"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Eight owned CPU workers; existing lifecycle, prewarm, shared spawn, switch failure families",
+  "inputs": "High-load repeat 2/3",
+  "assertions": "All affected timing tests pass under CPU contention",
+  "actual": [
+    "171 passed, 2 warnings in 9.31s"
+  ],
+  "elapsed_s": 9.96,
+  "reset": "Test fixtures clean decoders; owned load workers stopped in finally",
+  "exit_status": 0
+}

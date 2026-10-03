@@ -475,6 +475,34 @@ _first_frame_reg_lock = threading.Lock()
 _first_frame_reg: list = []  # [(weakref(clip), bytes)]，尾部 = 最近使用
 _first_frame_bytes = 0
 _ffr_evict_seq = 0
+_shared_first_images: weakref.WeakValueDictionary = weakref.WeakValueDictionary()
+_shared_first_lock = threading.Lock()
+
+
+def _first_image_key(path: Path):
+    try:
+        path = Path(path)
+        stat = path.stat()
+        return str(path.resolve()), stat.st_mtime_ns, stat.st_size
+    except OSError:
+        return None  # Missing media still follows the decoder's existing error path.
+
+
+def _shared_first_image_locked(key):
+    """Caller holds the shared-image lock; registry never takes that lock."""
+    image = _shared_first_images.get(key)
+    if image is not None:
+        return image
+    # The weak pool's latest wrapper may have belonged to a closed child.
+    # Surviving pets still own the same data; don't decode another copy.
+    with _first_frame_reg_lock:
+        for ref, _nbytes in _first_frame_reg:
+            clip = ref()
+            if clip is not None and getattr(clip, '_first_image_source_key', None) == key:
+                image = clip._first_image
+                if image is not None:
+                    return image
+    return None
 
 
 def _clip_first_frame_bytes(clip) -> int:
@@ -1892,6 +1920,16 @@ class WebMClip(QObject):
         if img is None:
             return []
         if self._first_image is None:
+            key = _first_image_key(self.path)
+            if key is not None:
+                with _shared_first_lock:
+                    shared = _shared_first_image_locked(key)
+                    if shared is not None:
+                        # QImage value copy shares immutable pixel storage. Keep
+                        # the existing drawing copies and per-clip cancellation.
+                        img = QImage(shared)
+                    _shared_first_images[key] = img
+                self._first_image_source_key = key
             self._first_image = img
             self._first_frame_done.set()
             # 预算 LRU 登记；逐出返回给调用方、在释放本 clip 锁后执行
@@ -1908,7 +1946,12 @@ class WebMClip(QObject):
         """
         if self._first_image is not None:
             return []
-        img = self._decode_first_qimage(gen=gen)
+        key = _first_image_key(self.path)
+        with _shared_first_lock:
+            shared = _shared_first_image_locked(key) if key is not None else None
+            img = QImage(shared) if shared is not None else None
+        if img is None:
+            img = self._decode_first_qimage(gen=gen)
         if gen is not None and gen != self._first_frame_gen:
             return []  # 已被取消/换代：结果作废，不提交
         return self._store_first_frame(img)

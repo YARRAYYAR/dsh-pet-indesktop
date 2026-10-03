@@ -1,0 +1,494 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky_multi.py",
+    "--output",
+    "docs/evidence/seeky4-memory/public-spawn-churn-red.json",
+    "--probe",
+    ".scratch/seeky-proc-memory",
+    "--spawn-api",
+    "--churn",
+    "--expect-shared-first-frames",
+    "--expect-warm-limit",
+    "2"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Real Cocoa AppShell, three same-character windows, same idle clip, isolated config, seed 42",
+  "inputs": "12s startup + 20s steady; 0.5s process-tree footprint and 40ms first-frame process sampling",
+  "assertions": "All three pets >=22 delivered fps, no forward source gaps; optional process-wide warm cap",
+  "reset": "aboutToQuit performs actual per-window cleanup; sampler stopped and joined",
+  "checks": {
+    "max_first_frame_decoders": 2,
+    "steady_mib": 540.3001708984375,
+    "peak_mib": 743.3014984130859,
+    "growth_mib": 72.45322799682617,
+    "playback": {
+      "0": {
+        "fps": 21.40830278610884,
+        "forward_gaps": 0,
+        "frames": 213
+      },
+      "1": {
+        "fps": 21.661751245804947,
+        "forward_gaps": 0,
+        "frames": 214
+      },
+      "2": {
+        "fps": 21.557860484034986,
+        "forward_gaps": 0,
+        "frames": 213
+      }
+    },
+    "queue_drops": 0,
+    "duplicate_first_images": [
+      "assets/characters/shenshen/videos/click/\u70b9\u51fb\u56de\u5e94-\u50b2\u5a07\u751f\u6c14.webm",
+      "assets/characters/shenshen/videos/click/\u70b9\u51fb\u56de\u5e94-\u5143\u6c14\u6325\u624b.webm",
+      "assets/characters/shenshen/videos/click/\u70b9\u51fb\u56de\u5e94-\u5bb3\u7f9e\u60ca\u8bb6.webm",
+      "assets/characters/shenshen/videos/click/\u70b9\u51fb\u56de\u5e94-\u5f00\u5fc3\u8dc3\u52a8.webm",
+      "assets/characters/shenshen/videos/click/\u70b9\u51fb\u56de\u5e94-\u6320\u75d2\u54af\u54af\u7b11.webm",
+      "assets/characters/shenshen/videos/turn/\u4e1c\u5f20\u897f\u671b.webm",
+      "assets/characters/shenshen/videos/drag/\u88ab\u9f20\u6807\u62d6\u62fd\u60ac\u7a7a\u53cd\u9988.webm"
+    ],
+    "lifecycle": {
+      "windows_after_close": 2,
+      "windows_after_respawn": 3
+    },
+    "shared_process_enabled": true
+  },
+  "samples": [
+    {
+      "time": 2.094,
+      "stage": "startup",
+      "footprint": 704320288,
+      "ffmpeg_count": 5,
+      "rss": 539443200
+    },
+    {
+      "time": 2.614,
+      "stage": "startup",
+      "footprint": 564170064,
+      "ffmpeg_count": 3,
+      "rss": 675758080
+    },
+    {
+      "time": 3.133,
+      "stage": "startup",
+      "footprint": 547491152,
+      "ffmpeg_count": 3,
+      "rss": 674807808
+    },
+    {
+      "time": 3.652,
+      "stage": "startup",
+      "footprint": 553028968,
+      "ffmpeg_count": 3,
+      "rss": 647659520
+    },
+    {
+      "time": 4.17,
+      "stage": "startup",
+      "footprint": 568429928,
+      "ffmpeg_count": 3,
+      "rss": 646430720
+    },
+    {
+      "time": 4.711,
+      "stage": "startup",
+      "footprint": 565644648,
+      "ffmpeg_count": 3,
+      "rss": 603144192
+    },
+    {
+      "time": 5.255,
+      "stage": "startup",
+      "footprint": 561909096,
+      "ffmpeg_count": 3,
+      "rss": 650559488
+    },
+    {
+      "time": 5.997,
+      "stage": "startup",
+      "footprint": 619482472,
+      "ffmpeg_count": 3,
+      "rss": 261488640
+    },
+    {
+      "time": 6.651,
+      "stage": "startup",
+      "footprint": 617352552,
+      "ffmpeg_count": 3,
+      "rss": 382271488
+    },
+    {
+      "time": 7.214,
+      "stage": "startup",
+      "footprint": 565431680,
+      "ffmpeg_count": 3,
+      "rss": 563265536
+    },
+    {
+      "time": 7.738,
+      "stage": "startup",
+      "footprint": 589188480,
+      "ffmpeg_count": 3,
+      "rss": 593936384
+    },
+    {
+      "time": 8.389,
+      "stage": "startup",
+      "footprint": 617663872,
+      "ffmpeg_count": 3,
+      "rss": 426065920
+    },
+    {
+      "time": 8.91,
+      "stage": "startup",
+      "footprint": 564956544,
+      "ffmpeg_count": 3,
+      "rss": 612925440
+    },
+    {
+      "time": 9.441,
+      "stage": "startup",
+      "footprint": 578686336,
+      "ffmpeg_count": 3,
+      "rss": 574160896
+    },
+    {
+      "time": 10.064,
+      "stage": "startup",
+      "footprint": 554323328,
+      "ffmpeg_count": 3,
+      "rss": 483065856
+    },
+    {
+      "time": 10.598,
+      "stage": "startup",
+      "footprint": 589958528,
+      "ffmpeg_count": 3,
+      "rss": 552861696
+    },
+    {
+      "time": 11.117,
+      "stage": "startup",
+      "footprint": 555109736,
+      "ffmpeg_count": 3,
+      "rss": 618512384
+    },
+    {
+      "time": 11.633,
+      "stage": "startup",
+      "footprint": 579833192,
+      "ffmpeg_count": 3,
+      "rss": 613302272
+    },
+    {
+      "time": 12.152,
+      "stage": "steady",
+      "footprint": 544312680,
+      "ffmpeg_count": 3,
+      "rss": 670892032
+    },
+    {
+      "time": 12.663,
+      "stage": "steady",
+      "footprint": 554929536,
+      "ffmpeg_count": 3,
+      "rss": 567394304
+    },
+    {
+      "time": 13.177,
+      "stage": "steady",
+      "footprint": 721883912,
+      "ffmpeg_count": 5,
+      "rss": 677216256
+    },
+    {
+      "time": 13.709,
+      "stage": "steady",
+      "footprint": 707220232,
+      "ffmpeg_count": 5,
+      "rss": 541949952
+    },
+    {
+      "time": 14.275,
+      "stage": "steady",
+      "footprint": 527191424,
+      "ffmpeg_count": 3,
+      "rss": 411975680
+    },
+    {
+      "time": 14.826,
+      "stage": "steady",
+      "footprint": 493800832,
+      "ffmpeg_count": 3,
+      "rss": 468844544
+    },
+    {
+      "time": 15.347,
+      "stage": "steady",
+      "footprint": 505548184,
+      "ffmpeg_count": 3,
+      "rss": 528269312
+    },
+    {
+      "time": 15.86,
+      "stage": "steady",
+      "footprint": 462687640,
+      "ffmpeg_count": 3,
+      "rss": 535068672
+    },
+    {
+      "time": 16.377,
+      "stage": "steady",
+      "footprint": 484101528,
+      "ffmpeg_count": 3,
+      "rss": 490291200
+    },
+    {
+      "time": 16.897,
+      "stage": "steady",
+      "footprint": 479546776,
+      "ffmpeg_count": 3,
+      "rss": 508248064
+    },
+    {
+      "time": 17.418,
+      "stage": "steady",
+      "footprint": 473058712,
+      "ffmpeg_count": 3,
+      "rss": 569524224
+    },
+    {
+      "time": 17.935,
+      "stage": "steady",
+      "footprint": 455478680,
+      "ffmpeg_count": 3,
+      "rss": 553811968
+    },
+    {
+      "time": 18.456,
+      "stage": "steady",
+      "footprint": 488541592,
+      "ffmpeg_count": 3,
+      "rss": 561283072
+    },
+    {
+      "time": 18.973,
+      "stage": "steady",
+      "footprint": 474418584,
+      "ffmpeg_count": 3,
+      "rss": 527597568
+    },
+    {
+      "time": 19.497,
+      "stage": "steady",
+      "footprint": 471862680,
+      "ffmpeg_count": 3,
+      "rss": 568655872
+    },
+    {
+      "time": 20.049,
+      "stage": "steady",
+      "footprint": 539528600,
+      "ffmpeg_count": 3,
+      "rss": 429998080
+    },
+    {
+      "time": 20.613,
+      "stage": "steady",
+      "footprint": 532549040,
+      "ffmpeg_count": 3,
+      "rss": 498778112
+    },
+    {
+      "time": 21.16,
+      "stage": "steady",
+      "footprint": 555994544,
+      "ffmpeg_count": 3,
+      "rss": 553418752
+    },
+    {
+      "time": 21.713,
+      "stage": "steady",
+      "footprint": 566988208,
+      "ffmpeg_count": 3,
+      "rss": 527613952
+    },
+    {
+      "time": 22.247,
+      "stage": "steady",
+      "footprint": 564727216,
+      "ffmpeg_count": 3,
+      "rss": 536592384
+    },
+    {
+      "time": 22.805,
+      "stage": "steady",
+      "footprint": 559877576,
+      "ffmpeg_count": 3,
+      "rss": 585728000
+    },
+    {
+      "time": 23.467,
+      "stage": "steady",
+      "footprint": 772428576,
+      "ffmpeg_count": 5,
+      "rss": 580255744
+    },
+    {
+      "time": 24.594,
+      "stage": "steady",
+      "footprint": 661934184,
+      "ffmpeg_count": 4,
+      "rss": 529907712
+    },
+    {
+      "time": 25.139,
+      "stage": "steady",
+      "footprint": 700158680,
+      "ffmpeg_count": 5,
+      "rss": 421183488
+    },
+    {
+      "time": 25.664,
+      "stage": "steady",
+      "footprint": 589204816,
+      "ffmpeg_count": 3,
+      "rss": 288325632
+    },
+    {
+      "time": 26.189,
+      "stage": "steady",
+      "footprint": 469862968,
+      "ffmpeg_count": 2,
+      "rss": 398409728
+    },
+    {
+      "time": 26.715,
+      "stage": "steady",
+      "footprint": 432998992,
+      "ffmpeg_count": 2,
+      "rss": 468713472
+    },
+    {
+      "time": 27.391,
+      "stage": "steady",
+      "footprint": 779408112,
+      "ffmpeg_count": 5,
+      "rss": 598671360
+    },
+    {
+      "time": 29.025,
+      "stage": "steady",
+      "footprint": 573296000,
+      "ffmpeg_count": 3,
+      "rss": 659161088
+    },
+    {
+      "time": 29.558,
+      "stage": "steady",
+      "footprint": 566545792,
+      "ffmpeg_count": 3,
+      "rss": 654770176
+    },
+    {
+      "time": 30.084,
+      "stage": "steady",
+      "footprint": 577555840,
+      "ffmpeg_count": 3,
+      "rss": 650084352
+    },
+    {
+      "time": 30.639,
+      "stage": "steady",
+      "footprint": 585469336,
+      "ffmpeg_count": 3,
+      "rss": 606814208
+    },
+    {
+      "time": 31.176,
+      "stage": "steady",
+      "footprint": 607702448,
+      "ffmpeg_count": 3,
+      "rss": 617463808
+    },
+    {
+      "time": 31.728,
+      "stage": "steady",
+      "footprint": 592448944,
+      "ffmpeg_count": 3,
+      "rss": 538427392
+    },
+    {
+      "time": 32.294,
+      "stage": "steady",
+      "footprint": 633900488,
+      "ffmpeg_count": 3,
+      "rss": 522960896
+    },
+    {
+      "time": 32.86,
+      "stage": "steady",
+      "footprint": 631918024,
+      "ffmpeg_count": 3,
+      "rss": 516407296
+    },
+    {
+      "time": 33.379,
+      "stage": "steady",
+      "footprint": 611732960,
+      "ffmpeg_count": 3,
+      "rss": 583172096
+    },
+    {
+      "time": 33.916,
+      "stage": "steady",
+      "footprint": 607538656,
+      "ffmpeg_count": 3,
+      "rss": 619266048
+    },
+    {
+      "time": 34.443,
+      "stage": "steady",
+      "footprint": 603606496,
+      "ffmpeg_count": 3,
+      "rss": 602079232
+    },
+    {
+      "time": 34.977,
+      "stage": "steady",
+      "footprint": 611716576,
+      "ffmpeg_count": 3,
+      "rss": 639188992
+    },
+    {
+      "time": 35.512,
+      "stage": "steady",
+      "footprint": 676434072,
+      "ffmpeg_count": 4,
+      "rss": 629964800
+    },
+    {
+      "time": 36.083,
+      "stage": "steady",
+      "footprint": 632065504,
+      "ffmpeg_count": 3,
+      "rss": 571752448
+    },
+    {
+      "time": 36.603,
+      "stage": "steady",
+      "footprint": 391694304,
+      "ffmpeg_count": 1,
+      "rss": 261193728
+    }
+  ],
+  "errors": [
+    "Pet 0: fps=21.41, skipped source frames=0",
+    "Pet 1: fps=21.66, skipped source frames=0",
+    "Pet 2: fps=21.56, skipped source frames=0",
+    "7 clips retain separate identical first-frame buffers"
+  ],
+  "exit_status": 1
+}

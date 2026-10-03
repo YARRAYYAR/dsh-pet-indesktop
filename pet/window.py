@@ -98,7 +98,8 @@ from .click_sound import (
     play_press_sound, play_release_sound,
 )
 from .proactive import effective_proactive_config
-from .window_optional_services import WindowFeatureGateMixin, effects_coverage, prepare_effects_painter
+from .window_optional_services import (WindowFeatureGateMixin, effects_coverage,
+                                       prepare_effects_painter)
 
 from . import platform_win
 from .platform_mac import _keep_macos_tool_window_visible, _mac_set_window_level
@@ -1190,6 +1191,9 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
         self._squash_timer.stop()
         self._squash_active = False
         self._physics_timer.stop()
+        cursor_facing_timer = getattr(self, "_cursor_facing_timer", None)
+        if cursor_facing_timer is not None:
+            cursor_facing_timer.stop()
         jank = getattr(self, "_jank_timer", None)  # 仅 perfstats 观测模式存在
         if jank is not None:
             jank.stop()
@@ -1584,18 +1588,6 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
         self._submit_collision_state(force=True)
 
     # ================================================================ 播放
-    def _connect_movie(self, name: str, movie) -> None:
-        """按需连接 clip 信号（懒加载）：同一动画只连接一次。
-
-        兜底说明：主线程被阻塞导致队列溢出、最后一帧被丢弃时，
-        frameChanged 永远到不了末尾帧；finished 信号保证动画链一定继续。
-        """
-        if name in self._connected_movies:
-            return
-        movie.frameChanged.connect(lambda n, name=name: self._on_frame(name, n))
-        movie.finished.connect(lambda name=name: self._on_clip_finished(name))
-        self._connected_movies.add(name)
-
     def _switch(self, name: str, _link_request: bool = False) -> bool:
         """切换到指定动画（链式模型：全部一次性播放）。
 
@@ -1651,7 +1643,7 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
         self._collision_local_bounds = (
             QRect(cached_bounds) if cached_bounds is not None else None
         )
-        movie = self.lib.movie(name)
+        movie = self._movie_for_render(name)
         self._connect_movie(name, movie)
         self.movie = movie
         # 批11：切换动画时按当前门控同步解码节流（在 start() 之前——start
@@ -1690,6 +1682,9 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
             _clear = getattr(prev_movie, 'clear_display_frame', None)
             if callable(_clear):  # 测试替身可无此方法（纯优化，非正确性调用）
                 _clear()
+        release = getattr(self.lib, 'release_superseded_movies', None)
+        if callable(release):
+            release(movie)
         # 启动成功：仅当待重试的正是本动画时才清除待重试状态——重试绑定
         # 目标动画身份，无关动画的成功切换不得吞掉其他动画的待重试
         # （B7 复审 R2）。
@@ -1760,7 +1755,7 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
             self._update_interaction_hold()
             return
         idle_name = self._pick(self.idles, exclude=requested)
-        movie = self.lib.movie(idle_name)
+        movie = self._movie_for_render(idle_name)
         self._connect_movie(idle_name, movie)
         self.anim = idle_name
         self._click_hold = idle_name in self.clicks  # idle 不在 clicks → 释放

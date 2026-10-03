@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/scripts/make_icon.py", line 230, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/Users/ray/Documents/New project/dsr-pet/scripts/make_icon.py", line 117, in main
+    from PySide6.QtCore import QByteArray, QBuffer, QIODevice
+ModuleNotFoundError: No module named 'PySide6'

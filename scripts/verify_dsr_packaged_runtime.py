@@ -17,9 +17,10 @@ from pet.settings_commands import SettingsCommandClient
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--app', type=Path, required=True)
+    parser.add_argument('--output', type=Path)
     args = parser.parse_args()
     root = Path(__file__).resolve().parent.parent
-    output = root / 'docs/evidence/dsr-pet/packaged-ipc.json'
+    output = args.output or root / 'docs/evidence/dsr-pet/packaged-ipc.json'
     output.parent.mkdir(parents=True, exist_ok=True)
     bundle = args.app.resolve()
     config_dir = Config().dir
@@ -110,7 +111,7 @@ def main():
     config.path.unlink(missing_ok=True)
     (config_dir / 'slots' / f'slot-{slot}.lock').unlink(missing_ok=True)
     output.write_text(json.dumps({'command': [sys.executable, str(Path(__file__).resolve()),
-                                 '--app', str(bundle)], 'bundle_command': command, 'cwd': str(root),
+                                 *sys.argv[1:]], 'bundle_command': command, 'cwd': str(root),
                                  'setup': 'Previously unused slot with temporary Config; actual installed bundle, 106 HD assets',
                                  'assertions': 'Directory/play/error/quit through real QLocalServer; child processes exit',
                                  'reset': 'Test instance config removed; packaged process and its children stopped',

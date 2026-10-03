@@ -1,0 +1,21 @@
+{
+  "command": "QT_QPA_PLATFORM=offscreen PYTHON_BIN=/Library/Frameworks/Python.framework/Versions/3.13/bin/python3.13 bash scripts/build_macos.sh --variants webm",
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Local arm64 PyInstaller onedir; original sources plus 106 verified HQ variants",
+  "inputs": "Current source/icon/assets/index/licenses",
+  "assertions": "Build, encoding check, dependency-free bridge smoke, ad-hoc signature complete",
+  "actual": [
+    "Traceback (most recent call last):",
+    "  File \"/Users/ray/Documents/New project/dsr-pet/scripts/make_icon.py\", line 230, in <module>",
+    "    sys.exit(main())",
+    "             ~~~~^^",
+    "  File \"/Users/ray/Documents/New project/dsr-pet/scripts/make_icon.py\", line 117, in main",
+    "    from PySide6.QtCore import QByteArray, QBuffer, QIODevice",
+    "ModuleNotFoundError: No module named 'PySide6'"
+  ],
+  "elapsed_s": 0.23,
+  "reset": "Generated bundle in non-synced local cache; old installed app backed up before replacement",
+  "exit_status": 1,
+  "actual_python_bin": "/Library/Frameworks/Python.framework/Versions/3.13/bin/python3.13",
+  "cause": "Resolving the venv interpreter symlink lost the venv site-packages context; retry preserves the .venv path"
+}

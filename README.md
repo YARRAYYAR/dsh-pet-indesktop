@@ -6,7 +6,8 @@ macOS Apple Silicon 桌宠，基于上游 v4.2.1 纯桌宠修复提交 `1c3a59c`
 - 「连接 → Codex」显示本地工作状态、提问和本轮完成消息；问题在 Codex 中回答。
 - Codex 任务框支持配色预设、自定义背景/边框、80–160% 大小、实时预览和恢复默认。
 - 顶部倒立按原生屏幕刘海与菜单栏边界分别吸附，默认藏入约半个身体。
-- 解码队列、缩略图缓存和动作切换资源释放经过内存验收；保留 106 个高清动作。
+- 保留 106 个原始动作；放大时在下一动作开始切换到离线生成的 1440p 素材，缩小时释放高清播放器。
+- 多宠复用首帧像素，后台预热最多同时运行 2 路；原绘制隔离副本和完整帧序保留。
 
 ## 从源码运行与构建
 
@@ -19,6 +20,14 @@ PYTHON_BIN=.venv/bin/python scripts/build_macos.sh --variants webm
 
 构建产物默认位于 `~/Library/Caches/dsr-pet-build/macos/seeky· pet.app`。
 沿用 `~/Library/Application Support/dsr-pet` 配置目录和原 bundle identifier，改名后保留已有偏好。
+
+### 多宠共享模式
+
+本机交付启用已有的单进程多窗和同角色共享解码。源码仍保留上游默认与独立进程回退；如需同样模式，退出应用后在配置文件中设置 `experimental_single_process_spawn=true`，并保持 `experimental_shared_decode=true`，再重启。
+
+三宠、相同动作、当前机器和素材的三次对比（基线 seeky.3；两端都开共享模式）：12–32 秒采样占用中位数 417.6 → 339.8 MiB，采样峰值中位数 674.1 → 569.5 MiB；约 23.7 fps、无新增丢帧。此窗口仍可能包含预热，不能代表任意长期负载。三个高清放大桌宠的内存明显更高，见报告中的单独数据。
+
+1440p 素材改善放大清晰度，原画缺失的细节仍有上限；应用没有实时超分推理。
 
 验收数据、已知限制及逐文件说明见 [优化报告](docs/PR-REPORT-DSR-PET-2026-10-02.md)。
 macOS 构建为本地 ad-hoc 签名；没有 Developer ID 公证。Windows、Linux 的本轮原生运行尚未核验。

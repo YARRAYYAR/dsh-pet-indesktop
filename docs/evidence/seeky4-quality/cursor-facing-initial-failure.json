@@ -1,0 +1,36 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky_cursor.py"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Fresh temporary config; real Cocoa AppShell; cursor-transparent native pet window",
+  "inputs": "Actual pointer clicks at five visible positions around a centered pet",
+  "assertions": "120ms mouse polling; radius 280 logical pixels; horizontal dead zone 16; left/right update facing, center/outside preserve facing",
+  "reset": "Temporary config; AppShell pet window closes; no user preferences written",
+  "checks": [
+    {
+      "input": "范围外左",
+      "cursor": [
+        637,
+        761
+      ],
+      "window_center": [
+        755.5,
+        490.5
+      ],
+      "requested_facing": null,
+      "before": "left",
+      "actual": "left",
+      "expected": "left",
+      "pass": true
+    }
+  ],
+  "errors": [
+    "expected 5 pointer positions, observed 1"
+  ],
+  "exit_status": 1,
+  "in_progress": false,
+  "root_cause": "The E2E run reached one native pointer input, then repeated timer callbacks raised TypeError because the initial implementation passed unsupported force_mask=True to PetWindow._rebuild_frame(). The test ended with exit status 1; implementation corrected before rerun.",
+  "failure_artifact": ".scratch/seeky-cursor-e2e-red.log"
+}
