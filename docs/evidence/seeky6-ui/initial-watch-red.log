@@ -1,0 +1,65 @@
+FF.                                                                      [100%]
+=================================== FAILURES ===================================
+_____ test_initial_watch_snapshot_does_not_complete_same_name_replay[True] _____
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x113a72660>, watch_before_ack = True
+
+    @pytest.mark.parametrize('watch_before_ack', (True, False))
+    def test_initial_watch_snapshot_does_not_complete_same_name_replay(qtbot, watch_before_ack):
+        """Separate IPC sockets can deliver list, play, then initial watch late."""
+        from pet.settings_actions import ActionLibrary
+        client = ControlledClient()
+        library = ActionLibrary(client)
+        qtbot.addWidget(library)
+        library.show()
+        client.reply('list_actions', actions())
+        library.play.click()  # replay the current action before watch connects
+        if watch_before_ack:
+            client.reply('watch_actions', {'current': '动作000'})  # old initial snapshot
+        client.reply('play_action', {'requested': '动作000', 'current': '动作000'})
+        if not watch_before_ack:
+            client.reply('watch_actions', {'current': '动作000'})
+>       assert library._queued == '动作000'
+E       AssertionError: assert '' == '动作000'
+E         
+E         - 动作000
+
+tests/test_seeky6_settings.py:116: AssertionError
+----------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: Populating font family aliases took 92 ms. Replace uses of missing font family "Sans Serif" with one that exists to avoid this cost. 
+QtWarningMsg: This plugin does not support propagateSizeHints()
+--------------------------- Captured stderr teardown ---------------------------
+This plugin does not support propagateSizeHints()
+____ test_initial_watch_snapshot_does_not_complete_same_name_replay[False] _____
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x135590550>, watch_before_ack = False
+
+    @pytest.mark.parametrize('watch_before_ack', (True, False))
+    def test_initial_watch_snapshot_does_not_complete_same_name_replay(qtbot, watch_before_ack):
+        """Separate IPC sockets can deliver list, play, then initial watch late."""
+        from pet.settings_actions import ActionLibrary
+        client = ControlledClient()
+        library = ActionLibrary(client)
+        qtbot.addWidget(library)
+        library.show()
+        client.reply('list_actions', actions())
+        library.play.click()  # replay the current action before watch connects
+        if watch_before_ack:
+            client.reply('watch_actions', {'current': '动作000'})  # old initial snapshot
+        client.reply('play_action', {'requested': '动作000', 'current': '动作000'})
+        if not watch_before_ack:
+            client.reply('watch_actions', {'current': '动作000'})
+>       assert library._queued == '动作000'
+E       AssertionError: assert '' == '动作000'
+E         
+E         - 动作000
+
+tests/test_seeky6_settings.py:116: AssertionError
+----------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: This plugin does not support propagateSizeHints()
+--------------------------- Captured stderr teardown ---------------------------
+This plugin does not support propagateSizeHints()
+=========================== short test summary info ============================
+FAILED tests/test_seeky6_settings.py::test_initial_watch_snapshot_does_not_complete_same_name_replay[True]
+FAILED tests/test_seeky6_settings.py::test_initial_watch_snapshot_does_not_complete_same_name_replay[False]
+2 failed, 1 passed, 6 deselected in 0.70s

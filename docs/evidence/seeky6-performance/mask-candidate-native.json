@@ -1,0 +1,28 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "(heredoc recorded in log companion script)"
+  ],
+  "setup": "Cocoa isolated Qt real HQ premultiplied idle frame",
+  "inputs": "832/1664/2304 canvas width;100 calls each per implementation",
+  "assertions": "Candidate equals current QRegion each call;canvas untouched",
+  "checks": [
+    {
+      "width": 832,
+      "current_median_ms": 1.1638124997261912,
+      "candidate_median_ms": 1.5736039931653067
+    },
+    {
+      "width": 1664,
+      "current_median_ms": 3.9663544957875274,
+      "candidate_median_ms": 6.318145999102853
+    },
+    {
+      "width": 2304,
+      "current_median_ms": 7.382812997093424,
+      "candidate_median_ms": 11.874353993334807
+    }
+  ],
+  "exit_status": 0,
+  "reset": "Decode generator closed; no product source changed"
+}

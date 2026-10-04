@@ -1,0 +1,91 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky_coverage.py",
+    "--output",
+    "docs/evidence/seeky6-performance/coverage-after-2.json",
+    "--max-ms",
+    "5"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Cocoa, real transparent HQ idle frame; original region union as reference",
+  "inputs": "Three sizes, three rotations, eight repeats per case",
+  "assertions": "Exact native coverage region; unchanged display bytes; optional cost budget",
+  "checks": [
+    {
+      "scale": 0.5203125,
+      "angle": 0,
+      "median_ms": 0.38735399721190333,
+      "coverage_rectangles": 114,
+      "exact_region_parity": true,
+      "display_pixels_unchanged": true
+    },
+    {
+      "scale": 0.5203125,
+      "angle": 35,
+      "median_ms": 0.39060349809005857,
+      "coverage_rectangles": 116,
+      "exact_region_parity": true,
+      "display_pixels_unchanged": true
+    },
+    {
+      "scale": 0.5203125,
+      "angle": -90,
+      "median_ms": 0.37468699883902445,
+      "coverage_rectangles": 118,
+      "exact_region_parity": true,
+      "display_pixels_unchanged": true
+    },
+    {
+      "scale": 1.3,
+      "angle": 0,
+      "median_ms": 1.6148124996107072,
+      "coverage_rectangles": 428,
+      "exact_region_parity": true,
+      "display_pixels_unchanged": true
+    },
+    {
+      "scale": 1.3,
+      "angle": 35,
+      "median_ms": 1.5990204992704093,
+      "coverage_rectangles": 381,
+      "exact_region_parity": true,
+      "display_pixels_unchanged": true
+    },
+    {
+      "scale": 1.3,
+      "angle": -90,
+      "median_ms": 1.5033125018817373,
+      "coverage_rectangles": 390,
+      "exact_region_parity": true,
+      "display_pixels_unchanged": true
+    },
+    {
+      "scale": 1.8,
+      "angle": 0,
+      "median_ms": 2.9670834992430173,
+      "coverage_rectangles": 704,
+      "exact_region_parity": true,
+      "display_pixels_unchanged": true
+    },
+    {
+      "scale": 1.8,
+      "angle": 35,
+      "median_ms": 2.6895000046351925,
+      "coverage_rectangles": 634,
+      "exact_region_parity": true,
+      "display_pixels_unchanged": true
+    },
+    {
+      "scale": 1.8,
+      "angle": -90,
+      "median_ms": 2.5640834937803447,
+      "coverage_rectangles": 632,
+      "exact_region_parity": true,
+      "display_pixels_unchanged": true
+    }
+  ],
+  "errors": [],
+  "reset": "Decode generator closed; source assets unchanged",
+  "exit_status": 0
+}

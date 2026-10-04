@@ -1,0 +1,14 @@
+{
+  "command": "python comparison of native matrix captures, excluding state-only captures lacking the geometry schema",
+  "inputs": [
+    "baseline/result.json",
+    "final-settings/result.json"
+  ],
+  "assertions": "Every baseline matrix geometry field remains equal",
+  "baseline_count": 0,
+  "final_count": 63,
+  "comparisons": 0,
+  "differences": [],
+  "exit_status": 1,
+  "actual": "No baseline records matched: old schema lacks current_row; empty comparison is rejected"
+}

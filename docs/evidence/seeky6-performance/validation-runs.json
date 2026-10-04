@@ -1,0 +1,167 @@
+[
+  {
+    "command": "QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest -q tests/test_webm_first_frame_lock.py -k material",
+    "cwd": "/Users/ray/Documents/New project/dsr-pet",
+    "setup": "Same Python3.13/Qt6.11.2 env; isolated temporary configs and Qt offscreen",
+    "inputs": "Named focused regression files; race synchronization uses Event and injected decode faults",
+    "assertions": "Same-identity one decoder, independent cancellation/retry, no GUI wait, immutable RGBA and native region parity",
+    "actual": "4 failed,4passed; cross-instance duplication/cancel/session-end/stale-identity reproduced",
+    "exit_status": 1,
+    "log": "race-red.log",
+    "reset": "pytest fixture releases and joins workers, closes clips and resets session flag"
+  },
+  {
+    "command": "QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest -q tests/test_webm_first_frame_lock.py tests/test_first_frame_no_gui_decode.py tests/test_first_frame_budget.py",
+    "cwd": "/Users/ray/Documents/New project/dsr-pet",
+    "setup": "Same Python3.13/Qt6.11.2 env; isolated temporary configs and Qt offscreen",
+    "inputs": "Named focused regression files; race synchronization uses Event and injected decode faults",
+    "assertions": "Same-identity one decoder, independent cancellation/retry, no GUI wait, immutable RGBA and native region parity",
+    "actual": "34 passed",
+    "exit_status": 0,
+    "log": "race-green.log",
+    "reset": "pytest fixture releases and joins workers, closes clips and resets session flag"
+  },
+  {
+    "command": "QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest -q tests/test_dsr_rendering.py",
+    "cwd": "/Users/ray/Documents/New project/dsr-pet",
+    "setup": "Same Python3.13/Qt6.11.2 env; isolated temporary configs and Qt offscreen",
+    "inputs": "Named focused regression files; race synchronization uses Event and injected decode faults",
+    "assertions": "Same-identity one decoder, independent cancellation/retry, no GUI wait, immutable RGBA and native region parity",
+    "actual": "7 passed before implementation; exact pixel oracle introduced",
+    "exit_status": 0,
+    "log": "coverage-oracle-before.log",
+    "reset": "pytest fixture releases and joins workers, closes clips and resets session flag"
+  },
+  {
+    "command": "QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest -q tests/test_dsr_rendering.py",
+    "cwd": "/Users/ray/Documents/New project/dsr-pet",
+    "setup": "Same Python3.13/Qt6.11.2 env; isolated temporary configs and Qt offscreen",
+    "inputs": "Named focused regression files; race synchronization uses Event and injected decode faults",
+    "assertions": "Same-identity one decoder, independent cancellation/retry, no GUI wait, immutable RGBA and native region parity",
+    "actual": "4 failures exposed Qt bitmap palette inversion",
+    "exit_status": 1,
+    "log": "coverage-oracle-after.log",
+    "reset": "pytest fixture releases and joins workers, closes clips and resets session flag"
+  },
+  {
+    "command": "QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest -q tests/test_dsr_rendering.py",
+    "cwd": "/Users/ray/Documents/New project/dsr-pet",
+    "setup": "Same Python3.13/Qt6.11.2 env; isolated temporary configs and Qt offscreen",
+    "inputs": "Named focused regression files; race synchronization uses Event and injected decode faults",
+    "assertions": "Same-identity one decoder, independent cancellation/retry, no GUI wait, immutable RGBA and native region parity",
+    "actual": "7 passed with corrected palette",
+    "exit_status": 0,
+    "log": "coverage-oracle-after-2.log",
+    "reset": "pytest fixture releases and joins workers, closes clips and resets session flag"
+  },
+  {
+    "command": "QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest -q tests/test_webm_first_frame_lock.py tests/test_first_frame_no_gui_decode.py tests/test_first_frame_budget.py tests/test_webm_clip_loop.py tests/test_webm_reader_lifecycle.py tests/test_decode_fanout.py tests/test_dsr_rendering.py",
+    "cwd": "/Users/ray/Documents/New project/dsr-pet",
+    "setup": "Same Python3.13/Qt6.11.2 env; isolated temporary configs and Qt offscreen",
+    "inputs": "Named focused regression files; race synchronization uses Event and injected decode faults",
+    "assertions": "Same-identity one decoder, independent cancellation/retry, no GUI wait, immutable RGBA and native region parity",
+    "actual": "121 passed",
+    "exit_status": 0,
+    "log": "regression.log",
+    "reset": "pytest fixture releases and joins workers, closes clips and resets session flag"
+  },
+  {
+    "command": "QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest -q tests/test_seeky6_settings.py -k initial_watch",
+    "cwd": "/Users/ray/Documents/New project/dsr-pet",
+    "setup": "Python3.13/Qt6.11.2 offscreen; no simultaneous native performance",
+    "inputs": "Full accumulated source; initial-watch red case added before the corresponding fix",
+    "assertions": "Declared race, lifecycle, settings, IPC and repository checks",
+    "actual": "2 failed, 1 passed before initial-watch fix",
+    "exit_status": 1,
+    "log": "../seeky6-ui/initial-watch-red.log",
+    "reset": "pytest fixtures close widgets and join owned workers"
+  },
+  {
+    "command": "QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest -q tests/test_seeky6_settings.py tests/test_dsr_settings.py tests/test_settings_process_isolation.py",
+    "cwd": "/Users/ray/Documents/New project/dsr-pet",
+    "setup": "Python3.13/Qt6.11.2 offscreen; no simultaneous native performance",
+    "inputs": "Full accumulated source; initial-watch red case added before the corresponding fix",
+    "assertions": "Declared race, lifecycle, settings, IPC and repository checks",
+    "actual": "42 passed in 8.38s",
+    "exit_status": 0,
+    "log": "../seeky6-ui/final-regression.log",
+    "reset": "pytest fixtures close widgets and join owned workers"
+  },
+  {
+    "command": "QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest -q",
+    "cwd": "/Users/ray/Documents/New project/dsr-pet",
+    "setup": "Python3.13/Qt6.11.2 offscreen; no simultaneous native performance",
+    "inputs": "Full accumulated source; initial-watch red case added before the corresponding fix",
+    "assertions": "Declared race, lifecycle, settings, IPC and repository checks",
+    "actual": "2935 passed, 21 skipped, 261 warnings in 192.97s",
+    "exit_status": 0,
+    "log": "full-pytest-final.log",
+    "reset": "pytest fixtures close widgets and join owned workers"
+  },
+  {
+    "command": "PYTHON_BIN=.venv/bin/python scripts/build_macos.sh --variants webm",
+    "cwd": "/Users/ray/Documents/New project/dsr-pet",
+    "setup": "Final source environment;CACHE_APP=/Users/ray/Library/Caches/dsr-pet-build/macos/seeky· pet.app;actual full arguments in corresponding JSON",
+    "inputs": "Accumulated source/docs;Python3.13.2/Qt6.11.2;macOS26.6.2/Mac15,3/8GiB/Retina2",
+    "assertions": "Named gate or actual package command flow",
+    "actual": "arm64 seeky.6 app;encoding and bridge smoke pass;ad-hoc signature applied",
+    "exit_status": 0,
+    "log": "build-macos.log",
+    "reset": "Command flow closes only temporary slot;non-runtime checks read source/build output"
+  },
+  {
+    "command": ".venv/bin/python scripts/verify_dsr_packaged_runtime.py --app CACHE_APP --output package-cache-ipc.json",
+    "cwd": "/Users/ray/Documents/New project/dsr-pet",
+    "setup": "Final source environment;CACHE_APP=/Users/ray/Library/Caches/dsr-pet-build/macos/seeky· pet.app;actual full arguments in corresponding JSON",
+    "inputs": "Accumulated source/docs;Python3.13.2/Qt6.11.2;macOS26.6.2/Mac15,3/8GiB/Retina2",
+    "assertions": "Named gate or actual package command flow",
+    "actual": "ModuleNotFoundError pet;no bundle launch",
+    "exit_status": 1,
+    "log": "package-cache-ipc-run.log",
+    "reset": "Command flow closes only temporary slot;non-runtime checks read source/build output"
+  },
+  {
+    "command": "PYTHONPATH=. .venv/bin/python scripts/verify_dsr_packaged_runtime.py --app CACHE_APP --output package-cache-ipc.json",
+    "cwd": "/Users/ray/Documents/New project/dsr-pet",
+    "setup": "Final source environment;CACHE_APP=/Users/ray/Library/Caches/dsr-pet-build/macos/seeky· pet.app;actual full arguments in corresponding JSON",
+    "inputs": "Accumulated source/docs;Python3.13.2/Qt6.11.2;macOS26.6.2/Mac15,3/8GiB/Retina2",
+    "assertions": "Named gate or actual package command flow",
+    "actual": "106 actions;play/error/quit;zero remaining children",
+    "exit_status": 0,
+    "log": "package-cache-ipc-run-2.log",
+    "reset": "Command flow closes only temporary slot;non-runtime checks read source/build output"
+  },
+  {
+    "command": "GIT_OPTIONAL_LOCKS=0 .venv/bin/python -m ruff check pet tests scripts/verify_seeky_multi.py scripts/verify_seeky6_prewarm.py scripts/verify_seeky_settings_ui.py scripts/verify_dsr_package.py",
+    "cwd": "/Users/ray/Documents/New project/dsr-pet",
+    "setup": "Final source environment;CACHE_APP=/Users/ray/Library/Caches/dsr-pet-build/macos/seeky· pet.app;actual full arguments in corresponding JSON",
+    "inputs": "Accumulated source/docs;Python3.13.2/Qt6.11.2;macOS26.6.2/Mac15,3/8GiB/Retina2",
+    "assertions": "Named gate or actual package command flow",
+    "actual": "All checks passed",
+    "exit_status": 0,
+    "log": "ruff-final.log",
+    "reset": "Command flow closes only temporary slot;non-runtime checks read source/build output"
+  },
+  {
+    "command": "GIT_OPTIONAL_LOCKS=0 QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest -q tests/test_pr_report_discipline.py",
+    "cwd": "/Users/ray/Documents/New project/dsr-pet",
+    "setup": "Final source environment;CACHE_APP=/Users/ray/Library/Caches/dsr-pet-build/macos/seeky· pet.app;actual full arguments in corresponding JSON",
+    "inputs": "Accumulated source/docs;Python3.13.2/Qt6.11.2;macOS26.6.2/Mac15,3/8GiB/Retina2",
+    "assertions": "Named gate or actual package command flow",
+    "actual": "21 passed",
+    "exit_status": 0,
+    "log": "report-gate.log",
+    "reset": "Command flow closes only temporary slot;non-runtime checks read source/build output"
+  },
+  {
+    "command": "GIT_OPTIONAL_LOCKS=0 git diff --check",
+    "cwd": "/Users/ray/Documents/New project/dsr-pet",
+    "setup": "Final source environment;CACHE_APP=/Users/ray/Library/Caches/dsr-pet-build/macos/seeky· pet.app;actual full arguments in corresponding JSON",
+    "inputs": "Accumulated source/docs;Python3.13.2/Qt6.11.2;macOS26.6.2/Mac15,3/8GiB/Retina2",
+    "assertions": "Named gate or actual package command flow",
+    "actual": "no output,exit0",
+    "exit_status": 0,
+    "log": "diff-check-final.log",
+    "reset": "Command flow closes only temporary slot;non-runtime checks read source/build output"
+  }
+]

@@ -1,0 +1,35 @@
+QSystemTrayIcon::setVisible: No Icon set
+WARNING:root:GUI 卡顿 1071ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（1071ms，8 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-990ms] verify_seeky_multi.py:57:main <- app.py:1703:start <- app.py:1812:_create_ui_with_character_fallback <- app.py:572:_create_ui <- app.py:537:_build_window <- enum.py:695:__call__
+WARNING:pet.gui_stall_sampler:  [t-876ms] verify_seeky_multi.py:57:main <- app.py:1703:start <- app.py:1812:_create_ui_with_character_fallback <- app.py:572:_create_ui <- app.py:537:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-792ms] window.py:746:__init__ <- window.py:1669:_switch <- webm_clip.py:1629:start <- threading.py:979:start <- threading.py:659:wait <- threading.py:359:wait
+WARNING:pet.gui_stall_sampler:  [t-738ms] app.py:404:_create_library <- library.py:201:__init__ <- library.py:313:_load_all <- glob.py:478:select_recursive <- glob.py:502:select_recursive_step <- glob.py:429:select_wildcard
+WARNING:pet.gui_stall_sampler:  [t-658ms] verify_seeky_multi.py:249:<module> <- verify_seeky_multi.py:92:main <- app.py:2627:spawn_pet <- app.py:2774:spawn_in_process_window
+WARNING:pet.gui_stall_sampler:  [t-179ms] verify_seeky_multi.py:249:<module> <- verify_seeky_multi.py:208:main
+WARNING:root:GUI 卡顿 823ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（823ms，6 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-794ms] window.py:746:__init__ <- window.py:1669:_switch <- webm_clip.py:1629:start <- threading.py:979:start <- threading.py:659:wait <- threading.py:359:wait
+WARNING:pet.gui_stall_sampler:  [t-740ms] app.py:404:_create_library <- library.py:201:__init__ <- library.py:313:_load_all <- glob.py:478:select_recursive <- glob.py:502:select_recursive_step <- glob.py:429:select_wildcard
+WARNING:pet.gui_stall_sampler:  [t-659ms] verify_seeky_multi.py:249:<module> <- verify_seeky_multi.py:92:main <- app.py:2627:spawn_pet <- app.py:2774:spawn_in_process_window
+WARNING:pet.gui_stall_sampler:  [t-180ms] verify_seeky_multi.py:249:<module> <- verify_seeky_multi.py:208:main
+WARNING:root:GUI 卡顿 734ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（734ms，5 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-740ms] app.py:404:_create_library <- library.py:201:__init__ <- library.py:313:_load_all <- glob.py:478:select_recursive <- glob.py:502:select_recursive_step <- glob.py:429:select_wildcard
+WARNING:pet.gui_stall_sampler:  [t-660ms] verify_seeky_multi.py:249:<module> <- verify_seeky_multi.py:92:main <- app.py:2627:spawn_pet <- app.py:2774:spawn_in_process_window
+WARNING:pet.gui_stall_sampler:  [t-181ms] verify_seeky_multi.py:249:<module> <- verify_seeky_multi.py:208:main
+WARNING:root:GUI 卡顿 268ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（268ms，4 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-316ms] verify_seeky_multi.py:249:<module> <- verify_seeky_multi.py:208:main
+WARNING:root:GUI 卡顿 269ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（269ms，4 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-316ms] verify_seeky_multi.py:249:<module> <- verify_seeky_multi.py:208:main
+WARNING:root:GUI 卡顿 269ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（269ms，4 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-316ms] verify_seeky_multi.py:249:<module> <- verify_seeky_multi.py:208:main
+Traceback (most recent call last):
+  File "/Users/ray/Library/Caches/seeky-native-v6/pet/window.py", line 3173, in _jank_check
+    def _jank_check(self) -> None:
+    
+KeyboardInterrupt
+{'max_first_frame_decoders': 0, 'steady_mib': None, 'peak_mib': 1815.990852355957, 'growth_mib': None, 'playback': {0: {'fps': 0, 'forward_gaps': 0, 'frames': 0}, 1: {'fps': 0, 'forward_gaps': 0, 'frames': 0}, 2: {'fps': 0, 'forward_gaps': 0, 'frames': 0}}, 'queue_drops': 0, 'duplicate_first_images': [], 'lifecycle': {}, 'shared_process_enabled': True, 'source_widths': [], 'actions': {0: '待机呼吸休闲', 1: '待机呼吸休闲', 2: '待机呼吸休闲'}} ['', 'Pet 0: fps=0.00, skipped source frames=0', 'Pet 1: fps=0.00, skipped source frames=0', 'Pet 2: fps=0.00, skipped source frames=0']

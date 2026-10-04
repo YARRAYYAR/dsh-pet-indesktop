@@ -18,7 +18,7 @@ QScrollArea#settingsScroll, QScrollArea#settingsScroll > QWidget > QWidget { bac
 QLabel#pageDescription { color: #9a9aa3; padding: 6px 0 12px 0; }
 QFrame#pageHeaderDivider { background: #29292c; }
 QLabel#brandTitle { color: #f5f5f7; font-size: 19px; font-weight: 600; }
-QLabel#brandVersion { color: #74747a; font-size: 11px; padding: 4px; }
+QLabel#brandVersion { color: #89898f; font-size: 11px; padding: 4px; }
 QPushButton#quitApplication { background: transparent; border: none; color: #9a9aa0; text-align: left; padding: 8px 4px; }
 QPushButton#quitApplication:hover { background: #242426; color: #f5f5f7; }
 QPushButton#quitApplication:focus { border: 1px solid #0a84ff; }
@@ -34,9 +34,14 @@ QPushButton#sidebarSubtask:focus { border-color: #0a84ff; }
 QListWidget#actionLibraryList { background: #1c1c1e; color: #f5f5f7; border: 1px solid #303034; border-radius: 12px; padding: 8px; }
 QListWidget#actionLibraryList::item { padding: 10px 8px; border-radius: 6px; }
 QListWidget#actionLibraryList::item:selected { background: #2c2c2e; color: #ffffff; }
-QPushButton#actionPrimary { background: #0a84ff; border-color: #0a84ff; color: #ffffff; }
-QPushButton#actionPrimary:hover { background: #2994ff; }
+QPushButton#actionPrimary { background: #454548; border-color: #68686c; color: #ffffff; }
+QPushButton#actionPrimary:hover { background: #515155; border-color: #7c7c82; }
+QPushButton#actionPrimary:pressed { background: #3b3b3e; }
+QPushButton#actionPrimary:disabled { background: #29292b; border-color: #3a3a3c; color: #a8a8ae; }
+QListWidget#actionLibraryList:focus { border-color: #b9b9c2; }
+QPushButton#actionPrimary:focus { border: 2px solid #b9b9c2; }
 QLineEdit#settingsSearch { background: #252527; color: #d9d9db; }
+QLineEdit { placeholder-text-color: #929298; }
 QPushButton#saveAndExit { color: #e4e4e9; }
 QPushButton#saveAndExit:hover { background: #33333c; }
 QListWidget#settingsSidebar::item { color: #b8b8c0; }
@@ -68,7 +73,7 @@ QLabel#sectionTitle { color: #d8d8e0; }
 QFrame#settingsCard { background: #171719; border: 1px solid #202022; border-radius: 12px; }
 QFrame#cardSeparator { background: #252527; }
 QLabel#settingLabel { color: #d5d5d7; }
-QLabel#settingHint { color: #89898d; }
+QLabel#settingHint { color: #a0a0a7; }
 QLabel#quickLaunchName { color: #e0e0e6; }
 QLabel#quickLaunchDetail, QLabel#quickLaunchCount, QLabel#quickLaunchEmpty,
 QLabel#menuLayoutEditorLabel, QLabel#menuLayoutPreviewLabel,
@@ -255,7 +260,7 @@ QLabel#settingLabel {
 QLabel#settingHint {
     font-size: 12px;
     font-weight: 400;
-    color: #777777;
+    color: #6f6f6f;
 }
 QLabel#settingLabel:disabled, QLabel#settingHint:disabled { color: #a6a8ac; }
 SettingRow[searchMatch="true"] {

@@ -1,0 +1,41 @@
+{
+  "stage": "After long/mixed/quality flows, before prototype native experiments/build",
+  "commands": [
+    {
+      "command": [
+        "memory_pressure",
+        "-Q"
+      ],
+      "exit_status": 0,
+      "output": "The system has 8589934592 (524288 pages with a page size of 16384).\nSystem-wide memory free percentage: 39%"
+    },
+    {
+      "command": [
+        "sysctl",
+        "vm.swapusage"
+      ],
+      "exit_status": 0,
+      "output": "vm.swapusage: total = 10240.00M used = 8814.06M free = 1425.94M (encrypted)"
+    },
+    {
+      "command": [
+        "pmset",
+        "-g",
+        "therm"
+      ],
+      "exit_status": 0,
+      "output": "No thermal warning level has been recorded; no performance warning level has been recorded; no CPU power status has been recorded"
+    }
+  ],
+  "ranked_hypotheses": [
+    "System memory/thermal pressure should raise multiple step costs and improve when pressure eases.",
+    "Natural action/draining boundaries may add independent decoders and raise footprint; inspect topology already captured.",
+    "Coverage conversion cost may dominate; candidate conversions should improve measured hot-path time without pixel changes."
+  ],
+  "observations": [
+    "370-450s long slowdown raises mask/scale/consume costs together; later speeds recover.",
+    "Two indexed-alpha conversion candidates pass exact pixel/region checks but run slower than current; rejected.",
+    "Current-only queue IPC limitations independently documented by xhigh source reviewer."
+  ],
+  "conclusion": "Causal attribution unverified; no speculative product change or quality reduction. Full long/mixed >=22fps acceptance remains unmet."
+}

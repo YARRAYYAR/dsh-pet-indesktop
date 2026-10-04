@@ -1,0 +1,13 @@
+{
+  "command": "compare same-name captures in baseline and final-settings; fields logical_size,dpr,sidebar,search,save,quit,row_heights; require exactly56 baseline captures and no differences",
+  "inputs": [
+    "baseline/result.json",
+    "final-settings/result.json"
+  ],
+  "assertions": "56 native captures times7 geometry fields exactly equal, empty matrix forbidden",
+  "baseline_count": 56,
+  "final_count": 63,
+  "comparisons": 392,
+  "differences": [],
+  "exit_status": 0
+}

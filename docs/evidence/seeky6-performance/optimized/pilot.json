@@ -1,0 +1,1380 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky_multi.py",
+    "--root",
+    "/Users/ray/Library/Caches/seeky-native-v6",
+    "--output",
+    "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky6-performance/optimized/pilot.json",
+    "--probe",
+    "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+    "--scale",
+    "1.3",
+    "--spawn-api",
+    "--expect-warm-limit",
+    "2",
+    "--duration",
+    "110",
+    "--steady-after",
+    "40"
+  ],
+  "cwd": "/Users/ray/Library/Caches/seeky-native-v6",
+  "setup": "Real Cocoa AppShell, three same-character windows, same idle clip, isolated config, seed 42",
+  "inputs": {
+    "root": "/Users/ray/Library/Caches/seeky-native-v6",
+    "output": "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky6-performance/optimized/pilot.json",
+    "probe": "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+    "expect_warm_limit": 2,
+    "expect_shared_first_frames": false,
+    "scale": 1.3,
+    "spawn_api": true,
+    "churn": false,
+    "duration": 110.0,
+    "steady_after": 40.0,
+    "prewarm": "full",
+    "different_actions": false,
+    "mixed_sizes": false,
+    "exercise": false
+  },
+  "assertions": "All three pets >=22 delivered fps, no forward source gaps; optional process-wide warm cap",
+  "reset": "aboutToQuit performs actual per-window cleanup; sampler stopped and joined",
+  "checks": {
+    "max_first_frame_decoders": 0,
+    "steady_mib": null,
+    "peak_mib": 1815.990852355957,
+    "growth_mib": null,
+    "playback": {
+      "0": {
+        "fps": 0,
+        "forward_gaps": 0,
+        "frames": 0
+      },
+      "1": {
+        "fps": 0,
+        "forward_gaps": 0,
+        "frames": 0
+      },
+      "2": {
+        "fps": 0,
+        "forward_gaps": 0,
+        "frames": 0
+      }
+    },
+    "queue_drops": 0,
+    "duplicate_first_images": [],
+    "lifecycle": {},
+    "shared_process_enabled": true,
+    "source_widths": [],
+    "actions": {
+      "0": "\u5f85\u673a\u547c\u5438\u4f11\u95f2",
+      "1": "\u5f85\u673a\u547c\u5438\u4f11\u95f2",
+      "2": "\u5f85\u673a\u547c\u5438\u4f11\u95f2"
+    }
+  },
+  "samples": [
+    {
+      "time": 0.809,
+      "stage": "startup",
+      "footprint": 1796741288,
+      "ffmpeg_count": 6,
+      "ffmpeg_footprint": 1656738688,
+      "parent_footprint": 140002600,
+      "rss": 1074626560
+    },
+    {
+      "time": 1.359,
+      "stage": "startup",
+      "footprint": 1683248768,
+      "ffmpeg_count": 5,
+      "ffmpeg_footprint": 1267404928,
+      "parent_footprint": 415843840,
+      "rss": 1133772800
+    },
+    {
+      "time": 1.924,
+      "stage": "startup",
+      "footprint": 1680971368,
+      "ffmpeg_count": 5,
+      "ffmpeg_footprint": 1236209744,
+      "parent_footprint": 444761624,
+      "rss": 1399750656
+    },
+    {
+      "time": 3.51,
+      "stage": "startup",
+      "footprint": 1666520728,
+      "ffmpeg_count": 5,
+      "ffmpeg_footprint": 1217417320,
+      "parent_footprint": 449103408,
+      "rss": 1385840640
+    },
+    {
+      "time": 4.036,
+      "stage": "startup",
+      "footprint": 1641191184,
+      "ffmpeg_count": 5,
+      "ffmpeg_footprint": 1192071392,
+      "parent_footprint": 449119792,
+      "rss": 1517043712
+    },
+    {
+      "time": 4.571,
+      "stage": "startup",
+      "footprint": 1623135992,
+      "ffmpeg_count": 5,
+      "ffmpeg_footprint": 1174016200,
+      "parent_footprint": 449119792,
+      "rss": 1554497536
+    },
+    {
+      "time": 5.099,
+      "stage": "startup",
+      "footprint": 1647728328,
+      "ffmpeg_count": 5,
+      "ffmpeg_footprint": 1198624920,
+      "parent_footprint": 449103408,
+      "rss": 1483505664
+    },
+    {
+      "time": 5.624,
+      "stage": "startup",
+      "footprint": 1571673752,
+      "ffmpeg_count": 5,
+      "ffmpeg_footprint": 1122095208,
+      "parent_footprint": 449578544,
+      "rss": 1592442880
+    },
+    {
+      "time": 6.173,
+      "stage": "startup",
+      "footprint": 1654101776,
+      "ffmpeg_count": 5,
+      "ffmpeg_footprint": 1197789408,
+      "parent_footprint": 456312368,
+      "rss": 1506852864
+    },
+    {
+      "time": 6.701,
+      "stage": "startup",
+      "footprint": 1591252728,
+      "ffmpeg_count": 5,
+      "ffmpeg_footprint": 1134940360,
+      "parent_footprint": 456312368,
+      "rss": 1600700416
+    },
+    {
+      "time": 7.784,
+      "stage": "startup",
+      "footprint": 1622349680,
+      "ffmpeg_count": 5,
+      "ffmpeg_footprint": 1166020928,
+      "parent_footprint": 456328752,
+      "rss": 1537572864
+    },
+    {
+      "time": 8.306,
+      "stage": "startup",
+      "footprint": 1650710360,
+      "ffmpeg_count": 5,
+      "ffmpeg_footprint": 1194381608,
+      "parent_footprint": 456328752,
+      "rss": 1508900864
+    },
+    {
+      "time": 8.823,
+      "stage": "startup",
+      "footprint": 1660458744,
+      "ffmpeg_count": 5,
+      "ffmpeg_footprint": 1204129992,
+      "parent_footprint": 456328752,
+      "rss": 1503346688
+    },
+    {
+      "time": 9.346,
+      "stage": "startup",
+      "footprint": 1623611176,
+      "ffmpeg_count": 5,
+      "ffmpeg_footprint": 1167233272,
+      "parent_footprint": 456377904,
+      "rss": 1537785856
+    },
+    {
+      "time": 11.48,
+      "stage": "startup",
+      "footprint": 1596053168,
+      "ffmpeg_count": 5,
+      "ffmpeg_footprint": 1139593344,
+      "parent_footprint": 456459824,
+      "rss": 1614102528
+    },
+    {
+      "time": 11.999,
+      "stage": "startup",
+      "footprint": 1630607048,
+      "ffmpeg_count": 5,
+      "ffmpeg_footprint": 1174163608,
+      "parent_footprint": 456443440,
+      "rss": 1553907712
+    },
+    {
+      "time": 12.529,
+      "stage": "startup",
+      "footprint": 1585321744,
+      "ffmpeg_count": 5,
+      "ffmpeg_footprint": 1128845536,
+      "parent_footprint": 456476208,
+      "rss": 1649033216
+    },
+    {
+      "time": 13.055,
+      "stage": "startup",
+      "footprint": 1546178952,
+      "ffmpeg_count": 3,
+      "ffmpeg_footprint": 1089702744,
+      "parent_footprint": 456476208,
+      "rss": 1552891904
+    },
+    {
+      "time": 13.592,
+      "stage": "startup",
+      "footprint": 1611257592,
+      "ffmpeg_count": 5,
+      "ffmpeg_footprint": 1154781384,
+      "parent_footprint": 456476208,
+      "rss": 1594474496
+    },
+    {
+      "time": 14.113,
+      "stage": "startup",
+      "footprint": 1606571720,
+      "ffmpeg_count": 5,
+      "ffmpeg_footprint": 1148342424,
+      "parent_footprint": 458229296,
+      "rss": 1595703296
+    },
+    {
+      "time": 14.676,
+      "stage": "startup",
+      "footprint": 1524832040,
+      "ffmpeg_count": 5,
+      "ffmpeg_footprint": 1066569976,
+      "parent_footprint": 458262064,
+      "rss": 1803108352
+    },
+    {
+      "time": 15.737,
+      "stage": "startup",
+      "footprint": 1585157856,
+      "ffmpeg_count": 5,
+      "ffmpeg_footprint": 1126928560,
+      "parent_footprint": 458229296,
+      "rss": 1675689984
+    },
+    {
+      "time": 16.255,
+      "stage": "startup",
+      "footprint": 1615337184,
+      "ffmpeg_count": 5,
+      "ffmpeg_footprint": 1157107888,
+      "parent_footprint": 458229296,
+      "rss": 1579286528
+    },
+    {
+      "time": 16.783,
+      "stage": "startup",
+      "footprint": 1621579536,
+      "ffmpeg_count": 5,
+      "ffmpeg_footprint": 1163317472,
+      "parent_footprint": 458262064,
+      "rss": 1607106560
+    },
+    {
+      "time": 17.305,
+      "stage": "startup",
+      "footprint": 1639110344,
+      "ffmpeg_count": 5,
+      "ffmpeg_footprint": 1180864664,
+      "parent_footprint": 458245680,
+      "rss": 1544978432
+    },
+    {
+      "time": 17.839,
+      "stage": "startup",
+      "footprint": 1645926016,
+      "ffmpeg_count": 5,
+      "ffmpeg_footprint": 1187680336,
+      "parent_footprint": 458245680,
+      "rss": 1533050880
+    },
+    {
+      "time": 18.377,
+      "stage": "startup",
+      "footprint": 1603704544,
+      "ffmpeg_count": 5,
+      "ffmpeg_footprint": 1145458864,
+      "parent_footprint": 458245680,
+      "rss": 1617166336
+    },
+    {
+      "time": 18.905,
+      "stage": "startup",
+      "footprint": 1650710312,
+      "ffmpeg_count": 5,
+      "ffmpeg_footprint": 1192464632,
+      "parent_footprint": 458245680,
+      "rss": 1514422272
+    },
+    {
+      "time": 19.956,
+      "stage": "startup",
+      "footprint": 1591071784,
+      "ffmpeg_count": 4,
+      "ffmpeg_footprint": 1132809720,
+      "parent_footprint": 458262064,
+      "rss": 1484324864
+    },
+    {
+      "time": 20.487,
+      "stage": "startup",
+      "footprint": 1631278792,
+      "ffmpeg_count": 5,
+      "ffmpeg_footprint": 1173000344,
+      "parent_footprint": 458278448,
+      "rss": 1541603328
+    },
+    {
+      "time": 21.539,
+      "stage": "startup",
+      "footprint": 1840454136,
+      "ffmpeg_count": 6,
+      "ffmpeg_footprint": 1381782424,
+      "parent_footprint": 458671712,
+      "rss": 1599848448
+    },
+    {
+      "time": 22.085,
+      "stage": "startup",
+      "footprint": 1904204424,
+      "ffmpeg_count": 6,
+      "ffmpeg_footprint": 1445188624,
+      "parent_footprint": 459015800,
+      "rss": 1544470528
+    },
+    {
+      "time": 23.144,
+      "stage": "startup",
+      "footprint": 1563334464,
+      "ffmpeg_count": 5,
+      "ffmpeg_footprint": 1074778288,
+      "parent_footprint": 488556176,
+      "rss": 1421869056
+    },
+    {
+      "time": 23.667,
+      "stage": "startup",
+      "footprint": 1143051160,
+      "ffmpeg_count": 4,
+      "ffmpeg_footprint": 654544136,
+      "parent_footprint": 488507024,
+      "rss": 1477738496
+    },
+    {
+      "time": 24.225,
+      "stage": "startup",
+      "footprint": 1245533176,
+      "ffmpeg_count": 4,
+      "ffmpeg_footprint": 756993384,
+      "parent_footprint": 488539792,
+      "rss": 1460256768
+    },
+    {
+      "time": 24.746,
+      "stage": "startup",
+      "footprint": 1201410944,
+      "ffmpeg_count": 4,
+      "ffmpeg_footprint": 712854768,
+      "parent_footprint": 488556176,
+      "rss": 1453424640
+    },
+    {
+      "time": 25.281,
+      "stage": "startup",
+      "footprint": 1189368800,
+      "ffmpeg_count": 4,
+      "ffmpeg_footprint": 700370256,
+      "parent_footprint": 488998544,
+      "rss": 1459748864
+    },
+    {
+      "time": 25.808,
+      "stage": "startup",
+      "footprint": 1149161768,
+      "ffmpeg_count": 3,
+      "ffmpeg_footprint": 660261528,
+      "parent_footprint": 488900240,
+      "rss": 1432813568
+    },
+    {
+      "time": 26.327,
+      "stage": "startup",
+      "footprint": 1137217568,
+      "ffmpeg_count": 3,
+      "ffmpeg_footprint": 648317328,
+      "parent_footprint": 488900240,
+      "rss": 1428652032
+    },
+    {
+      "time": 26.854,
+      "stage": "startup",
+      "footprint": 1242485632,
+      "ffmpeg_count": 4,
+      "ffmpeg_footprint": 753274096,
+      "parent_footprint": 489211536,
+      "rss": 1408925696
+    },
+    {
+      "time": 27.388,
+      "stage": "startup",
+      "footprint": 1223119816,
+      "ffmpeg_count": 4,
+      "ffmpeg_footprint": 733891896,
+      "parent_footprint": 489227920,
+      "rss": 1458438144
+    },
+    {
+      "time": 27.917,
+      "stage": "startup",
+      "footprint": 1363776456,
+      "ffmpeg_count": 4,
+      "ffmpeg_footprint": 874532152,
+      "parent_footprint": 489244304,
+      "rss": 1147371520
+    },
+    {
+      "time": 29.513,
+      "stage": "startup",
+      "footprint": 1225348136,
+      "ffmpeg_count": 4,
+      "ffmpeg_footprint": 729206168,
+      "parent_footprint": 496141968,
+      "rss": 1393655808
+    },
+    {
+      "time": 30.036,
+      "stage": "startup",
+      "footprint": 1190777752,
+      "ffmpeg_count": 4,
+      "ffmpeg_footprint": 694635784,
+      "parent_footprint": 496141968,
+      "rss": 1379663872
+    },
+    {
+      "time": 30.574,
+      "stage": "startup",
+      "footprint": 1267209160,
+      "ffmpeg_count": 4,
+      "ffmpeg_footprint": 771067192,
+      "parent_footprint": 496141968,
+      "rss": 1346912256
+    },
+    {
+      "time": 31.086,
+      "stage": "startup",
+      "footprint": 861129056,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 365855704,
+      "parent_footprint": 495273352,
+      "rss": 721158144
+    }
+  ],
+  "components": [
+    {
+      "time": 2.266,
+      "stage": "startup",
+      "first_frame_unique_bytes": 14745600,
+      "queue_referenced_bytes": 0,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 0,
+      "clip_display_image_bytes": 44236800,
+      "window_scaled_image_bytes": 18690048,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 52,
+          "total": 0.25627746297686826
+        },
+        "rebuild.calls": {
+          "count": 53,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 55,
+          "total": 0.0519522859249264
+        },
+        "jank.100ms+": {
+          "count": 6,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 34,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 47,
+          "total": 5.507035127011477
+        },
+        "webm.queue_wait": {
+          "count": 47,
+          "total": 0.028385042111040093
+        },
+        "jank.50_100ms": {
+          "count": 15,
+          "total": 0.0
+        },
+        "webm.consume": {
+          "count": 47,
+          "total": 0.1942481720179785
+        },
+        "rebuild.scale": {
+          "count": 47,
+          "total": 0.1587388699699659
+        },
+        "rebuild.total": {
+          "count": 47,
+          "total": 0.4099910450167954
+        }
+      }
+    },
+    {
+      "time": 4.276,
+      "stage": "startup",
+      "first_frame_unique_bytes": 14745600,
+      "queue_referenced_bytes": 14745600,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 14745600,
+      "clip_display_image_bytes": 44236800,
+      "window_scaled_image_bytes": 18690048,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 119,
+          "total": 0.4583919209690066
+        },
+        "rebuild.calls": {
+          "count": 120,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 122,
+          "total": 0.12611232491326518
+        },
+        "jank.100ms+": {
+          "count": 6,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 111,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 115,
+          "total": 11.611123293056153
+        },
+        "webm.queue_wait": {
+          "count": 115,
+          "total": 0.03241920912114438
+        },
+        "jank.50_100ms": {
+          "count": 18,
+          "total": 0.0
+        },
+        "webm.consume": {
+          "count": 114,
+          "total": 0.40917496412293985
+        },
+        "rebuild.scale": {
+          "count": 114,
+          "total": 0.401451575991814
+        },
+        "rebuild.total": {
+          "count": 114,
+          "total": 0.8659495061001508
+        }
+      }
+    },
+    {
+      "time": 6.279,
+      "stage": "startup",
+      "first_frame_unique_bytes": 14745600,
+      "queue_referenced_bytes": 14745600,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 14745600,
+      "clip_display_image_bytes": 44236800,
+      "window_scaled_image_bytes": 18690048,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 194,
+          "total": 0.6969077140529407
+        },
+        "rebuild.calls": {
+          "count": 191,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 197,
+          "total": 0.19364474192843772
+        },
+        "jank.100ms+": {
+          "count": 6,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 184,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 186,
+          "total": 17.694100756081752
+        },
+        "webm.queue_wait": {
+          "count": 186,
+          "total": 0.035283959106891416
+        },
+        "jank.50_100ms": {
+          "count": 27,
+          "total": 0.0
+        },
+        "webm.consume": {
+          "count": 185,
+          "total": 0.6320686342078261
+        },
+        "rebuild.scale": {
+          "count": 185,
+          "total": 0.6914836990617914
+        },
+        "rebuild.total": {
+          "count": 185,
+          "total": 1.403337966039544
+        }
+      }
+    },
+    {
+      "time": 8.264,
+      "stage": "startup",
+      "first_frame_unique_bytes": 14745600,
+      "queue_referenced_bytes": 44236800,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 44236800,
+      "clip_display_image_bytes": 44236800,
+      "window_scaled_image_bytes": 18690048,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 268,
+          "total": 0.9321998439409072
+        },
+        "rebuild.calls": {
+          "count": 261,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 271,
+          "total": 0.26675328705459833
+        },
+        "jank.100ms+": {
+          "count": 6,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 255,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 258,
+          "total": 23.644435049107415
+        },
+        "webm.queue_wait": {
+          "count": 258,
+          "total": 0.036542413145070896
+        },
+        "jank.50_100ms": {
+          "count": 27,
+          "total": 0.0
+        },
+        "webm.consume": {
+          "count": 255,
+          "total": 0.8746886792359874
+        },
+        "rebuild.scale": {
+          "count": 255,
+          "total": 0.9438099929975579
+        },
+        "rebuild.total": {
+          "count": 255,
+          "total": 1.8909535489801783
+        }
+      }
+    },
+    {
+      "time": 10.274,
+      "stage": "startup",
+      "first_frame_unique_bytes": 14745600,
+      "queue_referenced_bytes": 14745600,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 14745600,
+      "clip_display_image_bytes": 44236800,
+      "window_scaled_image_bytes": 18690048,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 343,
+          "total": 1.1774603020312497
+        },
+        "rebuild.calls": {
+          "count": 332,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 346,
+          "total": 0.32336221005243715
+        },
+        "jank.100ms+": {
+          "count": 6,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 328,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 327,
+          "total": 29.647468293114798
+        },
+        "webm.queue_wait": {
+          "count": 327,
+          "total": 0.03776987112360075
+        },
+        "jank.50_100ms": {
+          "count": 33,
+          "total": 0.0
+        },
+        "webm.consume": {
+          "count": 326,
+          "total": 1.1045802252338035
+        },
+        "rebuild.scale": {
+          "count": 326,
+          "total": 1.1904483659163816
+        },
+        "rebuild.total": {
+          "count": 326,
+          "total": 2.3886342519836035
+        }
+      }
+    },
+    {
+      "time": 12.265,
+      "stage": "startup",
+      "first_frame_unique_bytes": 14745600,
+      "queue_referenced_bytes": 29491200,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 29491200,
+      "clip_display_image_bytes": 44236800,
+      "window_scaled_image_bytes": 18690048,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 418,
+          "total": 1.410245137041784
+        },
+        "rebuild.calls": {
+          "count": 403,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 421,
+          "total": 0.3973311291047139
+        },
+        "jank.100ms+": {
+          "count": 6,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 399,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 398,
+          "total": 35.58778600304504
+        },
+        "webm.queue_wait": {
+          "count": 398,
+          "total": 0.04073425612295978
+        },
+        "jank.50_100ms": {
+          "count": 39,
+          "total": 0.0
+        },
+        "webm.consume": {
+          "count": 396,
+          "total": 1.3237511441693641
+        },
+        "rebuild.scale": {
+          "count": 397,
+          "total": 1.471415488878847
+        },
+        "rebuild.total": {
+          "count": 397,
+          "total": 2.9295272509771166
+        }
+      }
+    },
+    {
+      "time": 14.264,
+      "stage": "startup",
+      "first_frame_unique_bytes": 14745600,
+      "queue_referenced_bytes": 0,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 0,
+      "clip_display_image_bytes": 44236800,
+      "window_scaled_image_bytes": 18690048,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 493,
+          "total": 1.6274522590101697
+        },
+        "rebuild.calls": {
+          "count": 473,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 496,
+          "total": 0.4580564200587105
+        },
+        "jank.100ms+": {
+          "count": 6,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 473,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 466,
+          "total": 41.48385412401694
+        },
+        "webm.queue_wait": {
+          "count": 466,
+          "total": 0.0422193350532325
+        },
+        "jank.50_100ms": {
+          "count": 39,
+          "total": 0.0
+        },
+        "webm.consume": {
+          "count": 466,
+          "total": 1.5177874352812069
+        },
+        "rebuild.scale": {
+          "count": 467,
+          "total": 1.758248863814515
+        },
+        "rebuild.total": {
+          "count": 467,
+          "total": 3.4387226270191604
+        }
+      }
+    },
+    {
+      "time": 16.268,
+      "stage": "startup",
+      "first_frame_unique_bytes": 14745600,
+      "queue_referenced_bytes": 0,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 0,
+      "clip_display_image_bytes": 44236800,
+      "window_scaled_image_bytes": 18690048,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 574,
+          "total": 1.8631353399978252
+        },
+        "rebuild.calls": {
+          "count": 550,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 577,
+          "total": 0.5227362961159088
+        },
+        "jank.100ms+": {
+          "count": 6,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 540,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 543,
+          "total": 47.50233145010134
+        },
+        "webm.queue_wait": {
+          "count": 543,
+          "total": 0.04412679103552364
+        },
+        "jank.50_100ms": {
+          "count": 45,
+          "total": 0.0
+        },
+        "webm.consume": {
+          "count": 543,
+          "total": 1.7594436022045556
+        },
+        "rebuild.scale": {
+          "count": 544,
+          "total": 2.1016673237318173
+        },
+        "rebuild.total": {
+          "count": 544,
+          "total": 4.018397665990051
+        }
+      }
+    },
+    {
+      "time": 18.264,
+      "stage": "startup",
+      "first_frame_unique_bytes": 14745600,
+      "queue_referenced_bytes": 14745600,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 14745600,
+      "clip_display_image_bytes": 44236800,
+      "window_scaled_image_bytes": 18690048,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 640,
+          "total": 2.062768841002253
+        },
+        "rebuild.calls": {
+          "count": 612,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 643,
+          "total": 0.6038330461451551
+        },
+        "jank.100ms+": {
+          "count": 6,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 616,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 606,
+          "total": 53.59654995011806
+        },
+        "webm.queue_wait": {
+          "count": 606,
+          "total": 0.04556983002112247
+        },
+        "jank.50_100ms": {
+          "count": 48,
+          "total": 0.0
+        },
+        "webm.consume": {
+          "count": 605,
+          "total": 1.967031145162764
+        },
+        "rebuild.scale": {
+          "count": 606,
+          "total": 2.426386909748544
+        },
+        "rebuild.total": {
+          "count": 606,
+          "total": 4.536377332988195
+        }
+      }
+    },
+    {
+      "time": 20.269,
+      "stage": "startup",
+      "first_frame_unique_bytes": 14745600,
+      "queue_referenced_bytes": 0,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 0,
+      "clip_display_image_bytes": 44236800,
+      "window_scaled_image_bytes": 18690048,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 712,
+          "total": 2.2870365969574777
+        },
+        "rebuild.calls": {
+          "count": 680,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 715,
+          "total": 0.6715048781043151
+        },
+        "jank.100ms+": {
+          "count": 6,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 689,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 673,
+          "total": 59.573215827171225
+        },
+        "webm.queue_wait": {
+          "count": 673,
+          "total": 0.04714386601699516
+        },
+        "jank.50_100ms": {
+          "count": 51,
+          "total": 0.0
+        },
+        "webm.consume": {
+          "count": 673,
+          "total": 2.2124193081253907
+        },
+        "rebuild.scale": {
+          "count": 674,
+          "total": 2.7849473267851863
+        },
+        "rebuild.total": {
+          "count": 674,
+          "total": 5.11744003793865
+        }
+      }
+    },
+    {
+      "time": 22.288,
+      "stage": "startup",
+      "first_frame_unique_bytes": 14745600,
+      "queue_referenced_bytes": 0,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 0,
+      "clip_display_image_bytes": 44236800,
+      "window_scaled_image_bytes": 18690048,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 793,
+          "total": 2.531325012911111
+        },
+        "rebuild.calls": {
+          "count": 763,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 796,
+          "total": 0.7435491291253129
+        },
+        "jank.100ms+": {
+          "count": 6,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 749,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 746,
+          "total": 64.78517282911344
+        },
+        "webm.queue_wait": {
+          "count": 746,
+          "total": 0.05003540603502188
+        },
+        "jank.50_100ms": {
+          "count": 54,
+          "total": 0.0
+        },
+        "webm.consume": {
+          "count": 753,
+          "total": 2.446909773061634
+        },
+        "rebuild.scale": {
+          "count": 754,
+          "total": 3.124655653751688
+        },
+        "rebuild.total": {
+          "count": 755,
+          "total": 5.732662409864133
+        },
+        "predict.made": {
+          "count": 3,
+          "total": 0.0
+        },
+        "rebuild.skip": {
+          "count": 1,
+          "total": 0.0
+        }
+      }
+    },
+    {
+      "time": 24.272,
+      "stage": "startup",
+      "first_frame_unique_bytes": 14745600,
+      "queue_referenced_bytes": 58982400,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 44236800,
+      "clip_display_image_bytes": 44236800,
+      "window_scaled_image_bytes": 18690048,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 907,
+          "total": 2.8672023349936353
+        },
+        "rebuild.calls": {
+          "count": 877,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 910,
+          "total": 0.8365036731411237
+        },
+        "jank.100ms+": {
+          "count": 6,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 778,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 825,
+          "total": 68.5746081610996
+        },
+        "webm.queue_wait": {
+          "count": 825,
+          "total": 0.3829484090965707
+        },
+        "jank.50_100ms": {
+          "count": 54,
+          "total": 0.0
+        },
+        "webm.consume": {
+          "count": 867,
+          "total": 2.7213063622330083
+        },
+        "rebuild.scale": {
+          "count": 868,
+          "total": 3.6076149016735144
+        },
+        "rebuild.total": {
+          "count": 869,
+          "total": 6.570105865859659
+        },
+        "predict.made": {
+          "count": 3,
+          "total": 0.0
+        },
+        "rebuild.skip": {
+          "count": 1,
+          "total": 0.0
+        }
+      }
+    },
+    {
+      "time": 26.264,
+      "stage": "startup",
+      "first_frame_unique_bytes": 14745600,
+      "queue_referenced_bytes": 0,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 0,
+      "clip_display_image_bytes": 44236800,
+      "window_scaled_image_bytes": 18690048,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 1028,
+          "total": 3.211378748062998
+        },
+        "rebuild.calls": {
+          "count": 998,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 1031,
+          "total": 0.930696222188999
+        },
+        "jank.100ms+": {
+          "count": 6,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 799,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 903,
+          "total": 72.231411619141
+        },
+        "webm.queue_wait": {
+          "count": 903,
+          "total": 0.6284247800649609
+        },
+        "jank.50_100ms": {
+          "count": 54,
+          "total": 0.0
+        },
+        "webm.consume": {
+          "count": 988,
+          "total": 2.9824426482373383
+        },
+        "rebuild.scale": {
+          "count": 989,
+          "total": 4.055718196672387
+        },
+        "rebuild.total": {
+          "count": 990,
+          "total": 7.400118699864834
+        },
+        "predict.made": {
+          "count": 3,
+          "total": 0.0
+        },
+        "rebuild.skip": {
+          "count": 1,
+          "total": 0.0
+        }
+      }
+    },
+    {
+      "time": 28.265,
+      "stage": "startup",
+      "first_frame_unique_bytes": 14745600,
+      "queue_referenced_bytes": 44236800,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 29491200,
+      "clip_display_image_bytes": 44236800,
+      "window_scaled_image_bytes": 18690048,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 1125,
+          "total": 3.520804749074159
+        },
+        "rebuild.calls": {
+          "count": 1095,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 1128,
+          "total": 1.0229244240763364
+        },
+        "jank.100ms+": {
+          "count": 6,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 840,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 971,
+          "total": 76.06535070917744
+        },
+        "webm.queue_wait": {
+          "count": 971,
+          "total": 0.8647482740780106
+        },
+        "jank.50_100ms": {
+          "count": 64,
+          "total": 0.0
+        },
+        "webm.consume": {
+          "count": 1085,
+          "total": 3.301507024181774
+        },
+        "rebuild.scale": {
+          "count": 1086,
+          "total": 4.4889019496622495
+        },
+        "rebuild.total": {
+          "count": 1087,
+          "total": 8.169620235828916
+        },
+        "predict.made": {
+          "count": 3,
+          "total": 0.0
+        },
+        "rebuild.skip": {
+          "count": 1,
+          "total": 0.0
+        }
+      }
+    },
+    {
+      "time": 30.265,
+      "stage": "startup",
+      "first_frame_unique_bytes": 14745600,
+      "queue_referenced_bytes": 0,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 0,
+      "clip_display_image_bytes": 44236800,
+      "window_scaled_image_bytes": 18690048,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 1194,
+          "total": 3.7363583731639665
+        },
+        "rebuild.calls": {
+          "count": 1164,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 1197,
+          "total": 1.0855635080224602
+        },
+        "jank.100ms+": {
+          "count": 6,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 912,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 1015,
+          "total": 79.99704083419056
+        },
+        "webm.queue_wait": {
+          "count": 1015,
+          "total": 0.8660086060990579
+        },
+        "jank.50_100ms": {
+          "count": 79,
+          "total": 0.0
+        },
+        "webm.consume": {
+          "count": 1154,
+          "total": 3.5821235721668927
+        },
+        "rebuild.scale": {
+          "count": 1155,
+          "total": 4.865793240678613
+        },
+        "rebuild.total": {
+          "count": 1156,
+          "total": 8.780716693872819
+        },
+        "predict.made": {
+          "count": 3,
+          "total": 0.0
+        },
+        "rebuild.skip": {
+          "count": 1,
+          "total": 0.0
+        }
+      }
+    }
+  ],
+  "accounting": "Raw frame bytes deduplicated by object identity across queue/ring; QImage storage by cacheKey. Clip/window images are separate categories; QPixmap aliases are not added. Process footprint includes native allocators/ffmpeg and is not the sum of reference categories.",
+  "errors": [
+    "",
+    "Pet 0: fps=0.00, skipped source frames=0",
+    "Pet 1: fps=0.00, skipped source frames=0",
+    "Pet 2: fps=0.00, skipped source frames=0"
+  ],
+  "exit_status": 1
+}

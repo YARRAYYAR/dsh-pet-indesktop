@@ -127,10 +127,22 @@ def _new_icon_canvas(widget, requested_size: int | None = None):
 
 def vector_menu_icon(menu: QMenu, name: str, size: int | None = None) -> QIcon:
     """Draw a crisp 16-unit semantic icon using the current menu palette."""
+    # Settings destinations have separate keys; context-menu icons keep their
+    # established meanings and artwork.
+    name = {'settings-gear': 'settings', 'settings-paw': 'pet',
+            'settings-link': 'link', 'settings-speaker': 'sound'}.get(name, name)
     pixmap, painter, color = _new_icon_canvas(menu, size)
     path = QPainterPath()
 
-    if name == "search":
+    settings_svg = {'settings-click': 'mouse-pointer-click',
+                    'settings-menu': 'list-tree', 'settings-workflow': 'workflow'}.get(name)
+    if settings_svg:
+        from PySide6.QtSvg import QSvgRenderer
+        source = Path(__file__).resolve().parents[1] / 'resources' / 'settings-icons' / f'{settings_svg}.svg'
+        data = source.read_bytes().replace(b'currentColor', color.name().encode())
+        renderer = QSvgRenderer(data)
+        renderer.render(painter, QRectF(0, 0, 16, 16))
+    elif name == "search":
         painter.drawEllipse(QPointF(6.5, 6.5), 4.5, 4.5)
         painter.drawLine(QPointF(9.8, 9.8), QPointF(14.0, 14.0))
     elif name == "chat":

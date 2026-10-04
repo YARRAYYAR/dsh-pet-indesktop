@@ -120,7 +120,7 @@ from pet import __version__
 path = Path(sys.argv[1])
 data = plistlib.loads(path.read_bytes())
 data['CFBundleShortVersionString'] = __version__
-data['CFBundleVersion'] = '4.2.1.5'
+data['CFBundleVersion'] = '4.2.1.6'
 data['CFBundleDisplayName'] = 'seeky· pet'
 path.write_bytes(plistlib.dumps(data))
 PY

@@ -1,0 +1,85 @@
+FF....FF                                                                 [100%]
+=================================== FAILURES ===================================
+_________ test_material_single_flight_reuses_pixels_across_live_clips __________
+
+flight_group = (<function flight_group.<locals>.make at 0x112951080>, <function flight_group.<locals>.start at 0x112950fe0>, PosixPat.../folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-32/test_material_single_flight_re0/shared.webm'), [])
+
+    def test_material_single_flight_reuses_pixels_across_live_clips(flight_group):
+        make, start, path, errors = flight_group
+        owner, follower = make(), make()
+        first = start(owner)
+        assert owner.entered.wait(5)
+        second = start(follower)
+        follower.release.set()
+        owner.release.set()
+        first.join(5); second.join(5)
+        assert not errors
+>       assert owner.calls + follower.calls == 1
+E       assert (1 + 1) == 1
+E        +  where 1 = <tests.test_webm_first_frame_lock._FlightClip(0xaebc8b390) at 0x11295a040>.calls
+E        +  and   1 = <tests.test_webm_first_frame_lock._FlightClip(0xaebc8b430) at 0x11295a740>.calls
+
+tests/test_webm_first_frame_lock.py:498: AssertionError
+______________ test_material_waiter_cancel_does_not_cancel_owner _______________
+
+flight_group = (<function flight_group.<locals>.make at 0x113a9c040>, <function flight_group.<locals>.start at 0x113a9c180>, PosixPat.../folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-32/test_material_waiter_cancel_do0/shared.webm'), [])
+
+    def test_material_waiter_cancel_does_not_cancel_owner(flight_group):
+        make, start, path, errors = flight_group
+        owner, follower = make(), make()
+        first = start(owner)
+        assert owner.entered.wait(5)
+        second = start(follower)
+        follower.cancel_first_frame_warm()
+        second.join(1)
+>       assert not second.is_alive(), "cancelled waiter must leave before owner finishes"
+E       AssertionError: cancelled waiter must leave before owner finishes
+E       assert not True
+E        +  where True = is_alive()
+E        +    where is_alive = <Thread(Thread-4 (run), started daemon 6164312064)>.is_alive
+
+tests/test_webm_first_frame_lock.py:510: AssertionError
+__________ test_material_session_end_stops_waiters_and_discards_owner __________
+
+flight_group = (<function flight_group.<locals>.make at 0x113a9da80>, <function flight_group.<locals>.start at 0x113a9d1c0>, PosixPat.../folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-32/test_material_session_end_stop0/shared.webm'), [])
+
+    def test_material_session_end_stops_waiters_and_discards_owner(flight_group):
+        make, start, path, errors = flight_group
+        owner, follower = make(), make()
+        first = start(owner)
+        assert owner.entered.wait(5)
+        second = start(follower)
+        webm_clip_mod.set_session_ending()
+        second.join(1)
+>       assert not second.is_alive() and follower.calls == 0
+E       assert (not True)
+E        +  where True = is_alive()
+E        +    where is_alive = <Thread(Thread-14 (run), started daemon 6164312064)>.is_alive
+
+tests/test_webm_first_frame_lock.py:554: AssertionError
+________ test_material_replaced_during_decode_never_caches_stale_pixels ________
+
+flight_group = (<function flight_group.<locals>.make at 0x113a9ec00>, <function flight_group.<locals>.start at 0x113a9d300>, PosixPat.../folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-32/test_material_replaced_during_0/shared.webm'), [])
+
+    def test_material_replaced_during_decode_never_caches_stale_pixels(flight_group):
+        make, start, path, errors = flight_group
+        owner = make()
+        first = start(owner)
+        assert owner.entered.wait(5)
+        path.write_bytes(b"replacement-identity")
+        replacement = make()
+        second = start(replacement)
+        assert replacement.entered.wait(5), "new identity must not wait for obsolete decode"
+        owner.release.set(); replacement.release.set()
+        first.join(5); second.join(5)
+>       assert owner._first_image is None
+E       assert <PySide6.QtGui.QImage(QSize(2, 2),format=QImage::Format_RGBA8888,depth=32,devicePixelRatio=1,bytesPerLine=8,sizeInBytes=16) at 0x113b9acc0> is None
+E        +  where <PySide6.QtGui.QImage(QSize(2, 2),format=QImage::Format_RGBA8888,depth=32,devicePixelRatio=1,bytesPerLine=8,sizeInBytes=16) at 0x113b9acc0> = <tests.test_webm_first_frame_lock._FlightClip(0xaebc01450) at 0x113b98b00>._first_image
+
+tests/test_webm_first_frame_lock.py:571: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_webm_first_frame_lock.py::test_material_single_flight_reuses_pixels_across_live_clips
+FAILED tests/test_webm_first_frame_lock.py::test_material_waiter_cancel_does_not_cancel_owner
+FAILED tests/test_webm_first_frame_lock.py::test_material_session_end_stops_waiters_and_discards_owner
+FAILED tests/test_webm_first_frame_lock.py::test_material_replaced_during_decode_never_caches_stale_pixels
+4 failed, 4 passed, 9 deselected in 3.32s

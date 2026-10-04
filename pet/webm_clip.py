@@ -203,7 +203,12 @@ _FFMPEG_EXE_LOCK = threading.Lock()
 _FFMPEG_INPUT_PARAMS = [
     '-c:v', 'libvpx-vp9',
     '-threads', '1',
+    '-filter_threads', '1',
 ]
+# Input -threads only limits the decoder. Auto filter/rawvideo output pools
+# still created 30 OS threads per HQ process; these options retain byte-exact
+# RGBA while limiting those pools (native pipeline-parity evidence, seeky.6).
+_FFMPEG_OUTPUT_PARAMS = ['-threads', '1']
 
 # ------------------------------------------------------------ 会话结束（关机/注销）spawn 闸门（issue #111）
 # 现象：Windows 关机/注销时必弹「ffmpeg-*.exe - 应用程序无法正常启动
@@ -477,6 +482,17 @@ _first_frame_bytes = 0
 _ffr_evict_seq = 0
 _shared_first_images: weakref.WeakValueDictionary = weakref.WeakValueDictionary()
 _shared_first_lock = threading.Lock()
+
+
+class _FirstFrameFlight:
+    """Transient result for already waiting consumers, never a persistent cache."""
+
+    def __init__(self):
+        self.done = threading.Event()
+        self.image = None
+
+
+_first_frame_flights: dict = {}  # Asset identity -> one background decode owner.
 
 
 def _first_image_key(path: Path):
@@ -1867,6 +1883,7 @@ class WebMClip(QObject):
                     pix_fmt='rgba',
                     bits_per_pixel=self._bpp * 8,
                     input_params=list(_FFMPEG_INPUT_PARAMS),
+                    output_params=list(_FFMPEG_OUTPUT_PARAMS),
                 )
                 meta = next(g)  # ffmpeg 进程在此拉起；capture 即时登记句柄
                 frame = next(g)
@@ -1946,15 +1963,57 @@ class WebMClip(QObject):
         """
         if self._first_image is not None:
             return []
+        if gen is None:
+            gen = self._first_frame_gen
         key = _first_image_key(self.path)
-        with _shared_first_lock:
-            shared = _shared_first_image_locked(key) if key is not None else None
-            img = QImage(shared) if shared is not None else None
-        if img is None:
-            img = self._decode_first_qimage(gen=gen)
-        if gen is not None and gen != self._first_frame_gen:
-            return []  # 已被取消/换代：结果作废，不提交
-        return self._store_first_frame(img)
+
+        def active():
+            return (not self._cleaned and gen == self._first_frame_gen
+                    and not session_ending() and _first_image_key(self.path) == key)
+
+        def commit(img):
+            # Cancellation changes generation under this same lock. Commit and
+            # cancellation therefore cannot cross after the final validity check.
+            with self._reader_lock:
+                return self._store_first_frame(img) if active() else []
+
+        if key is None:
+            return commit(self._decode_first_qimage(gen=gen)) if active() else []
+        while active():
+            with _shared_first_lock:
+                shared = _shared_first_image_locked(key)
+                img = QImage(shared) if shared is not None else None
+                flight = _first_frame_flights.get(key)
+                owner = img is None and flight is None
+                if owner:
+                    flight = _FirstFrameFlight()
+                    _first_frame_flights[key] = flight
+            if img is not None:
+                return commit(img)
+            if owner:
+                try:
+                    img = self._decode_first_qimage(gen=gen)
+                    victims = commit(img)
+                    if self._first_image is not None:
+                        # A budget eviction may remove the weak pool before a
+                        # waiter resumes. Its transient flight retains the pixels
+                        # only until those existing waiters have consumed them.
+                        flight.image = QImage(self._first_image)
+                    return victims
+                finally:
+                    with _shared_first_lock:
+                        if _first_frame_flights.get(key) is flight:
+                            del _first_frame_flights[key]
+                        flight.done.set()  # Failure/cancel/exception all release.
+            # Only background warmers reach this wait. Each retains its own
+            # cancellation generation; closing a waiter never kills the owner.
+            while not flight.done.wait(.05):
+                if not active():
+                    return []
+            if flight.image is not None:
+                return commit(QImage(flight.image))
+            # Failed owner: a still live consumer can claim and retry.
+        return []
 
     def warm_first_frame(self) -> None:
         """后台线程预解码首帧缓存（仅 QImage，线程安全）。
@@ -1969,7 +2028,7 @@ class WebMClip(QObject):
         _first_frame_procs，cancel_first_frame_warm/cleanup 可主动 terminate；
         解码代次在认领时捕获，取消后结果作废不写入缓存。cleanup 后不再预热。
         """
-        if self._first_image is not None or imageio_ffmpeg is None or self._cleaned:
+        if self._first_image is not None or imageio_ffmpeg is None or self._cleaned or session_ending():
             return
         if not self._first_frame_lock.acquire(blocking=False):
             return
@@ -2200,6 +2259,7 @@ class WebMClip(QObject):
                     pix_fmt='rgba',
                     bits_per_pixel=self._bpp * 8,
                     input_params=input_params,
+                    output_params=list(_FFMPEG_OUTPUT_PARAMS),
                 )
                 meta = next(gen)  # ffmpeg 进程在此拉起；capture 即时登记句柄
                 if meta.get('size'):

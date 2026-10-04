@@ -1,0 +1,92 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky6_prewarm.py",
+    "--root",
+    "/Users/ray/Library/Caches/seeky-native-v6-baseline",
+    "--output",
+    "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky6-performance/prewarm/baseline-2.json",
+    "--probe",
+    "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory"
+  ],
+  "cwd": "/Users/ray/Library/Caches/seeky-native-v6-baseline",
+  "setup": "Real Cocoa Qt and FFmpeg; three WebMClip consumers, same HQ identity; isolated from playback",
+  "inputs": {
+    "clip": "/Users/ray/Library/Caches/seeky-native-v6-baseline/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+    "source_sha256": "025078e2465710087caac9efd461ebf18483832f1845d6fe849aa26f7e0bad05"
+  },
+  "assertions": "Three successful identical 2560x1440 RGBA first frames; optional single decoder; no flight/proc after cleanup; raw/final-composite parity checked across runs",
+  "accounting": "Explicit synchronized stress bypasses MovieLibrary two-slot cap; normal application peaks are recorded separately by verify_seeky_multi",
+  "reset": "All workers joined, decoder handles cleaned, native preview closed",
+  "checks": {
+    "decode_calls": 3,
+    "all_consumers_entered_warm": true,
+    "elapsed_seconds": 0.6227562919957563,
+    "peak_footprint_mib": 978.9722747802734,
+    "peak_rss_mib": 773.421875,
+    "max_ffmpeg": 3,
+    "pixel_hashes": [
+      "67bc9ca3e964ae3f39a8e57f9a457c5e6a3b53c243658fd9d22c42e23a38a10a",
+      "67bc9ca3e964ae3f39a8e57f9a457c5e6a3b53c243658fd9d22c42e23a38a10a",
+      "67bc9ca3e964ae3f39a8e57f9a457c5e6a3b53c243658fd9d22c42e23a38a10a"
+    ],
+    "shared_pixel_storage": true,
+    "dimensions": [
+      [
+        2560,
+        1440
+      ],
+      [
+        2560,
+        1440
+      ],
+      [
+        2560,
+        1440
+      ]
+    ],
+    "rendered_hash": "8a8b7f40680fc45ab2367390b406d9f5213f0a164508a21b46d67951b5a51031",
+    "cleanup": true,
+    "remaining_flights": 0
+  },
+  "samples": [
+    {
+      "time": 0.06331362499622628,
+      "footprint": 78940536,
+      "rss": 167231488,
+      "ffmpeg_count": 3
+    },
+    {
+      "time": 0.15485654199437704,
+      "footprint": 307465240,
+      "rss": 403488768,
+      "ffmpeg_count": 3
+    },
+    {
+      "time": 0.25001979200169444,
+      "footprint": 549571776,
+      "rss": 569884672,
+      "ffmpeg_count": 3
+    },
+    {
+      "time": 0.4086188340006629,
+      "footprint": 930663928,
+      "rss": 810991616,
+      "ffmpeg_count": 3
+    },
+    {
+      "time": 0.4948691250028787,
+      "footprint": 1026526832,
+      "rss": 775061504,
+      "ffmpeg_count": 3
+    },
+    {
+      "time": 0.5570704589918023,
+      "footprint": 809978712,
+      "rss": 730578944,
+      "ffmpeg_count": 2
+    }
+  ],
+  "errors": [],
+  "exit_status": 0
+}

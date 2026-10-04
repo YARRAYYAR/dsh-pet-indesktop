@@ -1,7 +1,6 @@
 """Keep soft display alpha independent of the binary native window mask."""
-from PIL import Image, ImageChops
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QBitmap, QImage, QRegion
+from PySide6.QtGui import QBitmap, QImage, QRegion, qRgba
 
 
 def coverage_region(canvas: QImage) -> QRegion:
@@ -12,24 +11,21 @@ def coverage_region(canvas: QImage) -> QRegion:
 
     The image remains untouched. A dithered alpha mask would otherwise clip
     low-opacity hair/shadows before the window compositor can blend them.
-    Pillow's compiled LUT avoids scanning pixels in the GUI's Python loop.
+    Qt's native masks avoid full RGBA/Pillow plane copies in the GUI hot path.
     """
-    rgba = canvas.convertToFormat(QImage.Format.Format_RGBA8888)
-    pixels = Image.frombytes('RGBA', (rgba.width(), rgba.height()),
-                             bytes(rgba.constBits()), 'raw', 'RGBA', rgba.bytesPerLine())
-    red, green, blue, plane = pixels.split()
-    # The imported HD VP9 clips encode their empty black background at A=1.
-    # Exclude exactly that tuple from native coverage (not from display data).
-    # Colored faint edges and every other alpha value retain their coverage.
-    rgb = ImageChops.lighter(ImageChops.lighter(red, green), blue)
-    black = rgb.point([255] + [0] * 255)
-    floor = ImageChops.multiply(black, plane.point([0, 255] + [0] * 254))
-    plane = ImageChops.subtract(plane, floor.point([0] + [1] * 255))
-    binary = plane.point([0] + [255] * 255).tobytes()
-    coverage = QImage(binary, rgba.width(), rgba.height(), rgba.width(),
-                      QImage.Format.Format_Alpha8).convertToFormat(QImage.Format.Format_ARGB32)
-    mask = QBitmap.fromImage(coverage.createAlphaMask(Qt.ImageConversionFlag.ThresholdDither))
-    region = QRegion(mask)
+    # Alpha8 converted back to ARGB has black RGB. Only A=0 matches zero,
+    # including transparent colored samples in an unpremultiplied input.
+    alpha = canvas.convertToFormat(QImage.Format.Format_Alpha8).convertToFormat(QImage.Format.Format_ARGB32)
+    visible = alpha.createMaskFromColor(0, Qt.MaskMode.MaskOutColor)
+    rgba = canvas.convertToFormat(QImage.Format.Format_ARGB32)
+    floor = rgba.createMaskFromColor(qRgba(0, 0, 0, 1), Qt.MaskMode.MaskInColor)
+    # createMaskFromColor uses black/white, while QBitmap treats black as the
+    # covered bit. Match createAlphaMask's white/black palette without changing
+    # any bits (otherwise fromImage silently inverts the coverage).
+    for mask in (visible, floor):
+        mask.setColor(0, 0xffffffff)
+        mask.setColor(1, 0xff000000)
+    region = QRegion(QBitmap.fromImage(visible)) - QRegion(QBitmap.fromImage(floor))
     padded = QRegion(region)
     for dx, dy in ((-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0, 1), (1, 1)):
         padded |= region.translated(dx, dy)

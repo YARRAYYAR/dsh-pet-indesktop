@@ -1,0 +1,98 @@
+QSystemTrayIcon::setVisible: No Icon set
+WARNING:root:GUI 卡顿 1618ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（1618ms，14 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-1550ms] window.py:1050:_write_runtime_marker <- window_placement.py:211:write_runtime_marker <- slot_manager.py:596:write_runtime_marker <- _local.py:555:write_text <- _abc.py:651:write_text <- _local.py:537:open
+WARNING:pet.gui_stall_sampler:  [t-1183ms] verify_seeky_multi.py:57:main <- app.py:1703:start <- app.py:1812:_create_ui_with_character_fallback <- app.py:572:_create_ui <- app.py:537:_build_window <- enum.py:695:__call__
+WARNING:pet.gui_stall_sampler:  [t-1125ms] app.py:572:_create_ui <- app.py:537:_build_window <- window.py:1132:showEvent <- window.py:1095:_schedule_macos_window_level <- window.py:1090:apply_current_native_window <- platform_mac.py:78:_mac_set_window_level
+WARNING:pet.gui_stall_sampler:  [t-983ms] verify_seeky_multi.py:57:main <- app.py:1703:start <- app.py:1812:_create_ui_with_character_fallback <- app.py:572:_create_ui <- app.py:539:_build_window <- app.py:3147:_build_tray
+WARNING:pet.gui_stall_sampler:  [t-926ms] verify_seeky_multi.py:305:<module> <- verify_seeky_multi.py:57:main <- app.py:1719:start <- app.py:1613:_install_config_watcher <- app.py:1623:_watch_config_file
+WARNING:pet.gui_stall_sampler:  [t-873ms] <frozen importlib._bootstrap>:1360:_find_and_load <- <frozen importlib._bootstrap>:1331:_find_and_load_unlocked <- <frozen importlib._bootstrap>:935:_load_unlocked <- <frozen importlib._bootstrap_external>:1022:exec_module <- <frozen importlib._bootstrap_external>:1118:get_code <- <frozen importlib._bootstrap_external>:1218:get_data
+WARNING:pet.gui_stall_sampler:  [t-788ms] verify_seeky_multi.py:305:<module> <- verify_seeky_multi.py:113:main <- app.py:2627:spawn_pet <- app.py:2768:spawn_in_process_window <- app.py:537:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-649ms] verify_seeky_multi.py:305:<module> <- verify_seeky_multi.py:241:main
+WARNING:root:GUI 卡顿 868ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（868ms，9 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-894ms] <frozen importlib._bootstrap>:1360:_find_and_load <- <frozen importlib._bootstrap>:1331:_find_and_load_unlocked <- <frozen importlib._bootstrap>:935:_load_unlocked <- <frozen importlib._bootstrap_external>:1022:exec_module <- <frozen importlib._bootstrap_external>:1118:get_code <- <frozen importlib._bootstrap_external>:1218:get_data
+WARNING:pet.gui_stall_sampler:  [t-809ms] verify_seeky_multi.py:305:<module> <- verify_seeky_multi.py:113:main <- app.py:2627:spawn_pet <- app.py:2768:spawn_in_process_window <- app.py:537:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-670ms] verify_seeky_multi.py:305:<module> <- verify_seeky_multi.py:241:main
+WARNING:pet.gui_stall_sampler:  [t-13ms] verify_seeky_multi.py:305:<module> <- verify_seeky_multi.py:241:main <- webm_clip.py:2439:_poll <- webm_clip.py:2673:_process_frame
+WARNING:root:GUI 卡顿 791ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（791ms，8 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-810ms] verify_seeky_multi.py:305:<module> <- verify_seeky_multi.py:113:main <- app.py:2627:spawn_pet <- app.py:2768:spawn_in_process_window <- app.py:537:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-670ms] verify_seeky_multi.py:305:<module> <- verify_seeky_multi.py:241:main
+WARNING:pet.gui_stall_sampler:  [t-13ms] verify_seeky_multi.py:305:<module> <- verify_seeky_multi.py:241:main <- webm_clip.py:2439:_poll <- webm_clip.py:2673:_process_frame
+WARNING:root:GUI 卡顿 107ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（107ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-100ms] webm_clip.py:2690:_process_frame <- window_optional_services.py:62:<lambda> <- verify_seeky_multi.py:92:observed_frame <- window.py:1917:_on_frame <- window.py:2068:_rebuild_frame <- window.py:1990:_frame_signature
+WARNING:pet.gui_stall_sampler:  [t-46ms] verify_seeky_multi.py:305:<module> <- verify_seeky_multi.py:241:main
+WARNING:root:GUI 卡顿 108ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（108ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-100ms] webm_clip.py:2690:_process_frame <- window_optional_services.py:62:<lambda> <- verify_seeky_multi.py:92:observed_frame <- window.py:1917:_on_frame <- window.py:2068:_rebuild_frame <- window.py:1990:_frame_signature
+WARNING:pet.gui_stall_sampler:  [t-46ms] verify_seeky_multi.py:305:<module> <- verify_seeky_multi.py:241:main
+WARNING:root:GUI 卡顿 108ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（108ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-100ms] webm_clip.py:2690:_process_frame <- window_optional_services.py:62:<lambda> <- verify_seeky_multi.py:92:observed_frame <- window.py:1917:_on_frame <- window.py:2068:_rebuild_frame <- window.py:1990:_frame_signature
+WARNING:pet.gui_stall_sampler:  [t-46ms] verify_seeky_multi.py:305:<module> <- verify_seeky_multi.py:241:main
+WARNING:root:GUI 卡顿 103ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（103ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-137ms] verify_seeky_multi.py:305:<module> <- verify_seeky_multi.py:241:main
+WARNING:pet.gui_stall_sampler:  [t-43ms] window.py:1917:_on_frame <- window.py:2124:_rebuild_frame <- window.py:2270:_sync_mask <- window_optional_services.py:42:effects_coverage <- frame_edges.py:25:coverage_region <- Image.py:2046:point
+WARNING:root:GUI 卡顿 105ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（105ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-137ms] verify_seeky_multi.py:305:<module> <- verify_seeky_multi.py:241:main
+WARNING:pet.gui_stall_sampler:  [t-44ms] window.py:1917:_on_frame <- window.py:2124:_rebuild_frame <- window.py:2270:_sync_mask <- window_optional_services.py:42:effects_coverage <- frame_edges.py:25:coverage_region <- Image.py:2046:point
+WARNING:root:GUI 卡顿 105ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（105ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-137ms] verify_seeky_multi.py:305:<module> <- verify_seeky_multi.py:241:main
+WARNING:pet.gui_stall_sampler:  [t-44ms] window.py:1917:_on_frame <- window.py:2124:_rebuild_frame <- window.py:2270:_sync_mask <- window_optional_services.py:42:effects_coverage <- frame_edges.py:25:coverage_region <- Image.py:2046:point
+WARNING:root:GUI 卡顿 333ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（333ms，3 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-379ms] verify_seeky_multi.py:305:<module> <- verify_seeky_multi.py:241:main
+WARNING:pet.gui_stall_sampler:  [t-324ms] window.py:2124:_rebuild_frame <- window.py:2270:_sync_mask <- window_optional_services.py:42:effects_coverage <- frame_edges.py:18:coverage_region <- Image.py:3284:frombytes <- Image.py:959:frombytes
+WARNING:pet.gui_stall_sampler:  [t-16ms] verify_seeky_multi.py:305:<module> <- verify_seeky_multi.py:241:main <- webm_clip.py:2439:_poll <- webm_clip.py:2690:_process_frame
+WARNING:root:GUI 卡顿 335ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（335ms，3 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-379ms] verify_seeky_multi.py:305:<module> <- verify_seeky_multi.py:241:main
+WARNING:pet.gui_stall_sampler:  [t-325ms] window.py:2124:_rebuild_frame <- window.py:2270:_sync_mask <- window_optional_services.py:42:effects_coverage <- frame_edges.py:18:coverage_region <- Image.py:3284:frombytes <- Image.py:959:frombytes
+WARNING:pet.gui_stall_sampler:  [t-17ms] verify_seeky_multi.py:305:<module> <- verify_seeky_multi.py:241:main <- webm_clip.py:2439:_poll <- webm_clip.py:2690:_process_frame
+WARNING:root:GUI 卡顿 335ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（335ms，3 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-379ms] verify_seeky_multi.py:305:<module> <- verify_seeky_multi.py:241:main
+WARNING:pet.gui_stall_sampler:  [t-325ms] window.py:2124:_rebuild_frame <- window.py:2270:_sync_mask <- window_optional_services.py:42:effects_coverage <- frame_edges.py:18:coverage_region <- Image.py:3284:frombytes <- Image.py:959:frombytes
+WARNING:pet.gui_stall_sampler:  [t-17ms] verify_seeky_multi.py:305:<module> <- verify_seeky_multi.py:241:main <- webm_clip.py:2439:_poll <- webm_clip.py:2690:_process_frame
+WARNING:root:GUI 卡顿 105ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（105ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-127ms] window.py:1917:_on_frame <- window.py:2124:_rebuild_frame <- window.py:2270:_sync_mask <- window_optional_services.py:42:effects_coverage <- frame_edges.py:27:coverage_region <- Image.py:2046:point
+WARNING:pet.gui_stall_sampler:  [t-11ms] verify_seeky_multi.py:97:<lambda> <- window.py:1705:switch_clip <- window.py:1701:_switch <- window.py:1454:_submit_collision_state <- collision_client.py:267:_submit_collision_state <- collision_ipc.py:1261:submit_state
+WARNING:root:GUI 卡顿 105ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（105ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-127ms] window.py:1917:_on_frame <- window.py:2124:_rebuild_frame <- window.py:2270:_sync_mask <- window_optional_services.py:42:effects_coverage <- frame_edges.py:27:coverage_region <- Image.py:2046:point
+WARNING:pet.gui_stall_sampler:  [t-11ms] verify_seeky_multi.py:97:<lambda> <- window.py:1705:switch_clip <- window.py:1701:_switch <- window.py:1454:_submit_collision_state <- collision_client.py:267:_submit_collision_state <- collision_ipc.py:1261:submit_state
+WARNING:root:GUI 卡顿 105ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（105ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-127ms] window.py:1917:_on_frame <- window.py:2124:_rebuild_frame <- window.py:2270:_sync_mask <- window_optional_services.py:42:effects_coverage <- frame_edges.py:27:coverage_region <- Image.py:2046:point
+WARNING:pet.gui_stall_sampler:  [t-11ms] verify_seeky_multi.py:97:<lambda> <- window.py:1705:switch_clip <- window.py:1701:_switch <- window.py:1454:_submit_collision_state <- collision_client.py:267:_submit_collision_state <- collision_ipc.py:1261:submit_state
+WARNING:root:GUI 卡顿 294ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（294ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-301ms] verify_seeky_multi.py:305:<module> <- verify_seeky_multi.py:241:main <- window.py:2460:paintEvent
+WARNING:pet.gui_stall_sampler:  [t-33ms] window.py:1917:_on_frame <- window.py:2124:_rebuild_frame <- window.py:2270:_sync_mask <- window_optional_services.py:42:effects_coverage <- frame_edges.py:25:coverage_region <- Image.py:2046:point
+WARNING:root:GUI 卡顿 297ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（297ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-302ms] verify_seeky_multi.py:305:<module> <- verify_seeky_multi.py:241:main <- window.py:2460:paintEvent
+WARNING:pet.gui_stall_sampler:  [t-33ms] window.py:1917:_on_frame <- window.py:2124:_rebuild_frame <- window.py:2270:_sync_mask <- window_optional_services.py:42:effects_coverage <- frame_edges.py:25:coverage_region <- Image.py:2046:point
+WARNING:root:GUI 卡顿 297ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（297ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-302ms] verify_seeky_multi.py:305:<module> <- verify_seeky_multi.py:241:main <- window.py:2460:paintEvent
+WARNING:pet.gui_stall_sampler:  [t-33ms] window.py:1917:_on_frame <- window.py:2124:_rebuild_frame <- window.py:2270:_sync_mask <- window_optional_services.py:42:effects_coverage <- frame_edges.py:25:coverage_region <- Image.py:2046:point
+WARNING:root:GUI 卡顿 150ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（150ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-103ms] webm_clip.py:2439:_poll <- webm_clip.py:2690:_process_frame <- window_optional_services.py:62:<lambda> <- verify_seeky_multi.py:92:observed_frame <- window.py:1917:_on_frame <- window.py:2106:_rebuild_frame
+WARNING:pet.gui_stall_sampler:  [t-21ms] verify_seeky_multi.py:92:observed_frame <- window.py:1919:_on_frame <- window.py:2126:_rebuild_frame <- window.py:2291:_sync_mask <- window_optional_services.py:44:effects_coverage <- frame_edges.py:36:coverage_region
+WARNING:root:GUI 卡顿 150ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（150ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-103ms] webm_clip.py:2439:_poll <- webm_clip.py:2690:_process_frame <- window_optional_services.py:62:<lambda> <- verify_seeky_multi.py:92:observed_frame <- window.py:1917:_on_frame <- window.py:2106:_rebuild_frame
+WARNING:pet.gui_stall_sampler:  [t-21ms] verify_seeky_multi.py:92:observed_frame <- window.py:1919:_on_frame <- window.py:2126:_rebuild_frame <- window.py:2291:_sync_mask <- window_optional_services.py:44:effects_coverage <- frame_edges.py:36:coverage_region
+WARNING:root:GUI 卡顿 150ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（150ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-103ms] webm_clip.py:2439:_poll <- webm_clip.py:2690:_process_frame <- window_optional_services.py:62:<lambda> <- verify_seeky_multi.py:92:observed_frame <- window.py:1917:_on_frame <- window.py:2106:_rebuild_frame
+WARNING:pet.gui_stall_sampler:  [t-21ms] verify_seeky_multi.py:92:observed_frame <- window.py:1919:_on_frame <- window.py:2126:_rebuild_frame <- window.py:2291:_sync_mask <- window_optional_services.py:44:effects_coverage <- frame_edges.py:36:coverage_region
+{'max_first_frame_decoders': 2, 'steady_mib': 1636.301040649414, 'peak_mib': 2038.1144104003906, 'growth_mib': 86.5156021118164, 'playback': {0: {'fps': 18.760016668932007, 'forward_gaps': 0, 'frames': 1257, 'ten_second_bins': [{'start': 0, 'fps': 15.117575008551915, 'frames': 138}, {'start': 10, 'fps': 15.636191225574755, 'frames': 156}, {'start': 20, 'fps': 16.219211202337178, 'frames': 162}, {'start': 30, 'fps': 17.812754737488305, 'frames': 178}, {'start': 40, 'fps': 19.44940147975858, 'frames': 195}, {'start': 50, 'fps': 22.704668521885885, 'frames': 227}, {'start': 60, 'fps': 19.867150970279543, 'frames': 199}, {'start': 70, 'fps': 15.897131473301892, 'frames': 159}, {'start': 80, 'fps': 21.958983037189252, 'frames': 219}, {'start': 90, 'fps': 17.368605993675022, 'frames': 174}, {'start': 100, 'fps': 13.679751940498145, 'frames': 136}]}, 1: {'fps': 18.723320388262536, 'forward_gaps': 0, 'frames': 1255, 'ten_second_bins': [{'start': 0, 'fps': 14.85917302557342, 'frames': 134}, {'start': 10, 'fps': 15.686905456227498, 'frames': 157}, {'start': 20, 'fps': 16.31652022336404, 'frames': 162}, {'start': 30, 'fps': 17.372966459128335, 'frames': 174}, {'start': 40, 'fps': 19.311586952171304, 'frames': 194}, {'start': 50, 'fps': 22.80123749447548, 'frames': 228}, {'start': 60, 'fps': 19.472632920794567, 'frames': 195}, {'start': 70, 'fps': 16.0682344143179, 'frames': 160}, {'start': 80, 'fps': 21.8811791747383, 'frames': 219}, {'start': 90, 'fps': 17.186966048203892, 'frames': 172}, {'start': 100, 'fps': 13.467336683417082, 'frames': 135}]}, 2: {'fps': 18.633048483281804, 'forward_gaps': 0, 'frames': 1248, 'ten_second_bins': [{'start': 0, 'fps': 14.843418673690321, 'frames': 134}, {'start': 10, 'fps': 15.680283049211965, 'frames': 157}, {'start': 20, 'fps': 16.42532523151647, 'frames': 164}, {'start': 30, 'fps': 17.26647593233951, 'frames': 173}, {'start': 40, 'fps': 19.396984924623123, 'frames': 194}, {'start': 50, 'fps': 22.597167821633022, 'frames': 226}, {'start': 60, 'fps': 19.672789320485794, 'frames': 197}, {'start': 70, 'fps': 15.83635098195461, 'frames': 158}, {'start': 80, 'fps': 21.869764548911043, 'frames': 219}, {'start': 90, 'fps': 16.847584843226656, 'frames': 168}, {'start': 100, 'fps': 13.859317880528662, 'frames': 139}]}}, 'queue_drops': 0, 'duplicate_first_images': [], 'lifecycle': {}, 'shared_process_enabled': True, 'source_widths': [2560, 2560, 2560], 'actions': {0: '待机呼吸休闲', 1: '待机呼吸休闲', 2: '待机呼吸休闲'}, 'initial_decode_routes': {0: {'idle_eligible': True, 'broker_active': True, 'feed': False, 'publish': True, 'path': '/Users/ray/Library/Caches/seeky-native-v6-baseline/assets/characters_hq/shenshen/videos/idle/待机呼吸休闲.webm'}, 1: {'idle_eligible': True, 'broker_active': True, 'feed': True, 'publish': False, 'path': '/Users/ray/Library/Caches/seeky-native-v6-baseline/assets/characters_hq/shenshen/videos/idle/待机呼吸休闲.webm'}, 2: {'idle_eligible': True, 'broker_active': True, 'feed': True, 'publish': False, 'path': '/Users/ray/Library/Caches/seeky-native-v6-baseline/assets/characters_hq/shenshen/videos/idle/待机呼吸休闲.webm'}}, 'live_ffmpeg_after_cleanup': []} ['Pet 0: fps=18.76, skipped source frames=0', 'Pet 1: fps=18.72, skipped source frames=0', 'Pet 2: fps=18.63, skipped source frames=0']

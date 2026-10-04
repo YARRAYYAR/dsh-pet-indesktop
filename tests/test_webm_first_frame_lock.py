@@ -412,3 +412,161 @@ def test_sweep_unconfirmed_abandons_after_retry_limit(app, monkeypatch):
     clip._unconfirmed_procs = []
     webm_clip_mod._ORPHAN_REGISTRY._clips.discard(clip)
     app.processEvents()
+
+
+class _FlightClip(WebMClip):
+    """Inject only decode completion/failure; keep real warm/cancel/cache lifecycle."""
+
+    def __init__(self, path, outcome="image"):
+        super().__init__("dummy.webm")
+        self.path = path
+        self._ffr_pinned = True
+        self.entered = threading.Event()
+        self.release = threading.Event()
+        self.calls = 0
+        self.outcome = outcome
+
+    def _decode_first_qimage(self, gen=None):
+        self.calls += 1
+        self.entered.set()
+        assert self.release.wait(5), "test did not release decoder"
+        if self.outcome == "error":
+            raise RuntimeError("injected decode failure")
+        if self.outcome == "none":
+            return None
+        image = QImage(2, 2, QImage.Format.Format_RGBA8888)
+        image.fill(0x7F123456)
+        return image
+
+
+@pytest.fixture
+def flight_group(app, tmp_path, monkeypatch):
+    """Observe entry into coordination, without scheduling sleeps or new product hooks."""
+    path = tmp_path / "shared.webm"
+    path.write_bytes(b"identity")
+    looked_up = threading.Event()
+    original = webm_clip_mod._shared_first_image_locked
+
+    def observe(key):
+        looked_up.set()
+        return original(key)
+
+    monkeypatch.setattr(webm_clip_mod, "_shared_first_image_locked", observe)
+    clips, threads, errors = [], [], []
+
+    def make(outcome="image", media=path):
+        clip = _FlightClip(media, outcome)
+        clips.append(clip)
+        return clip
+
+    def start(clip):
+        def run():
+            try:
+                clip.warm_first_frame()
+            except Exception as exc:
+                errors.append(exc)
+        thread = threading.Thread(target=run, daemon=True)
+        threads.append(thread)
+        looked_up.clear()
+        thread.start()
+        assert looked_up.wait(5)
+        return thread
+
+    yield make, start, path, errors
+    for clip in clips:
+        clip.release.set()
+        clip.cancel_first_frame_warm()
+    for thread in threads:
+        thread.join(5)
+        assert not thread.is_alive()
+    for clip in clips:
+        clip.cleanup()
+    webm_clip_mod._reset_session_ending_for_tests()
+    app.processEvents()
+
+
+def test_material_single_flight_reuses_pixels_across_live_clips(flight_group):
+    make, start, path, errors = flight_group
+    owner, follower = make(), make()
+    first = start(owner)
+    assert owner.entered.wait(5)
+    second = start(follower)
+    follower.release.set()
+    owner.release.set()
+    first.join(5); second.join(5)
+    assert not errors
+    assert owner.calls + follower.calls == 1
+    assert owner._first_image.cacheKey() == follower._first_image.cacheKey()
+
+
+def test_material_waiter_cancel_does_not_cancel_owner(flight_group):
+    make, start, path, errors = flight_group
+    owner, follower = make(), make()
+    first = start(owner)
+    assert owner.entered.wait(5)
+    second = start(follower)
+    follower.cancel_first_frame_warm()
+    second.join(1)
+    assert not second.is_alive(), "cancelled waiter must leave before owner finishes"
+    assert follower.calls == 0 and follower._first_image is None
+    owner.release.set(); first.join(5)
+    assert owner._first_image is not None and not errors
+
+
+@pytest.mark.parametrize("outcome", ["cancel", "none", "error"])
+def test_material_owner_failure_releases_claim_for_live_waiter(flight_group, outcome):
+    make, start, path, errors = flight_group
+    owner = make(outcome if outcome != "cancel" else "image")
+    follower = make()
+    first = start(owner)
+    assert owner.entered.wait(5)
+    second = start(follower)
+    if outcome == "cancel":
+        owner.cancel_first_frame_warm()
+    owner.release.set(); first.join(5)
+    assert follower.entered.wait(5), "live waiter must retry after released claim"
+    follower.release.set(); second.join(5)
+    assert owner._first_image is None and follower._first_image is not None
+    assert len(errors) == int(outcome == "error")
+    assert owner.calls == follower.calls == 1
+
+
+def test_material_different_identities_decode_independently(flight_group, tmp_path):
+    make, start, path, errors = flight_group
+    other = tmp_path / "other.webm"
+    other.write_bytes(b"different")
+    owner, independent = make(), make(media=other)
+    first = start(owner); second = start(independent)
+    assert owner.entered.wait(5) and independent.entered.wait(5)
+    owner.release.set(); independent.release.set()
+    first.join(5); second.join(5)
+    assert owner.calls == independent.calls == 1 and not errors
+
+
+def test_material_session_end_stops_waiters_and_discards_owner(flight_group):
+    make, start, path, errors = flight_group
+    owner, follower = make(), make()
+    first = start(owner)
+    assert owner.entered.wait(5)
+    second = start(follower)
+    webm_clip_mod.set_session_ending()
+    second.join(1)
+    assert not second.is_alive() and follower.calls == 0
+    owner.release.set(); first.join(5)
+    assert owner._first_image is None and follower._first_image is None
+    assert not errors
+
+
+def test_material_replaced_during_decode_never_caches_stale_pixels(flight_group):
+    make, start, path, errors = flight_group
+    owner = make()
+    first = start(owner)
+    assert owner.entered.wait(5)
+    path.write_bytes(b"replacement-identity")
+    replacement = make()
+    second = start(replacement)
+    assert replacement.entered.wait(5), "new identity must not wait for obsolete decode"
+    owner.release.set(); replacement.release.set()
+    first.join(5); second.join(5)
+    assert owner._first_image is None
+    assert replacement._first_image is not None and not errors

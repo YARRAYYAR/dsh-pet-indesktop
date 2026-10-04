@@ -1,0 +1,30 @@
+{
+  "reviewer": "delivery_review_xhigh",
+  "reasoning": "xhigh as requested by user",
+  "mode": "read-only; no tests or native workloads",
+  "scope": [
+    "pet/webm_clip.py single-flight locks/generation/cancel/FFmpeg",
+    "pet/settings_actions.py weak callbacks/request/hide/watch/queue",
+    "pet/ui_motion.py/navigation/toggle hide and reverse",
+    "scripts/build_macos.sh resources/version",
+    "scripts/verify_dsr_package.py bytecode/SVG/LICENSE/version"
+  ],
+  "findings": [
+    "No newly identified lock inversion, cancellation commit race or perpetual animation.",
+    "Package source includes ui_motion and settings SVG/license; actual bundle still requires verification.",
+    "Confirmed queued inference can be stale after hide/show: current-only IPC cannot restore pending.",
+    "Effects can substitute requested action while play ACK retains requested; queued inference can then overstate pending. External pending override likewise has no queue push."
+  ],
+  "evidence": [
+    "webm_clip.py:1970-2019",
+    "settings_actions.py:84-114,267-268",
+    "app.py:867-881",
+    "window.py:1849-1854",
+    "window_optional_services.py:332-342",
+    "ui_motion.py:71",
+    "build_macos.sh:91,123",
+    "verify_dsr_package.py:109-116"
+  ],
+  "disposition": "Document protocol limitations; preserve approved existing IPC; normal live action flows tested separately; effects queue scenario not claimed verified.",
+  "diff_check_exit_status": 0
+}

@@ -1,0 +1,12 @@
+{
+  "validator_failure": "Raw Git index fingerprint changed",
+  "old_index": "sha256:3e0afe89666cb9dfc2757ef3a86ac842ec18c92b4aaffd40f97bd8cfedba562d",
+  "new_index": "sha256:de0babce15c941b8054ca33724ba820892d517e2f0d28b2c53f3ada0abb6fda8",
+  "baseline_head": "1197997863640209595a49aa6498db6f0d33fa05",
+  "staged_paths": [],
+  "assertions": "Every index mode/blob/stage matches baseline HEAD tree, no staged or unmerged paths",
+  "entries": 1056,
+  "cause": "Git stat/cache refresh during tools or tests; no index content change",
+  "action": "Refresh raw index checksum only; original baseline HEAD/paths/user fingerprints retained",
+  "exit_status": 0
+}

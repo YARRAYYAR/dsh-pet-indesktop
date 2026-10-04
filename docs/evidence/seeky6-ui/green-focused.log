@@ -1,0 +1,68 @@
+....F..F....                                                             [100%]
+=================================== FAILURES ===================================
+___________________ test_sidebar_reuses_rows_and_keeps_focus ___________________
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x133eb4c30>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-34/test_sidebar_reuses_rows_and_k0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x133dbb350>
+
+    def test_sidebar_reuses_rows_and_keeps_focus(qtbot, tmp_path, monkeypatch):
+        from pet import autostart
+        from pet.config import Config
+        from pet.modern_settings_dialog import ModernSettingsDialog
+        monkeypatch.setattr(autostart, 'is_enabled', lambda: False)
+        dialog = ModernSettingsDialog(Config(tmp_path), include_ai=False, standalone=True)
+        qtbot.addWidget(dialog)
+        dialog.show()
+        headings = dialog.findChildren(QPushButton, 'sidebarDomainHeading')
+        target = next(button for button in headings if button.text().startswith('桌宠'))
+        target.setFocus()
+        target.click()
+>       assert QApplication.focusWidget() is target
+E       assert None is <pet.settings_navigation.SidebarNavigationButton(0xa0d1bea00, name="sidebarDomainHeading") at 0x1342e7fc0>
+E        +  where None = <built-in method focusWidget of Shiboken.ObjectType object at 0xa0ef49910>()
+E        +    where <built-in method focusWidget of Shiboken.ObjectType object at 0xa0ef49910> = QApplication.focusWidget
+
+tests/test_seeky6_settings.py:123: AssertionError
+________________ test_brand_navigation_and_native_minimum_size _________________
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x13458a470>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-34/test_brand_navigation_and_nati0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1342b95e0>
+
+    def test_brand_navigation_and_native_minimum_size(qtbot, tmp_path, monkeypatch):
+        from pet.config import Config
+        from pet.modern_settings_dialog import ModernSettingsDialog
+        from pet import autostart
+    
+        monkeypatch.setattr(autostart, 'is_enabled', lambda: False)
+        dialog = ModernSettingsDialog(Config(tmp_path), include_ai=False, standalone=True)
+        qtbot.addWidget(dialog)
+        dialog.resize(720, 500)
+        dialog.show()
+        assert 'seeky· pet' in dialog.windowTitle()
+        assert '文件识别' not in [dialog.sidebar.item(i).text() for i in range(dialog.sidebar.count())]
+        assert dialog.property('settingsDark') is True
+        assert not dialog.windowIcon().isNull()
+        assert dialog.findChildren(QLabel, 'pageDescription')
+        pet_row = next(i for i in range(dialog.sidebar.count())
+                       if dialog.sidebar.item(i).text() == '桌宠')
+        dialog.sidebar.setCurrentRow(pet_row)
+        children = dialog.findChildren(QPushButton, 'sidebarSubtask')
+        assert {'常用控制', '动作库'} <= {button.text() for button in children}
+        assert all(button.icon().isNull() for button in children)
+        assert dialog.quit_button.isVisible()
+        assert dialog.quit_button.geometry().bottom() < dialog.height()
+        dialog.resize(1000, 680)
+        next(button for button in children if button.text() == '动作库').click()
+        from pet.settings_actions import ActionLibrary
+        from PySide6.QtCore import QPoint
+        library = dialog.findChild(ActionLibrary)
+>       qtbot.waitUntil(lambda: library.play.mapTo(dialog, QPoint(0, 0)).y() < dialog.height())
+E       pytestqt.exceptions.TimeoutError: waitUntil timed out in 5000 milliseconds
+
+tests/test_dsr_settings.py:100: TimeoutError
+=========================== short test summary info ============================
+FAILED tests/test_seeky6_settings.py::test_sidebar_reuses_rows_and_keeps_focus
+FAILED tests/test_dsr_settings.py::test_brand_navigation_and_native_minimum_size
+2 failed, 10 passed in 68.15s (0:01:08)

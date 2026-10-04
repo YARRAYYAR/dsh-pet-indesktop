@@ -1,0 +1,160 @@
+FFFFEEF                                                                  [100%]
+==================================== ERRORS ====================================
+_________ ERROR at teardown of test_destroy_cancels_every_live_request _________
+
+item = <Function test_destroy_cancels_every_live_request>
+
+    @pytest.hookimpl(wrapper=True, trylast=True)
+    def pytest_runtest_teardown(item):
+        """
+        Hook called after each test tear down, to process any pending events and
+        avoiding leaking events to the next test. Also, if exceptions have
+        been captured during fixtures teardown, fail the test.
+        """
+        _process_events()
+>       _close_widgets(item)
+
+.venv/lib/python3.13/site-packages/pytestqt/plugin.py:203: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+item = <Function test_destroy_cancels_every_live_request>
+
+    def _close_widgets(item: pytest.Item) -> None:
+        """
+        Close all widgets registered in the pytest item.
+        """
+        widgets = getattr(item, "qt_widgets", None)
+        if widgets:
+            for w, before_close_func in item.qt_widgets:  # type: ignore[attr-defined]
+                w = w()
+                if w is not None:
+                    if before_close_func is not None:
+                        before_close_func(w)
+>                   w.close()
+E                   RuntimeError: libshiboken: Internal C++ object (ActionLibrary) already deleted.
+
+.venv/lib/python3.13/site-packages/pytestqt/qtbot.py:808: RuntimeError
+__________ ERROR at setup of test_sidebar_reuses_rows_and_keeps_focus __________
+
+item = <Function test_sidebar_reuses_rows_and_keeps_focus>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+E       AssertionError: previous item was not torn down properly
+
+.venv/lib/python3.13/site-packages/pytestqt/plugin.py:178: AssertionError
+=================================== FAILURES ===================================
+_____________ test_refresh_preserves_visible_selection_and_scroll ______________
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x1108ee510>
+
+    def test_refresh_preserves_visible_selection_and_scroll(qtbot):
+        library, client = open_library(qtbot)
+        library.list.setCurrentRow(35)
+        library.list.scrollToItem(library.list.currentItem())
+        scroll = library.list.verticalScrollBar().value()
+        library.refresh.click()
+        client.reply('list_actions', actions())
+>       assert library.list.currentItem().data(Qt.ItemDataRole.UserRole) == '动作035'
+E       AssertionError: assert '动作000' == '动作035'
+E         
+E         - 动作035
+E         + 动作000
+
+tests/test_seeky6_settings.py:58: AssertionError
+----------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: Populating font family aliases took 517 ms. Replace uses of missing font family "Sans Serif" with one that exists to avoid this cost. 
+QtWarningMsg: This plugin does not support propagateSizeHints()
+--------------------------- Captured stderr teardown ---------------------------
+This plugin does not support propagateSizeHints()
+____________ test_pending_blocks_repeat_and_watch_is_playback_truth ____________
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x131b30190>
+
+    def test_pending_blocks_repeat_and_watch_is_playback_truth(qtbot):
+        library, client = open_library(qtbot)
+        library.list.setCurrentRow(3)
+        library.play.click()
+>       assert '请求中' in library.status.text()
+E       assert '请求中' in '60 个动作 · 在桌宠窗口播放'
+E        +  where '60 个动作 · 在桌宠窗口播放' = <built-in method text of PySide6.QtWidgets.QLabel object at 0x131b0e9c0>()
+E        +    where <built-in method text of PySide6.QtWidgets.QLabel object at 0x131b0e9c0> = <PySide6.QtWidgets.QLabel(0xaaa7d4700, name="settingHint") at 0x131b0e9c0>.text
+E        +      where <PySide6.QtWidgets.QLabel(0xaaa7d4700, name="settingHint") at 0x131b0e9c0> = <pet.settings_actions.ActionLibrary(0xaaa7d0000) at 0x110dd7f00>.status
+
+tests/test_seeky6_settings.py:66: AssertionError
+----------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: This plugin does not support propagateSizeHints()
+--------------------------- Captured stderr teardown ---------------------------
+This plugin does not support propagateSizeHints()
+________ test_pending_failure_retries_and_hidden_callbacks_are_ignored _________
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x131b30e10>
+
+    def test_pending_failure_retries_and_hidden_callbacks_are_ignored(qtbot):
+        library, client = open_library(qtbot)
+        library.play.click()
+        client.reply('play_action', error='桌宠暂时没有响应，请重试')
+        assert library.play.isEnabled()
+        assert '没有响应' in library.status.text()
+        library.play.click()
+        library.refresh.click()
+        pending = [next(call[3] for call in reversed(client.calls) if call[0] == command)
+                   for command in ('play_action', 'list_actions', 'watch_actions')]
+        before = library.list.currentItem().text()
+        library.hide()
+>       assert all(token in client.cancelled for token in pending)
+E       assert False
+E        +  where False = all(<generator object test_pending_failure_retries_and_hidden_callbacks_are_ignored.<locals>.<genexpr> at 0x131afa9b0>)
+
+tests/test_seeky6_settings.py:92: AssertionError
+----------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: This plugin does not support propagateSizeHints()
+___________________ test_destroy_cancels_every_live_request ____________________
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x1318f7ce0>
+
+    def test_destroy_cancels_every_live_request(qtbot):
+        import shiboken6
+        library, client = open_library(qtbot)
+        library.play.click()
+        library.refresh.click()
+        tokens = [next(call[3] for call in reversed(client.calls) if call[0] == command)
+                  for command in ('play_action', 'list_actions', 'watch_actions')]
+        library.deleteLater()
+        qtbot.waitUntil(lambda: not shiboken6.isValid(library))
+>       assert all(token in client.cancelled for token in tokens)
+E       assert False
+E        +  where False = all(<generator object test_destroy_cancels_every_live_request.<locals>.<genexpr> at 0x131afb1d0>)
+
+tests/test_seeky6_settings.py:107: AssertionError
+----------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: This plugin does not support propagateSizeHints()
+_________________ test_hidden_and_reduced_motion_snap_to_state _________________
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x131a796e0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x131983df0>
+
+    def test_hidden_and_reduced_motion_snap_to_state(qtbot, monkeypatch):
+>       from pet import ui_motion
+E       ImportError: cannot import name 'ui_motion' from 'pet' (/Users/ray/Documents/New project/dsr-pet/pet/__init__.py)
+
+tests/test_seeky6_settings.py:130: ImportError
+=========================== short test summary info ============================
+FAILED tests/test_seeky6_settings.py::test_refresh_preserves_visible_selection_and_scroll
+FAILED tests/test_seeky6_settings.py::test_pending_blocks_repeat_and_watch_is_playback_truth
+FAILED tests/test_seeky6_settings.py::test_pending_failure_retries_and_hidden_callbacks_are_ignored
+FAILED tests/test_seeky6_settings.py::test_destroy_cancels_every_live_request
+FAILED tests/test_seeky6_settings.py::test_hidden_and_reduced_motion_snap_to_state
+ERROR tests/test_seeky6_settings.py::test_destroy_cancels_every_live_request
+ERROR tests/test_seeky6_settings.py::test_sidebar_reuses_rows_and_keeps_focus
+5 failed, 2 errors in 3.23s

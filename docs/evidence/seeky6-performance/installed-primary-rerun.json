@@ -1,0 +1,18 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky6-performance/experiments/verify_installed_primary.py"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "CUA getApp exact installed path; already running actual primary instance",
+  "inputs": "Read-only list_actions",
+  "assertions": "Installed process exists; real directory contains 106 actions",
+  "checks": {
+    "installed_path": "/Users/ray/Applications/seeky· pet.app",
+    "pid": 57857,
+    "action_count": 106,
+    "current": "待机呼吸休闲"
+  },
+  "reset": "No settings written; leave application running",
+  "exit_status": 0
+}

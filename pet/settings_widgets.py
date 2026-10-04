@@ -10,7 +10,7 @@ from pathlib import Path
 
 import shiboken6
 
-from PySide6.QtCore import QEvent, QEasingCurve, QFileInfo, QPoint, QPointF, QRect, QRectF, QSize, Qt, QTimer, QVariantAnimation, Signal
+from PySide6.QtCore import QEvent, QFileInfo, QPoint, QPointF, QRect, QRectF, QSize, Qt, QTimer, Signal
 from PySide6.QtGui import QAction, QColor, QFontDatabase, QImageReader, QPainter, QPainterPath, QPen, QPixmap
 from PySide6.QtWidgets import (
     QAbstractButton,
@@ -33,6 +33,7 @@ from PySide6.QtWidgets import (
     QScrollArea,
     QSlider,
     QSpinBox,
+    QStackedLayout,
     QStackedWidget,
     QSizePolicy,
     QVBoxLayout,
@@ -47,6 +48,7 @@ from .context_menus.icons import (
     vector_widget_icon,
 )
 from .context_menus.quick_launch import fitted_application_icon
+from .ui_motion import StateTransition
 
 
 def _system_font_families() -> tuple[str, ...]:
@@ -166,10 +168,7 @@ class ToggleSwitch(QAbstractButton):
         self.setFixedSize(38, 22)
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self._progress = 0.0
-        self._motion = QVariantAnimation(self)
-        self._motion.setDuration(140)
-        self._motion.setEasingCurve(QEasingCurve.Type.OutCubic)
-        self._motion.valueChanged.connect(self._advance)
+        self._motion = StateTransition(self, 140, self._advance)
         self.toggled.connect(self._animate)
 
     def _advance(self, value):
@@ -177,14 +176,12 @@ class ToggleSwitch(QAbstractButton):
         self.update()
 
     def _animate(self, checked):
-        self._motion.stop()
         target = 1.0 if checked else 0.0
-        if not self.isVisible():
-            self._advance(target)
-            return
-        self._motion.setStartValue(self._progress)
-        self._motion.setEndValue(target)
-        self._motion.start()
+        self._motion.move_to(target)
+
+    def hideEvent(self, event):
+        self._motion.snap(float(self.isChecked()))
+        super().hideEvent(event)
 
     def paintEvent(self, event) -> None:  # noqa: N802
         painter = QPainter(self)
@@ -1364,19 +1361,58 @@ class CollapsibleGroup(QWidget):
         self.toggle.setAccessibleName(f"{state}{self.toggle.text()}")
 
 
-class _CurrentPageStack(QStackedWidget):
-    """Do not let a hidden tab impose its minimum width on the active task."""
+class _CurrentPageLayout(QStackedLayout):
+    """Qt layout items query the layout directly for wrapped content height."""
 
     def sizeHint(self) -> QSize:  # noqa: N802
         current = self.currentWidget()
         return current.sizeHint() if current is not None else QSize()
 
-    def minimumSizeHint(self) -> QSize:  # noqa: N802
+    def minimumSize(self) -> QSize:  # noqa: N802
         current = self.currentWidget()
         if current is None:
             return QSize()
         hint = current.minimumSizeHint()
         return QSize(0, hint.height())
+
+    def hasHeightForWidth(self) -> bool:  # noqa: N802
+        current = self.currentWidget()
+        return current is not None and current.hasHeightForWidth()
+
+    def heightForWidth(self, width: int) -> int:  # noqa: N802
+        current = self.currentWidget()
+        if current is not None and current.hasHeightForWidth():
+            return max(current.heightForWidth(width), self.minimumSize().height())
+        return self.sizeHint().height()
+
+
+class _CurrentPageStack(QWidget):
+    """Size the active task without inheriting a hidden tab's form geometry."""
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self._pages = _CurrentPageLayout(self)
+        self._pages.setContentsMargins(0, 0, 0, 0)
+
+    def addWidget(self, widget) -> int:  # noqa: N802
+        return self._pages.addWidget(widget)
+
+    def count(self) -> int:
+        return self._pages.count()
+
+    def widget(self, index) -> QWidget:
+        return self._pages.widget(index)
+
+    def currentWidget(self) -> QWidget:  # noqa: N802
+        return self._pages.currentWidget()
+
+    def currentIndex(self) -> int:  # noqa: N802
+        return self._pages.currentIndex()
+
+    def setCurrentIndex(self, index) -> None:  # noqa: N802
+        self._pages.setCurrentIndex(index)
+        self._pages.invalidate()
+        self.updateGeometry()
 
 class SettingsTabContainer(QWidget):
     """Keyboard-accessible in-page tabs for peer tasks within one domain."""

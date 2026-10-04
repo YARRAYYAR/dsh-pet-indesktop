@@ -1,0 +1,926 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "/Users/ray/Documents/New project/dsr-pet/scripts/verify_dsr_package.py",
+    "--app",
+    "/Users/ray/Applications/seeky· pet.app",
+    "--output",
+    "docs/evidence/seeky6-performance/package-installed.json"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Completed arm64 bundle and source tree; read-only verification",
+  "assertions": "Source bytecode matches; 106 source and 106 HQ hashes plus index and settings SVG/license match; pure modules excluded; signature valid; bundle version 4.2.1.6",
+  "reset": "Read-only; no configuration or application state changed",
+  "checks": {
+    "info": {
+      "CFBundleDisplayName": "seeky· pet",
+      "CFBundleShortVersionString": "4.2.1",
+      "CFBundleVersion": "4.2.1.6",
+      "CFBundleIdentifier": "com.ray.dsr-pet"
+    },
+    "binary_sha256": "1a064e1d5bfce0cf7b61e44a8316f8d7ec10e382d5632e142c8bd9eff7bfb908",
+    "architecture": "/Users/ray/Applications/seeky· pet.app/Contents/MacOS/seeky· pet: Mach-O 64-bit executable arm64",
+    "source_modules": {
+      "pet.app": "43ae22d63c8af0c59f63e5ab0231136440ef0a5f955b8b1654b770822dee1b3f",
+      "pet.animation_thumbnail": "dbfbac9cccd3b89e1ce1fbf83e095925a58481260d6194420160c19687aa3c12",
+      "pet.branding": "d14ebe5c53eb7802c35ad623dbf5eb2bb5859f6ef0faea7701838579889833cf",
+      "pet.ceiling_geometry": "bd67bb4859b4cb46e5699be585ae855364bbdeb9066deede86f321ebf4f878ad",
+      "pet.codex_link": "119def55041f5e99cc9fa1a158ede990dee72dc8a220e28baf4e19923221c1f9",
+      "pet.config": "10f1d110596f7f0a4418768153352211a6d3c00ade3b54c39e62dd9055c22bf7",
+      "pet.context_menus.icons": "e197d4d1b95119ea0d49bf2f21ae00566561c2d834b52ec70242b024d5f9db08",
+      "pet.context_menus.shared": "9046dbbbe090ca6af5e6b36f60f9b899123aee240f1c19d69d1010efbb8ef391",
+      "pet.decode_fanout": "f09275413ef7b0685d15f7bdaf7214343b050b03789450fcb9e74d9527fcd87b",
+      "pet.frame_edges": "19be31ff5d1ee0d79ec177f0c7bba5e6daa995bd3b1014ec81c2b5f475b0fd3c",
+      "pet.gui_stall_sampler": "5aef5be785074406284ba50ecc149b7dc0187b3bfa4d155f57cd373ad47e7fa3",
+      "pet.library": "ef02eb5bce4955ab39a5b40545091f611345387dd8e96015b2f0f3192ac2a23f",
+      "pet.modern_settings_dialog": "58ae35e547de26feb15e3910659a4e078fdcd5adc3fe3a8c3ad5abd3eb3c94ae",
+      "pet.settings_actions": "4a3a2451f8767bfa0c53d53485eb0cada6566994dc695d711f68a8f030f7b355",
+      "pet.settings_brand": "ce64ac4405d9a8daf1cb918d1709dfdde34e0fdf7f05d82e2fdf67d8c05e1809",
+      "pet.settings_codex": "8d2db1ba307b5c1ab6da5ea70bafe3ecd331cdf56d07490dbeefa3c15552d314",
+      "pet.settings_task_appearance": "98215509ea0ec5815a8f77c0ccada233bad44b89bcca800eeca650b94ef8eefa",
+      "pet.task_bubble": "86577a623d8c1f3c66da80ca4fc0f68ddad21978e4e3757e3840beece373ff53",
+      "pet.task_bubble_style": "fd92366d1bc2c6b1be0e127c2f358ca6def917263831f3bedee21c4c5b9d871f",
+      "pet.settings_commands": "9fbf9e15d32d71bd6f9c2323131205406a602415191decc76e294c0fb7dfc9b0",
+      "pet.settings_navigation": "259d8496a0e615db61fe3e190499d32a3b8963803a022582b89ae6a68afd6e28",
+      "pet.settings_pet_controls": "23dedb2e1a9a7d679b55e598f96828476df3286348710c68157957b0ce947f42",
+      "pet.settings_theme_qss": "874289a222426fdcf0b7ee9ea28c74a534472f731dcc0784f0b8a38febe20d03",
+      "pet.settings_widgets": "3c2359e7de27d60757df7ecfac08029f93e937bef052d8dd4a1b4c46c41cb8a2",
+      "pet.top_flip": "af5bea29387de08e1456222baf85967a11b8a6656fabacafb80b2eb829e308ad",
+      "pet.ui_motion": "45a4c7a03735c4d26cc9c125b3c0287221717bbe0261d81240a3ce7c5c6be9af",
+      "pet.webm_clip": "a86ff22f5893a80ad5bd591074d6cc1c2ab1bbe81e2429e8eb3c53ba757d585c",
+      "pet.window": "e5b3a97fdb25e206f1bdce4cf7a4c7b96fa0659de988404934848247a34f6885",
+      "pet.window_optional_services": "28cce9a834d2dabe32c02cd8d46c79c74032b4a1584021e59bb2e9f6f949e2bd",
+      "pet.window_placement": "de52c8c130aff1966fb502c78146a58d99314f5d2e30024665be4b418ebf2584"
+    },
+    "excluded_modules": [],
+    "icons": {
+      "app-icon.png": "f94c0056d3f5e467d904b18f9a6dda1b0bd3dd80ba61bf5785115c5db2653f2a",
+      "app-icon-mac.png": "c1fc7d750884a06ef4ee29b2f2637abe0fc2ab59a002870ec145991e97859ed7",
+      "bundle_icns": "a29c7feab4681927b61bc065e55d260e3199befe1952406ae698f76e600c7f9b"
+    },
+    "assets": [
+      {
+        "path": "assets/characters/shenshen/videos/click/点击回应-傲娇生气.webm",
+        "sha256": "fa65f3cc4b602aaf60e715a3bea12c46211db156e8532051fd305fb5eecf64e8"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/click/点击回应-元气挥手.webm",
+        "sha256": "87ce2947dd0a9be19b923537dc6d1a121495d9897dbdc07e8ba3dfc78250cb9b"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/click/点击回应-害羞惊讶.webm",
+        "sha256": "8de5e90e94a727d23fda97dd0a0549f1a0ba6056282a7e6f3f548bc7cf079d19"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/click/点击回应-开心跃动.webm",
+        "sha256": "6206fb92f3965473275da756865fac87800a9c8c87861d868a31299e180912aa"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/click/点击回应-挠痒咯咯笑.webm",
+        "sha256": "efeca07d945fa3ddf51777726c6609c70ee8a12be525326aedb7dbe6640b882c"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/drag/被鼠标拖拽悬空反馈.webm",
+        "sha256": "4086e3026953fd4f232f5700a4ef64d074a42767be3ebb30c978b10ade602f98"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/events/balance/余额-分文不剩.webm",
+        "sha256": "620b82123f214940299068c2903f8c9a7cbffb179ba24f5c185f8267704717b4"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/events/balance/余额-数金皱眉.webm",
+        "sha256": "3ea63c94d854981449d55523b3cad3f19a617162ba8f16d61a16cc86837a4293"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/events/balance/余额-袋空如洗.webm",
+        "sha256": "d19023efe91e399036c3af0ad69a62febf45034adc5fdce795114972d69f780e"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/events/balance/余额-金袋叮当.webm",
+        "sha256": "1e1e8d8acdbb606a429f3e59be538efcd34997a155a8c38935fd78c020765255"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/events/balance/余额-钱袋如常.webm",
+        "sha256": "5cf63f144d170656b667ec39a3f172599934a7d4560301feda6c1971e97b30ba"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/events/balance/余额-钱袋满溢.webm",
+        "sha256": "b7c945bd08515f599ff65249b36a89d9aee2e8cde402c3a43be2967b57554f0e"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/idle/待机呼吸休闲.webm",
+        "sha256": "e07b8eb018c947420146f052d544903d243cb385f85e27d6d734f6ed00ab52ac"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/move/左转奔跑.webm",
+        "sha256": "0494ed9730dc960046572db55da852c32b7d910254b40213fbbe4721f88fd833"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/move/漂浮踏步.webm",
+        "sha256": "f5c8024c730f2080f0c40cd786bc60f21a6c6da7fc42d72ccd43884b725a1c3f"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/move/螃蟹走路.webm",
+        "sha256": "75ec1024e6162a470a961ef0e3688e24851616c743b4f79d7080eeec6bd3cf65"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/三球抛接.webm",
+        "sha256": "4b8af8c50289d519309cffe41333a8c4171bac3b652bbad0c4a24f3e948b60f0"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/下五子棋.webm",
+        "sha256": "e40c8f654b6272aacccc1dfb3854cafedc3d482ff00e0a8ea1becd4496fd44da"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/中秋赏月吃月饼.webm",
+        "sha256": "6e4a13ddced2d5329782748013762ca086d0e179e0a9b4ef122c65100e003022"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/优雅女仆舞.webm",
+        "sha256": "ff5837b43cb9054ff4784a1227b0b1352233751dbaa9a47230e1410e4a22ab6a"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/偷吃零食被抓住.webm",
+        "sha256": "6968fc94c6cb3ae6f17c63b699e9d376cd2cac2c1b55fee3fc898c971443fa0c"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/写代码.webm",
+        "sha256": "27a1e5d7482dd605141ed8dc227c77f2871de168e223f5b632361bb5d203e32c"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/写福字.webm",
+        "sha256": "774dffc01e8d6c70b6070f98835ede54405ed91803a806cacbfbfc6e6459216a"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/凭空生花.webm",
+        "sha256": "c5495832e2a22a783f27338bfeed26d28b0db3b6d793a563cb2ff2697096f8be"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/动物环绕.webm",
+        "sha256": "d1f78b830600c096b0aba21d97dd44b43ecbdf4a9a00be88e6c7a48b3ebddda8"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/原地专心玩魔方.webm",
+        "sha256": "f6cb6ff30cfdb5feee2a745a8b83541471d7fe4314f8a7ab2ae6d3f3588d73ae"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/原地小憩沉眠.webm",
+        "sha256": "a9ec51a980eeab90462e3268648ec6fdd535c1f79232248e72ff17aea0250d45"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/原地敲击桌面互动.webm",
+        "sha256": "25f62dd7f5b9bc2ff6ba8c217203170aa7cbb1ea315f5182d1e538f97a811f2b"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/原地跳跃抓碎头顶物品.webm",
+        "sha256": "4f5ac009eaf2487ec2d5108fac11f73d5e2add8a691dd3e0dee0550acf07b5f3"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/原地蹲下玩玩具汽车.webm",
+        "sha256": "6f049a875904b0b8f46c6e2b75d209e40f5b6d51c330c42df4f212ca999784a4"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/原地重力下蹲压缩.webm",
+        "sha256": "bea2fa5caf10e0da3e0f2da2a091977f61b0c1beb39deea08068d1d3f94fc5be"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/变鸽子.webm",
+        "sha256": "1aa4583b4c9ad3592795cef521fc2b32ff7d0ef4314c3c7402ea60bc20cf2def"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/可爱宅舞.webm",
+        "sha256": "538b005b06a54126b2bffa965238387be5d341bc5015103c98c01882c76a0b44"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/吃Token.webm",
+        "sha256": "2c9fa4302690752109e4787a606c091b0d4dfcb457fe80af4ed55f7a653a0048"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/吃冰淇淋融化.webm",
+        "sha256": "bdd455b456839e0a250ae98797b592a51a0d606fc767a0d4dfa131a2777768cf"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/吃午餐.webm",
+        "sha256": "155a7cb9349a99371788c86ab3f723fe4cb7fe61e80b01e9db30ab539c29c987"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/吃大闸蟹.webm",
+        "sha256": "aa20fbb2fd67d74a9ff253f8cd401156ccd1a4330bedb8dc4ee66110d80a2059"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/吃年糕.webm",
+        "sha256": "284d2cf7f62093c197d2ad53ecee2ff5c2900352e05d509cccecce5dc74a9de4"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/吃早餐.webm",
+        "sha256": "b1e56b9aa7ebbeadec531406a853d447da8f4d1a2a6f257ed714fbc03db81c67"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/吃晚餐.webm",
+        "sha256": "32833e21ac9de32f3e474769a57dd7b82de4c7a8f721a62c1956beaa72b9cc94"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/吃汤圆.webm",
+        "sha256": "ca271b225eb035a3b3009d475d487a22d8a136e6b6090f9c35d3a40e7c0da2a2"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/吃白饭.webm",
+        "sha256": "d71912f34f432ac00f23be2233b08b80ca2ffe289189f4afa5c8aaffcb6d4411"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/吃粽子.webm",
+        "sha256": "3b88e38535fb911487fd64cd6c16a0e210561171633899752925399b32fb9171"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/吃糖葫芦.webm",
+        "sha256": "a382f98b2d24c5960a9cc121b56855b0742c077a17e65820b761ca9614982f26"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/吃腊八粥.webm",
+        "sha256": "fe805fb460b10541d133f3a5f28289a28a9f08005d84770ec1ff709077224351"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/吃西瓜.webm",
+        "sha256": "c133e4a06a3987d0e2d7ed7b73bce5ec3f32fb14a3acdf12d8fe35a9cd5232a6"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/吃重阳糕.webm",
+        "sha256": "aa469d0a4cc294c51fab079e5722d6da3c381265817a9226ee2c63dfa2ccee6d"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/吃长寿面.webm",
+        "sha256": "1c2ba5fa7453dd8873d7317590863db190c41e73fac1b212fc1128b2661dc224"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/吃青团.webm",
+        "sha256": "3236ac73eea54822c09107c5979af8c88bd9a912cfff0ec18781f07ad5bc7392"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/吃饺子.webm",
+        "sha256": "a039ba9f4ad3b0788ca28e0310bba2b57649e7a082795787fcad8a92b2292547"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/吹气球.webm",
+        "sha256": "c7fca9dbcb10c386b020e37077c7668f1e825623f023e5a2a40bd18cd174cd65"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/吹笛子.webm",
+        "sha256": "951dac3eb2efe48e685f74a83f2eb382357308929f52e8760dbe94e4a83a3fb2"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/哈欠连天.webm",
+        "sha256": "80b7a972788a9b673add77a670d5bd32b67550ea32fa811a1afe834ad9f278fa"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/堆雪人.webm",
+        "sha256": "1df66e86b4ee59081b9b4abbebf4ce2dd04a3498c6a45defb3c14beeff0d35bb"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/大口吃零食.webm",
+        "sha256": "502317d14773c25a80b6d557741b960d448f77db598a5baa8428882102968b2f"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/女仆屈膝礼仪.webm",
+        "sha256": "9f36be653c95cb3e9373b51ee26078d426b0748f5e38c92cfe1440b8c770ba64"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/小幅度原地360度旋转展示.webm",
+        "sha256": "2302c0cdf9bf9f8afecc244632ff019c7cb702e4a1c9e877ef3b1ebddcc27f6b"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/小提琴演奏.webm",
+        "sha256": "23c4fdb2786cc2e485c8d71480d16bd68e95d37f6fa88e59d43e61fecd35e6e3"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/工作状态-原地踱步张望.webm",
+        "sha256": "7f84d7ec125b4af612b85360fb80680933f921de3f1c532672884c70ae9ad1c9"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/工作状态-垂头叹气冒汗.webm",
+        "sha256": "652c6da5fbb9df0ff7959d00e22fac8f38cbeae1bd0919b47fc806b09cfdc773"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/工作状态-忙碌点按.webm",
+        "sha256": "8bdb8db24bd04cfcd2865aa4d15cd1003357b55f62de211470a4b3194a7c72bd"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/工作状态-思考冒泡.webm",
+        "sha256": "7b1739ebfb01158ea1caf3b8a691bfcadc795f9e577d19e01987c9d84ca4bfd0"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/工作状态-清点归档.webm",
+        "sha256": "bdbfebb51798188dd0a8f6497625a21607608544d81724bf478737f0d598c7f8"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/工作状态-雀跃庆祝.webm",
+        "sha256": "0c1d8a866b2d23859da103b71bbad22fe3207c20269b65231d0de64001d75b24"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/悠闲哼歌.webm",
+        "sha256": "7b02910fe2d6ce720854d8f605b1ddbd862715fe4f6a727a9119df52afe08cc3"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/扑克魔术.webm",
+        "sha256": "547df52e387135ec538e89ce4f3540a85f9f0b7cef08423ebf21d2f2a5ed4d24"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/打瞌睡被惊醒.webm",
+        "sha256": "ad8db54941bc18908d7dfef0368db0a173b8f4a92d43cb436e767c4037a4854b"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/抽陀螺.webm",
+        "sha256": "68fd77c67ddf4051911c82eb8d9e5e927e5edd68e924154c22ef95f2fa9e9ced"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/拆礼物.webm",
+        "sha256": "3929a8ffd3e1f00e39ed058e8e5497d4d9fe026dbc9de7f7e913728cc05fa656"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/插茱萸赏菊.webm",
+        "sha256": "6cbb9414d3d85f1bae85a7da81e374d61d2df72e791e3581aa374845790049f5"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/摇扇纳凉.webm",
+        "sha256": "1823697cafcde739d3ab51465f324a8e3dd3334fdb0c76aff3dbd18abb1ca622"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/撸猫.webm",
+        "sha256": "ad4fa37aea75b8814e1f5db31356be4e07e18ae69647ce1835cfdcea223e9eff"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/收红包.webm",
+        "sha256": "e1c6e499826a58854d7053ec69f9110ff01fd315df55ccb565ab4aced530a4b5"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/放孔明灯.webm",
+        "sha256": "f506ec653365c6e8fcbfc36a7116f598991df2f48c802e9b95046fc5b2bae54e"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/放河灯.webm",
+        "sha256": "d2a4a66acd5a99c1d08d48018be4b5c56360f582099b5fa8b03649125d1b3f36"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/放烟花.webm",
+        "sha256": "03fc305bc1e2f70cb46c82e035dd806cf1cb886e7500715163d0c072df1582dc"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/放风筝.webm",
+        "sha256": "09139e13ffd848c80f2be5b073e3605b547c89b93f169226ab00b9bf4fb2a72e"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/整体换装试色.webm",
+        "sha256": "3f9093c1bbe712b475ea17c9ef4a6760fd24f6fc9f38d4672282b03c79322c16"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/是啊，吃什么.webm",
+        "sha256": "7c925607167d1a1f36092ce07eaa16c1054d5df21aa9ca26c3de07181a37c6fd"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/晨间刷牙.webm",
+        "sha256": "3d06526c2ad1ad3b76b53dbae4c2ae0ebc802e17cbc1ad2f6bb7117fe402beba"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/涮火锅.webm",
+        "sha256": "0fc568e7caa836c23e599eca51ca293115810975918af5ad5791be6f64e071c3"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/深度思考碎碎念.webm",
+        "sha256": "d0b4362b1393b1eb42a3822654809f304c0a70f27b6877dea51986fc46e79b22"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/照镜子.webm",
+        "sha256": "d32a89e3f2d42e71ba59c66e3b9355bd543be3eb4dd45b68cc17e39931858d84"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/玩水枪.webm",
+        "sha256": "4bf6ebd675b81e8fa47935f4b5b0e869c8379899f5c9df40a98f33ddd59f4bb5"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/玩游戏气急败坏.webm",
+        "sha256": "e7df212541e59102deee1ab26cdb65cd6854ea4dc1558357f34da62a491a98de"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/用鲸鱼尾巴拍打地面.webm",
+        "sha256": "c53b6e632c9af5dca87738c8244cc2e97ea3d30bba6181966e2f4aae2036c089"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/碎碎念-发呆碎碎念.webm",
+        "sha256": "e5ad15617c80b681c3fdea9106f3b486ffbba22094a3a8359acc024f81a4d6f3"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/碎碎念-对屏碎碎念.webm",
+        "sha256": "b177cc6b9bc00caeb0eb65ace7e8e36870dd9992f9fcb07848cd31fcb8f975ac"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/碎碎念-擦桌碎碎念.webm",
+        "sha256": "99c756421cfcc5b0e5be0a73bca427197e636ebd6220e0d5b9110a4bdec95e96"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/穿针乞巧.webm",
+        "sha256": "25c9a452a1059973e7930a77830d8d6a8f6a9319ca4687560c6e9454af057444"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/舞狮头.webm",
+        "sha256": "0493bb522e93092df37bc3c14858fecef6c6c2725de5c5825c6e7f127ee8b60c"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/荡秋千.webm",
+        "sha256": "407d99589b28567d2b077f74b87b94513e79fe73a210ca09ee319afebca9e2ab"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/萌化小幽灵.webm",
+        "sha256": "85c3d6a4ea0f81c0b19f7d8624cf1797e772f169e591f743e3a529b8d3a3a083"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/蓝鲸现世.webm",
+        "sha256": "f26285434165f15f3d591904df89c9aef68209cdc84b6c4eda757ad33cd4a2ff"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/蝴蝶蜜蜂环绕头顶开花.webm",
+        "sha256": "479a83ddbcdc9a3138067336e713c78d0b2fd869604c3fdae6677b0bba2a016d"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/被吓一跳.webm",
+        "sha256": "696df460960c579a41e0dd8aeddac2394feddd8eaf787d07dba3705728ba360f"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/被落叶淹没.webm",
+        "sha256": "ada86493156ef7f2d9148c2aea4f240137b21fb35acb6756e2f2f8cc59d4193e"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/装点圣诞树.webm",
+        "sha256": "b4cac70ad34d90f13bc6db943340e0f825cdad99fc9bc7c0510e07d7b111c0fe"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/讨糖南瓜灯.webm",
+        "sha256": "492d888278bd7357e67669dcd55b37b9a2cd2e0977f029e61c2f3af9743d93e1"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/超大伸懒腰.webm",
+        "sha256": "ad3ba0446afc41274e2c05fe4c01b3c5d6bf64aaa82fc246fa3b14a6b7bdd83d"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/踢毽子.webm",
+        "sha256": "6a9062a0a35a85d9214d679e453fafe9a9cbc9a6c7c7a38c49e5be45c899ddef"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/轻快摇摆舞.webm",
+        "sha256": "f0b64e36d4cf8e1cf6d0b1e5e3bb68a30478748107e29a4da75b43a0bb2a134c"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/轻快记录.webm",
+        "sha256": "d0ac2841d875f56e583181f58881de7a66c016dba98767bfda20ea28b83bc71f"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/骑木马.webm",
+        "sha256": "bafc300eee03d98e85545acf7b6b15fadea66ee55cd3b16394ab15928a82db41"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/random/鲸鱼吐泡泡特效.webm",
+        "sha256": "286f42f276e1e3f70bdb05b16fa348cb3334d41e0a52918ec583c2929f576371"
+      },
+      {
+        "path": "assets/characters/shenshen/videos/turn/东张西望.webm",
+        "sha256": "c501c6c60e2a7e22d2f3c97f9d66fe130842419166e02591326cfa363daee029"
+      }
+    ],
+    "hq_assets": [
+      {
+        "path": "assets/characters_hq/shenshen/videos/click/点击回应-傲娇生气.webm",
+        "sha256": "51f6d8096bff1a36e419c347b766b1624dff12a9e30633e925768ef2a5b69fe6"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/click/点击回应-元气挥手.webm",
+        "sha256": "e06661ff57a19d0d33ee41ff8e9eecf649f5dae29317ed16aca3f11217de8b7f"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/click/点击回应-害羞惊讶.webm",
+        "sha256": "56ac94456b1ba8a69d7078d9a2babc116014586f52224d82563d6be24e9571cd"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/click/点击回应-开心跃动.webm",
+        "sha256": "bc0614b783efb30301c5cf7614aef68e70cae7bf927bf9a52167f0aa94dc85b5"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/click/点击回应-挠痒咯咯笑.webm",
+        "sha256": "a24143483529b2746682c484297a296d6f16b82f4a62bac0fd529336155291c3"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/drag/被鼠标拖拽悬空反馈.webm",
+        "sha256": "b9c25c3cb2c92faba8b5b108b06f5c61179ca4e0bd7fdfa17f19f0df452fa184"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/events/balance/余额-分文不剩.webm",
+        "sha256": "1f12360f87e876efa8bf58f8e0d173ae80f3c7c1dda661924787f9eb64029635"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/events/balance/余额-数金皱眉.webm",
+        "sha256": "95740298ad5f1c004da9067a77bcc12021aa51fb835f4dc29a4dc3443d8176fe"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/events/balance/余额-袋空如洗.webm",
+        "sha256": "00cf7f72c347928cbcc1cf4f7d49b3ebbd7cb2b7cf3972f4dd1f563ac4fd6d7c"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/events/balance/余额-金袋叮当.webm",
+        "sha256": "ee8b94cc463b73a31d215a39959e5021c3a294f603488bf6b30ddf05354327a8"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/events/balance/余额-钱袋如常.webm",
+        "sha256": "cb8c3605a3edf9cbdbd2b7f09a6d5a2d809211786a5551ea390edaf0bc12e442"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/events/balance/余额-钱袋满溢.webm",
+        "sha256": "1d7cd8acbcbda1a31f83065808f8b51ae83c4ddd63c099611c84adbb59f88dfc"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/idle/待机呼吸休闲.webm",
+        "sha256": "025078e2465710087caac9efd461ebf18483832f1845d6fe849aa26f7e0bad05"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/move/左转奔跑.webm",
+        "sha256": "9c61035b20308809e1a0dc02ba85b184601ea63e5d8907f58987cc1d4b2e4836"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/move/漂浮踏步.webm",
+        "sha256": "a135d53646f47173b074d2bb8a5978c1571a46bfb97f63fbba40dae423f94ebb"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/move/螃蟹走路.webm",
+        "sha256": "9dd06cf83cde5c0451505b207d06c4646e6bcbb5a6e13e61b5916eae29ed7170"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/三球抛接.webm",
+        "sha256": "026e48162c19cb64454bfd508df4b861da947acfaa76e095df18ced8e2e9f776"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/下五子棋.webm",
+        "sha256": "738c3c34167e78f200555293b9d7177962f36c91b34212b27336116beae48962"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/中秋赏月吃月饼.webm",
+        "sha256": "90f2bed8244221bbccd3dceaf01367c960f5c82dba69bfb1a4ce5fb59af7eda7"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/优雅女仆舞.webm",
+        "sha256": "a1121790bab210cdf2cb37f2c7cba9339b5e043d99592677dedead83ba486b6f"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/偷吃零食被抓住.webm",
+        "sha256": "516f0f0feebc40528f33332b341c9a47c3b845542dde2a864195a88f55bd8001"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/写代码.webm",
+        "sha256": "3222d2ca71e6d239f170c2e86f0b0c2566917acb65c3767d8fa2472baced8b5e"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/写福字.webm",
+        "sha256": "90d94597883ea59c85feeed25253b38ab2239967fbdd119ff3e9c2e1cd377870"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/凭空生花.webm",
+        "sha256": "17cfdb77a47ee96abd3873047cc11b0e52dd5a3635b56e6b65706cb38c70883f"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/动物环绕.webm",
+        "sha256": "c327cb14edc1449548f6dfe1d2f274f573796a07874da60909a7ad7060869703"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/原地专心玩魔方.webm",
+        "sha256": "a92c54f00e51f0717327313595aa21e9e4a5bb14342ad82d04e759dfb4de680f"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/原地小憩沉眠.webm",
+        "sha256": "455028dae261094d5d86fb11c4ec568443f19ad258c423039b715657d0fb6ae2"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/原地敲击桌面互动.webm",
+        "sha256": "19788c6e3a0b06c7d7d456f018b98c2f48b46f35436c2dc69360f2c4ec6fd9a9"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/原地跳跃抓碎头顶物品.webm",
+        "sha256": "680843d360f770488ad47c714bf7f2d36efd03c87219008c884a470548c33bfc"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/原地蹲下玩玩具汽车.webm",
+        "sha256": "93a267eca6a1909f57ad2a48ae7a38ba41746f3a4a37e65f1b8fd718ee9c10c9"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/原地重力下蹲压缩.webm",
+        "sha256": "ff4239ce749a03f00563a1350c5a0aa4b5df47ce6748873c1b7f727e0f1d78f1"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/变鸽子.webm",
+        "sha256": "09b51d109fcc32a20a802fac9cc77804a69b44d20862fb760590dadad2451a80"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/可爱宅舞.webm",
+        "sha256": "b0f9c4bfb8896c71f8315535350468927517bfb3c7696619836cf61f5e7e2f88"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/吃Token.webm",
+        "sha256": "0775080a13a5a7e070395beb8f089b8635ab45aeb3e34ec5570aceba822fabad"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/吃冰淇淋融化.webm",
+        "sha256": "fd0ebcbe9cb4df3af07dbc996b76b2c9c11fa755c63a9e1290ce5b21fd45d842"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/吃午餐.webm",
+        "sha256": "3b6a15a3d9cd740e0d776af8c97fabe1fa52b89d80c94b943a34aa9d48c98684"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/吃大闸蟹.webm",
+        "sha256": "b6a4ee384c19fd7c2547221d9d7a4e82b6c1c171655b6f2f08e431078a0c07f5"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/吃年糕.webm",
+        "sha256": "27d72640f96631cf79269a6a70c3ffa6b34f7e0d99bf132f08e755cc10bf2444"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/吃早餐.webm",
+        "sha256": "ef66b1d83b19b2eacd5bccdb4d08b042df63a1a2452b2a52f04be088e646e549"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/吃晚餐.webm",
+        "sha256": "00222c7241deb71aa1489278fec8edc2df96046b36197a806be1337a28e08a97"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/吃汤圆.webm",
+        "sha256": "ce29347e0f80e30a54e01a66a1b0c67577ce2ae2e08e7aafcd71e37db7b0e6af"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/吃白饭.webm",
+        "sha256": "ef4cd7d2511145a8a0350053ab2fb9c237d7a778814bc53ba4c51b5070f7117e"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/吃粽子.webm",
+        "sha256": "16a6dead0ce536185b90f18306c2c8e96c2e44cbab388b0a6fef8ba95b269b86"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/吃糖葫芦.webm",
+        "sha256": "7d2600ac4e039240403b819f6367964bf771c2d6843a3f909d7a66d8cc49fb0c"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/吃腊八粥.webm",
+        "sha256": "868d2ed016280350e4a29a2e97a683c1c97288633f74a6fb1d6896d706286152"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/吃西瓜.webm",
+        "sha256": "73f613dd69ef03cc12e644acaddcd511bb921f1a9206e86db7641f0ae8d434b1"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/吃重阳糕.webm",
+        "sha256": "dc71a72662e627279853a1b33482b0b7516216e39beafb9c83b2b8328fa7f849"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/吃长寿面.webm",
+        "sha256": "f6daa7a92b096b6cfd618a9f0f7464c4b4d2733db1e96ac3764b6ab91cd4b43c"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/吃青团.webm",
+        "sha256": "f4cc4c3e834f957fd9a60ca4a18a046d021105b0a0ce74f0fb01da89613cd01a"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/吃饺子.webm",
+        "sha256": "ea83df3ba9af2dd8751d64b9b0355efc83ed19fab16dc8550718645c9964238e"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/吹气球.webm",
+        "sha256": "29259d5a5b1e7ff7502006f5b4d1de948776f22826cdcd1ddb87243f8e1f87a2"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/吹笛子.webm",
+        "sha256": "d8c063d9f931dbb266e61ee0c18ddfa141eb6ff9a0b77a31f2072df7e6b78baa"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/哈欠连天.webm",
+        "sha256": "e7cb60a13fc140c8269fb6c10df3527b5a1013c4bdcaf280a8d02ddb60f91d83"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/堆雪人.webm",
+        "sha256": "5e6904637d29ea9224fbb8a8439ad30938811ee21436bb5e515f02573299494e"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/大口吃零食.webm",
+        "sha256": "47188953f22d2ed56284241637374b3652c6f48a74373f07aea72820ed71d5ad"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/女仆屈膝礼仪.webm",
+        "sha256": "8e06446d8ebb7f70c4671b83eac1bc87b66f4545a4c67a28d5ceee0d6f790ddb"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/小幅度原地360度旋转展示.webm",
+        "sha256": "9a02858c8576fdf3ffc2d9a27b38916fb744f46d41108be6574ccf7a7125a8e3"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/小提琴演奏.webm",
+        "sha256": "9a1441ffb5bb35c95208ba4dd11d7efe9ccf3d8734db1987548dc09e149fe10c"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/工作状态-原地踱步张望.webm",
+        "sha256": "37ffc97ead2f45e979683ef0efbd102f5b86efa70530efff557b37fe34ab3a10"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/工作状态-垂头叹气冒汗.webm",
+        "sha256": "1ebeb73bed79e00d803706b5d9e752dedac52ba821e56bddd6b38c40a98f4978"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/工作状态-忙碌点按.webm",
+        "sha256": "72ba0a0ce61175855e74dfd5d969c687d57edbdd17e3771da5d0426543962aed"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/工作状态-思考冒泡.webm",
+        "sha256": "13e7755042076b87fee94e9ef6e48587e720129a3e20064677f78c7c8946e77a"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/工作状态-清点归档.webm",
+        "sha256": "92a871443e3d9461e778a0fdef398abddd47971f0981af797e744a9153677433"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/工作状态-雀跃庆祝.webm",
+        "sha256": "914bdc99686628c0032c68788890ccb2a432b427bd7625618d78e14e4804bfb0"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/悠闲哼歌.webm",
+        "sha256": "ba10f77c8d2e31c0cc82576e166fabd888a15ab43846c323a969a81950df21a4"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/扑克魔术.webm",
+        "sha256": "1bdbc3d469aa8dfe87b936bbac4e0f329e91c818dc6a390015362ee7e209b99c"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/打瞌睡被惊醒.webm",
+        "sha256": "6cf525c7b74adaeed5ed1dcf3adfe109531057d308499909c2376c3087e04155"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/抽陀螺.webm",
+        "sha256": "55a8eee3a4084d523e173cc4367e0be711f77dadd4d11022f90490cfae899198"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/拆礼物.webm",
+        "sha256": "6d2399986d99cb9f6e8ac21929b8cc6e496050591651a20fcabf13d3fe414ba7"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/插茱萸赏菊.webm",
+        "sha256": "581344f6d75222197e589742010e7aa4752ab348e9712025bcdb8926639e9a4d"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/摇扇纳凉.webm",
+        "sha256": "2ffd6cac8875b2f71efd5e1d68d3453aa90027db632476cd104dec63bfdd7012"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/撸猫.webm",
+        "sha256": "b90770d92ef17ef87431b1390dcf3ea2df6296d7ac512202f70ebff8d20484e0"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/收红包.webm",
+        "sha256": "049041b97bb152bc121ff133d05c6e19dd6ef718223d7d410dd9c5aa54f49cab"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/放孔明灯.webm",
+        "sha256": "cdfa993d82452e3adaa8eb27175e0bfe920fa747665ac25a56d5bb4a74e802db"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/放河灯.webm",
+        "sha256": "59523d16322e2042e618e77ee3ddda944c885533772f45426aaa56af5e40ea39"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/放烟花.webm",
+        "sha256": "a3739e1cce033161f3cd46b4f0f63c2895a104dbe6f61deec19012edfdd56503"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/放风筝.webm",
+        "sha256": "192a2c6c476007caf0d798f38348fe569710a923e919a75fac60230e523aeffe"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/整体换装试色.webm",
+        "sha256": "750870460b487d08f403fc266f07eb378553698c6e1d5bf583e60971606a49f2"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/是啊，吃什么.webm",
+        "sha256": "31e7a6e1889af65f132cf0189d7bbc9846774fba1324298840c65705b04587f1"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/晨间刷牙.webm",
+        "sha256": "b3c2c356a71b84eff4fa4ae30879e260735f80df4f5549a3407aeca801a9a440"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/涮火锅.webm",
+        "sha256": "1d8d9267fd05f749b837863f6c0ea430cfa2b006ff9ac7f2d39f2dca64a04e06"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/深度思考碎碎念.webm",
+        "sha256": "c73ea976a6ff8aa8e427b830379c4fe71bac8b0ca184c973f47215ec81d4687b"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/照镜子.webm",
+        "sha256": "73d547fd8cc3e58df3f81f74ea58137c47fcf6d4de8d1820723794737f8bfb83"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/玩水枪.webm",
+        "sha256": "89054eb17374ae6da258b56ad15a601d00bb17645f69b15031aad75b44d8eda0"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/玩游戏气急败坏.webm",
+        "sha256": "1b3be61a79f1f25eb3d2757f6947a349896c7df26be5c432ec8437c57793d6a1"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/用鲸鱼尾巴拍打地面.webm",
+        "sha256": "1448bfcd41c6734135d4e314b3161eb3fdfb8551dbd823c06e04726a6db4d661"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/碎碎念-发呆碎碎念.webm",
+        "sha256": "9d784883a90d526e7e45423ee9f2a2e811a5302afbc6c2e89e849504a929b88f"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/碎碎念-对屏碎碎念.webm",
+        "sha256": "97634f8d9e1889551d803e3eb3a0824e7c47724119d4c9849a16089449721fd2"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/碎碎念-擦桌碎碎念.webm",
+        "sha256": "87c0609ec8f18573b6fd8813436874ae7001cf1ff3369c86a213ec56cdd1cf39"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/穿针乞巧.webm",
+        "sha256": "4982d1cc329f77c84db104d1cf87a9ab5046f81b2f26bb0fbcca2d555bfacab2"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/舞狮头.webm",
+        "sha256": "749f0157f33e6bf3dd1accd47ef2f9bdf5710051d3cd24d863397b023a4b0f0f"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/荡秋千.webm",
+        "sha256": "253c746809f26b5e9031493af220a5258a45286de6b96d396704e4d5cc17589f"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/萌化小幽灵.webm",
+        "sha256": "a9074074107849f3a93d6d40af4c98427422326a5b5ca1621546dd2720d12ca8"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/蓝鲸现世.webm",
+        "sha256": "eb7008ff88c275d92d43f679befd9ce95f5c47f3239cb5063b526fb7074ea171"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/蝴蝶蜜蜂环绕头顶开花.webm",
+        "sha256": "3c71dd4c148851c2b27e25b96a405b8ea7c6e70f3b04432a6803ac85e1b4063f"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/被吓一跳.webm",
+        "sha256": "e70cceb6d5ca5c5d1dc80587ccd622e70e0fc0e00ede146f40a66bd126e337a0"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/被落叶淹没.webm",
+        "sha256": "73b5f0a22dc11beb0f729520c05b33f526c54acd397004f8de944ca73747e9cf"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/装点圣诞树.webm",
+        "sha256": "fef4acf178be6b881201d112c50f35171543f76e44613fb6ad61fdbe8bd30de3"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/讨糖南瓜灯.webm",
+        "sha256": "e0ada4c73913ce33679cd4e2d1073d100a1925a22017e04c6a59054fcdf6753c"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/超大伸懒腰.webm",
+        "sha256": "1e0f9c7a44f1f7b32d68c01d933a8056d2cc15994f7595b68e6b21e96ccdd703"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/踢毽子.webm",
+        "sha256": "0440712a389cdf87628a12a36ed9eea2d27d27fb56966af189bf7d9208463fb8"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/轻快摇摆舞.webm",
+        "sha256": "1a2a7e6d5caf326a8e89a67882ca1f763f57928241ca2a62ea2e334ed4519215"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/轻快记录.webm",
+        "sha256": "9bc7eef46c317137f61bdcd5e9dd71abf45f91b30fea00e0ce605f4d3a48cf75"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/骑木马.webm",
+        "sha256": "e033936514df50fd19d18fe506e6b304eff6e58bfe091b31ad62c3ea77055fda"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/random/鲸鱼吐泡泡特效.webm",
+        "sha256": "a8f26977cb5373e9cb7f7b3860d7e75a6934145a5169c7e69b48e8a1b4042a48"
+      },
+      {
+        "path": "assets/characters_hq/shenshen/videos/turn/东张西望.webm",
+        "sha256": "cc1f57c156dd4dd2cde59bbc26fece1c00995e7fa368dd15e6f4e333c6e346aa"
+      }
+    ],
+    "settings_icons": {
+      "pet/resources/settings-icons/LICENSE": "b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57",
+      "pet/resources/settings-icons/list-tree.svg": "e4c994b829b8b4d0ddc66c1ce14f9f56d0347e37b1b1fb124111831a61ec3890",
+      "pet/resources/settings-icons/mouse-pointer-click.svg": "18ecf709c32b55252ef3d2a83c7bf5eaa0065c3cb875d6309a55cf42d4d6627f",
+      "pet/resources/settings-icons/workflow.svg": "ae99ea8f56a2835a2cca35b2fbb57643ab73443610970dba23e24bd9df75cfec"
+    },
+    "codesign": {
+      "exit_status": 0,
+      "output": ""
+    }
+  },
+  "errors": [],
+  "exit_status": 0
+}

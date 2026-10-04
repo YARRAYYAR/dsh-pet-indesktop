@@ -87,41 +87,60 @@ def apply_dark_palette(dialog):
 
 
 def expand_domain_navigation(dialog, row):
-    """Keep the stable domain/page indices while expanding its peer tasks."""
+    """Update stable row widgets so navigation preserves keyboard focus."""
     if not isinstance(dialog.sidebar.itemDelegate(), NavigationDelegate):
         dialog.sidebar.setItemDelegate(NavigationDelegate(dialog.sidebar))
     for index in range(dialog.sidebar.count()):
         item = dialog.sidebar.item(index)
-        old = dialog.sidebar.itemWidget(item)
-        if old is not None:
-            dialog.sidebar.removeItemWidget(item)
-            old.deleteLater()
-        item.setSizeHint(QSize(0, 40))
-        page = dialog.pages.widget(index)
-        tabs = page.findChildren(SettingsTabContainer)
-        pane = QFrame(dialog.sidebar)
-        pane.setObjectName('expandedDomainNavigation' if index == row else 'domainNavigation')
-        layout = QVBoxLayout(pane)
-        layout.setContentsMargins(10, 8, 6, 6)
-        layout.setSpacing(2)
-        expandable = index == row and bool(tabs)
-        heading = SidebarNavigationButton(item.text() + ('  ⌄' if expandable else ''), pane,
-                                          selected=index == row)
-        heading.setIcon(item.icon())
-        heading.setObjectName('sidebarDomainHeading')
-        heading.setMinimumHeight(24)
-        heading.setIconSize(QSize(18, 18))
-        layout.addWidget(heading)
-        if not expandable:
-            heading.clicked.connect(lambda _checked=False, index=index: dialog.sidebar.setCurrentRow(index))
+        pane = dialog.sidebar.itemWidget(item)
+        if pane is None:
+            pane = _domain_navigation_row(dialog, item, index)
             dialog.sidebar.setItemWidget(item, pane)
-            continue
+        selected = index == row
+        pane.heading.setSelected(selected)
+        pane.setObjectName('expandedDomainNavigation' if selected else 'domainNavigation')
+        pane.heading.blockSignals(True)
+        pane.heading.setChecked(selected and pane.children is not None)
+        pane.heading.blockSignals(False)
+        _disclose_domain(item, pane, selected and pane.children is not None)
+
+
+def _disclose_domain(item, pane, expanded):
+    if pane.children is not None:
+        pane.children.setVisible(expanded)
+        suffix = ('  ⌄' if expanded else '  ›') if pane.heading._selected else ''
+        pane.heading.setText(item.text() + suffix)
+        pane.heading.setAccessibleName(f'{item.text()}：{"收起" if expanded else "展开"}子页面')
+    else:
+        pane.heading.setText(item.text())
+        pane.heading.setAccessibleName(item.text())
+    item.setSizeHint(QSize(0, pane.sizeHint().height() if expanded else 40))
+
+
+def _domain_navigation_row(dialog, item, index):
+    pane = QFrame(dialog.sidebar)
+    layout = QVBoxLayout(pane)
+    layout.setContentsMargins(10, 8, 6, 6)
+    layout.setSpacing(2)
+    heading = SidebarNavigationButton(item.text(), pane)
+    settings_icon = {'常规': 'settings-gear', '桌宠': 'settings-paw',
+                     '互动': 'settings-click', '菜单': 'settings-menu',
+                     '连接': 'settings-link', '自动化与联动': 'settings-workflow',
+                     '语音': 'settings-speaker'}.get(item.text())
+    heading.setIcon(vector_widget_icon(dialog, settings_icon, 18) if settings_icon else item.icon())
+    heading.setObjectName('sidebarDomainHeading')
+    heading.setMinimumHeight(24)
+    heading.setIconSize(QSize(18, 18))
+    layout.addWidget(heading)
+    pane.heading = heading
+    pane.children = None
+    tabs = dialog.pages.widget(index).findChildren(SettingsTabContainer)
+    if tabs:
         tasks = tabs[0]
         tasks.tab_bar.hide()
         heading.setCheckable(True)
-        heading.setChecked(True)
-        heading.setAccessibleName(f'{item.text()}：展开或收起子页面')
         children = QWidget(pane)
+        pane.children = children
         child_layout = QVBoxLayout(children)
         child_layout.setContentsMargins(20, 0, 0, 0)
         child_layout.setSpacing(2)
@@ -136,13 +155,11 @@ def expand_domain_navigation(dialog, row):
             tasks._buttons[task_index].toggled.connect(button.setChecked)
             button.setAccessibleName(f'{item.text()}：{title}')
             child_layout.addWidget(button)
-        def disclose(expanded, item=item, pane=pane, children=children, heading=heading):
-            children.setVisible(expanded)
-            heading.setText(item.text() + ('  ⌄' if expanded else '  ›'))
-            item.setSizeHint(QSize(0, pane.sizeHint().height()))
-        heading.toggled.connect(disclose)
-        item.setSizeHint(QSize(0, pane.sizeHint().height()))
-        dialog.sidebar.setItemWidget(item, pane)
+        heading.toggled.connect(lambda expanded: _disclose_domain(item, pane, expanded)
+                                if dialog.sidebar.currentRow() == index else None)
+        children.hide()
+    heading.clicked.connect(lambda _checked=False: dialog.sidebar.setCurrentRow(index))
+    return pane
 
 
 def page_heading(page, title, max_width):

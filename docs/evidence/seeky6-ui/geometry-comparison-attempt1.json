@@ -1,0 +1,6 @@
+{
+  "command": "original comparison accessed seven geometry keys for every capture including motion/keyboard-only captures",
+  "actual": "KeyError: current_row",
+  "reason": "State-only captures do not carry matrix geometry; corrected schema filter, no product change",
+  "exit_status": 1
+}

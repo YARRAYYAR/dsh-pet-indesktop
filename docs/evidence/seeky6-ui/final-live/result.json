@@ -1,0 +1,3358 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "scripts/verify_seeky_settings_ui.py",
+    "--phase",
+    "after",
+    "--live",
+    "--output",
+    "/tmp/seeky6-ui-worker/live-final"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "python": "3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]",
+  "pyside": "6.11.2",
+  "platform": "cocoa",
+  "phase": "after",
+  "live": true,
+  "setup": "temporary isolated Config, pure build, sound/link/autostart disabled",
+  "inputs": "domain navigation; all subtask pages; 720x500/1000x680/1100x760; 125% fonts; actual action request when --live",
+  "assertions": [
+    "readable text and native placeholder >=4.5:1; focus and required icon source strokes >=3:1",
+    "seven domain labels/order unchanged; sidebar width 200",
+    "domain buttons reused and keyboard focus preserved",
+    "keyboard Left/Right disclosure, Space task selection and Tab navigation",
+    "replaying current one-shot shows playing and queued together; next same-name watch event clears queue",
+    "real AppShell list/search/play/queue/watch IPC; selection/scroll retained; displayed queue and current match pet",
+    "actual command server disconnect clears current, shows connection error and keeps retry available",
+    "restored actual server; Refresh reattaches watch and a new real playback push updates current",
+    "rapid hover reversal starts at rendered value; press settles; hidden window stops every state animation",
+    "real disk replacement failure shows native save dialog and retains settings; restored destination saves and closes"
+  ],
+  "captures": [
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/keyboard-action-tab-focus.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        680
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        554,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        595,
+        175,
+        42
+      ],
+      "current_row": 1,
+      "row_heights": [
+        40,
+        116,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/720x500-font100-1-常规.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 0,
+      "row_heights": [
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/720x500-font100-2-桌宠.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 1,
+      "row_heights": [
+        40,
+        116,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/720x500-font100-2-常用控制.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 1,
+      "row_heights": [
+        40,
+        116,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/720x500-font100-2-动作库.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 1,
+      "row_heights": [
+        40,
+        116,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/720x500-font100-action-footer.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 1,
+      "row_heights": [
+        40,
+        116,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/720x500-font100-3-互动.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 2,
+      "row_heights": [
+        40,
+        40,
+        116,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/720x500-font100-3-点击与音效.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 2,
+      "row_heights": [
+        40,
+        40,
+        116,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/720x500-font100-3-自言自语.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 2,
+      "row_heights": [
+        40,
+        40,
+        116,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/720x500-font100-4-菜单.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 3,
+      "row_heights": [
+        40,
+        40,
+        40,
+        152,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/720x500-font100-4-菜单编排.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 3,
+      "row_heights": [
+        40,
+        40,
+        40,
+        152,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/720x500-font100-4-快捷启动.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 3,
+      "row_heights": [
+        40,
+        40,
+        40,
+        152,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/720x500-font100-4-外观.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 3,
+      "row_heights": [
+        40,
+        40,
+        40,
+        152,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/720x500-font100-5-连接.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 4,
+      "row_heights": [
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/720x500-font100-6-自动化与联动.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 5,
+      "row_heights": [
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/720x500-font100-7-语音.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 6,
+      "row_heights": [
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/1000x680-font100-1-常规.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        680
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        554,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        595,
+        175,
+        42
+      ],
+      "current_row": 0,
+      "row_heights": [
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/1000x680-font100-2-桌宠.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        680
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        554,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        595,
+        175,
+        42
+      ],
+      "current_row": 1,
+      "row_heights": [
+        40,
+        116,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/1000x680-font100-2-常用控制.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        680
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        554,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        595,
+        175,
+        42
+      ],
+      "current_row": 1,
+      "row_heights": [
+        40,
+        116,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/1000x680-font100-2-动作库.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        680
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        554,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        595,
+        175,
+        42
+      ],
+      "current_row": 1,
+      "row_heights": [
+        40,
+        116,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/1000x680-font100-action-footer.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        680
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        554,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        595,
+        175,
+        42
+      ],
+      "current_row": 1,
+      "row_heights": [
+        40,
+        116,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/1000x680-font100-3-互动.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        680
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        554,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        595,
+        175,
+        42
+      ],
+      "current_row": 2,
+      "row_heights": [
+        40,
+        40,
+        116,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/1000x680-font100-3-点击与音效.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        680
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        554,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        595,
+        175,
+        42
+      ],
+      "current_row": 2,
+      "row_heights": [
+        40,
+        40,
+        116,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/1000x680-font100-3-自言自语.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        680
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        554,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        595,
+        175,
+        42
+      ],
+      "current_row": 2,
+      "row_heights": [
+        40,
+        40,
+        116,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/1000x680-font100-4-菜单.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        680
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        554,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        595,
+        175,
+        42
+      ],
+      "current_row": 3,
+      "row_heights": [
+        40,
+        40,
+        40,
+        152,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/1000x680-font100-4-菜单编排.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        680
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        554,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        595,
+        175,
+        42
+      ],
+      "current_row": 3,
+      "row_heights": [
+        40,
+        40,
+        40,
+        152,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/1000x680-font100-4-快捷启动.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        680
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        554,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        595,
+        175,
+        42
+      ],
+      "current_row": 3,
+      "row_heights": [
+        40,
+        40,
+        40,
+        152,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/1000x680-font100-4-外观.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        680
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        554,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        595,
+        175,
+        42
+      ],
+      "current_row": 3,
+      "row_heights": [
+        40,
+        40,
+        40,
+        152,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/1000x680-font100-5-连接.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        680
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        554,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        595,
+        175,
+        42
+      ],
+      "current_row": 4,
+      "row_heights": [
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/1000x680-font100-6-自动化与联动.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        680
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        554,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        595,
+        175,
+        42
+      ],
+      "current_row": 5,
+      "row_heights": [
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/1000x680-font100-7-语音.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        680
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        554,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        595,
+        175,
+        42
+      ],
+      "current_row": 6,
+      "row_heights": [
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/1100x760-font100-1-常规.png",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        760
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        634,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        675,
+        175,
+        42
+      ],
+      "current_row": 0,
+      "row_heights": [
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/1100x760-font100-2-桌宠.png",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        760
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        634,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        675,
+        175,
+        42
+      ],
+      "current_row": 1,
+      "row_heights": [
+        40,
+        116,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/1100x760-font100-2-常用控制.png",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        760
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        634,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        675,
+        175,
+        42
+      ],
+      "current_row": 1,
+      "row_heights": [
+        40,
+        116,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/1100x760-font100-2-动作库.png",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        760
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        634,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        675,
+        175,
+        42
+      ],
+      "current_row": 1,
+      "row_heights": [
+        40,
+        116,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/1100x760-font100-action-footer.png",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        760
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        634,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        675,
+        175,
+        42
+      ],
+      "current_row": 1,
+      "row_heights": [
+        40,
+        116,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/1100x760-font100-3-互动.png",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        760
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        634,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        675,
+        175,
+        42
+      ],
+      "current_row": 2,
+      "row_heights": [
+        40,
+        40,
+        116,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/1100x760-font100-3-点击与音效.png",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        760
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        634,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        675,
+        175,
+        42
+      ],
+      "current_row": 2,
+      "row_heights": [
+        40,
+        40,
+        116,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/1100x760-font100-3-自言自语.png",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        760
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        634,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        675,
+        175,
+        42
+      ],
+      "current_row": 2,
+      "row_heights": [
+        40,
+        40,
+        116,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/1100x760-font100-4-菜单.png",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        760
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        634,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        675,
+        175,
+        42
+      ],
+      "current_row": 3,
+      "row_heights": [
+        40,
+        40,
+        40,
+        152,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/1100x760-font100-4-菜单编排.png",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        760
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        634,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        675,
+        175,
+        42
+      ],
+      "current_row": 3,
+      "row_heights": [
+        40,
+        40,
+        40,
+        152,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/1100x760-font100-4-快捷启动.png",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        760
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        634,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        675,
+        175,
+        42
+      ],
+      "current_row": 3,
+      "row_heights": [
+        40,
+        40,
+        40,
+        152,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/1100x760-font100-4-外观.png",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        760
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        634,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        675,
+        175,
+        42
+      ],
+      "current_row": 3,
+      "row_heights": [
+        40,
+        40,
+        40,
+        152,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/1100x760-font100-5-连接.png",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        760
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        634,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        675,
+        175,
+        42
+      ],
+      "current_row": 4,
+      "row_heights": [
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/1100x760-font100-6-自动化与联动.png",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        760
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        634,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        675,
+        175,
+        42
+      ],
+      "current_row": 5,
+      "row_heights": [
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/1100x760-font100-7-语音.png",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        760
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        634,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        675,
+        175,
+        42
+      ],
+      "current_row": 6,
+      "row_heights": [
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/720x500-font125-1-常规.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 0,
+      "row_heights": [
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/720x500-font125-2-桌宠.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 1,
+      "row_heights": [
+        40,
+        116,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/720x500-font125-2-常用控制.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 1,
+      "row_heights": [
+        40,
+        116,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/720x500-font125-2-动作库.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 1,
+      "row_heights": [
+        40,
+        116,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/720x500-font125-action-footer.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 1,
+      "row_heights": [
+        40,
+        116,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/720x500-font125-3-互动.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 2,
+      "row_heights": [
+        40,
+        40,
+        116,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/720x500-font125-3-点击与音效.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 2,
+      "row_heights": [
+        40,
+        40,
+        116,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/720x500-font125-3-自言自语.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 2,
+      "row_heights": [
+        40,
+        40,
+        116,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/720x500-font125-4-菜单.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 3,
+      "row_heights": [
+        40,
+        40,
+        40,
+        152,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/720x500-font125-4-菜单编排.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 3,
+      "row_heights": [
+        40,
+        40,
+        40,
+        152,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/720x500-font125-4-快捷启动.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 3,
+      "row_heights": [
+        40,
+        40,
+        40,
+        152,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/720x500-font125-4-外观.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 3,
+      "row_heights": [
+        40,
+        40,
+        40,
+        152,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/720x500-font125-5-连接.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 4,
+      "row_heights": [
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/720x500-font125-6-自动化与联动.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 5,
+      "row_heights": [
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/720x500-font125-7-语音.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 6,
+      "row_heights": [
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/live-current-replay-queued.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        680
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        554,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        595,
+        175,
+        42
+      ],
+      "current_row": 1,
+      "row_heights": [
+        40,
+        116,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/live-current-replay-started.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        680
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        554,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        595,
+        175,
+        42
+      ],
+      "current_row": 1,
+      "row_heights": [
+        40,
+        116,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/live-action-queued.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        680
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        554,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        595,
+        175,
+        42
+      ],
+      "current_row": 1,
+      "row_heights": [
+        40,
+        116,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/live-720-font125-action-queued-footer.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        500
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        374,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        415,
+        175,
+        42
+      ],
+      "current_row": 1,
+      "row_heights": [
+        40,
+        116,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/live-action-request.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        680
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        554,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        595,
+        175,
+        42
+      ],
+      "current_row": 1,
+      "row_heights": [
+        40,
+        116,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/live-disconnected-retry.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        680
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        554,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        595,
+        175,
+        42
+      ],
+      "current_row": 1,
+      "row_heights": [
+        40,
+        116,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/live-reconnected-playback-watch.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        680
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        554,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        595,
+        175,
+        42
+      ],
+      "current_row": 1,
+      "row_heights": [
+        40,
+        116,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/motion-selected-focus.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        680
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        554,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        595,
+        175,
+        42
+      ],
+      "current_row": 1,
+      "row_heights": [
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "path": "/tmp/seeky6-ui-worker/live-final/save-failure-settings-stays-open.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0,
+      "sidebar": [
+        0,
+        0,
+        200,
+        680
+      ],
+      "search": [
+        12,
+        89,
+        175,
+        32
+      ],
+      "save": [
+        12,
+        554,
+        175,
+        32
+      ],
+      "quit": [
+        12,
+        595,
+        175,
+        42
+      ],
+      "current_row": 1,
+      "row_heights": [
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40
+      ]
+    }
+  ],
+  "errors": [],
+  "exit_status": 0,
+  "contrast": {
+    "method": "WCAG sRGB relative luminance; alpha composited over actual surface before linearization",
+    "palette_samples": "live QWidget palettes after native show/QSS polish",
+    "values": {
+      "settings_search_Text": {
+        "foreground_rgba": [
+          217,
+          217,
+          219,
+          255
+        ],
+        "background_rgb": [
+          37,
+          37,
+          39
+        ],
+        "composited_rgb": [
+          217.0,
+          217.0,
+          219.0
+        ],
+        "ratio": 10.854
+      },
+      "settings_search_PlaceholderText": {
+        "foreground_rgba": [
+          146,
+          146,
+          152,
+          255
+        ],
+        "background_rgb": [
+          37,
+          37,
+          39
+        ],
+        "composited_rgb": [
+          146.0,
+          146.0,
+          152.0
+        ],
+        "ratio": 4.945
+      },
+      "action_search_Text": {
+        "foreground_rgba": [
+          213,
+          213,
+          215,
+          255
+        ],
+        "background_rgb": [
+          41,
+          41,
+          43
+        ],
+        "composited_rgb": [
+          213.0,
+          213.0,
+          215.0
+        ],
+        "ratio": 9.906
+      },
+      "action_search_PlaceholderText": {
+        "foreground_rgba": [
+          146,
+          146,
+          152,
+          255
+        ],
+        "background_rgb": [
+          41,
+          41,
+          43
+        ],
+        "composited_rgb": [
+          146.0,
+          146.0,
+          152.0
+        ],
+        "ratio": 4.693
+      },
+      "sidebar_idle_text": {
+        "foreground_rgba": [
+          255,
+          255,
+          255,
+          199
+        ],
+        "background_rgb": [
+          20,
+          20,
+          22
+        ],
+        "composited_rgb": [
+          203.3921568627451,
+          203.3921568627451,
+          203.83137254901962
+        ],
+        "ratio": 11.39,
+        "threshold": 4.5
+      },
+      "brand_version": {
+        "foreground_rgba": [
+          137,
+          137,
+          143
+        ],
+        "background_rgb": [
+          20,
+          20,
+          22
+        ],
+        "composited_rgb": [
+          137,
+          137,
+          143
+        ],
+        "ratio": 5.291,
+        "threshold": 4.5
+      },
+      "setting_hint": {
+        "foreground_rgba": [
+          160,
+          160,
+          167
+        ],
+        "background_rgb": [
+          23,
+          23,
+          25
+        ],
+        "composited_rgb": [
+          160,
+          160,
+          167
+        ],
+        "ratio": 6.889,
+        "threshold": 4.5
+      },
+      "sidebar_idle_icon": {
+        "foreground_rgba": [
+          255,
+          255,
+          255,
+          158
+        ],
+        "background_rgb": [
+          20,
+          20,
+          22
+        ],
+        "composited_rgb": [
+          165.6078431372549,
+          165.6078431372549,
+          166.3686274509804
+        ],
+        "ratio": 7.528,
+        "threshold": 3
+      },
+      "sidebar_selected_icon": {
+        "foreground_rgba": [
+          255,
+          255,
+          255,
+          242
+        ],
+        "background_rgb": [
+          49,
+          49,
+          51
+        ],
+        "composited_rgb": [
+          244.49803921568628,
+          244.49803921568628,
+          244.6
+        ],
+        "ratio": 11.855,
+        "threshold": 3
+      },
+      "action_play_icon": {
+        "foreground_rgba": [
+          214,
+          214,
+          214
+        ],
+        "background_rgb": [
+          44,
+          44,
+          46
+        ],
+        "composited_rgb": [
+          214,
+          214,
+          214
+        ],
+        "ratio": 9.589,
+        "threshold": 3
+      },
+      "sidebar_focus": {
+        "foreground_rgba": [
+          185,
+          185,
+          194
+        ],
+        "background_rgb": [
+          49,
+          49,
+          51
+        ],
+        "composited_rgb": [
+          185,
+          185,
+          194
+        ],
+        "ratio": 6.665,
+        "threshold": 3
+      },
+      "action_focus_hover": {
+        "foreground_rgba": [
+          185,
+          185,
+          194
+        ],
+        "background_rgb": [
+          81,
+          81,
+          85
+        ],
+        "composited_rgb": [
+          185,
+          185,
+          194
+        ],
+        "ratio": 4.056,
+        "threshold": 3
+      },
+      "search_focus": {
+        "foreground_rgba": [
+          10,
+          132,
+          255
+        ],
+        "background_rgb": [
+          41,
+          41,
+          43
+        ],
+        "composited_rgb": [
+          10,
+          132,
+          255
+        ],
+        "ratio": 3.981,
+        "threshold": 3
+      }
+    }
+  },
+  "navigation_reused": true,
+  "navigation_focus_preserved": true,
+  "action_layout": [
+    {
+      "window": [
+        720,
+        500
+      ],
+      "font_percent": 100,
+      "content_height": 371,
+      "play_top": 341,
+      "play_height": 30,
+      "viewport_height": 371,
+      "page_scroll": 0
+    },
+    {
+      "window": [
+        1000,
+        680
+      ],
+      "font_percent": 100,
+      "content_height": 551,
+      "play_top": 439,
+      "play_height": 30,
+      "viewport_height": 551,
+      "page_scroll": 0
+    },
+    {
+      "window": [
+        1100,
+        760
+      ],
+      "font_percent": 100,
+      "content_height": 631,
+      "play_top": 479,
+      "play_height": 30,
+      "viewport_height": 631,
+      "page_scroll": 0
+    },
+    {
+      "window": [
+        720,
+        500
+      ],
+      "font_percent": 125,
+      "content_height": 371,
+      "play_top": 341,
+      "play_height": 30,
+      "viewport_height": 371,
+      "page_scroll": 0
+    }
+  ],
+  "action_sources": {
+    "点击回应-元气挥手": {
+      "frames": 241,
+      "duration": 10.04,
+      "fps": 24.003984063745023
+    },
+    "点击回应-傲娇生气": {
+      "frames": 241,
+      "duration": 10.04,
+      "fps": 24.003984063745023
+    }
+  },
+  "same_action_replay_queued": {
+    "actual_current": "点击回应-元气挥手",
+    "actual_pending": "点击回应-元气挥手",
+    "displayed_current": "点击回应-元气挥手",
+    "queued": "点击回应-元气挥手",
+    "watch_serial_before": 8,
+    "watch_serial_after": 8
+  },
+  "same_action_replay_started": {
+    "actual_current": "点击回应-元气挥手",
+    "actual_pending": null,
+    "displayed_current": "点击回应-元气挥手",
+    "queued": "",
+    "watch_serial": 9
+  },
+  "queue_observation": {
+    "selected": "点击回应-傲娇生气",
+    "queued": "点击回应-傲娇生气",
+    "actual_pending": "点击回应-傲娇生气",
+    "displayed_current": "点击回应-元气挥手",
+    "actual_current": "点击回应-元气挥手"
+  },
+  "narrow_real_queue_layout": {
+    "window": [
+      720,
+      500
+    ],
+    "font_percent": 125,
+    "play_top": 341,
+    "play_height": 30,
+    "viewport_height": 371,
+    "page_scroll": 0
+  },
+  "native_reduced_motion": false,
+  "motion": {
+    "hover_midpoint": 0.618921875,
+    "press_midpoint": 0.8098906250000001,
+    "durations_ms": [
+      120,
+      140,
+      80
+    ]
+  },
+  "idle": {
+    "seconds": 2.003,
+    "cpu_seconds": 0.3988,
+    "rss_before": 181370880,
+    "rss_after": 222969856,
+    "running_animations": 0
+  },
+  "save_failure": {
+    "title": "",
+    "text": "配置未能写入磁盘，改动可能在重启后丢失。\n\n配置路径：/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/seeky-settings-ui-2aj1tyq_/dsr-pet/blocked-save.json"
+  },
+  "child_process_exit": {
+    "observed_pids": [
+      34670
+    ],
+    "exited_pids": [
+      34670
+    ],
+    "alive_pids": []
+  }
+}
