@@ -19,7 +19,7 @@
 
 ## 二、修改文件说明
 
-最终逐文件增删行数与证据文件清单在集成结束后生成；以下说明代码归属与目的。
+最终逐文件增删行数与证据文件清单见本文末尾及 manifest；以下说明代码归属与目的。
 
 | 文件 | 改动与原因 |
 |---|---|
@@ -132,7 +132,7 @@
 | 解码/取消/生命周期/渲染回归 | 121 passed。 |
 | UI 初始 snapshot 顺序红/绿 | 修复前 2 failed / 1 passed；最终设置相关 42 passed，真实 IPC 验收通过。 |
 | 全量 pytest | 最终 2935 passed / 21 skipped / 261 warnings，192.97 秒。 |
-| Ruff / diff / 报告门 | 最终 Ruff 与 git diff --check 通过，报告规则测试通过。 |
+| Ruff / diff / 报告门 | 最终 Ruff 与源码/文档 diff --check 通过，报告规则测试 21 passed；原始日志尾随空白按原样保留。 |
 | 受影响时序族 CPU 满载三轮 | 8 个本次拥有的负载进程，CPU 采样中位数 100%；三轮各 138 passed，32.32 / 32.58 / 32.71 秒，负载进程全部退出。 |
 | 原生画质、默认三宠、不同动作与缩放新增关闭 | 单宠画质与 balanced 三轮通过；620 秒长时和复合缩放场景帧率约 21.4–21.8，22 fps 门未全通过，帧序与清理通过。 |
 | 包内源代码/素材/许可/版本/签名与实际 IPC | cache 与安装位置均通过；30 个产品模块字节码、212 素材、索引/品牌/三 SVG/许可、arm64、4.2.1.6、ad-hoc 签名；实际 106 list/play/error/quit、子进程零残留。 |
@@ -157,20 +157,22 @@
 - 原应用完整备份：`/Users/ray/Library/Caches/seeky-pet-backups/seeky.5-20261004-140941.app`；安装时用户 Config 的字节哈希未变，没有配置迁移。
 - 构建命令：`PYTHON_BIN=.venv/bin/python scripts/build_macos.sh --variants webm`；静态与运行命令见 [package-cache](evidence/seeky6-performance/package-cache.json)、[package-installed](evidence/seeky6-performance/package-installed.json)、[实际安装 IPC](evidence/seeky6-performance/package-installed-ipc.json)、[原生设置保存](evidence/seeky6-performance/package-settings-native.json)。运行脚本需 `PYTHONPATH=.`；首次漏设导致 import 失败，原始日志保留后正确重跑通过。
 - 极高思考子代理只读审查完成，线程/取消/动效/包装源码未发现新的阻断问题，队列协议限制已列出。见 [source-review](evidence/seeky6-performance/final-source-review.json)。
-- 发布目标：个人仓库 `YARRAYYAR/dsh-pet-indesktop` 的 `codex/seeky-pet`，保留历史、不 force push。推送验证结果随后写入。
+- 发布目标：个人仓库 `YARRAYYAR/dsh-pet-indesktop` 的 `codex/seeky-pet`，保留历史、不 force push。源码/验收提交 `90f488112486b79c120fa91d397ca4e8d3cd97b2` 已推送并通过远端 SHA 核对；见 [publish-source](evidence/seeky6-performance/publish-source.json)。后续交付记录为纯文档提交，未改产品或安装包。
 
 本轮实现、Mac 安装和普通 UI 流程已交付；长时/复合高清场景的 22 fps 以及特殊效果的待播提示仍有明确未完成项，不称为全部验收通过。
 
+原始 stdout 的尾随空白使包含日志的 `git diff --check` 返回 2；这是证据文本格式，未清洗或隐藏。排除仅 `docs/evidence/**/*.log` 后，基线到源码提交的源码、文档、JSON 与资源 diff 检查返回 0，两份输出均已保存。
+
 ### 最终增删行数与文件清单
 
-逐文件数值来自 `git diff --numstat -z`；新增文本按实际行数计算。没有删除文件。另有 528 份验收文本/截图/实验资源，逐个路径、字节数与 SHA-256 在 [change-manifest.json](evidence/seeky6-performance/change-manifest.json)；二进制记为 null。manifest 自身不作递归哈希。
+逐文件数值来自 `git diff --numstat -z`；新增文本按实际行数计算。没有删除文件。另有 531 份验收文本/截图/实验资源，逐个路径、字节数与 SHA-256 在 [change-manifest.json](evidence/seeky6-performance/change-manifest.json)；二进制记为 null。manifest 自身不作递归哈希。
 
 | 文件 | 状态 | + / − 行 |
 |---|---|---:|
 | `README.md` | modified | 2 / 0 |
 | `THIRD_PARTY_NOTICES` | modified | 53 / 0 |
 | `docs/INDEX.md` | modified | 1 / 0 |
-| `docs/PR-REPORT-SEEKY6-2026-10-04.md` | new | 195 / 0 |
+| `docs/PR-REPORT-SEEKY6-2026-10-04.md` | new | 197 / 0 |
 | `pet/branding.py` | modified | 1 / 1 |
 | `pet/context_menus/icons.py` | modified | 13 / 1 |
 | `pet/frame_edges.py` | modified | 15 / 19 |

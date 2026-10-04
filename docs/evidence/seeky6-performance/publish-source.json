@@ -1,0 +1,14 @@
+{
+  "command": [
+    "git push personal HEAD:refs/heads/codex/seeky-pet",
+    "git ls-remote personal refs/heads/codex/seeky-pet"
+  ],
+  "setup": "Authorized personal fork branch;baseline remote1197997;no force push",
+  "repository": "https://github.com/YARRAYYAR/dsh-pet-indesktop",
+  "branch": "codex/seeky-pet",
+  "source_commit": "90f488112486b79c120fa91d397ca4e8d3cd97b2",
+  "verified_remote_source_commit": "90f488112486b79c120fa91d397ca4e8d3cd97b2",
+  "assertions": "Remote branch matches committed implementation/report/evidence",
+  "exit_status": 0,
+  "reset": "User history preserved;subsequent delivery-record-only commit will be verified separately"
+}
