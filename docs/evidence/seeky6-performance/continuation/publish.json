@@ -1,0 +1,15 @@
+{
+  "command": "git push personal HEAD:codex/seeky-pet; git ls-remote personal refs/heads/codex/seeky-pet",
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Authorized personal branch, normal fast-forward push",
+  "assertions": "Exact remote source SHA matches local source commit; installed code/resource/signature and nativeIPC gates already pass",
+  "checks": {
+    "source_commit": "c5bd85f9e0ec671dfe101993a9909f3f202fcd54",
+    "verified_remote_source_commit": "c5bd85f9e0ec671dfe101993a9909f3f202fcd54",
+    "branch": "codex/seeky-pet",
+    "remote_url": "https://github.com/YARRAYYAR/dsh-pet-indesktop.git",
+    "installed": "/Users/ray/Applications/seeky\u00b7 pet.app"
+  },
+  "exit_status": 0,
+  "reset": "Keep installed actual primary running; original backups retained; delivery docs follow separately"
+}

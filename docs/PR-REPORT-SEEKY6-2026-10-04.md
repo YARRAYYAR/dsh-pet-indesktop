@@ -200,16 +200,18 @@
 
 后续最终范围门一次因 raw Git index 指纹变化失败；逐项核对1597条 mode/blob/stage 与 HEAD tree 全相同、无 staged/unmerged 改动后，仅刷新 stat 指纹，复跑通过。失败日志、语义证明与复跑均保留在 continuation。
 
+后续性能源码提交 `c5bd85f9e0ec671dfe101993a9909f3f202fcd54` 已推送 `personal/codex/seeky-pet`，远端逐字SHA核对一致；见 [publish](evidence/seeky6-performance/continuation/publish.json)。这不改变上述未通过的帧率门。交付文档后续提交不改运行源码。
+
 ### 最终增删行数与文件清单
 
-逐文件数值来自 `git diff --numstat -z`；新增文本按实际行数计算。没有删除文件。另有 652 份验收文本/截图/实验资源，逐个路径、字节数与 SHA-256 在 [change-manifest.json](evidence/seeky6-performance/change-manifest.json)；二进制记为 null。manifest 自身不作递归哈希。
+逐文件数值来自 `git diff --numstat -z`；新增文本按实际行数计算。没有删除文件。另有 654 份验收文本/截图/实验资源，逐个路径、字节数与 SHA-256 在 [change-manifest.json](evidence/seeky6-performance/change-manifest.json)；二进制记为 null。manifest 自身不作递归哈希。
 
 | 文件 | 状态 | + / − 行 |
 |---|---|---:|
 | `README.md` | modified | 2 / 0 |
 | `THIRD_PARTY_NOTICES` | modified | 53 / 0 |
 | `docs/INDEX.md` | modified | 1 / 0 |
-| `docs/PR-REPORT-SEEKY6-2026-10-04.md` | new | 235 / 0 |
+| `docs/PR-REPORT-SEEKY6-2026-10-04.md` | new | 237 / 0 |
 | `pet/branding.py` | modified | 1 / 1 |
 | `pet/context_menus/icons.py` | modified | 13 / 1 |
 | `pet/frame_edges.py` | modified | 25 / 22 |
