@@ -1,0 +1,30 @@
+....................F                                                    [100%]
+=================================== FAILURES ===================================
+___________ test_premultiplied_coverage_avoids_full_image_conversion ___________
+
+    def test_premultiplied_coverage_avoids_full_image_conversion():
+        from pet.frame_edges import coverage_region
+    
+        class ConversionObservedImage(QImage):
+            def __init__(self):
+                super().__init__(33, 9, QImage.Format.Format_ARGB32_Premultiplied)
+                self.conversions = []
+    
+            def convertToFormat(self, *args, **kwargs):  # noqa: N802 (Qt API)
+                self.conversions.append(args[0])
+                return super().convertToFormat(*args, **kwargs)
+    
+        image = ConversionObservedImage()
+        image.fill(0)
+        image.setPixelColor(16, 4, QColor(80, 120, 255, 1))
+        assert coverage_region(image).contains(QPoint(16, 4))
+>       assert image.conversions == []
+E       assert [<Format.Form...at_ARGB32: 5>] == []
+E         
+E         Left contains 2 more items, first extra item: <Format.Format_Alpha8: 23>
+E         Use -v to get more diff
+
+tests/test_dsr_rendering.py:163: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_dsr_rendering.py::test_premultiplied_coverage_avoids_full_image_conversion
+1 failed, 20 passed in 0.33s

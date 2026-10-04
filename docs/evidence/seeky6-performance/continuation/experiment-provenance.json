@@ -1,0 +1,52 @@
+{
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Native Cocoa against frozen seeky.6 coverage source from35078cb; product unchanged during candidate experiments; source tests added before product fastpath modification",
+  "inputs": {
+    "HQ_clip": "idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+    "widths": [
+      832,
+      1664,
+      2304
+    ],
+    "calls_per_mask": 100
+  },
+  "records": [
+    {
+      "actual_command": ".venv/bin/python .scratch/seeky-performance-plan/benchmark3.py",
+      "rerun": ".venv/bin/python docs/evidence/seeky6-performance/continuation/benchmark3-rectangle-equality.py",
+      "exit_status": 1,
+      "actual": "QRegion rectangle equality assertion failed, not a coverage difference",
+      "log": "benchmark3.log"
+    },
+    {
+      "actual_command": ".venv/bin/python .scratch/seeky-performance-plan/benchmark3.py (assertion changed toXOR)",
+      "rerun": ".venv/bin/python docs/evidence/seeky6-performance/continuation/benchmark3.py",
+      "exit_status": 0,
+      "actual": "All pixel coverage/display parity passes, slower than frozen before",
+      "log": "benchmark3-semantic.log"
+    },
+    {
+      "actual_command": ".venv/bin/python .scratch/seeky-performance-plan/benchmark4.py",
+      "rerun": ".venv/bin/python docs/evidence/seeky6-performance/continuation/benchmark4.py",
+      "exit_status": 0,
+      "actual": "Direct Alpha8 path correct but slower",
+      "log": "benchmark4.log"
+    },
+    {
+      "actual_command": ".venv/bin/python .scratch/seeky-performance-plan/benchmark567.py",
+      "rerun": ".venv/bin/python docs/evidence/seeky6-performance/continuation/benchmark567.py",
+      "exit_status": 0,
+      "actual": "Premultiplied direct/separable union/combined parity and timing pass",
+      "log": "benchmark567.log"
+    },
+    {
+      "actual_command": ".venv/bin/python .scratch/seeky-performance-plan/scale_candidate.py",
+      "rerun": ".venv/bin/python docs/evidence/seeky6-performance/continuation/scale_candidate.py",
+      "exit_status": 1,
+      "actual": "Mirror after scaling changes pixels at all four widths; rejected",
+      "log": "scale_candidate.log"
+    }
+  ],
+  "assertions": "Native coverage XOR empty and unchanged source byte hashes; mirror candidate requires all display bytes identical",
+  "reset": "Decode generators closed; candidate experiments retained as explicitly rejected/accepted evidence; no candidate3/4/mirror code incorporated"
+}

@@ -66,7 +66,8 @@ def main():
                 start = time.perf_counter()
                 actual = coverage_region(canvas)
                 timings.append((time.perf_counter()-start)*1000)
-            parity = actual == expected
+            # QRegion equality compares rectangle decomposition; XOR compares coverage.
+            parity = (actual ^ expected).isEmpty()
             unchanged = before == hashlib.sha256(bytes(canvas.constBits())).hexdigest()
             row = {'scale': scale, 'angle': angle, 'median_ms': statistics.median(timings),
                    'coverage_rectangles': actual.rectCount(), 'exact_region_parity': parity,

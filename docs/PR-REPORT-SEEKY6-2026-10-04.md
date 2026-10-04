@@ -83,7 +83,7 @@
 | 2 | 23.26 / 23.37 / 23.26 | 22.70 / 22.57 / 22.49 | 948.6 / 1307.4 | 1723.5 / 1913.7 |
 | 3 | 21.92 / 21.92 / 22.09 | 23.35 / 23.34 / 23.50 | 1203.3 / 971.5 | 1816.2 / 1626.8 |
 
-当前三轮全部 >=22 fps、源帧缺口/队列丢帧为零、关闭无 FFmpeg 残留；基线三轮中的两轮未达到全部三宠门槛。三轮物理峰值中位数 1816.2 → 1626.8 MiB（约 10.4%），固定窗口占用中位数 1126.8 → 971.5 MiB（约 13.8%）。第二轮当前内存高于基线，不能声称每次占用必降或仅由首帧去重造成此差值。原始 RSS、实际 FFmpeg/缓存/环/队列/窗口成本与逐帧记录见 [balanced](evidence/seeky6-performance/balanced/)。
+首批已发布实现的三轮全部 >=22 fps、源帧缺口/队列丢帧为零、关闭无 FFmpeg 残留；基线三轮中的两轮未达到全部三宠门槛。三轮物理峰值中位数 1816.2 → 1626.8 MiB（约 10.4%），固定窗口占用中位数 1126.8 → 971.5 MiB（约 13.8%）。第二轮当前内存高于基线，不能声称每次占用必降或仅由首帧去重造成此差值。原始 RSS、实际 FFmpeg/缓存/环/队列/窗口成本与逐帧记录见 [balanced](evidence/seeky6-performance/balanced/)。
 
 成本分类使用同一固定窗口每轮中位数，再取三轮中位数（MiB）：
 
@@ -131,9 +131,9 @@
 | 首帧故障断言红/绿 | 实现前 4 failed / 4 passed；实现后相关 34 passed。 |
 | 解码/取消/生命周期/渲染回归 | 121 passed。 |
 | UI 初始 snapshot 顺序红/绿 | 修复前 2 failed / 1 passed；最终设置相关 42 passed，真实 IPC 验收通过。 |
-| 全量 pytest | 最终 2935 passed / 21 skipped / 261 warnings，192.97 秒。 |
+| 全量 pytest | 初批2935 passed；后续最终2949 passed /21 skipped /262 warnings，188.25秒。 |
 | Ruff / diff / 报告门 | 最终 Ruff 与源码/文档 diff --check 通过，报告规则测试 21 passed；原始日志尾随空白按原样保留。 |
-| 受影响时序族 CPU 满载三轮 | 8 个本次拥有的负载进程，CPU 采样中位数 100%；三轮各 138 passed，32.32 / 32.58 / 32.71 秒，负载进程全部退出。 |
+| 受影响时序族 CPU 满载三轮 | 8 个本次拥有的负载进程，CPU 采样中位数 100%；初批三轮各138 passed；后续三轮各159 passed，36.11 /39.22 /38.95秒，负载进程全部退出。 |
 | 原生画质、默认三宠、不同动作与缩放新增关闭 | 单宠画质与 balanced 三轮通过；620 秒长时和复合缩放场景帧率约 21.4–21.8，22 fps 门未全通过，帧序与清理通过。 |
 | 包内源代码/素材/许可/版本/签名与实际 IPC | cache 与安装位置均通过；30 个产品模块字节码、212 素材、索引/品牌/三 SVG/许可、arm64、4.2.1.6、ad-hoc 签名；实际 106 list/play/error/quit、子进程零残留。 |
 | 安装与授权分支推送 | 已安装并打开；原 seeky.5 完整保留，安装未改用户配置；分支推送结果见交付节。 |
@@ -163,19 +163,56 @@
 
 原始 stdout 的尾随空白使包含日志的 `git diff --check` 返回 2；这是证据文本格式，未清洗或隐藏。排除仅 `docs/evidence/**/*.log` 后，基线到源码提交的源码、文档、JSON 与资源 diff 检查返回 0，两份输出均已保存。
 
+
+### 后续批次：掩码转换与扩展成本
+
+在已发布 `35078cb093c06c35e67d147d6f9a2d2a1fcad864` 的 seeky.6 基础上继续处理长时/混合场景帧率差距。本批仅改 `frame_edges.coverage_region`：合法 Qt `ARGB32_Premultiplied` 画布直接比较零像素与黑 A1；其他格式沿用 alpha 隔离转换。3×3 覆盖扩展分成水平、垂直两步，区域 union 从八次减为四次。素材、播放器队列、帧序、碰撞边界、Qt 绘制隔离及 IPC 均沿用现状，无新增缓存、线程、依赖、网络或磁盘路径。
+
+依据 [Qt QImage 格式说明](https://doc.qt.io/qt-6/qimage.html#Format-enum) 与 [Qt 6.11 掩码源码](https://github.com/qt/qtbase/blob/6.11/src/gui/image/qimage.cpp)，合法预乘像素 A=0 的 RGB 为零，黑 A1 在转换前后的位值相同；非预乘透明 colored 输入不能直接比较 raw zero。像素 oracle 在实施前补充单行/单列、1/8/31/32/33 宽度、稀疏边角、黑 A1、colored A1、空图及输入字节不变；这些少见组合无法可靠从现有媒体 E2E 穷举，所以使用独立确定性图像检查。优化契约红例为 **1 failed / 20 passed**（旧路径仍调用格式转换），实现后 **21 passed**。原生三个尺寸×三种旋转 **9/9** 覆盖一致、显示字节不变，最大 2.05 ms；记录见 [continuation](evidence/seeky6-performance/continuation/)。
+
+每种宽度 100 次的 Cocoa 独立比较（ms）：
+
+| 宽度 | 已发布 seeky.6 | 直接预乘 | 分离扩展 | 两者组合 |
+|---|---:|---:|---:|---:|
+| 832 | 1.199 | 0.923 | 1.098 | 0.844 |
+| 1664 | 4.561 | 3.614 | 3.812 | 3.218 |
+| 2304 | 7.436 | 6.183 | 7.322 | 6.039 |
+
+这只证明掩码函数成本下降，不能替代最终帧率检查。Big-int 位图扩展虽像素覆盖相同但更慢；Alpha8 直接生成掩码同样更慢，均未用于产品。改变镜像/缩放顺序会改变最终像素，即使较快也未采用。Big-int 首次 native 对照的 `QRegion ==` 断言失败：矩形拆分 428/440 不同，但 XOR 空且逐点覆盖相同。后续原生检查用 XOR 空验证覆盖；保留失败与诊断记录，不将其误报为像素损失。已写的密集随机 oracle 仍保留原断言并通过。
+
+本批三轮前后对照、620 秒长测和混合场景已完成，但帧率仍失败：
+
+| 轮次 | 修改前 fps | 修改后 fps |
+|---|---|---|
+| 1 | 23.28 / 23.49 / 23.24 | 14.13 / 14.12 / 14.22 |
+| 2 | 14.71 / 14.52 / 14.55 | 3.44 / 3.62 / 3.63 |
+| 3 | 5.28 / 5.29 / 5.28 | 3.88 / 3.92 / 3.81 |
+
+620 秒为 5.47 / 5.49 / 5.48 fps，混合场景为 3.35 / 7.02 / 3.34 fps。所有轮次源帧缺口、队列丢帧、重复首帧缓冲和退出 FFmpeg 残留均为零；不同动作、四次缩放及2→3窗生命周期按原脚本完成。后续旧实现也显著降速，且 decode/scale/consume 多步骤一起升高，不能由这些轮次声称新掩码改善了整体帧率或降低了稳态占用。
+
+增加同时记录系统指标的单次100秒复测：15.89 / 15.85 / 15.80 fps；系统 CPU 中位数88.8%、峰值98.3%，同期 swap-in 增加4055.8 MiB，可用内存首末1239 /1048 MiB。该观测支持“测量期间有明显系统压力”，不证明全部降速由压力造成；没有关闭其他应用或更改系统设置以制造通过结果。原始数据见 [observed-system](evidence/seeky6-performance/continuation/observed-system.json) 与同目录逐帧原生记录。10分钟帧率门仍未满足。
+
+为减少轮次间环境变化的影响，又做100轮交错次序的真实 Cocoa QWidget 对照：同一个HQ帧的两份1px位移画布，每次改变掩码，计入计算、setMask、绘制与事件分发。修改前中位数2.182 ms，修改后1.985 ms（约9.1%）；掩码覆盖一致。见 [native_mask_cost](evidence/seeky6-performance/continuation/native_mask_cost.json)。这是一条局部路径收益，未被包装成多宠整体帧率达标。
+
+最终源检查2949 passed /21 skipped /262 warnings，188.25秒；Ruff通过。CPU满载三轮各159 passed，36.11 /39.22 /38.95秒，8个本次负载进程全部结束；改动范围门通过。新安装包构建、缓存/已安装的静态字节码/215份素材与品牌文件/签名检查及两次真实IPC list106→play→invalid→quit→无子进程残留均通过。已更新 `/Users/ray/Applications/seeky· pet.app`，build4.2.1.6；此前seeky.6整包备份为 `/Users/ray/Library/Caches/seeky-pet-backups/seeky.6-before-mask-20261004-232913.app`，最初seeky.5备份仍保留。安装时默认Config字节哈希不变。CUA重新打开实际已安装程序，真实主进程再次返回106个动作，保留运行；新原生截图见 [installed-native](evidence/seeky6-performance/continuation/installed-native.png)。本批未改变UI源码，沿用首批56截图/392geometry字段与实际设置保存/失败恢复验收。测试前正常退出本任务打开的已安装主进程，ACK 与进程退出成功；“配置字节不变”断言失败，原有 `AppShell._on_about_to_quit → save_position` 会保存位置。没有保存具体字段的退出前快照，因此只记录字节检查失败，不宣称已经逐字段核对；未重写或回滚用户配置。完成后重新打开已安装程序。
+
+后续队列字段扩展仍未应用：当前协议保持原样，隐藏后队列恢复和特效改写请求的提示限制仍按前文记录。兼容扩展需要同时覆盖一次性等待与切换重试两种主进程状态；等待用户对可选字段的答复，不从“继续”推断新的协议授权。
+
+后续最终范围门一次因 raw Git index 指纹变化失败；逐项核对1597条 mode/blob/stage 与 HEAD tree 全相同、无 staged/unmerged 改动后，仅刷新 stat 指纹，复跑通过。失败日志、语义证明与复跑均保留在 continuation。
+
 ### 最终增删行数与文件清单
 
-逐文件数值来自 `git diff --numstat -z`；新增文本按实际行数计算。没有删除文件。另有 531 份验收文本/截图/实验资源，逐个路径、字节数与 SHA-256 在 [change-manifest.json](evidence/seeky6-performance/change-manifest.json)；二进制记为 null。manifest 自身不作递归哈希。
+逐文件数值来自 `git diff --numstat -z`；新增文本按实际行数计算。没有删除文件。另有 652 份验收文本/截图/实验资源，逐个路径、字节数与 SHA-256 在 [change-manifest.json](evidence/seeky6-performance/change-manifest.json)；二进制记为 null。manifest 自身不作递归哈希。
 
 | 文件 | 状态 | + / − 行 |
 |---|---|---:|
 | `README.md` | modified | 2 / 0 |
 | `THIRD_PARTY_NOTICES` | modified | 53 / 0 |
 | `docs/INDEX.md` | modified | 1 / 0 |
-| `docs/PR-REPORT-SEEKY6-2026-10-04.md` | new | 197 / 0 |
+| `docs/PR-REPORT-SEEKY6-2026-10-04.md` | new | 235 / 0 |
 | `pet/branding.py` | modified | 1 / 1 |
 | `pet/context_menus/icons.py` | modified | 13 / 1 |
-| `pet/frame_edges.py` | modified | 15 / 19 |
+| `pet/frame_edges.py` | modified | 25 / 22 |
 | `pet/resources/settings-icons/LICENSE` | new | 43 / 0 |
 | `pet/resources/settings-icons/list-tree.svg` | new | 17 / 0 |
 | `pet/resources/settings-icons/mouse-pointer-click.svg` | new | 17 / 0 |
@@ -190,8 +227,9 @@
 | `scripts/build_macos.sh` | modified | 1 / 1 |
 | `scripts/verify_dsr_package.py` | modified | 10 / 3 |
 | `scripts/verify_seeky6_prewarm.py` | new | 199 / 0 |
+| `scripts/verify_seeky_coverage.py` | modified | 2 / 1 |
 | `scripts/verify_seeky_multi.py` | modified | 145 / 18 |
 | `scripts/verify_seeky_settings_ui.py` | new | 456 / 0 |
-| `tests/test_dsr_rendering.py` | modified | 35 / 0 |
+| `tests/test_dsr_rendering.py` | modified | 90 / 0 |
 | `tests/test_seeky6_settings.py` | new | 193 / 0 |
 | `tests/test_webm_first_frame_lock.py` | modified | 158 / 0 |

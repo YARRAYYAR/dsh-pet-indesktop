@@ -1,0 +1,13 @@
+{
+  "setup": "Final raw-index gate failed after existing stat cache refresh; no stage operation performed",
+  "assertions": "Every index mode/blob/stage equals HEAD tree exactly; no user staged changes/unmerged entries; branch HEAD unchanged",
+  "checks": {
+    "entries": 1597,
+    "semantic_exact": true,
+    "old_raw_hash": "sha256:6549c3121553b2a8cd2d0b8b4639d7ed6b75368ce3dfefd18f0bdb9fe855762a",
+    "refreshed_raw_hash": "sha256:0b6b1249fce3e893a72820ef83c68559e13e1a8232046bdf58c54435fd596751",
+    "head": "35078cb093c06c35e67d147d6f9a2d2a1fcad864"
+  },
+  "reset": "Refresh only raw stat fingerprint after semantic proof; preserve staged tree",
+  "exit_status": 0
+}

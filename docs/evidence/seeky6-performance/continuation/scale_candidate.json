@@ -1,0 +1,46 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-performance-plan/scale_candidate.py"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Cocoa Qt real HQ QPixmap.toImage, before/after mirror order only",
+  "inputs": "40 repetitions at317/832/1664/2304 physical widths",
+  "assertions": "All scaled image bytes equal; timing compared",
+  "checks": [
+    {
+      "clip": "idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+      "width": 317,
+      "height": 178,
+      "equal": false,
+      "old_median_ms": 1.7461460010963492,
+      "new_median_ms": 0.48122950101969764
+    },
+    {
+      "clip": "idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+      "width": 832,
+      "height": 468,
+      "equal": false,
+      "old_median_ms": 1.88647899631178,
+      "new_median_ms": 0.7643959979759529
+    },
+    {
+      "clip": "idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+      "width": 1664,
+      "height": 936,
+      "equal": false,
+      "old_median_ms": 2.327146001334768,
+      "new_median_ms": 1.70620850258274
+    },
+    {
+      "clip": "idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+      "width": 2304,
+      "height": 1296,
+      "equal": false,
+      "old_median_ms": 2.873541001463309,
+      "new_median_ms": 3.2014164971769787
+    }
+  ],
+  "exit_status": 1,
+  "reset": "Generators closed; product source unchanged"
+}

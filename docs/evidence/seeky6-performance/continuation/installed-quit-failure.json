@@ -1,0 +1,12 @@
+{
+  "command": "PYTHONPATH=. .venv/bin/python .scratch/seeky-performance-plan/stop_installed.py",
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Normal real IPC quit before isolated performance runs",
+  "inputs": {
+    "installed_pid": 57857
+  },
+  "assertions": "Quit ACK and process exits; unchanged config bytes (invalid expectation)",
+  "actual": "ACK succeeded and PID exited; config byte equality assertion failed. AppShell._on_about_to_quit calls win.save_position as existing save semantics. Exact changed fields were not retained, so only the failed byte check is claimed. No config restore/rewriting performed.",
+  "exit_status": 1,
+  "reset": "Original application closed normally; reopen after measurements"
+}

@@ -1,0 +1,203 @@
+{
+  "schema_version": 1,
+  "agent_limit": 2,
+  "baseline_paths": [],
+  "baseline_fingerprints": {},
+  "baseline_head": "35078cb093c06c35e67d147d6f9a2d2a1fcad864",
+  "baseline_index": "sha256:0b6b1249fce3e893a72820ef83c68559e13e1a8232046bdf58c54435fd596751",
+  "main_owned_paths": [
+    "scripts/verify_seeky_multi.py",
+    "scripts/verify_seeky6_prewarm.py",
+    "scripts/verify_dsr_package.py",
+    "scripts/build_macos.sh",
+    "pet/branding.py",
+    "seeky· pet.spec",
+    "docs/evidence/seeky6-performance",
+    "docs/evidence/seeky6-ui",
+    "docs/PR-REPORT-SEEKY6-2026-10-04.md",
+    "docs/INDEX.md",
+    "README.md",
+    "THIRD_PARTY_NOTICES",
+    "tests/test_webm_first_frame_lock.py",
+    "pet/frame_edges.py",
+    "tests/test_dsr_rendering.py",
+    "scripts/verify_seeky_coverage.py"
+  ],
+  "source_discrepancies": [
+    {
+      "claim": "历史报告记录高清三宠中位占用943.5 MiB、采样峰值1958.2 MiB，约23.5fps无帧缺口；旧数据没有覆盖足够长的稳态运行。",
+      "resolution": "仅作为本轮前态线索。重新执行真实Cocoa三宠高清基线和改后测量，记录至少60秒稳态曲线、帧序、同帧画面与物理占用；不预设收益。",
+      "documentation_evidence": [
+        "docs/PR-REPORT-DSR-PET-2026-10-02.md::10.2 三个放大桌宠"
+      ],
+      "implementation_evidence": [
+        "scripts/verify_seeky_multi.py::main",
+        "pet/webm_clip.py::WebMClip._process_frame"
+      ]
+    },
+    {
+      "claim": "修改前原生三宠短测7至17fps，110秒测仍低于22fps；原有轮廓函数重复RGBA/Pillow多平面拷贝。",
+      "resolution": "独立批次用Qt原生掩码表达同一alpha覆盖规则；实现前锁定全部alpha/颜色/旋转的region像素一致性，以真实三宠检查效果，不更改显示图像或素材。",
+      "documentation_evidence": [
+        "docs/evidence/seeky6-performance/baseline-extended/round-1.json::checks"
+      ],
+      "implementation_evidence": [
+        "pet/frame_edges.py::coverage_region",
+        "pet/window.py::_sync_mask"
+      ]
+    }
+  ],
+  "waves": [
+    {
+      "id": "wave-1",
+      "packets": [
+        {
+          "id": "shared-first-frame-prewarm",
+          "agent": "main",
+          "goal": "同路径mtime大小素材的后台首帧解码single flight；被取消、失败或会话结束时释放认领并唤醒等待者，复用成功首帧。",
+          "boundary_rationale": "只有WebMClip首帧池/锁/提交需共同变化；decode_fanout已共享bytes且无需修改。",
+          "boundary_evidence": [
+            "pet/webm_clip.py::_decode_first_qimage_and_cache",
+            "pet/webm_clip.py::warm_first_frame",
+            "pet/webm_clip.py::cancel_first_frame_warm"
+          ],
+          "consumer_scan": {
+            "method": "rg扫描RING_CAPACITY/_RingBuffer/._feed_source/_reader_feed及queue.Queue消费者；跟读publish、poll、队列put/pop调用链。",
+            "result": "每个消费者通过一个Subscription环按序获得帧，reader经有界本地队列交给GUI消费。环与队列保存同一bytes对象引用。协议为(kind,data,src,reason)，帧索引从0起；取消由stop/generation控制。",
+            "evidence": [
+              "pet/decode_fanout.py::_SourceSink.on_frame",
+              "pet/decode_fanout.py::_RingBuffer.pop_with_cursor",
+              "pet/decode_fanout.py::_FanoutFeedSession.poll",
+              "pet/webm_clip.py::WebMClip._reader_feed",
+              "pet/webm_clip.py::WebMClip._poll"
+            ]
+          },
+          "owned_paths": [
+            "pet/webm_clip.py"
+          ],
+          "test_paths": [],
+          "interface_status": "frozen",
+          "upstream_contracts": [
+            {
+              "provider": "WebMClip reader and publish sink",
+              "interface": "_SourceSink.on_frame(data, src_idx) → _RingBuffer.push(data, src_idx)",
+              "semantics": "data为一张RGBA源帧的不可变bytes；src_idx为0基时间线索引。每个有界环保留最新序列，容量满时丢弃最旧项。",
+              "evidence": [
+                "pet/webm_clip.py::WebMClip._stamp_source_indices",
+                "pet/webm_clip.py::WebMClip._mirror_frame_to_sink",
+                "pet/decode_fanout.py::_SourceSink.on_frame"
+              ]
+            }
+          ],
+          "downstream_expectations": [
+            {
+              "consumer": "订阅端WebMClip reader及GUI _poll/_process_frame",
+              "interface": "feed.poll()返回(kind,data,src,reason)，reader队列保存(data,src)",
+              "semantics": "保持字节内容和顺序不变、有界背压和取消语义不变；不得每环、每队列、每窗口额外复制原始帧。",
+              "evidence": [
+                "pet/decode_fanout.py::_FanoutFeedSession.poll",
+                "pet/webm_clip.py::WebMClip._reader_feed",
+                "pet/webm_clip.py::WebMClip._process_frame"
+              ]
+            }
+          ],
+          "shared_state_owner": "模块级首帧协调表拥有每素材在飞任务；WebMClip继续独占自身代次/进程/显示槽；协调任务不永久强持有图像或QObject。",
+          "invariants": [
+            "No resolution/pixel/Alpha/frame-order change; Qt drawing isolation copies unchanged.",
+            "Process-wide prewarm cap remains two; one first-frame decoder per asset identity.",
+            "No GUI wait; background waits are cancellable; result published only if caller generation valid.",
+            "Leader failure/cancel releases flight, wakes all waiters; waiter cancellation cannot cancel another live consumer.",
+            "Media, user configuration, cursor facing, top flip and original branding artwork retained."
+          ],
+          "integration_entry": "scripts/verify_seeky6_prewarm.py and scripts/verify_seeky_multi.py real Cocoa/FFmpeg.",
+          "dependencies": [],
+          "checks": [
+            "执行E2E前按项目要求阅读~/.codex/docs/testing-policy.md；不在实现后新增测试。若E2E不能安全覆盖某失效模式，先列全模式和预期再写隔离测试。",
+            "真实Cocoa三只HQ桌宠前后测量：>=60秒稳态、进程树物理占用/RSS、帧队列/环占用、FPS和帧缺口；成功与失败均保存命令、配置、输入、断言、实测和退出码。",
+            "经现有原生流程覆盖混合尺寸、缩放边界、关闭/重生、shared/local回退；确认106份原片与HQ哈希未变。",
+            "比对同源帧画面；每宠>=22交付fps且没有源帧缺口。",
+            "运行Ruff、受影响decode-fanout/WebM生命周期族；跨层生命周期改动按项目规则跑全量pytest；被接受后才做打包验收。",
+            "将数字、逐文件行数、真实运行证据和限制追加到既有PR报告并保持索引有效。"
+          ]
+        },
+        {
+          "id": "settings-ui",
+          "agent": "ui-worker",
+          "goal": "固定截图侧栏布局；复用导航按钮和可中断120/140/80ms反馈；语义图标及动作库选择/请求/排队/当前播放状态；系统减少动态效果；右侧可读性。",
+          "boundary_rationale": "侧栏图标绘制、一级/二级按钮状态动画和展开布局由同一导航装配协调；设置行组件和持久设置模型不属于本包。",
+          "boundary_evidence": [
+            "pet/settings_navigation.py::SidebarNavigationButton",
+            "pet/settings_brand.py::expand_domain_navigation",
+            "pet/modern_settings_dialog.py::ModernSettingsDialog"
+          ],
+          "consumer_scan": {
+            "method": "rg扫描SidebarNavigationButton、expand_domain_navigation、vector_widget_icon和QVariantAnimation的全部调用、测试和截图入口。",
+            "result": "设置域和子页面共用SidebarNavigationButton；一级图标走语义矢量provider，二级项缩进显示；ModernSettingsDialog拥有域/页选择，SettingsTabContainer拥有subtask状态。暂无新增持久设置需求。",
+            "evidence": [
+              "pet/settings_brand.py::expand_domain_navigation",
+              "pet/settings_navigation.py::SidebarNavigationButton.paintEvent",
+              "pet/context_menus/icons.py::vector_widget_icon",
+              "pet/modern_settings_dialog.py::ModernSettingsDialog"
+            ]
+          },
+          "owned_paths": [
+            "pet/settings_navigation.py",
+            "pet/settings_brand.py",
+            "pet/settings_actions.py",
+            "pet/settings_widgets.py",
+            "pet/settings_theme_qss.py",
+            "pet/context_menus/icons.py",
+            "pet/ui_motion.py",
+            "pet/resources/settings-icons",
+            "scripts/verify_seeky_settings_ui.py",
+            "tests/test_seeky6_settings.py"
+          ],
+          "test_paths": [],
+          "interface_status": "frozen",
+          "upstream_contracts": [
+            {
+              "provider": "设置域与子任务模型",
+              "interface": "sidebar item text/icon/current row及SettingsTabContainer keys/labels/currentKey",
+              "semantics": "Preserve currently available domain order, actual page indices and per-setting owner (pure build exposes seven domains as screenshot).",
+              "evidence": [
+                "pet/modern_settings_dialog.py::ModernSettingsDialog",
+                "pet/settings_brand.py::expand_domain_navigation",
+                "pet/settings_widgets.py::SettingsTabContainer"
+              ]
+            }
+          ],
+          "downstream_expectations": [
+            {
+              "consumer": "Qt sidebar and native visual acceptance",
+              "interface": "SidebarNavigationButton(text, selected, secondary), setIcon(QIcon), clicked/toggled",
+              "semantics": "保持键盘焦点、checked状态、几何和accessible name/路由；动画只说明悬停/选择状态并可中断。",
+              "evidence": [
+                "pet/settings_navigation.py::SidebarNavigationButton",
+                "scripts/capture_settings_pages.py::main",
+                ".agents/skills/qt-ui-review/SKILL.md::Review"
+              ]
+            }
+          ],
+          "shared_state_owner": "ModernSettingsDialog owns current domain, SettingsTabContainer owns subtask; buttons own transient hover/selection/press; ActionLibrary owns visible selection/pending request/queued state; command client owns IPC.",
+          "invariants": [
+            "Screenshot sidebar positions, width, spacing, hierarchy/order/brand/footer retained.",
+            "Only settings and action library presentation changes; no persisted preferences or IPC schema changes.",
+            "Icons use new settings-only keys where replacing shared provider semantics would change menus.",
+            "Reuse existing Qt widgets; reduced-motion query via native ctypes without PyObjC dependency; hidden/destroyed animations stopped.",
+            "Action selection/scroll retained if visible; duplicate requests suppressed; actual current state follows watch_actions."
+          ],
+          "integration_entry": "Real Cocoa settings dialog and actual isolated AppShell command server via scripts/verify_seeky_settings_ui.py.",
+          "dependencies": [],
+          "checks": [
+            "实现前读docs/SETTINGS-CHANGE-GATES.md和视觉系统参考，核实现有源代码与已接受截图。",
+            "若需下载图标，联网核对首发来源、许可证、署名要求；必要时把来源与许可加入THIRD_PARTY_NOTICES。",
+            "使用公开Qt行为入口跑相关导航/无障碍检查；不要实现后新写单测。",
+            "对受影响页面在720×760与1100×760、浅/深主题、高DPI、键盘焦点、选择/悬停/按压态截图并人工检查。",
+            "运行Ruff、受影响设置UI检查、git diff --check；行为或生命周期语义变化时按规则跑全套。",
+            "将文件/性能/原生截图和适用限制纳入现有PR报告与INDEX。"
+          ]
+        }
+      ]
+    }
+  ]
+}

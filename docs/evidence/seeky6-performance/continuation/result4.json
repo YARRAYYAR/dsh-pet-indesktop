@@ -1,0 +1,29 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-performance-plan/benchmark4.py"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Cocoa isolated Qt; real HQ premultiplied idle frame",
+  "inputs": "832/1664/2304 canvas width, 100 calls per candidate",
+  "assertions": "Every native region equals current product; display bytes untouched",
+  "checks": [
+    {
+      "width": 832,
+      "current_median_ms": 1.18674999976065,
+      "mask_candidate_4_median_ms": 1.7485624994151294
+    },
+    {
+      "width": 1664,
+      "current_median_ms": 4.018542000267189,
+      "mask_candidate_4_median_ms": 6.942062500456814
+    },
+    {
+      "width": 2304,
+      "current_median_ms": 7.547207998868544,
+      "mask_candidate_4_median_ms": 13.495854000211693
+    }
+  ],
+  "exit_status": 0,
+  "reset": "Generator closed; no product source changed"
+}

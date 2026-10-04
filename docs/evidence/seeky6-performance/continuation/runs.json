@@ -1,0 +1,2741 @@
+[
+  {
+    "label": "before-1",
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky_multi.py",
+      "--root",
+      "/Users/ray/Library/Caches/seeky-native-v6",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky6-performance/continuation/before-1.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+      "--duration",
+      "100",
+      "--steady-after",
+      "35",
+      "--prewarm",
+      "balanced",
+      "--scale",
+      "1.3",
+      "--spawn-api",
+      "--expect-warm-limit",
+      "2",
+      "--expect-shared-first-frames"
+    ],
+    "elapsed_seconds": 102.38156770799833,
+    "exit_status": 0,
+    "checks": {
+      "max_first_frame_decoders": 2,
+      "steady_mib": 1077.8242263793945,
+      "peak_mib": 1715.8009948730469,
+      "growth_mib": 447.5313529968262,
+      "playback": {
+        "0": {
+          "fps": 23.28204184959123,
+          "forward_gaps": 0,
+          "frames": 1444,
+          "ten_second_bins": [
+            {
+              "start": 0,
+              "fps": 23.552415233524417,
+              "frames": 213
+            },
+            {
+              "start": 10,
+              "fps": 23.659859444394318,
+              "frames": 237
+            },
+            {
+              "start": 20,
+              "fps": 23.708108976934824,
+              "frames": 237
+            },
+            {
+              "start": 30,
+              "fps": 23.48525146281,
+              "frames": 235
+            },
+            {
+              "start": 40,
+              "fps": 23.69121116297746,
+              "frames": 237
+            },
+            {
+              "start": 50,
+              "fps": 23.283239091651307,
+              "frames": 232
+            },
+            {
+              "start": 60,
+              "fps": 23.40602931278692,
+              "frames": 234
+            },
+            {
+              "start": 70,
+              "fps": 23.270276234227353,
+              "frames": 233
+            },
+            {
+              "start": 80,
+              "fps": 23.48925918490262,
+              "frames": 235
+            },
+            {
+              "start": 90,
+              "fps": 22.273055622441596,
+              "frames": 223
+            }
+          ]
+        },
+        "1": {
+          "fps": 23.490463452646384,
+          "forward_gaps": 0,
+          "frames": 1457,
+          "ten_second_bins": [
+            {
+              "start": 0,
+              "fps": 23.577823499972194,
+              "frames": 213
+            },
+            {
+              "start": 10,
+              "fps": 23.74892278092871,
+              "frames": 238
+            },
+            {
+              "start": 20,
+              "fps": 23.617378370501395,
+              "frames": 236
+            },
+            {
+              "start": 30,
+              "fps": 23.781570787802167,
+              "frames": 238
+            },
+            {
+              "start": 40,
+              "fps": 23.690259890181594,
+              "frames": 237
+            },
+            {
+              "start": 50,
+              "fps": 23.78792460437456,
+              "frames": 237
+            },
+            {
+              "start": 60,
+              "fps": 23.40132774915384,
+              "frames": 234
+            },
+            {
+              "start": 70,
+              "fps": 23.778468947526807,
+              "frames": 238
+            },
+            {
+              "start": 80,
+              "fps": 23.48784453857428,
+              "frames": 235
+            },
+            {
+              "start": 90,
+              "fps": 22.475066722854333,
+              "frames": 225
+            }
+          ]
+        },
+        "2": {
+          "fps": 23.238951001180517,
+          "forward_gaps": 0,
+          "frames": 1440,
+          "ten_second_bins": [
+            {
+              "start": 0,
+              "fps": 23.408761565042916,
+              "frames": 211
+            },
+            {
+              "start": 10,
+              "fps": 23.401327749153833,
+              "frames": 234
+            },
+            {
+              "start": 20,
+              "fps": 23.70453700820618,
+              "frames": 237
+            },
+            {
+              "start": 30,
+              "fps": 23.488316068417245,
+              "frames": 235
+            },
+            {
+              "start": 40,
+              "fps": 23.691448993113422,
+              "frames": 237
+            },
+            {
+              "start": 50,
+              "fps": 23.27191020252581,
+              "frames": 233
+            },
+            {
+              "start": 60,
+              "fps": 23.38606070338847,
+              "frames": 234
+            },
+            {
+              "start": 70,
+              "fps": 23.176372192384036,
+              "frames": 231
+            },
+            {
+              "start": 80,
+              "fps": 23.49350414650308,
+              "frames": 235
+            },
+            {
+              "start": 90,
+              "fps": 21.96655867277851,
+              "frames": 220
+            }
+          ]
+        }
+      },
+      "queue_drops": 0,
+      "duplicate_first_images": [],
+      "lifecycle": {},
+      "shared_process_enabled": true,
+      "source_widths": [
+        2560,
+        2560,
+        2560
+      ],
+      "actions": {
+        "0": "待机呼吸休闲",
+        "1": "待机呼吸休闲",
+        "2": "待机呼吸休闲"
+      },
+      "initial_decode_routes": {
+        "0": {
+          "idle_eligible": true,
+          "broker_active": true,
+          "feed": false,
+          "publish": true,
+          "path": "/Users/ray/Library/Caches/seeky-native-v6/assets/characters_hq/shenshen/videos/idle/待机呼吸休闲.webm"
+        },
+        "1": {
+          "idle_eligible": true,
+          "broker_active": true,
+          "feed": true,
+          "publish": false,
+          "path": "/Users/ray/Library/Caches/seeky-native-v6/assets/characters_hq/shenshen/videos/idle/待机呼吸休闲.webm"
+        },
+        "2": {
+          "idle_eligible": true,
+          "broker_active": true,
+          "feed": true,
+          "publish": false,
+          "path": "/Users/ray/Library/Caches/seeky-native-v6/assets/characters_hq/shenshen/videos/idle/待机呼吸休闲.webm"
+        }
+      },
+      "live_ffmpeg_after_cleanup": []
+    }
+  },
+  {
+    "label": "after-1",
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky_multi.py",
+      "--root",
+      "/Users/ray/Documents/New project/dsr-pet",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky6-performance/continuation/after-1.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+      "--duration",
+      "100",
+      "--steady-after",
+      "35",
+      "--prewarm",
+      "balanced",
+      "--scale",
+      "1.3",
+      "--spawn-api",
+      "--expect-warm-limit",
+      "2",
+      "--expect-shared-first-frames"
+    ],
+    "elapsed_seconds": 103.99478929200268,
+    "exit_status": 1,
+    "checks": {
+      "max_first_frame_decoders": 2,
+      "steady_mib": 756.5649261474609,
+      "peak_mib": 1515.3478927612305,
+      "growth_mib": 201.35169982910156,
+      "playback": {
+        "0": {
+          "fps": 14.131830249877924,
+          "forward_gaps": 0,
+          "frames": 875,
+          "ten_second_bins": [
+            {
+              "start": 0,
+              "fps": 23.711937512070556,
+              "frames": 222
+            },
+            {
+              "start": 10,
+              "fps": 23.786725797510456,
+              "frames": 237
+            },
+            {
+              "start": 20,
+              "fps": 23.795658547360386,
+              "frames": 238
+            },
+            {
+              "start": 30,
+              "fps": 23.79900385604112,
+              "frames": 238
+            },
+            {
+              "start": 40,
+              "fps": 23.590351044500437,
+              "frames": 236
+            },
+            {
+              "start": 50,
+              "fps": 23.006289055436113,
+              "frames": 230
+            },
+            {
+              "start": 60,
+              "fps": 14.436715697656815,
+              "frames": 144
+            },
+            {
+              "start": 70,
+              "fps": 6.349531466024887,
+              "frames": 63
+            },
+            {
+              "start": 80,
+              "fps": 7.8787082958758035,
+              "frames": 79
+            },
+            {
+              "start": 90,
+              "fps": 5.873776733550801,
+              "frames": 57
+            }
+          ]
+        },
+        "1": {
+          "fps": 14.115032671294156,
+          "forward_gaps": 0,
+          "frames": 875,
+          "ten_second_bins": [
+            {
+              "start": 0,
+              "fps": 23.745277927684835,
+              "frames": 221
+            },
+            {
+              "start": 10,
+              "fps": 23.673862450846638,
+              "frames": 237
+            },
+            {
+              "start": 20,
+              "fps": 23.781332155973427,
+              "frames": 238
+            },
+            {
+              "start": 30,
+              "fps": 23.608599557966645,
+              "frames": 236
+            },
+            {
+              "start": 40,
+              "fps": 23.680276136101373,
+              "frames": 237
+            },
+            {
+              "start": 50,
+              "fps": 23.115810209147813,
+              "frames": 231
+            },
+            {
+              "start": 60,
+              "fps": 14.557374379021104,
+              "frames": 144
+            },
+            {
+              "start": 70,
+              "fps": 6.325745785346361,
+              "frames": 64
+            },
+            {
+              "start": 80,
+              "fps": 7.602921987855878,
+              "frames": 75
+            },
+            {
+              "start": 90,
+              "fps": 5.865286927741756,
+              "frames": 57
+            }
+          ]
+        },
+        "2": {
+          "fps": 14.223442040684532,
+          "forward_gaps": 0,
+          "frames": 882,
+          "ten_second_bins": [
+            {
+              "start": 0,
+              "fps": 23.812874105664218,
+              "frames": 221
+            },
+            {
+              "start": 10,
+              "fps": 23.526820575456025,
+              "frames": 236
+            },
+            {
+              "start": 20,
+              "fps": 23.76636455186304,
+              "frames": 237
+            },
+            {
+              "start": 30,
+              "fps": 23.676475014296166,
+              "frames": 237
+            },
+            {
+              "start": 40,
+              "fps": 23.57071213640923,
+              "frames": 236
+            },
+            {
+              "start": 50,
+              "fps": 23.50709752923255,
+              "frames": 234
+            },
+            {
+              "start": 60,
+              "fps": 14.680868297424263,
+              "frames": 146
+            },
+            {
+              "start": 70,
+              "fps": 6.346216835899108,
+              "frames": 63
+            },
+            {
+              "start": 80,
+              "fps": 7.8822114655860585,
+              "frames": 79
+            },
+            {
+              "start": 90,
+              "fps": 5.871313391836773,
+              "frames": 57
+            }
+          ]
+        }
+      },
+      "queue_drops": 0,
+      "duplicate_first_images": [],
+      "lifecycle": {},
+      "shared_process_enabled": true,
+      "source_widths": [
+        2560,
+        2560,
+        2560
+      ],
+      "actions": {
+        "0": "待机呼吸休闲",
+        "1": "待机呼吸休闲",
+        "2": "待机呼吸休闲"
+      },
+      "initial_decode_routes": {
+        "0": {
+          "idle_eligible": true,
+          "broker_active": true,
+          "feed": false,
+          "publish": true,
+          "path": "/Users/ray/Documents/New project/dsr-pet/assets/characters_hq/shenshen/videos/idle/待机呼吸休闲.webm"
+        },
+        "1": {
+          "idle_eligible": true,
+          "broker_active": true,
+          "feed": true,
+          "publish": false,
+          "path": "/Users/ray/Documents/New project/dsr-pet/assets/characters_hq/shenshen/videos/idle/待机呼吸休闲.webm"
+        },
+        "2": {
+          "idle_eligible": true,
+          "broker_active": true,
+          "feed": true,
+          "publish": false,
+          "path": "/Users/ray/Documents/New project/dsr-pet/assets/characters_hq/shenshen/videos/idle/待机呼吸休闲.webm"
+        }
+      },
+      "live_ffmpeg_after_cleanup": []
+    }
+  },
+  {
+    "label": "before-2",
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky_multi.py",
+      "--root",
+      "/Users/ray/Library/Caches/seeky-native-v6",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky6-performance/continuation/before-2.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+      "--duration",
+      "100",
+      "--steady-after",
+      "35",
+      "--prewarm",
+      "balanced",
+      "--scale",
+      "1.3",
+      "--spawn-api",
+      "--expect-warm-limit",
+      "2",
+      "--expect-shared-first-frames"
+    ],
+    "elapsed_seconds": 108.91336558300827,
+    "exit_status": 1,
+    "checks": {
+      "max_first_frame_decoders": 2,
+      "steady_mib": 1449.6604614257812,
+      "peak_mib": 1847.114891052246,
+      "growth_mib": 25.312191009521484,
+      "playback": {
+        "0": {
+          "fps": 14.707900451246779,
+          "forward_gaps": 0,
+          "frames": 912,
+          "ten_second_bins": [
+            {
+              "start": 0,
+              "fps": 2.467422314750559,
+              "frames": 17
+            },
+            {
+              "start": 10,
+              "fps": 2.931818922176496,
+              "frames": 28
+            },
+            {
+              "start": 20,
+              "fps": 17.797709424741832,
+              "frames": 178
+            },
+            {
+              "start": 30,
+              "fps": 22.378548705957904,
+              "frames": 224
+            },
+            {
+              "start": 40,
+              "fps": 23.174389791229846,
+              "frames": 232
+            },
+            {
+              "start": 50,
+              "fps": 23.29317269076305,
+              "frames": 233
+            },
+            {
+              "start": 60,
+              "fps": 22.99612379747346,
+              "frames": 230
+            },
+            {
+              "start": 70,
+              "fps": 8.371002846140971,
+              "frames": 81
+            },
+            {
+              "start": 80,
+              "fps": 3.742704255555896,
+              "frames": 38
+            },
+            {
+              "start": 90,
+              "fps": 3.6801429998422823,
+              "frames": 36
+            }
+          ]
+        },
+        "1": {
+          "fps": 14.521274961473344,
+          "forward_gaps": 0,
+          "frames": 899,
+          "ten_second_bins": [
+            {
+              "start": 0,
+              "fps": 3.0401913293743283,
+              "frames": 16
+            },
+            {
+              "start": 10,
+              "fps": 3.134035626908223,
+              "frames": 32
+            },
+            {
+              "start": 20,
+              "fps": 19.59090178427906,
+              "frames": 196
+            },
+            {
+              "start": 30,
+              "fps": 21.976257613920307,
+              "frames": 220
+            },
+            {
+              "start": 40,
+              "fps": 23.138792336916985,
+              "frames": 230
+            },
+            {
+              "start": 50,
+              "fps": 22.896853691113403,
+              "frames": 229
+            },
+            {
+              "start": 60,
+              "fps": 22.89478440744684,
+              "frames": 229
+            },
+            {
+              "start": 70,
+              "fps": 7.68010347928898,
+              "frames": 77
+            },
+            {
+              "start": 80,
+              "fps": 3.6605900871220483,
+              "frames": 36
+            },
+            {
+              "start": 90,
+              "fps": 3.6484144598826425,
+              "frames": 37
+            }
+          ]
+        },
+        "2": {
+          "fps": 14.547033247584675,
+          "forward_gaps": 0,
+          "frames": 899,
+          "ten_second_bins": [
+            {
+              "start": 0,
+              "fps": 2.845235903529766,
+              "frames": 18
+            },
+            {
+              "start": 10,
+              "fps": 3.1669956823292194,
+              "frames": 31
+            },
+            {
+              "start": 20,
+              "fps": 19.672789320485794,
+              "frames": 197
+            },
+            {
+              "start": 30,
+              "fps": 21.9758064516129,
+              "frames": 219
+            },
+            {
+              "start": 40,
+              "fps": 22.987115117052817,
+              "frames": 229
+            },
+            {
+              "start": 50,
+              "fps": 22.905726431607913,
+              "frames": 230
+            },
+            {
+              "start": 60,
+              "fps": 22.870614786305833,
+              "frames": 228
+            },
+            {
+              "start": 70,
+              "fps": 7.809449433814922,
+              "frames": 77
+            },
+            {
+              "start": 80,
+              "fps": 3.7422500025285457,
+              "frames": 38
+            },
+            {
+              "start": 90,
+              "fps": 3.685840055603529,
+              "frames": 36
+            }
+          ]
+        }
+      },
+      "queue_drops": 0,
+      "duplicate_first_images": [],
+      "lifecycle": {},
+      "shared_process_enabled": true,
+      "source_widths": [
+        2560,
+        2560,
+        2560
+      ],
+      "actions": {
+        "0": "待机呼吸休闲",
+        "1": "待机呼吸休闲",
+        "2": "待机呼吸休闲"
+      },
+      "initial_decode_routes": {
+        "0": {
+          "idle_eligible": true,
+          "broker_active": true,
+          "feed": false,
+          "publish": true,
+          "path": "/Users/ray/Library/Caches/seeky-native-v6/assets/characters_hq/shenshen/videos/idle/待机呼吸休闲.webm"
+        },
+        "1": {
+          "idle_eligible": true,
+          "broker_active": true,
+          "feed": true,
+          "publish": false,
+          "path": "/Users/ray/Library/Caches/seeky-native-v6/assets/characters_hq/shenshen/videos/idle/待机呼吸休闲.webm"
+        },
+        "2": {
+          "idle_eligible": true,
+          "broker_active": true,
+          "feed": true,
+          "publish": false,
+          "path": "/Users/ray/Library/Caches/seeky-native-v6/assets/characters_hq/shenshen/videos/idle/待机呼吸休闲.webm"
+        }
+      },
+      "live_ffmpeg_after_cleanup": []
+    }
+  },
+  {
+    "label": "after-2",
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky_multi.py",
+      "--root",
+      "/Users/ray/Documents/New project/dsr-pet",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky6-performance/continuation/after-2.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+      "--duration",
+      "100",
+      "--steady-after",
+      "35",
+      "--prewarm",
+      "balanced",
+      "--scale",
+      "1.3",
+      "--spawn-api",
+      "--expect-warm-limit",
+      "2",
+      "--expect-shared-first-frames"
+    ],
+    "elapsed_seconds": 109.23725391599874,
+    "exit_status": 1,
+    "checks": {
+      "max_first_frame_decoders": 2,
+      "steady_mib": 1576.5506286621094,
+      "peak_mib": 1815.3486022949219,
+      "growth_mib": -18.140625,
+      "playback": {
+        "0": {
+          "fps": 3.4399054999545675,
+          "forward_gaps": 0,
+          "frames": 213,
+          "ten_second_bins": [
+            {
+              "start": 0,
+              "fps": 1.9805298679138925,
+              "frames": 14
+            },
+            {
+              "start": 10,
+              "fps": 2.6753991695560977,
+              "frames": 26
+            },
+            {
+              "start": 20,
+              "fps": 3.05573663624511,
+              "frames": 31
+            },
+            {
+              "start": 30,
+              "fps": 3.481965467095427,
+              "frames": 35
+            },
+            {
+              "start": 40,
+              "fps": 3.159125132946517,
+              "frames": 31
+            },
+            {
+              "start": 50,
+              "fps": 2.9973230804212787,
+              "frames": 30
+            },
+            {
+              "start": 60,
+              "fps": 3.182522816635356,
+              "frames": 32
+            },
+            {
+              "start": 70,
+              "fps": 3.674181729110744,
+              "frames": 37
+            },
+            {
+              "start": 80,
+              "fps": 3.6893562073418176,
+              "frames": 37
+            },
+            {
+              "start": 90,
+              "fps": 3.9009968073420853,
+              "frames": 39
+            }
+          ]
+        },
+        "1": {
+          "fps": 3.6166306625407882,
+          "forward_gaps": 0,
+          "frames": 224,
+          "ten_second_bins": [
+            {
+              "start": 0,
+              "fps": 2.1609303787521608,
+              "frames": 12
+            },
+            {
+              "start": 10,
+              "fps": 2.7497148443865074,
+              "frames": 28
+            },
+            {
+              "start": 20,
+              "fps": 3.5175236633410085,
+              "frames": 34
+            },
+            {
+              "start": 30,
+              "fps": 3.7769361901942577,
+              "frames": 38
+            },
+            {
+              "start": 40,
+              "fps": 3.4010099969081717,
+              "frames": 34
+            },
+            {
+              "start": 50,
+              "fps": 3.292452053666968,
+              "frames": 33
+            },
+            {
+              "start": 60,
+              "fps": 3.517738714783816,
+              "frames": 35
+            },
+            {
+              "start": 70,
+              "fps": 4.055520069754944,
+              "frames": 41
+            },
+            {
+              "start": 80,
+              "fps": 3.507287938024157,
+              "frames": 35
+            },
+            {
+              "start": 90,
+              "fps": 3.880877486825441,
+              "frames": 39
+            }
+          ]
+        },
+        "2": {
+          "fps": 3.6344461120350466,
+          "forward_gaps": 0,
+          "frames": 225,
+          "ten_second_bins": [
+            {
+              "start": 0,
+              "fps": 2.09121897153851,
+              "frames": 11
+            },
+            {
+              "start": 10,
+              "fps": 2.9455390862516966,
+              "frames": 29
+            },
+            {
+              "start": 20,
+              "fps": 3.4562460847212315,
+              "frames": 33
+            },
+            {
+              "start": 30,
+              "fps": 3.776203792533323,
+              "frames": 38
+            },
+            {
+              "start": 40,
+              "fps": 3.489294210943694,
+              "frames": 34
+            },
+            {
+              "start": 50,
+              "fps": 3.326445239655258,
+              "frames": 34
+            },
+            {
+              "start": 60,
+              "fps": 3.552806194422095,
+              "frames": 35
+            },
+            {
+              "start": 70,
+              "fps": 4.02215277992636,
+              "frames": 40
+            },
+            {
+              "start": 80,
+              "fps": 3.599156768985555,
+              "frames": 36
+            },
+            {
+              "start": 90,
+              "fps": 3.8206168747353937,
+              "frames": 38
+            }
+          ]
+        }
+      },
+      "queue_drops": 0,
+      "duplicate_first_images": [],
+      "lifecycle": {},
+      "shared_process_enabled": true,
+      "source_widths": [
+        2560,
+        2560,
+        2560
+      ],
+      "actions": {
+        "0": "待机呼吸休闲",
+        "1": "待机呼吸休闲",
+        "2": "待机呼吸休闲"
+      },
+      "initial_decode_routes": {
+        "0": {
+          "idle_eligible": true,
+          "broker_active": true,
+          "feed": false,
+          "publish": true,
+          "path": "/Users/ray/Documents/New project/dsr-pet/assets/characters_hq/shenshen/videos/idle/待机呼吸休闲.webm"
+        },
+        "1": {
+          "idle_eligible": true,
+          "broker_active": true,
+          "feed": true,
+          "publish": false,
+          "path": "/Users/ray/Documents/New project/dsr-pet/assets/characters_hq/shenshen/videos/idle/待机呼吸休闲.webm"
+        },
+        "2": {
+          "idle_eligible": true,
+          "broker_active": true,
+          "feed": true,
+          "publish": false,
+          "path": "/Users/ray/Documents/New project/dsr-pet/assets/characters_hq/shenshen/videos/idle/待机呼吸休闲.webm"
+        }
+      },
+      "live_ffmpeg_after_cleanup": []
+    }
+  },
+  {
+    "label": "before-3",
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky_multi.py",
+      "--root",
+      "/Users/ray/Library/Caches/seeky-native-v6",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky6-performance/continuation/before-3.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+      "--duration",
+      "100",
+      "--steady-after",
+      "35",
+      "--prewarm",
+      "balanced",
+      "--scale",
+      "1.3",
+      "--spawn-api",
+      "--expect-warm-limit",
+      "2",
+      "--expect-shared-first-frames"
+    ],
+    "elapsed_seconds": 108.7112172079942,
+    "exit_status": 1,
+    "checks": {
+      "max_first_frame_decoders": 2,
+      "steady_mib": 1046.3936233520508,
+      "peak_mib": 1350.4254913330078,
+      "growth_mib": 13.617210388183594,
+      "playback": {
+        "0": {
+          "fps": 5.282688452236903,
+          "forward_gaps": 0,
+          "frames": 328,
+          "ten_second_bins": [
+            {
+              "start": 0,
+              "fps": 5.337128624799857,
+              "frames": 37
+            },
+            {
+              "start": 10,
+              "fps": 6.7143904882911345,
+              "frames": 66
+            },
+            {
+              "start": 20,
+              "fps": 6.083896938785858,
+              "frames": 61
+            },
+            {
+              "start": 30,
+              "fps": 7.114616471353504,
+              "frames": 71
+            },
+            {
+              "start": 40,
+              "fps": 4.973320209293893,
+              "frames": 49
+            },
+            {
+              "start": 50,
+              "fps": 4.664856011444447,
+              "frames": 46
+            },
+            {
+              "start": 60,
+              "fps": 5.08879955218564,
+              "frames": 51
+            },
+            {
+              "start": 70,
+              "fps": 4.9350222075999355,
+              "frames": 49
+            },
+            {
+              "start": 80,
+              "fps": 4.783082136714733,
+              "frames": 48
+            },
+            {
+              "start": 90,
+              "fps": 6.909726456123237,
+              "frames": 69
+            }
+          ]
+        },
+        "1": {
+          "fps": 5.287335134584508,
+          "forward_gaps": 0,
+          "frames": 328,
+          "ten_second_bins": [
+            {
+              "start": 0,
+              "fps": 5.384449709239715,
+              "frames": 36
+            },
+            {
+              "start": 10,
+              "fps": 6.695069993913574,
+              "frames": 67
+            },
+            {
+              "start": 20,
+              "fps": 6.087600572234453,
+              "frames": 61
+            },
+            {
+              "start": 30,
+              "fps": 7.156414325274586,
+              "frames": 70
+            },
+            {
+              "start": 40,
+              "fps": 4.985856448035167,
+              "frames": 50
+            },
+            {
+              "start": 50,
+              "fps": 4.673039609090079,
+              "frames": 47
+            },
+            {
+              "start": 60,
+              "fps": 5.086522790736297,
+              "frames": 50
+            },
+            {
+              "start": 70,
+              "fps": 4.909573668653872,
+              "frames": 50
+            },
+            {
+              "start": 80,
+              "fps": 4.822611758785543,
+              "frames": 47
+            },
+            {
+              "start": 90,
+              "fps": 6.929728535416941,
+              "frames": 70
+            }
+          ]
+        },
+        "2": {
+          "fps": 5.27655800086432,
+          "forward_gaps": 0,
+          "frames": 327,
+          "ten_second_bins": [
+            {
+              "start": 0,
+              "fps": 5.439766245473337,
+              "frames": 36
+            },
+            {
+              "start": 10,
+              "fps": 6.697787700426224,
+              "frames": 67
+            },
+            {
+              "start": 20,
+              "fps": 6.063284244710042,
+              "frames": 60
+            },
+            {
+              "start": 30,
+              "fps": 7.1414725716442735,
+              "frames": 71
+            },
+            {
+              "start": 40,
+              "fps": 4.751842602796509,
+              "frames": 48
+            },
+            {
+              "start": 50,
+              "fps": 4.670811579460883,
+              "frames": 46
+            },
+            {
+              "start": 60,
+              "fps": 5.091857102122286,
+              "frames": 51
+            },
+            {
+              "start": 70,
+              "fps": 4.972650422675281,
+              "frames": 50
+            },
+            {
+              "start": 80,
+              "fps": 4.780941336832572,
+              "frames": 48
+            },
+            {
+              "start": 90,
+              "fps": 7.005787389582696,
+              "frames": 70
+            }
+          ]
+        }
+      },
+      "queue_drops": 0,
+      "duplicate_first_images": [],
+      "lifecycle": {},
+      "shared_process_enabled": true,
+      "source_widths": [
+        2560,
+        2560,
+        2560
+      ],
+      "actions": {
+        "0": "待机呼吸休闲",
+        "1": "待机呼吸休闲",
+        "2": "待机呼吸休闲"
+      },
+      "initial_decode_routes": {
+        "0": {
+          "idle_eligible": true,
+          "broker_active": true,
+          "feed": false,
+          "publish": true,
+          "path": "/Users/ray/Library/Caches/seeky-native-v6/assets/characters_hq/shenshen/videos/idle/待机呼吸休闲.webm"
+        },
+        "1": {
+          "idle_eligible": true,
+          "broker_active": true,
+          "feed": true,
+          "publish": false,
+          "path": "/Users/ray/Library/Caches/seeky-native-v6/assets/characters_hq/shenshen/videos/idle/待机呼吸休闲.webm"
+        },
+        "2": {
+          "idle_eligible": true,
+          "broker_active": true,
+          "feed": true,
+          "publish": false,
+          "path": "/Users/ray/Library/Caches/seeky-native-v6/assets/characters_hq/shenshen/videos/idle/待机呼吸休闲.webm"
+        }
+      },
+      "live_ffmpeg_after_cleanup": []
+    }
+  },
+  {
+    "label": "after-3",
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky_multi.py",
+      "--root",
+      "/Users/ray/Documents/New project/dsr-pet",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky6-performance/continuation/after-3.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+      "--duration",
+      "100",
+      "--steady-after",
+      "35",
+      "--prewarm",
+      "balanced",
+      "--scale",
+      "1.3",
+      "--spawn-api",
+      "--expect-warm-limit",
+      "2",
+      "--expect-shared-first-frames"
+    ],
+    "elapsed_seconds": 109.69417262500792,
+    "exit_status": 1,
+    "checks": {
+      "max_first_frame_decoders": 2,
+      "steady_mib": 1493.0037536621094,
+      "peak_mib": 1569.9412536621094,
+      "growth_mib": 415.5867385864258,
+      "playback": {
+        "0": {
+          "fps": 3.876201581944361,
+          "forward_gaps": 0,
+          "frames": 240,
+          "ten_second_bins": [
+            {
+              "start": 0,
+              "fps": 3.482815786907399,
+              "frames": 26
+            },
+            {
+              "start": 10,
+              "fps": 4.164000690614749,
+              "frames": 42
+            },
+            {
+              "start": 20,
+              "fps": 4.09684952271703,
+              "frames": 41
+            },
+            {
+              "start": 30,
+              "fps": 4.000738597894997,
+              "frames": 40
+            },
+            {
+              "start": 40,
+              "fps": 4.1480866950119255,
+              "frames": 41
+            },
+            {
+              "start": 50,
+              "fps": 4.095381433588271,
+              "frames": 41
+            },
+            {
+              "start": 60,
+              "fps": 3.900836626802853,
+              "frames": 39
+            },
+            {
+              "start": 70,
+              "fps": 3.750507881275592,
+              "frames": 37
+            },
+            {
+              "start": 80,
+              "fps": 3.5004632966127893,
+              "frames": 35
+            },
+            {
+              "start": 90,
+              "fps": 3.987281594094736,
+              "frames": 40
+            }
+          ]
+        },
+        "1": {
+          "fps": 3.924640443177505,
+          "forward_gaps": 0,
+          "frames": 244,
+          "ten_second_bins": [
+            {
+              "start": 0,
+              "fps": 3.972668043858256,
+              "frames": 26
+            },
+            {
+              "start": 10,
+              "fps": 4.206767765898505,
+              "frames": 42
+            },
+            {
+              "start": 20,
+              "fps": 4.305572641161275,
+              "frames": 43
+            },
+            {
+              "start": 30,
+              "fps": 4.249893752656184,
+              "frames": 43
+            },
+            {
+              "start": 40,
+              "fps": 4.335458765557425,
+              "frames": 42
+            },
+            {
+              "start": 50,
+              "fps": 4.301956365871144,
+              "frames": 43
+            },
+            {
+              "start": 60,
+              "fps": 3.797403397136551,
+              "frames": 38
+            },
+            {
+              "start": 70,
+              "fps": 3.6686028737389167,
+              "frames": 37
+            },
+            {
+              "start": 80,
+              "fps": 3.5523607526825542,
+              "frames": 35
+            },
+            {
+              "start": 90,
+              "fps": 3.9428987382724046,
+              "frames": 40
+            }
+          ]
+        },
+        "2": {
+          "fps": 3.8053105943085512,
+          "forward_gaps": 0,
+          "frames": 236,
+          "ten_second_bins": [
+            {
+              "start": 0,
+              "fps": 3.501400560224089,
+              "frames": 26
+            },
+            {
+              "start": 10,
+              "fps": 4.129068643248469,
+              "frames": 42
+            },
+            {
+              "start": 20,
+              "fps": 4.102774501256474,
+              "frames": 41
+            },
+            {
+              "start": 30,
+              "fps": 4.022398407977051,
+              "frames": 39
+            },
+            {
+              "start": 40,
+              "fps": 4.152992180219602,
+              "frames": 42
+            },
+            {
+              "start": 50,
+              "fps": 4.074772067437479,
+              "frames": 41
+            },
+            {
+              "start": 60,
+              "fps": 3.466169169444699,
+              "frames": 35
+            },
+            {
+              "start": 70,
+              "fps": 3.6546272802263746,
+              "frames": 36
+            },
+            {
+              "start": 80,
+              "fps": 3.5716472437087963,
+              "frames": 36
+            },
+            {
+              "start": 90,
+              "fps": 3.886799588209339,
+              "frames": 38
+            }
+          ]
+        }
+      },
+      "queue_drops": 0,
+      "duplicate_first_images": [],
+      "lifecycle": {},
+      "shared_process_enabled": true,
+      "source_widths": [
+        2560,
+        2560,
+        2560
+      ],
+      "actions": {
+        "0": "待机呼吸休闲",
+        "1": "待机呼吸休闲",
+        "2": "待机呼吸休闲"
+      },
+      "initial_decode_routes": {
+        "0": {
+          "idle_eligible": true,
+          "broker_active": true,
+          "feed": false,
+          "publish": true,
+          "path": "/Users/ray/Documents/New project/dsr-pet/assets/characters_hq/shenshen/videos/idle/待机呼吸休闲.webm"
+        },
+        "1": {
+          "idle_eligible": true,
+          "broker_active": true,
+          "feed": true,
+          "publish": false,
+          "path": "/Users/ray/Documents/New project/dsr-pet/assets/characters_hq/shenshen/videos/idle/待机呼吸休闲.webm"
+        },
+        "2": {
+          "idle_eligible": true,
+          "broker_active": true,
+          "feed": true,
+          "publish": false,
+          "path": "/Users/ray/Documents/New project/dsr-pet/assets/characters_hq/shenshen/videos/idle/待机呼吸休闲.webm"
+        }
+      },
+      "live_ffmpeg_after_cleanup": []
+    }
+  },
+  {
+    "label": "after-long",
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky_multi.py",
+      "--root",
+      "/Users/ray/Documents/New project/dsr-pet",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky6-performance/continuation/after-long.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+      "--duration",
+      "620",
+      "--steady-after",
+      "100",
+      "--prewarm",
+      "balanced",
+      "--scale",
+      "1.3",
+      "--spawn-api",
+      "--expect-warm-limit",
+      "2",
+      "--expect-shared-first-frames"
+    ],
+    "elapsed_seconds": 628.2603308329999,
+    "exit_status": 1,
+    "checks": {
+      "max_first_frame_decoders": 2,
+      "steady_mib": 1483.0662994384766,
+      "peak_mib": 1852.9582290649414,
+      "growth_mib": -350.8992614746094,
+      "playback": {
+        "0": {
+          "fps": 5.468295880860036,
+          "forward_gaps": 0,
+          "frames": 2827,
+          "ten_second_bins": [
+            {
+              "start": 0,
+              "fps": 2.449819529961293,
+              "frames": 16
+            },
+            {
+              "start": 10,
+              "fps": 2.8089324050480524,
+              "frames": 29
+            },
+            {
+              "start": 20,
+              "fps": 3.3368787670232956,
+              "frames": 33
+            },
+            {
+              "start": 30,
+              "fps": 3.4607315121233735,
+              "frames": 33
+            },
+            {
+              "start": 40,
+              "fps": 3.286838267014522,
+              "frames": 33
+            },
+            {
+              "start": 50,
+              "fps": 3.412757508066519,
+              "frames": 34
+            },
+            {
+              "start": 60,
+              "fps": 3.367828057069375,
+              "frames": 34
+            },
+            {
+              "start": 70,
+              "fps": 4.524982110535845,
+              "frames": 44
+            },
+            {
+              "start": 80,
+              "fps": 4.522935490317758,
+              "frames": 44
+            },
+            {
+              "start": 90,
+              "fps": 4.760216741783566,
+              "frames": 48
+            },
+            {
+              "start": 100,
+              "fps": 5.188282782164757,
+              "frames": 51
+            },
+            {
+              "start": 110,
+              "fps": 5.005311759418162,
+              "frames": 50
+            },
+            {
+              "start": 120,
+              "fps": 6.0435741697639935,
+              "frames": 61
+            },
+            {
+              "start": 130,
+              "fps": 8.745036940242251,
+              "frames": 88
+            },
+            {
+              "start": 140,
+              "fps": 9.150433120501038,
+              "frames": 91
+            },
+            {
+              "start": 150,
+              "fps": 5.455372026064548,
+              "frames": 55
+            },
+            {
+              "start": 160,
+              "fps": 4.195202785614643,
+              "frames": 41
+            },
+            {
+              "start": 170,
+              "fps": 4.070211142202996,
+              "frames": 41
+            },
+            {
+              "start": 180,
+              "fps": 4.292503449333125,
+              "frames": 43
+            },
+            {
+              "start": 190,
+              "fps": 4.053674812127761,
+              "frames": 40
+            },
+            {
+              "start": 200,
+              "fps": 4.2052144659377655,
+              "frames": 42
+            },
+            {
+              "start": 210,
+              "fps": 6.784741420340045,
+              "frames": 68
+            },
+            {
+              "start": 220,
+              "fps": 9.24796747967482,
+              "frames": 92
+            },
+            {
+              "start": 230,
+              "fps": 8.858297781352768,
+              "frames": 88
+            },
+            {
+              "start": 240,
+              "fps": 3.559949550429225,
+              "frames": 36
+            },
+            {
+              "start": 250,
+              "fps": 3.9403554615400456,
+              "frames": 39
+            },
+            {
+              "start": 260,
+              "fps": 3.8384928209810103,
+              "frames": 38
+            },
+            {
+              "start": 270,
+              "fps": 4.06532985070077,
+              "frames": 41
+            },
+            {
+              "start": 280,
+              "fps": 4.137959572134973,
+              "frames": 41
+            },
+            {
+              "start": 290,
+              "fps": 3.820400941025078,
+              "frames": 39
+            },
+            {
+              "start": 300,
+              "fps": 7.165083524402251,
+              "frames": 71
+            },
+            {
+              "start": 310,
+              "fps": 9.129609683541025,
+              "frames": 90
+            },
+            {
+              "start": 320,
+              "fps": 8.608815426997236,
+              "frames": 86
+            },
+            {
+              "start": 330,
+              "fps": 5.336179295624334,
+              "frames": 53
+            },
+            {
+              "start": 340,
+              "fps": 5.213178096474439,
+              "frames": 52
+            },
+            {
+              "start": 350,
+              "fps": 5.153576582148012,
+              "frames": 51
+            },
+            {
+              "start": 360,
+              "fps": 5.540962075192926,
+              "frames": 55
+            },
+            {
+              "start": 370,
+              "fps": 5.978073641761413,
+              "frames": 60
+            },
+            {
+              "start": 380,
+              "fps": 9.264200912322446,
+              "frames": 93
+            },
+            {
+              "start": 390,
+              "fps": 9.231643232495346,
+              "frames": 92
+            },
+            {
+              "start": 400,
+              "fps": 5.137814313346228,
+              "frames": 52
+            },
+            {
+              "start": 410,
+              "fps": 4.029508399975196,
+              "frames": 40
+            },
+            {
+              "start": 420,
+              "fps": 4.191071994439173,
+              "frames": 42
+            },
+            {
+              "start": 430,
+              "fps": 4.111582010247316,
+              "frames": 40
+            },
+            {
+              "start": 440,
+              "fps": 4.159353981313338,
+              "frames": 42
+            },
+            {
+              "start": 450,
+              "fps": 4.189710072063024,
+              "frames": 41
+            },
+            {
+              "start": 460,
+              "fps": 3.4428636524732967,
+              "frames": 35
+            },
+            {
+              "start": 470,
+              "fps": 3.97165492589729,
+              "frames": 39
+            },
+            {
+              "start": 480,
+              "fps": 3.92104258458617,
+              "frames": 39
+            },
+            {
+              "start": 490,
+              "fps": 3.9683751030251257,
+              "frames": 40
+            },
+            {
+              "start": 500,
+              "fps": 4.141258321340932,
+              "frames": 41
+            },
+            {
+              "start": 510,
+              "fps": 4.146280786134838,
+              "frames": 41
+            },
+            {
+              "start": 520,
+              "fps": 6.342686278655379,
+              "frames": 64
+            },
+            {
+              "start": 530,
+              "fps": 8.930383600568362,
+              "frames": 89
+            },
+            {
+              "start": 540,
+              "fps": 9.121892542101044,
+              "frames": 92
+            },
+            {
+              "start": 550,
+              "fps": 3.9568083134625183,
+              "frames": 39
+            },
+            {
+              "start": 560,
+              "fps": 4.130025283813298,
+              "frames": 42
+            },
+            {
+              "start": 570,
+              "fps": 4.298390150545977,
+              "frames": 43
+            },
+            {
+              "start": 580,
+              "fps": 4.10876642189657,
+              "frames": 40
+            },
+            {
+              "start": 590,
+              "fps": 3.965228000610025,
+              "frames": 40
+            },
+            {
+              "start": 600,
+              "fps": 3.941826933051161,
+              "frames": 39
+            },
+            {
+              "start": 610,
+              "fps": 7.9604664626581325,
+              "frames": 78
+            }
+          ]
+        },
+        "1": {
+          "fps": 5.485223658785422,
+          "forward_gaps": 0,
+          "frames": 2836,
+          "ten_second_bins": [
+            {
+              "start": 0,
+              "fps": 3.4384783828293246,
+              "frames": 20
+            },
+            {
+              "start": 10,
+              "fps": 3.039864149519387,
+              "frames": 30
+            },
+            {
+              "start": 20,
+              "fps": 3.5814419908724404,
+              "frames": 36
+            },
+            {
+              "start": 30,
+              "fps": 3.6538207800907356,
+              "frames": 37
+            },
+            {
+              "start": 40,
+              "fps": 3.6680710138548274,
+              "frames": 36
+            },
+            {
+              "start": 50,
+              "fps": 3.7405317789345727,
+              "frames": 37
+            },
+            {
+              "start": 60,
+              "fps": 3.7422121530868195,
+              "frames": 38
+            },
+            {
+              "start": 70,
+              "fps": 4.579707731379322,
+              "frames": 45
+            },
+            {
+              "start": 80,
+              "fps": 4.472999349381908,
+              "frames": 45
+            },
+            {
+              "start": 90,
+              "fps": 4.884730968132438,
+              "frames": 47
+            },
+            {
+              "start": 100,
+              "fps": 5.252425384662917,
+              "frames": 52
+            },
+            {
+              "start": 110,
+              "fps": 5.023322569070689,
+              "frames": 50
+            },
+            {
+              "start": 120,
+              "fps": 6.047002634033349,
+              "frames": 60
+            },
+            {
+              "start": 130,
+              "fps": 8.756121649001681,
+              "frames": 87
+            },
+            {
+              "start": 140,
+              "fps": 9.134528517797252,
+              "frames": 92
+            },
+            {
+              "start": 150,
+              "fps": 5.790268213495458,
+              "frames": 57
+            },
+            {
+              "start": 160,
+              "fps": 4.236281165080642,
+              "frames": 42
+            },
+            {
+              "start": 170,
+              "fps": 4.125923175310481,
+              "frames": 41
+            },
+            {
+              "start": 180,
+              "fps": 4.258766827322591,
+              "frames": 42
+            },
+            {
+              "start": 190,
+              "fps": 4.124646827115428,
+              "frames": 41
+            },
+            {
+              "start": 200,
+              "fps": 4.1690816834955156,
+              "frames": 42
+            },
+            {
+              "start": 210,
+              "fps": 6.823644437202114,
+              "frames": 68
+            },
+            {
+              "start": 220,
+              "fps": 9.250787841821705,
+              "frames": 92
+            },
+            {
+              "start": 230,
+              "fps": 8.864796568202895,
+              "frames": 88
+            },
+            {
+              "start": 240,
+              "fps": 4.134731746672046,
+              "frames": 42
+            },
+            {
+              "start": 250,
+              "fps": 3.9362330249950825,
+              "frames": 39
+            },
+            {
+              "start": 260,
+              "fps": 3.8454742924847056,
+              "frames": 38
+            },
+            {
+              "start": 270,
+              "fps": 4.056330996609325,
+              "frames": 40
+            },
+            {
+              "start": 280,
+              "fps": 4.181028329016341,
+              "frames": 42
+            },
+            {
+              "start": 290,
+              "fps": 3.795533580213997,
+              "frames": 38
+            },
+            {
+              "start": 300,
+              "fps": 7.0881186694882174,
+              "frames": 70
+            },
+            {
+              "start": 310,
+              "fps": 9.18746466359748,
+              "frames": 92
+            },
+            {
+              "start": 320,
+              "fps": 8.860733709490148,
+              "frames": 88
+            },
+            {
+              "start": 330,
+              "fps": 5.347153668970047,
+              "frames": 53
+            },
+            {
+              "start": 340,
+              "fps": 5.310023690874929,
+              "frames": 53
+            },
+            {
+              "start": 350,
+              "fps": 5.213711037732952,
+              "frames": 52
+            },
+            {
+              "start": 360,
+              "fps": 5.463016409664394,
+              "frames": 54
+            },
+            {
+              "start": 370,
+              "fps": 5.695919280686777,
+              "frames": 57
+            },
+            {
+              "start": 380,
+              "fps": 9.265413821580369,
+              "frames": 93
+            },
+            {
+              "start": 390,
+              "fps": 9.229957805907185,
+              "frames": 92
+            },
+            {
+              "start": 400,
+              "fps": 4.994954077003829,
+              "frames": 50
+            },
+            {
+              "start": 410,
+              "fps": 3.9656036066121194,
+              "frames": 39
+            },
+            {
+              "start": 420,
+              "fps": 4.2467683128935985,
+              "frames": 42
+            },
+            {
+              "start": 430,
+              "fps": 4.118202454850458,
+              "frames": 42
+            },
+            {
+              "start": 440,
+              "fps": 4.141730000621256,
+              "frames": 41
+            },
+            {
+              "start": 450,
+              "fps": 4.091108997371475,
+              "frames": 41
+            },
+            {
+              "start": 460,
+              "fps": 3.5870946583036285,
+              "frames": 36
+            },
+            {
+              "start": 470,
+              "fps": 4.003366934242127,
+              "frames": 40
+            },
+            {
+              "start": 480,
+              "fps": 3.9514078156820114,
+              "frames": 40
+            },
+            {
+              "start": 490,
+              "fps": 4.014452027298273,
+              "frames": 39
+            },
+            {
+              "start": 500,
+              "fps": 4.063719115734734,
+              "frames": 41
+            },
+            {
+              "start": 510,
+              "fps": 4.134794293983859,
+              "frames": 41
+            },
+            {
+              "start": 520,
+              "fps": 6.460412030722829,
+              "frames": 64
+            },
+            {
+              "start": 530,
+              "fps": 8.955704481877344,
+              "frames": 90
+            },
+            {
+              "start": 540,
+              "fps": 9.133068812599607,
+              "frames": 91
+            },
+            {
+              "start": 550,
+              "fps": 3.9506873182936952,
+              "frames": 40
+            },
+            {
+              "start": 560,
+              "fps": 4.140486714213247,
+              "frames": 41
+            },
+            {
+              "start": 570,
+              "fps": 4.278811534006079,
+              "frames": 42
+            },
+            {
+              "start": 580,
+              "fps": 4.214248270616431,
+              "frames": 42
+            },
+            {
+              "start": 590,
+              "fps": 3.9978958442924797,
+              "frames": 39
+            },
+            {
+              "start": 600,
+              "fps": 3.9452236838007146,
+              "frames": 39
+            },
+            {
+              "start": 610,
+              "fps": 7.960713362625991,
+              "frames": 78
+            }
+          ]
+        },
+        "2": {
+          "fps": 5.482957848745817,
+          "forward_gaps": 0,
+          "frames": 2835,
+          "ten_second_bins": [
+            {
+              "start": 0,
+              "fps": 3.2771716081273854,
+              "frames": 18
+            },
+            {
+              "start": 10,
+              "fps": 3.1129696692988555,
+              "frames": 31
+            },
+            {
+              "start": 20,
+              "fps": 3.511888776416634,
+              "frames": 35
+            },
+            {
+              "start": 30,
+              "fps": 3.6500050694514856,
+              "frames": 37
+            },
+            {
+              "start": 40,
+              "fps": 3.612194769541974,
+              "frames": 36
+            },
+            {
+              "start": 50,
+              "fps": 3.718739347361244,
+              "frames": 37
+            },
+            {
+              "start": 60,
+              "fps": 3.723701359150996,
+              "frames": 37
+            },
+            {
+              "start": 70,
+              "fps": 4.300308363575334,
+              "frames": 42
+            },
+            {
+              "start": 80,
+              "fps": 4.47613912654249,
+              "frames": 45
+            },
+            {
+              "start": 90,
+              "fps": 4.785087171805438,
+              "frames": 47
+            },
+            {
+              "start": 100,
+              "fps": 5.16309299641621,
+              "frames": 52
+            },
+            {
+              "start": 110,
+              "fps": 5.017099092826574,
+              "frames": 50
+            },
+            {
+              "start": 120,
+              "fps": 6.250064037541367,
+              "frames": 62
+            },
+            {
+              "start": 130,
+              "fps": 8.751018437490572,
+              "frames": 88
+            },
+            {
+              "start": 140,
+              "fps": 9.159093453283532,
+              "frames": 91
+            },
+            {
+              "start": 150,
+              "fps": 5.409520756531489,
+              "frames": 55
+            },
+            {
+              "start": 160,
+              "fps": 4.152177297970624,
+              "frames": 41
+            },
+            {
+              "start": 170,
+              "fps": 4.0913954805816,
+              "frames": 40
+            },
+            {
+              "start": 180,
+              "fps": 4.2868516136934245,
+              "frames": 43
+            },
+            {
+              "start": 190,
+              "fps": 4.063265036620175,
+              "frames": 41
+            },
+            {
+              "start": 200,
+              "fps": 4.116878171282724,
+              "frames": 41
+            },
+            {
+              "start": 210,
+              "fps": 6.891519377330957,
+              "frames": 69
+            },
+            {
+              "start": 220,
+              "fps": 9.290802105915132,
+              "frames": 91
+            },
+            {
+              "start": 230,
+              "fps": 8.822497368289131,
+              "frames": 89
+            },
+            {
+              "start": 240,
+              "fps": 3.62273837618515,
+              "frames": 36
+            },
+            {
+              "start": 250,
+              "fps": 3.8444354394605416,
+              "frames": 38
+            },
+            {
+              "start": 260,
+              "fps": 3.8429254775846142,
+              "frames": 39
+            },
+            {
+              "start": 270,
+              "fps": 4.061078622482127,
+              "frames": 41
+            },
+            {
+              "start": 280,
+              "fps": 4.249100952420418,
+              "frames": 42
+            },
+            {
+              "start": 290,
+              "fps": 3.8761314113308605,
+              "frames": 38
+            },
+            {
+              "start": 300,
+              "fps": 7.033854246307212,
+              "frames": 70
+            },
+            {
+              "start": 310,
+              "fps": 9.194240969941923,
+              "frames": 92
+            },
+            {
+              "start": 320,
+              "fps": 8.84595831215045,
+              "frames": 88
+            },
+            {
+              "start": 330,
+              "fps": 5.341660845625998,
+              "frames": 53
+            },
+            {
+              "start": 340,
+              "fps": 5.338589790973695,
+              "frames": 53
+            },
+            {
+              "start": 350,
+              "fps": 5.231466759670528,
+              "frames": 52
+            },
+            {
+              "start": 360,
+              "fps": 5.428881650380024,
+              "frames": 55
+            },
+            {
+              "start": 370,
+              "fps": 5.728900255754455,
+              "frames": 57
+            },
+            {
+              "start": 380,
+              "fps": 9.262689885142626,
+              "frames": 91
+            },
+            {
+              "start": 390,
+              "fps": 9.205681220410312,
+              "frames": 92
+            },
+            {
+              "start": 400,
+              "fps": 5.226641524129662,
+              "frames": 52
+            },
+            {
+              "start": 410,
+              "fps": 3.9145797492608754,
+              "frames": 39
+            },
+            {
+              "start": 420,
+              "fps": 4.186834957008356,
+              "frames": 42
+            },
+            {
+              "start": 430,
+              "fps": 4.106523212122444,
+              "frames": 41
+            },
+            {
+              "start": 440,
+              "fps": 4.137745549337441,
+              "frames": 41
+            },
+            {
+              "start": 450,
+              "fps": 4.109328174957147,
+              "frames": 42
+            },
+            {
+              "start": 460,
+              "fps": 3.6247721191057614,
+              "frames": 35
+            },
+            {
+              "start": 470,
+              "fps": 3.992588118467254,
+              "frames": 40
+            },
+            {
+              "start": 480,
+              "fps": 3.9237957561051338,
+              "frames": 39
+            },
+            {
+              "start": 490,
+              "fps": 3.9891576740142183,
+              "frames": 40
+            },
+            {
+              "start": 500,
+              "fps": 4.164973587972371,
+              "frames": 42
+            },
+            {
+              "start": 510,
+              "fps": 4.156751083353244,
+              "frames": 41
+            },
+            {
+              "start": 520,
+              "fps": 6.347287290312795,
+              "frames": 64
+            },
+            {
+              "start": 530,
+              "fps": 8.92522084850454,
+              "frames": 89
+            },
+            {
+              "start": 540,
+              "fps": 9.136035569631737,
+              "frames": 91
+            },
+            {
+              "start": 550,
+              "fps": 4.382031632153904,
+              "frames": 44
+            },
+            {
+              "start": 560,
+              "fps": 4.140486714213247,
+              "frames": 41
+            },
+            {
+              "start": 570,
+              "fps": 4.2228880532486235,
+              "frames": 43
+            },
+            {
+              "start": 580,
+              "fps": 4.1710984587791335,
+              "frames": 41
+            },
+            {
+              "start": 590,
+              "fps": 4.005101234203578,
+              "frames": 39
+            },
+            {
+              "start": 600,
+              "fps": 3.956272774596557,
+              "frames": 39
+            },
+            {
+              "start": 610,
+              "fps": 7.919666155611321,
+              "frames": 79
+            }
+          ]
+        }
+      },
+      "queue_drops": 0,
+      "duplicate_first_images": [],
+      "lifecycle": {},
+      "shared_process_enabled": true,
+      "source_widths": [
+        2560,
+        2560,
+        2560
+      ],
+      "actions": {
+        "0": "待机呼吸休闲",
+        "1": "待机呼吸休闲",
+        "2": "待机呼吸休闲"
+      },
+      "initial_decode_routes": {
+        "0": {
+          "idle_eligible": true,
+          "broker_active": true,
+          "feed": false,
+          "publish": true,
+          "path": "/Users/ray/Documents/New project/dsr-pet/assets/characters_hq/shenshen/videos/idle/待机呼吸休闲.webm"
+        },
+        "1": {
+          "idle_eligible": true,
+          "broker_active": true,
+          "feed": true,
+          "publish": false,
+          "path": "/Users/ray/Documents/New project/dsr-pet/assets/characters_hq/shenshen/videos/idle/待机呼吸休闲.webm"
+        },
+        "2": {
+          "idle_eligible": true,
+          "broker_active": true,
+          "feed": true,
+          "publish": false,
+          "path": "/Users/ray/Documents/New project/dsr-pet/assets/characters_hq/shenshen/videos/idle/待机呼吸休闲.webm"
+        }
+      },
+      "live_ffmpeg_after_cleanup": []
+    }
+  },
+  {
+    "label": "after-mixed",
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky_multi.py",
+      "--root",
+      "/Users/ray/Documents/New project/dsr-pet",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky6-performance/continuation/after-mixed.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+      "--duration",
+      "100",
+      "--steady-after",
+      "35",
+      "--prewarm",
+      "balanced",
+      "--scale",
+      "1.3",
+      "--spawn-api",
+      "--expect-warm-limit",
+      "2",
+      "--expect-shared-first-frames",
+      "--different-actions",
+      "--mixed-sizes",
+      "--exercise",
+      "--churn"
+    ],
+    "elapsed_seconds": 110.3499387089978,
+    "exit_status": 1,
+    "checks": {
+      "max_first_frame_decoders": 2,
+      "steady_mib": 1523.8787307739258,
+      "peak_mib": 1685.9418487548828,
+      "growth_mib": 416.7658996582031,
+      "playback": {
+        "0": {
+          "fps": 3.3521616424387677,
+          "forward_gaps": 0,
+          "frames": 168,
+          "ten_second_bins": [
+            {
+              "start": 0,
+              "fps": 2.469989626043571,
+              "frames": 16
+            },
+            {
+              "start": 10,
+              "fps": 3.5292219578106727,
+              "frames": 36
+            },
+            {
+              "start": 20,
+              "fps": 3.734246149058659,
+              "frames": 37
+            },
+            {
+              "start": 30,
+              "fps": 3.9629313498353858,
+              "frames": 40
+            },
+            {
+              "start": 40,
+              "fps": 3.8181724369227594,
+              "frames": 38
+            },
+            {
+              "start": 50,
+              "fps": 2.941052896937103,
+              "frames": 29
+            },
+            {
+              "start": 60,
+              "fps": 3.0804932896587838,
+              "frames": 31
+            },
+            {
+              "start": 70,
+              "fps": 2.9900914555558984,
+              "frames": 30
+            },
+            {
+              "start": 80,
+              "fps": 3.8089355569281453,
+              "frames": 38
+            },
+            {
+              "start": 90,
+              "fps": 3.6847218035038356,
+              "frames": 34
+            }
+          ]
+        },
+        "1": {
+          "fps": 7.020409476949321,
+          "forward_gaps": 0,
+          "frames": 350,
+          "ten_second_bins": [
+            {
+              "start": 0,
+              "fps": 10.373292424574476,
+              "frames": 72
+            },
+            {
+              "start": 10,
+              "fps": 14.58180391999115,
+              "frames": 146
+            },
+            {
+              "start": 20,
+              "fps": 15.570811805506406,
+              "frames": 155
+            },
+            {
+              "start": 30,
+              "fps": 15.30129457005376,
+              "frames": 153
+            },
+            {
+              "start": 40,
+              "fps": 15.828649856239801,
+              "frames": 159
+            },
+            {
+              "start": 50,
+              "fps": 5.671460401053274,
+              "frames": 57
+            },
+            {
+              "start": 60,
+              "fps": 3.0629165302436583,
+              "frames": 30
+            },
+            {
+              "start": 70,
+              "fps": 3.088103595581955,
+              "frames": 31
+            },
+            {
+              "start": 80,
+              "fps": 3.8500759609581463,
+              "frames": 38
+            },
+            {
+              "start": 90,
+              "fps": 3.605454068700289,
+              "frames": 34
+            }
+          ]
+        },
+        "2": {
+          "fps": 3.341653917384653,
+          "forward_gaps": 0,
+          "frames": 167,
+          "ten_second_bins": [
+            {
+              "start": 0,
+              "fps": 2.6530476885322014,
+              "frames": 17
+            },
+            {
+              "start": 10,
+              "fps": 3.53448723946151,
+              "frames": 35
+            },
+            {
+              "start": 20,
+              "fps": 3.745507921243104,
+              "frames": 38
+            },
+            {
+              "start": 30,
+              "fps": 4.027303049391257,
+              "frames": 40
+            },
+            {
+              "start": 40,
+              "fps": 3.8842697572856313,
+              "frames": 38
+            },
+            {
+              "start": 50,
+              "fps": 2.822850451656073,
+              "frames": 28
+            },
+            {
+              "start": 60,
+              "fps": 3.0382080858241385,
+              "frames": 30
+            },
+            {
+              "start": 70,
+              "fps": 3.032661767233103,
+              "frames": 31
+            },
+            {
+              "start": 80,
+              "fps": 3.812509266515579,
+              "frames": 37
+            },
+            {
+              "start": 90,
+              "fps": 3.153945752133059,
+              "frames": 20
+            }
+          ]
+        }
+      },
+      "queue_drops": 0,
+      "duplicate_first_images": [],
+      "lifecycle": {
+        "windows_after_close": 2,
+        "windows_after_respawn": 3
+      },
+      "shared_process_enabled": true,
+      "source_widths": [
+        2560,
+        2560,
+        2560
+      ],
+      "actions": {
+        "0": "待机呼吸休闲",
+        "1": "东张西望",
+        "2": "余额-分文不剩"
+      },
+      "initial_decode_routes": {
+        "0": {
+          "idle_eligible": true,
+          "broker_active": true,
+          "feed": false,
+          "publish": true,
+          "path": "/Users/ray/Documents/New project/dsr-pet/assets/characters_hq/shenshen/videos/idle/待机呼吸休闲.webm"
+        },
+        "1": {
+          "idle_eligible": false,
+          "broker_active": true,
+          "feed": false,
+          "publish": false,
+          "path": "/Users/ray/Documents/New project/dsr-pet/assets/characters/shenshen/videos/turn/东张西望.webm"
+        },
+        "2": {
+          "idle_eligible": false,
+          "broker_active": true,
+          "feed": false,
+          "publish": false,
+          "path": "/Users/ray/Documents/New project/dsr-pet/assets/characters_hq/shenshen/videos/events/balance/余额-分文不剩.webm"
+        }
+      },
+      "live_ffmpeg_after_cleanup": []
+    }
+  }
+]

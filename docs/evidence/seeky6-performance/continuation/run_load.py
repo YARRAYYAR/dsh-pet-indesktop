@@ -1,0 +1,64 @@
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+import threading
+import time
+
+import psutil
+
+root = Path.cwd()
+out = root / 'docs/evidence/seeky6-performance/continuation'
+command = [sys.executable, '-m', 'pytest', '-q',
+           'tests/test_webm_first_frame_lock.py',
+           'tests/test_dsr_rendering.py',
+           'tests/test_first_frame_no_gui_decode.py',
+           'tests/test_webm_clip_loop.py',
+           'tests/test_webm_reader_lifecycle.py',
+           'tests/test_decode_fanout.py',
+           'tests/test_decode_fanout_integration.py',
+           'tests/test_seeky6_settings.py',
+           'tests/test_settings_process_isolation.py']
+env = {**os.environ, 'QT_QPA_PLATFORM': 'offscreen', 'GIT_OPTIONAL_LOCKS': '0'}
+rounds = []
+for index in range(1, 4):
+    busy = [subprocess.Popen([sys.executable, '-c', 'while True: pass'],
+                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            for _ in range(os.cpu_count())]
+    samples = []
+    stop = threading.Event()
+    def sample():
+        psutil.cpu_percent()
+        while not stop.wait(.5):
+            samples.append(psutil.cpu_percent())
+    observer = threading.Thread(target=sample, daemon=True)
+    observer.start()
+    started = time.monotonic()
+    result = None
+    try:
+        with (out / f'cpu-load-{index}.log').open('w') as log:
+            result = subprocess.run(command, cwd=root, env=env, stdout=log,
+                                    stderr=subprocess.STDOUT, timeout=300).returncode
+    finally:
+        stop.set()
+        observer.join(5)
+        for process in busy:
+            process.terminate()
+        for process in busy:
+            process.wait(10)
+        record = {'command': command, 'cwd': str(root),
+                  'setup': f'{os.cpu_count()} owned CPU busy workers; offscreen Qt; no concurrent native measurement',
+                  'inputs': 'Affected decoder, lifecycle, IPC, navigation/motion timing families',
+                  'assertions': 'Every test passes under CPU load; owned load processes exit',
+                  'elapsed_seconds': round(time.monotonic()-started, 3),
+                  'cpu_percent_samples': samples, 'worker_pids': [p.pid for p in busy],
+                  'remaining_workers': [p.pid for p in busy if p.poll() is None],
+                  'reset': 'Only owned busy workers terminated and waited; no user processes touched',
+                  'exit_status': result}
+        (out / f'cpu-load-{index}.json').write_text(json.dumps(record, indent=2))
+        rounds.append(record)
+    print(f'CPU-load round {index}: exit {result}', flush=True)
+    if result:
+        break
+sys.exit(int(any(r['exit_status'] for r in rounds) or len(rounds) != 3))
