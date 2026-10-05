@@ -1,0 +1,23 @@
+{
+  "source_commit": "d8dc94312effed8257ecda8d68fc960491e99ad9",
+  "baseline": "45cb1fd5365cbfa47a1b3c4cbc1a11b937caff5b",
+  "remote": "https://github.com/YARRAYYAR/dsh-pet-indesktop.git",
+  "branch": "codex/seeky-pet",
+  "push_command": [
+    "git",
+    "push",
+    "personal",
+    "HEAD:refs/heads/codex/seeky-pet"
+  ],
+  "push_exit_status": 0,
+  "push_actual": "To https://github.com/YARRAYYAR/dsh-pet-indesktop.git\n   45cb1fd..d8dc943  HEAD -> codex/seeky-pet\n",
+  "verification_command": [
+    "git",
+    "ls-remote",
+    "personal",
+    "refs/heads/codex/seeky-pet"
+  ],
+  "remote_actual": "d8dc94312effed8257ecda8d68fc960491e99ad9\trefs/heads/codex/seeky-pet\n",
+  "assertions": "Actual source delivery commit matches remote branch; product code and package verified before commit; next docs-only commit adds this record",
+  "exit_status": 0
+}

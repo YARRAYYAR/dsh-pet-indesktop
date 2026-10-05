@@ -43,7 +43,7 @@
 
 ## 4. 交付
 
-目标 UI版本4.2.1 · seeky.7、CFBundleVersion4.2.1.7；上游基础版本4.2.1保持。安装前保存用户设置，退出旧进程，完整保留旧应用回退副本；签名核验后APFS克隆暂存并原子替换。旧设置99028通过原生保存关闭；安装guard又发现旧主进程45905仍运行（启动原因未核验），未覆盖运行中的应用，经现有quit IPC应答后正常退出。新包已克隆安装，Config字节未变；版本4.2.1.7、完整旧包二进制SHA相同备份均核验。安装后的静态核验及真实IPC均退出0；原生CUA实际窗口确认底部4.2.1 · seeky.7、表情头像、200px紧凑侧栏、键盘导航和106动作。点击播放后先见已排队，再由主进程更新为正在播放；截图与AX记录已保存。Git交付记录随后补齐。
+目标 UI版本4.2.1 · seeky.7、CFBundleVersion4.2.1.7；上游基础版本4.2.1保持。安装前保存用户设置，退出旧进程，完整保留旧应用回退副本；签名核验后APFS克隆暂存并原子替换。旧设置99028通过原生保存关闭；安装guard又发现旧主进程45905仍运行（启动原因未核验），未覆盖运行中的应用，经现有quit IPC应答后正常退出。新包已克隆安装，Config字节未变；版本4.2.1.7、完整旧包二进制SHA相同备份均核验。安装后的静态核验及真实IPC均退出0；原生CUA实际窗口确认底部4.2.1 · seeky.7、表情头像、200px紧凑侧栏、键盘导航和106动作。点击播放后先见已排队，再由主进程更新为正在播放；截图与AX记录已保存。源码交付提交 `d8dc94312effed8257ecda8d68fc960491e99ad9` 已正常推送到个人 `codex/seeky-pet`，独立ls-remote确认相同SHA；随后文档补录提交仅更新交付记录，不改变已核验产品代码。
 
 画质补充：实际AppShell中1280→2560→1280源切换、动作时长保持10.04秒、高清播放23.7817fps、缺口0、旧HQ队列清零。三种输入的24帧RGBA管线哈希相同，9种缩放/旋转覆盖区域与显示字节一致，均退出0。
 
@@ -136,3 +136,9 @@
 ![安装后动作库实际播放](evidence/seeky7/installed-actions.png)
 
 [完整安装UI接受记录](evidence/seeky7/installed-ui-acceptance.json)、[安装包核验](evidence/seeky7/package/archive.json)、[可重复命令与重置说明](evidence/seeky7/README.md)。最终真实主进程与设置窗口保留打开。CUA按bundle只选一个PID，临时经正常IPC退出自启测试主进程以绑定独立设置，再恢复主进程；没有强制结束程序或改变偏好。
+
+## 8. Git交付与证据完整性
+
+[产品源提交](https://github.com/YARRAYYAR/dsh-pet-indesktop/commit/d8dc94312effed8257ecda8d68fc960491e99ad9)；[分支](https://github.com/YARRAYYAR/dsh-pet-indesktop/tree/codex/seeky-pet)。[真实推送和远端SHA核验](evidence/seeky7/git-source-delivery.json)；[源码/证据逐文件哈希](evidence/seeky7/manifest.json)。报告和索引由Git内容校验；manifest排除自身，避免循环。
+
+Git索引写入耗时较长，改用单次core.bigFileThreshold=0读入，未改全局配置。第一次过早提交被自有git add持锁阻止，未修改历史。原生命令原始日志的尾空格保持原样；产品源码、测试、验证脚本、报告和索引diff检查无空白问题。FileProvider生成的104份编号副本先以暂存blob证明与保留原件完全相同，再可恢复地移到本地缓存；没有删除原件或失败记录。长期打开的软件日志写入本地缓存，Git中保留验收完成时的精确快照。

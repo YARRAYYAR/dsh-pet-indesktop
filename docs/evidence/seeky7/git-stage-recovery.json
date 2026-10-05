@@ -1,0 +1,23 @@
+{
+  "observed": "Default Git add spent82s withverylowCPU/open archived log. Own add interrupted usingSIGINT; streaming threshold override completed. No global Git option changed. Initial premature commit rejected by live index.lock without modifying history. Raw-log diffcheck noted existing command-output whitespace; source/report/index diffcheck clean.",
+  "commands": [
+    {
+      "command": "git add -- <explicit approved source/evidence paths>",
+      "exit_status": -2
+    },
+    {
+      "command": "git commit -m <source message> while own git add active",
+      "exit_status": 128,
+      "actual": "Unable to create .git/index.lock: File exists"
+    },
+    {
+      "command": "git -c core.bigFileThreshold=0 add -- <same paths>",
+      "exit_status": 0
+    },
+    {
+      "command": "git diff --cached --check -- pet scripts tests THIRD_PARTY_NOTICES docs/INDEX.md docs/PR-REPORT-SEEKY7-2026-10-05.md",
+      "exit_status": 0
+    }
+  ],
+  "assertions": "Original failure logs retained byte-for-byte; FileProvider exact duplicate copies reversibly moved with staged blob equality proof; history preserved"
+}
