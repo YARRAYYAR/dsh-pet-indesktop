@@ -2909,6 +2909,9 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
 
     def _collision_clamp_pos(self, x: float, y: float) -> tuple[float, float]:
         """把碰撞分离位置限制在抛掷物理使用的屏幕边界内（角色身体贴边语义）。"""
+        top_flip = getattr(self, '_top_flip', None)
+        if top_flip is not None:
+            top_flip.cancel('collision_move')
         left, top, right, bottom = self._throw_bounds()
         return min(max(x, left), right), min(max(y, top), bottom)
 
@@ -3011,6 +3014,7 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
         self.update()
 
     def _clear_slingshot_input(self) -> None:
+        self._effects_on_drag_cancelled()
         self._slingshot_anchor_pos = None
         self._slingshot_anchor_mouse = None
         self._slingshot_mouse = None
@@ -3141,6 +3145,7 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
         closeEvent）：隐藏后不再认为自己在拖拽/按住，迟到的动画事件也不会
         因 _press_global 残留而对旧库重新建立 hold；恢复显示后由
         _switch → _update_interaction_hold 按新状态重新同步。"""
+        self._effects_on_drag_cancelled()
         self._press_global = None
         self._grab_offset = None
         self._dragging = False
@@ -3360,8 +3365,7 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
             self._flush_drag_move()  # 拖拽结束：强制处理最后一次目标位置并停止合帧 timer
             self._just_dragged = True  # 抑制拖拽结束后的幽灵点击
             QTimer.singleShot(150, self, self._clear_just_dragged)
-            top_docked = (self._top_flip.enabled and self._virtual_pos().y()
-                          <= self._top_flip.reference_limit() + 40)
+            top_docked = self._top_flip.finish_manual_drag(self._virtual_pos().y())
             if top_docked:
                 # Release in the ceiling snap zone must not turn into a throw.
                 self._stop_physics()
@@ -4293,6 +4297,7 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
         self._cancel_move()
         self._cancel_animation_gap()
         self._physics_mode = mode
+        self._effects_on_physics_mode(mode)
         if mode == 'throw':
             self._throw_slow_switched = False  # 每次弹射只允许一次降速过渡
             self._warm_landing_idles()

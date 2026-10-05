@@ -1,0 +1,181 @@
+{
+  "schema_version": 1,
+  "agent_limit": 2,
+  "baseline_paths": [],
+  "baseline_fingerprints": {},
+  "baseline_head": "45cb1fd5365cbfa47a1b3c4cbc1a11b937caff5b",
+  "baseline_index": "sha256:3a32199374375a130ae2967e95e9633523ed968081b482123c7c579c2dd81eda",
+  "main_owned_paths": [
+    "docs",
+    "README.md",
+    "pet/branding.py",
+    "packaging",
+    "scripts/build_macos.sh",
+    "scripts/verify_seeky_multi.py",
+    ".scratch/seeky7",
+    "scripts/verify_dsr_package.py"
+  ],
+  "source_discrepancies": [],
+  "waves": [
+    {
+      "id": "wave-1",
+      "packets": [
+        {
+          "id": "settings_ui_xhigh",
+          "agent": "settings_ui_xhigh",
+          "goal": "Compact settings/sidebar motion, one save-before-quit action, fail-safe X/Esc, action-state/scroll retention",
+          "boundary_rationale": "Separate UI presentation and pet runtime ownership; unchanged settings/actions IPC/config contract",
+          "boundary_evidence": [
+            "pet/settings_brand.py::expand_domain_navigation",
+            "pet/settings_navigation.py::SidebarNavigationButton",
+            "pet/modern_settings_dialog.py::reject",
+            "pet/settings_actions.py::ActionLibrary"
+          ],
+          "consumer_scan": {
+            "method": "rg references and read entrypoint/callers",
+            "result": "Confirmed actual Qt dialog/runtime callers and existing verification scripts; no shared writable product paths",
+            "evidence": [
+              "pet/settings_brand.py::expand_domain_navigation",
+              "pet/settings_navigation.py::SidebarNavigationButton",
+              "pet/modern_settings_dialog.py::reject",
+              "pet/settings_actions.py::ActionLibrary"
+            ]
+          },
+          "owned_paths": [
+            "pet/settings_brand.py",
+            "pet/settings_navigation.py",
+            "pet/ui_motion.py",
+            "pet/settings_theme_qss.py",
+            "pet/settings_actions.py",
+            "pet/modern_settings_dialog.py",
+            "pet/context_menus/icons.py",
+            "pet/resources/lucide",
+            "THIRD_PARTY_NOTICES.md",
+            "scripts/verify_seeky_settings_ui.py",
+            "scripts/verify_seeky7_settings.py",
+            "tests/test_seeky6_settings.py",
+            "tests/test_seeky7_settings.py",
+            "THIRD_PARTY_NOTICES",
+            "pet/resources/settings-icons",
+            "tests/test_desktop_pet_features.py"
+          ],
+          "test_paths": [
+            "tests/test_seeky6_settings.py",
+            "tests/test_seeky7_settings.py",
+            "tests/test_desktop_pet_features.py"
+          ],
+          "interface_status": "frozen",
+          "upstream_contracts": [
+            {
+              "provider": "SettingsCommandClient",
+              "interface": "existing request quit/play and current state watch",
+              "semantics": "IPC unchanged; callback ok/error; playing comes from main process",
+              "evidence": [
+                "pet/settings_commands.py::SettingsCommandClient"
+              ]
+            }
+          ],
+          "downstream_expectations": [
+            {
+              "consumer": "ModernSettingsDialog",
+              "interface": "settings presentation and save lifecycle",
+              "semantics": "Existing domain/order,200 logical px, no new setting IDs/config fields; save failure keeps open",
+              "evidence": [
+                "pet/modern_settings_dialog.py::ModernSettingsDialog"
+              ]
+            }
+          ],
+          "shared_state_owner": "Dialog owns current selection/pill/page transition; each button owns finite feedback; ActionLibrary owns request generation",
+          "invariants": [
+            "Preserve media/alpha/frame order and user config",
+            "All Qt operations on owning GUI thread",
+            "Write red public-seam checks before implementation; no new isolated tests afterward",
+            "Do not edit other packet or primary-owned paths"
+          ],
+          "integration_entry": "Compact settings/sidebar motion, one save-before-quit action, fail-safe X/Esc, action-state/scroll retention",
+          "dependencies": [],
+          "checks": [
+            "native Cocoa settings matrix+actual AppShell actions",
+            "focused existing settings tests",
+            "Ruff/source diff review"
+          ]
+        },
+        {
+          "id": "runtime_interaction_xhigh",
+          "agent": "runtime_interaction_xhigh",
+          "goal": "Manual-only top attachment plus cursor facing based on transformed stable body center",
+          "boundary_rationale": "Separate UI presentation and pet runtime ownership; unchanged settings/actions IPC/config contract",
+          "boundary_evidence": [
+            "pet/top_flip.py::on_position",
+            "pet/window_placement.py::move_window_towards",
+            "pet/window_optional_services.py::_on_cursor_facing_tick",
+            "pet/window.py::mouseReleaseEvent"
+          ],
+          "consumer_scan": {
+            "method": "rg references and read entrypoint/callers",
+            "result": "Confirmed actual Qt dialog/runtime callers and existing verification scripts; no shared writable product paths",
+            "evidence": [
+              "pet/top_flip.py::on_position",
+              "pet/window_placement.py::move_window_towards",
+              "pet/window_optional_services.py::_on_cursor_facing_tick",
+              "pet/window.py::mouseReleaseEvent"
+            ]
+          },
+          "owned_paths": [
+            "pet/top_flip.py",
+            "pet/window_placement.py",
+            "pet/window_optional_services.py",
+            "pet/window.py",
+            "pet/interaction.py",
+            "scripts/verify_seeky_ceiling.py",
+            "scripts/verify_seeky_cursor.py",
+            "scripts/verify_seeky7_interactions.py",
+            "tests/test_dsr_codex_and_ceiling.py",
+            "tests/test_seeky7_interactions.py"
+          ],
+          "test_paths": [
+            "tests/test_dsr_codex_and_ceiling.py",
+            "tests/test_seeky7_interactions.py"
+          ],
+          "interface_status": "frozen",
+          "upstream_contracts": [
+            {
+              "provider": "PetWindow input and movement",
+              "interface": "drag-start/release/throw/automatic placement and effects current angle",
+              "semantics": "Manual threshold grants eligibility; automatic movement never creates ceiling attachment",
+              "evidence": [
+                "pet/window.py::mouseReleaseEvent",
+                "pet/window_placement.py::move_window_towards"
+              ]
+            }
+          ],
+          "downstream_expectations": [
+            {
+              "consumer": "PetWindow rendering/placement",
+              "interface": "top rotation, allowed body bounds, snap offset, cursor facing",
+              "semantics": "Normal physics boundaries for automatic movement; no_mirror unchanged; 120/280/16 cursor constants unchanged",
+              "evidence": [
+                "pet/window_optional_services.py::_effects_current_angle",
+                "pet/window.py::_rebuild_frame"
+              ]
+            }
+          ],
+          "shared_state_owner": "Each TopFlipController owns its own drag permission/attachment; PetWindow owns facing and lifecycle",
+          "invariants": [
+            "Preserve media/alpha/frame order and user config",
+            "All Qt operations on owning GUI thread",
+            "Write red public-seam checks before implementation; no new isolated tests afterward",
+            "Do not edit other packet or primary-owned paths"
+          ],
+          "integration_entry": "Manual-only top attachment plus cursor facing based on transformed stable body center",
+          "dependencies": [],
+          "checks": [
+            "native Cocoa four-edge/ceiling and real pointer E2E",
+            "existing ceiling/edge/physics regressions",
+            "Ruff/source diff review"
+          ]
+        }
+      ]
+    }
+  ]
+}

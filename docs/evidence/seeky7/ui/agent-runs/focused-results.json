@@ -1,0 +1,29 @@
+{
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "command": "QT_QPA_PLATFORM=offscreen .venv/bin/python -X pycache_prefix=/tmp/seeky7-ui-pycache -m pytest -q tests/test_seeky7_settings.py tests/test_seeky6_settings.py",
+  "setup": "existing RED tests; temporary Config saved at fixture setup; Qt audio/modal test fixtures; isolated delayed/raising transport and OS preference only",
+  "inputs": "default compact tokens, metric growth, independent label/disclosure, reused pages, keyboard/mouse focus, feedback retarget/hide/reduced motion, save errors, pending/error/success quit, defined external Config field preservation",
+  "assertions": "all original acceptance assertions; corrected external sentinel uses supported unexposed screen_name because Config.reload ignores invented keys",
+  "runs": [
+    {
+      "log": "focused-first.log",
+      "exit_status": 137,
+      "result": "blocked read on dataless now_playing.pyc; exact process terminated; sample and lsof evidence"
+    },
+    {
+      "log": "focused-second.log",
+      "exit_status": 1,
+      "result": "14 failed, 8 passed, 7 errors; unsupported currentChanged signal diagnosed; shell status variable fixed"
+    },
+    {
+      "log": "focused-third.log",
+      "exit_status": 1,
+      "result": "1 failed,21 passed; invented Config sentinel diagnosed"
+    },
+    {
+      "log": "focused-final.log",
+      "exit_status": 0,
+      "result": "22 passed in 6.46s"
+    }
+  ]
+}

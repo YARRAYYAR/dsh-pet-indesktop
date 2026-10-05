@@ -1,0 +1,10 @@
+{
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "command": "QT_QPA_PLATFORM=offscreen PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_seeky7_interactions.py tests/test_dsr_codex_and_ceiling.py tests/test_edge_reachability.py tests/test_edge_probe.py tests/test_drag_move_coalescing.py tests/test_pet_interaction_locks.py tests/test_move_sync.py tests/test_collision_window.py tests/test_architecture.py",
+  "setup": "Existing related regression tests plus process-level Qt/WebM public mouse acceptance. Temporary test Config; offscreen platform.",
+  "inputs": "Manual ceiling and release lifecycle, edge/probe placement, drag coalescing/interaction locks, move sync, collisions, architecture boundaries.",
+  "assertions": "Existing test assertions and public-seam ceiling acceptance must pass.",
+  "actual_result": "167 passed in 9.40s",
+  "exit_status": 0,
+  "log": "/tmp/seeky7-runtime-evidence/focused-1.log"
+}

@@ -1,0 +1,114 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "scripts/verify_seeky7_settings.py",
+    "--output",
+    "/tmp/seeky7-ui-evidence/native-seven",
+    "--suite",
+    "all",
+    "--idle-seconds",
+    "30"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "python": "3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]",
+  "pyside": "6.11.2",
+  "platform": "cocoa",
+  "setup": "temporary Config; no installed app/config writes; autostart disabled",
+  "inputs": "actual Qt mouse/key events, repeated label/disclosure, real disk replacement failure, missing IPC endpoint, 30s idle",
+  "checks": [
+    {
+      "name": "compact logical tokens 200/28/12/6/32/28/32",
+      "passed": true
+    },
+    {
+      "name": "label retains independent arrow expansion",
+      "passed": true
+    },
+    {
+      "name": "mouse focus retained; keyboard arrows Tab Enter activation",
+      "passed": true
+    },
+    {
+      "name": "finite painted feedback; true selection bounce; hide stops",
+      "passed": true
+    },
+    {
+      "name": "idle has no running animations",
+      "passed": false
+    },
+    {
+      "name": "real disk failure X/Esc/quit retains window",
+      "passed": true
+    },
+    {
+      "name": "one quit button saves/rereads; missing actual IPC endpoint retry",
+      "passed": true
+    },
+    {
+      "name": "successful Esc saves and closes",
+      "passed": true
+    }
+  ],
+  "captures": [
+    {
+      "path": "/tmp/seeky7-ui-evidence/native-seven/compact-geometry.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0
+    },
+    {
+      "path": "/tmp/seeky7-ui-evidence/native-seven/independent-disclosure.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0
+    },
+    {
+      "path": "/tmp/seeky7-ui-evidence/native-seven/keyboard-focus.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0
+    },
+    {
+      "path": "/tmp/seeky7-ui-evidence/native-seven/motion-settled.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0
+    },
+    {
+      "path": "/tmp/seeky7-ui-evidence/native-seven/all-save-paths-retain-window.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0
+    },
+    {
+      "path": "/tmp/seeky7-ui-evidence/native-seven/quit-connection-retry.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0
+    }
+  ],
+  "errors": [
+    "Traceback (most recent call last):\n  File \"/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky7_settings.py\", line 61, in check\n    run()\n    ~~~^^\n  File \"/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky7_settings.py\", line 165, in idle\n    assert running == 0\n           ^^^^^^^^^^^^\nAssertionError\n"
+  ],
+  "exit_status": 1,
+  "reduced_motion": false,
+  "idle": {
+    "seconds": 29.82,
+    "cpu_seconds": 1.9913,
+    "rss_before": 129089536,
+    "rss_after": 97222656,
+    "running_animations": 1
+  }
+}

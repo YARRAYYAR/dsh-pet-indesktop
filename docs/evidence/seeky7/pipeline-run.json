@@ -1,0 +1,29 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "scripts/verify_seeky6_prewarm.py",
+    "--root",
+    "/Users/ray/Documents/New project/dsr-pet",
+    "--output",
+    "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky7/pipeline.json",
+    "--probe",
+    "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+    "--pipeline-parity"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Serial native Cocoa; temporary isolated Config; installed user app left untouched; pycache outside cloud workspace",
+  "inputs": [
+    "scripts/verify_seeky6_prewarm.py",
+    "--root",
+    "/Users/ray/Documents/New project/dsr-pet",
+    "--output",
+    "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky7/pipeline.json",
+    "--probe",
+    "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+    "--pipeline-parity"
+  ],
+  "assertions": "Detailed public workflow assertions in corresponding output JSON",
+  "start": 1791171564.167391,
+  "end": 1791171566.2286248,
+  "exit_status": 0
+}

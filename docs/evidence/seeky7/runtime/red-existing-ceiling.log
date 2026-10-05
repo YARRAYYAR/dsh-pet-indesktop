@@ -1,0 +1,29 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__ test_ceiling_move_preserves_horizontal_position_without_manual_eligibility __
+
+qapp = <PySide6.QtWidgets.QApplication(0xc5b970500) at 0x106db2300>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-55/test_ceiling_move_preserves_ho0')
+
+    def test_ceiling_move_preserves_horizontal_position_without_manual_eligibility(qapp, tmp_path):
+        from pet.config import Config
+        from pet.window import PetWindow
+        from pet.window_placement import stable_body_local_rect
+        from tests.test_pet_interaction_locks import FakeLibrary
+    
+        window = PetWindow(FakeLibrary(), Config(tmp_path))
+        try:
+            screen = window._screen_available()
+            body = stable_body_local_rect(window)
+            x = screen.availableGeometry().center().x() - body.center().x()
+            top = screen.geometry().top() - body.top()
+            window._move_window_towards(x, top)
+>           assert window._effects_current_angle() == 0
+E           assert 180.0 == 0
+E            +  where 180.0 = _effects_current_angle()
+E            +    where _effects_current_angle = <pet.window.PetWindow(0xc59f7ebc0) at 0x110abbcc0>._effects_current_angle
+
+tests/test_dsr_codex_and_ceiling.py:41: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_dsr_codex_and_ceiling.py::test_ceiling_move_preserves_horizontal_position_without_manual_eligibility
+1 failed, 5 deselected in 2.37s

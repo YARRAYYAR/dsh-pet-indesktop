@@ -1,0 +1,53 @@
+........................................F............................... [ 45%]
+........................................................................ [ 91%]
+..............                                                           [100%]
+=================================== FAILURES ===================================
+_______ test_modern_settings_panel_uses_sidebar_and_includes_ai_settings _______
+
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-61/test_modern_settings_panel_use0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x115bad080>
+
+    def test_modern_settings_panel_uses_sidebar_and_includes_ai_settings(tmp_path, monkeypatch):
+        from PySide6.QtCore import QSize, Qt
+        from PySide6.QtWidgets import QApplication, QListWidget, QStackedWidget
+    
+        import pet.modern_settings_dialog as settings_mod
+        from pet.config import Config
+        from pet.modern_settings_dialog import ModernSettingsDialog
+    
+        app = QApplication.instance() or QApplication([])
+        config = Config(tmp_path)
+        autostart_values = []
+        monkeypatch.setattr(settings_mod.autostart_mod, "is_enabled", lambda: False)
+        monkeypatch.setattr(settings_mod.autostart_mod, "set_enabled", autostart_values.append)
+        dialog = ModernSettingsDialog(config, include_ai=True)
+        assert dialog.size() == QSize(1000, 680)
+        assert dialog.minimumSize() == QSize(720, 500)
+        assert dialog.font().pixelSize() == 13
+        assert dialog.findChild(settings_mod.QFrame, "sidebarPane").width() == 200
+        assert isinstance(dialog.sidebar, QListWidget)
+        assert isinstance(dialog.pages, QStackedWidget)
+        # 2026-09-19 新增「文件识别」域（拖文件解读，settings_file_interpret）。
+        expected_pages = ["常规", "桌宠", "互动", "菜单", "连接", "AI 与对话", "自动化与联动", "语音", "文件识别"]
+        assert [dialog.sidebar.item(i).text() for i in range(dialog.sidebar.count())] == expected_pages
+        assert dialog.pages.count() == len(expected_pages)
+        assert dialog.search_edit.placeholderText() == "搜索设置…"
+        assert all(not dialog.sidebar.item(i).icon().isNull() for i in range(dialog.sidebar.count()))
+>       assert all(dialog.sidebar.item(i).sizeHint().height() >= 34 for i in range(dialog.sidebar.count()))
+E       assert False
+E        +  where False = all(<generator object test_modern_settings_panel_uses_sidebar_and_includes_ai_settings.<locals>.<genexpr> at 0x136b05000>)
+
+tests/test_desktop_pet_features.py:1418: AssertionError
+----------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: This plugin does not support propagateSizeHints()
+=============================== warnings summary ===============================
+tests/test_movement.py::test_idle_roll_stays_idle_when_already_facing_inward
+tests/test_movement.py::test_random_turn_downgrades_when_already_facing_inward
+tests/test_movement.py::test_try_move_walks_toward_reachable_side_not_current_facing
+  /Users/ray/Documents/New project/dsr-pet/pet/window.py:2099: DeprecationWarning: Function: 'QImage.mirrored(bool horizontally, bool vertically)' is marked as deprecated, please check the documentation for more information.
+    img = img.mirrored(True, False)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_desktop_pet_features.py::test_modern_settings_panel_uses_sidebar_and_includes_ai_settings
+1 failed, 157 passed, 3 warnings in 17.75s

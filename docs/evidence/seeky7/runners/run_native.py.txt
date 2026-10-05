@@ -1,0 +1,9 @@
+import json,os,subprocess,sys,time
+from pathlib import Path
+root=Path.cwd();out=root/'docs/evidence/seeky7';env={**os.environ,'QT_QPA_PLATFORM':'cocoa','PYTHONPYCACHEPREFIX':'/tmp/seeky7-main-pycache'}
+commands=[('ui-seven-final',['scripts/verify_seeky7_settings.py','--output',str(out/'ui/final-seven'),'--idle-seconds','30']),('ui-matrix-final',['scripts/verify_seeky_settings_ui.py','--output',str(out/'ui/final-matrix'),'--phase','after','--live']),('quality',['scripts/verify_seeky_quality.py','--output',str(out/'quality.json')]),('coverage',['scripts/verify_seeky_coverage.py','--output',str(out/'coverage.json')]),('pipeline',['scripts/verify_seeky6_prewarm.py','--root',str(root),'--output',str(out/'pipeline.json'),'--probe',str(root/'.scratch/seeky-proc-memory'),'--pipeline-parity'])]
+for name,args in commands:
+ command=[sys.executable,*args];start=time.time()
+ with (out/(name+'.log')).open('w') as log:r=subprocess.run(command,cwd=root,env=env,stdout=log,stderr=subprocess.STDOUT)
+ record={'command':command,'cwd':str(root),'setup':'Serial native Cocoa; temporary isolated Config; installed user app left untouched; pycache outside cloud workspace','inputs':args,'assertions':'Detailed public workflow assertions in corresponding output JSON','start':start,'end':time.time(),'exit_status':r.returncode}
+ (out/(name+'-run.json')).write_text(json.dumps(record,indent=2));print(name,r.returncode,flush=True)

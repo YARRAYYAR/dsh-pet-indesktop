@@ -1,0 +1,19 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky7/verify_lifecycle.py"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Actual Cocoa AppShell, real WebM, fresh persisted Config; public spawn and public QWidget mouse events with real cursor. Physics drag remains enabled.",
+  "inputs": "Two independent windows; manual top attach in physics mode, automatic child top move, child close; actual saved location reopened in a fresh process",
+  "assertions": [
+    "saved top position restores upright without manual eligibility",
+    "real drag physics reaches ceiling, release confirms attachment and suppresses throw",
+    "attached parent does not grant automatic child ceiling eligibility",
+    "closing child preserves parent attachment",
+    "attached location persisted via public save_position"
+  ],
+  "errors": [],
+  "reset": "Original cursor restored; actual AppShell aboutToQuit cleanup; user config untouched",
+  "exit_status": 0
+}

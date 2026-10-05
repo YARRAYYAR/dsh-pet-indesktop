@@ -90,7 +90,10 @@ def move_window_towards(host, x: float, y: float,
     sbr = stable_body_local_rect(host)
     bounds = avail if body_bounds is None else body_bounds
     top = getattr(host, '_top_flip', None)
-    if body_bounds is None and top is not None and top.enabled:
+    if (top is not None and not top.manual_drag_active
+            and getattr(host, '_move_plan', None) is not None):
+        top.cancel('autonomous_move')
+    if body_bounds is None and top is not None and top.placement_allowed:
         # Select by body centre, not the mostly transparent video canvas.
         top.update_screen_edge(scr, x, sbr)
         bounds = QRect(avail)
@@ -101,7 +104,8 @@ def move_window_towards(host, x: float, y: float,
     yi = clamp_span(yi + sbr.y(), bounds.top(), bounds.bottom(), sbr.height()) - sbr.y()
     if top is not None and body_bounds is None:
         top.on_position(yi)
-        if top.enabled and yi <= top.reference_limit() + 40:
+        from .top_flip import TOP_FLIP_SNAP_PX
+        if top.placement_allowed and yi <= top.reference_limit() + TOP_FLIP_SNAP_PX:
             yi = top.reference_limit() - top.top_offset_px(sbr.height())
     # 1b. 灵动岛同步硬墙（可选）：身体框不得进入岛碰撞区（像屏幕边界一样
     #     同步钳制，杜绝 30Hz 采样下"钻进区→被弹→再钻回"的抽搐）。hook 由

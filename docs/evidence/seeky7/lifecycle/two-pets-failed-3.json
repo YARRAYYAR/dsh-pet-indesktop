@@ -1,0 +1,36 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky7/verify_lifecycle.py"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Actual Cocoa AppShell, real WebM, fresh persisted Config; public spawn and public QWidget mouse events with real cursor. Physics drag remains enabled.",
+  "inputs": "Two independent windows; manual top attach in physics mode, automatic child top move, child close; actual saved location reopened in a fresh process",
+  "assertions": [
+    "saved top position restores upright without manual eligibility"
+  ],
+  "errors": [
+    {
+      "error": "",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/ray/Documents/New project/dsr-pet/.scratch/seeky7/verify_lifecycle.py\", line 39, in <module>\n    assert win._virtual_pos().y()==win._top_flip.reference_limit()-win._top_flip.top_offset_px(b.height())\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "state": {
+        "dragging": false,
+        "mode": null,
+        "press": "None",
+        "target": "PySide6.QtCore.QPoint(526, -29)",
+        "pos": "PySide6.QtCore.QPoint(526, -126)",
+        "physpos": [
+          526.0,
+          -28.908282987796667
+        ],
+        "manual_drag": false,
+        "attached": true,
+        "angle": 180.0,
+        "cursor": "PySide6.QtCore.QPoint(756, 132)",
+        "qtbuttons": "MouseButton.NoButton"
+      }
+    }
+  ],
+  "reset": "Original cursor restored; actual AppShell aboutToQuit cleanup; user config untouched",
+  "exit_status": 1
+}

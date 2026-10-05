@@ -1,0 +1,28 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky7/verify_archive.py"
+  ],
+  "generation_command": [
+    "ditto",
+    "-c",
+    "-k",
+    "--sequesterRsrc",
+    "--keepParent",
+    "/Users/ray/Applications/seeky· pet.app",
+    "/Users/ray/Downloads/seeky-pet-4.2.1.7-macOS-arm64.zip"
+  ],
+  "source": "/Users/ray/Applications/seeky· pet.app",
+  "output": "/Users/ray/Downloads/seeky-pet-4.2.1.7-macOS-arm64.zip",
+  "setup": "Installed signed source-equivalent bundle; macOS ditto UTF8 metadata read explicitly",
+  "assertions": "Every ZIP entry CRC valid; exact UTF8 bundle name; embedded4.2.1.7; SHA256",
+  "checks": {
+    "zip_entries": 2247,
+    "bad_crc_entry": null,
+    "bundle_version": "4.2.1.7",
+    "sha256": "a2038e745df3cdb969d46100af72efd78e4ab598ec0e3e1771b2d92963f1e562",
+    "bytes": 1553295997
+  },
+  "elapsed_seconds": 3.063602924346924,
+  "exit_status": 0
+}

@@ -1,0 +1,18 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "-m",
+    "ruff",
+    "check",
+    "pet/",
+    "tests/",
+    "scripts/"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "CI pr-test.yml requires pet/ tests/; scripts/ added as scoped supporting check. Broad dot scan reported4existing archive evidence imports; archived prior-run files preserved unchanged.",
+  "inputs": "All product code, tests, verification/build scripts",
+  "assertions": "Project required lint and changed script lint pass",
+  "start": 1791172630.416797,
+  "end": 1791172630.5040781,
+  "exit_status": 0
+}

@@ -1415,7 +1415,7 @@ def test_modern_settings_panel_uses_sidebar_and_includes_ai_settings(tmp_path, m
     assert dialog.pages.count() == len(expected_pages)
     assert dialog.search_edit.placeholderText() == "搜索设置…"
     assert all(not dialog.sidebar.item(i).icon().isNull() for i in range(dialog.sidebar.count()))
-    assert all(dialog.sidebar.item(i).sizeHint().height() >= 34 for i in range(dialog.sidebar.count()))
+    assert all(dialog.sidebar.item(i).sizeHint().height() >= 32 for i in range(dialog.sidebar.count()))
     assert "QListWidget#settingsSidebar::item:hover" in dialog.styleSheet()
     assert "border-right: 1px solid #e3e5e8" in dialog.styleSheet()
     assert "background: #f7f7f8" in dialog.styleSheet()

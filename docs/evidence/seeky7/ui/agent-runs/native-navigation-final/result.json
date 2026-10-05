@@ -1,0 +1,93 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "scripts/verify_seeky7_settings.py",
+    "--output",
+    "/tmp/seeky7-ui-evidence/native-navigation-final",
+    "--suite",
+    "navigation",
+    "--idle-seconds",
+    "1"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "python": "3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]",
+  "pyside": "6.11.2",
+  "platform": "cocoa",
+  "setup": "temporary Config; no installed app/config writes; autostart disabled",
+  "inputs": "actual Qt mouse/key events, repeated label/disclosure, real disk replacement failure, missing IPC endpoint, 30s idle",
+  "checks": [
+    {
+      "name": "compact logical tokens 200/28/12/6/32/28/32",
+      "passed": true
+    },
+    {
+      "name": "label retains independent arrow expansion",
+      "passed": true
+    },
+    {
+      "name": "mouse focus retained; keyboard arrows Tab Enter activation",
+      "passed": true
+    },
+    {
+      "name": "finite painted feedback; true selection bounce; hide stops",
+      "passed": true
+    },
+    {
+      "name": "idle has no running animations",
+      "passed": true
+    }
+  ],
+  "captures": [
+    {
+      "path": "/tmp/seeky7-ui-evidence/native-navigation-final/compact-geometry.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0
+    },
+    {
+      "path": "/tmp/seeky7-ui-evidence/native-navigation-final/independent-disclosure.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0
+    },
+    {
+      "path": "/tmp/seeky7-ui-evidence/native-navigation-final/keyboard-scroll-last-row.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0
+    },
+    {
+      "path": "/tmp/seeky7-ui-evidence/native-navigation-final/keyboard-focus.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0
+    },
+    {
+      "path": "/tmp/seeky7-ui-evidence/native-navigation-final/motion-settled.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0
+    }
+  ],
+  "errors": [],
+  "exit_status": 0,
+  "reduced_motion": false,
+  "idle": {
+    "seconds": 0.952,
+    "cpu_seconds": 0.0062,
+    "rss_before": 140591104,
+    "rss_after": 98156544,
+    "running_animations": 0,
+    "active": []
+  }
+}

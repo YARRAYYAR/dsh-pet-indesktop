@@ -1,0 +1,22 @@
+{
+  "command": "CUA getApp exact installed path; search focus→Tab→Down→Enter opens pet; three Down→Enter opens actionlibrary; click accessible play button",
+  "setup": "Actual installed4.2.1.7 native Cocoa on Retina; user settings unchanged; CUA PID selection via temporary normal IPC quit and restart primary",
+  "inputs": "Keyboard navigation and play selected 三球抛接",
+  "assertions": [
+    "One exit action",
+    "Footer4.2.1 · seeky.7",
+    "Official smilingface and200logicalpixel compact sidebar",
+    "106 real actions; selected preserved; queued response then playing push seen in actual UI"
+  ],
+  "actual": {
+    "queued": "106 个动作 · 已选：三球抛接 · 已排队：三球抛接 · 正在播放：余额-数金皱眉",
+    "playing": "106 个动作 · 已选：三球抛接 · 正在播放：三球抛接",
+    "screenshots": [
+      "installed-general.png",
+      "installed-pet-settings.png",
+      "installed-actions.png"
+    ]
+  },
+  "reset": "No preference controls changed; installed primary and settings open for user",
+  "exit_status": 0
+}

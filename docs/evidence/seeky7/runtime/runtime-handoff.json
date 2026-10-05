@@ -1,0 +1,55 @@
+{
+  "scope": "seeky.7 manual ceiling and transformed stable body cursor facing",
+  "source_final": true,
+  "native_slot_released": true,
+  "owned_paths": [
+    "pet/top_flip.py",
+    "pet/window_placement.py",
+    "pet/window_optional_services.py",
+    "pet/window.py",
+    "pet/interaction.py",
+    "scripts/verify_seeky_ceiling.py",
+    "scripts/verify_seeky_cursor.py",
+    "scripts/verify_seeky7_interactions.py",
+    "tests/test_dsr_codex_and_ceiling.py",
+    "tests/test_seeky7_interactions.py"
+  ],
+  "invariants": "No media/config schema/IPC/decoder/packaging edits. Reuse 120ms cursor timer, 280px radius, 16px deadzone; no_mirror preserved. Intentional GoldenSpin/ThrowEgg angles preserved. Window 4664 lines <=4666 budget.",
+  "changes": "Only threshold-crossed mouse drag grants temporary top permission. Shared permission gates angle, clipping, expanded bounds, snap and top offset. 110px preview; 40px release attaches and suppresses throw. Outside release/cancel/disable/close/slingshot cleanup restores normal pose/offset. Confirmed attachment pauses across hide/show. Throw/collision/existing autonomous plan clears pose, physical position agrees with normalized virtual position. Cursor uses forward-transformed stable body center with draw delta and same painter pivot; cos(angle)<0 compensates mirror once.",
+  "acceptance": {
+    "native_interactions": {
+      "passed": 31,
+      "exit_status": 0,
+      "artifact": "/tmp/seeky7-runtime-evidence/green-native-final.json"
+    },
+    "native_original_cursor_red": {
+      "checks": 22,
+      "failed": 12,
+      "harness_errors": false,
+      "exit_status": 1,
+      "artifact": "/tmp/seeky7-runtime-evidence/red-cursor-held-frame.json"
+    },
+    "native_left_notch_right": {
+      "exit_status": 0,
+      "artifact": "/tmp/seeky7-runtime-evidence/ceiling-native-final.json"
+    },
+    "focused_regression": {
+      "passed": 167,
+      "seconds": 5.04,
+      "exit_status": 0,
+      "artifact": "/tmp/seeky7-runtime-evidence/focused-final.json"
+    }
+  },
+  "performance": {
+    "sample_count": 300,
+    "path": "actual native ceiling placement",
+    "mean_ms": 0.02051272342214361,
+    "max_ms": 0.07279199780896306,
+    "new_timers": 0,
+    "new_threads": 0,
+    "new_network": 0,
+    "new_disk_io_in_cursor_tick": 0
+  },
+  "evidence_notes": "All failures preserved. stop() cleared display pixmap; hash fixture now pauses actual clip publication timer, retaining original decoded pixels. Temporary edge setting persisted to withstand config watch. Cocoa initial Y normalization proven one pixel followed by exact stable repeated positions; no pointer tolerance. The original root-controlled full suite/highload/performance/build remains integration responsibility.",
+  "known_related_failure": "focused-2 had 157 pass/1 stale UI sidebar >=34px assertion; settings packet/root notified; no runtime failures in that batch."
+}

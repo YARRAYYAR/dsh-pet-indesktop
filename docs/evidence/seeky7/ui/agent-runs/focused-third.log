@@ -1,0 +1,32 @@
+...........F..........                                                   [100%]
+=================================== FAILURES ===================================
+____ test_single_footer_quit_deduplicates_errors_retry_and_external_reload _____
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x131e76030>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-58/test_single_footer_quit_dedupl0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x13231f450>
+
+    def test_single_footer_quit_deduplicates_errors_retry_and_external_reload(qtbot, tmp_path, monkeypatch):
+        dialog = open_dialog(qtbot, tmp_path, monkeypatch)
+        client = ControlledClient()
+        dialog.command_client = client
+        assert dialog.quit_button.text() == '退出软件'
+        assert dialog.save_exit_button is dialog.quit_button
+        assert len([button for button in dialog.sidebar.parentWidget().findChildren(QPushButton) if button.isVisible() and '退出' in button.text()]) == 1
+        external = json.loads(dialog.config.path.read_text()) if dialog.config.path.exists() else {}
+        external['seeky7_external_sentinel'] = '保留外部字段'
+        dialog.config.path.write_text(json.dumps(external))
+        dialog.no_move_check.setChecked(True)
+        dialog.quit_button.click()
+        assert not dialog.quit_button.isEnabled()
+        dialog.quit_button.click()
+        assert len(client.calls) == 1 and client.calls[0][0] == 'quit'
+        saved = json.loads(dialog.config.path.read_text())
+>       assert saved['seeky7_external_sentinel'] == '保留外部字段' and saved['no_move']
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'seeky7_external_sentinel'
+
+tests/test_seeky7_settings.py:188: KeyError
+=========================== short test summary info ============================
+FAILED tests/test_seeky7_settings.py::test_single_footer_quit_deduplicates_errors_retry_and_external_reload
+1 failed, 21 passed in 6.37s

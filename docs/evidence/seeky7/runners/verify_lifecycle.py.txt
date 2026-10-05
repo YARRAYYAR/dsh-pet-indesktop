@@ -1,0 +1,58 @@
+import json,subprocess,sys,tempfile,traceback
+from pathlib import Path
+sys.path.insert(0,str(Path.cwd()));sys.path.insert(0,str(Path.cwd()/'scripts'))
+from PySide6.QtCore import QPoint,QTimer,QEvent
+from PySide6.QtGui import QCursor
+from PySide6.QtWidgets import QApplication
+from pet.config import Config
+from pet.app import AppShell
+from verify_seeky7_interactions import wait_until,mouse_event
+out=Path('docs/evidence/seeky7/lifecycle');out.mkdir(parents=True,exist_ok=True)
+restore=len(sys.argv)>1
+base=Path(sys.argv[1]) if restore else Path(tempfile.mkdtemp(prefix='seeky7-lifecycle-'))
+cfg=Config(base)
+if not restore:
+ cfg.data.update({'top_flip_enabled':True,'no_move':True,'edge_probe_enabled':False,'collision_enabled':False,'media_prewarm':'minimal','drag_physics':True,'experimental_single_process_spawn':True,'harness_autostart':False,'codex_link_enabled':False,'self_talk_enabled':False,'click_sound_enabled':False,'rx':.5,'ry':0})
+ assert cfg.save()
+app=QApplication([]);app.setQuitOnLastWindowClosed(False);shell=AppShell(app,cfg,enable_chat=False,slot_id=0);shell.start();win=shell.win;old=QCursor.pos();checks=[];errors=[]
+def frozen(w):
+ wait_until(lambda:w.movie.currentPixmap() is not None)
+ w._rebuild_frame()
+def upright(w):
+ b=w._stable_body_local_rect();a=w._screen_available().availableGeometry()
+ assert not w._top_flip.manual_drag_active and not w._top_flip.manually_attached
+ assert w._effects_current_angle()==0
+ assert w._virtual_pos().y()+b.top()>=a.top()-1
+try:
+ assert app.platformName()=='cocoa';wait_until(lambda:win.movie.currentPixmap() is not None);upright(win);checks.append('saved top position restores upright without manual eligibility')
+ if not restore:
+  shell.spawn_pet();assert len(shell.instances)==2;child=shell.instances[-1].win;wait_until(lambda:child.movie.currentPixmap() is not None);frozen(win);frozen(child);upright(child)
+  b=win._stable_body_local_rect();a=win._screen_available().availableGeometry();press=win._virtual_pos()+b.center();QCursor.setPos(press);mouse_event(win,QEvent.Type.MouseButtonPress,press)
+  target=QPoint(win._virtual_pos().x(),a.top()-b.top()+3);destination=target+b.center();QCursor.setPos(destination);mouse_event(win,QEvent.Type.MouseMove,destination)
+  assert win._dragging and win._top_flip.manual_drag_active
+  wait_until(lambda:abs(win._phys_pos[1]-target.y())<.1 and win._effects_current_angle()>160,timeout=6)
+  mouse_event(win,QEvent.Type.MouseButtonRelease,destination)
+  assert win._top_flip.manually_attached and not win._top_flip.manual_drag_active
+  assert win._physics_mode is None
+  wait_until(lambda:win._effects_current_angle()==180)
+  print('RELEASE_POSITION',win._virtual_pos().y(),win._top_flip.reference_limit()-win._top_flip.top_offset_px(b.height()),flush=True)
+  assert win._virtual_pos().y()==win._top_flip.reference_limit()-win._top_flip.top_offset_px(b.height())
+  checks.append('real drag physics reaches ceiling, release confirms attachment and suppresses throw')
+  win.grab().save(str(out/'manual-physics.png'))
+  cb=child._stable_body_local_rect();ca=child._screen_available().availableGeometry();child._move_window_towards(child._virtual_pos().x(),ca.top()-cb.top()-180);upright(child)
+  assert win._top_flip.manually_attached and win._effects_current_angle()==180
+  assert win._top_flip is not child._top_flip
+  checks.append('attached parent does not grant automatic child ceiling eligibility')
+  child.grab().save(str(out/'independent-child.png'));child.on_exit_window();wait_until(lambda:len(shell.instances)==1)
+  assert win._top_flip.manually_attached and win.isVisible();checks.append('closing child preserves parent attachment')
+  win.save_position();assert cfg.get('ry') is not None;checks.append('attached location persisted via public save_position')
+ else:
+  frozen(win);win.grab().save(str(out/'restored-upright.png'))
+except Exception as e:errors.append({'error':str(e),'traceback':traceback.format_exc(),'state':{'dragging':win._dragging,'mode':win._physics_mode,'press':str(win._press_global),'target':str(win._drag_target),'pos':str(win._virtual_pos()),'physpos':win._phys_pos,'manual_drag':win._top_flip.manual_drag_active,'attached':win._top_flip.manually_attached,'angle':win._effects_current_angle(),'cursor':str(QCursor.pos()),'qtbuttons':str(QApplication.mouseButtons())}})
+finally:
+ QCursor.setPos(old);win.close();QTimer.singleShot(0,app.quit);app.exec()
+record={'command':[sys.executable,str(Path(__file__).resolve()),*sys.argv[1:]],'cwd':str(Path.cwd()),'setup':'Actual Cocoa AppShell, real WebM, fresh persisted Config; public spawn and public QWidget mouse events with real cursor. Physics drag remains enabled.','inputs':'Two independent windows; manual top attach in physics mode, automatic child top move, child close; actual saved location reopened in a fresh process','assertions':checks,'errors':errors,'reset':'Original cursor restored; actual AppShell aboutToQuit cleanup; user config untouched','exit_status':int(bool(errors))}
+name='restore' if restore else 'two-pets';(out/(name+'.json')).write_text(json.dumps(record,indent=2));print(name,record['exit_status'],errors)
+if not restore and not errors:
+ r=subprocess.run([sys.executable,str(Path(__file__).resolve()),str(base)],cwd=Path.cwd());assert r.returncode==0
+sys.exit(record['exit_status'])

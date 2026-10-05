@@ -1,0 +1,22 @@
+Window: "seeky· pet · 设置", App: seeky· pet.
+0 dialog seeky· pet · 设置, Secondary Actions: Raise
+	1 button 保存设置并退出软件, Description: 保存成功后退出所有桌宠；关闭设置窗口可用 Esc。, ID: QApplication.ModernSettingsDialog.sidebarPane.quitApplication, Secondary Actions: Raise
+	2 image QApplication.ModernSettingsDialog.sidebarPane.QWidget.brandLogo
+	3 text Value: seeky· pet, ID: QApplication.ModernSettingsDialog.sidebarPane.QWidget.brandTitle
+	4 text field (settable) Description: 搜索设置…, ID: QApplication.ModernSettingsDialog.sidebarPane.settingsSearch, Secondary Actions: Raise
+		5 button QApplication.ModernSettingsDialog.sidebarPane.settingsSearch.QLineEditIconButton
+	6 text Value: seeky· pet  4.2.1 · seeky.7, ID: QApplication.ModernSettingsDialog.sidebarPane.brandVersion
+	7 container QApplication.ModernSettingsDialog.QStackedWidget
+		8 text Value: 桌宠 调整角色显示与活动，浏览完整动作库。 选择动作后点击播放；桌宠当前动作结束后会继续原有活动。, ID: QApplication.ModernSettingsDialog.QStackedWidget._SettingsPageShell.pageHeader.pageTitle
+		9 text field (settable) 搜索动作, Description: 搜索动作…, Secondary Actions: Raise, ID: QApplication.ModernSettingsDialog.QStackedWidget._SettingsPageShell.settingsScroll.qt_scrollarea_viewport.settingsTaskTabs._CurrentPageStack.ActionLibrary.ResponsiveActionRow.QLineEdit
+		10 button 动作分类, Secondary Actions: Raise, ID: QApplication.ModernSettingsDialog.QStackedWidget._SettingsPageShell.settingsScroll.qt_scrollarea_viewport.settingsTaskTabs._CurrentPageStack.ActionLibrary.ResponsiveActionRow.ModernSelect
+		11 list 可播放动作, ID: QApplication.ModernSettingsDialog.QStackedWidget._SettingsPageShell.settingsScroll.qt_scrollarea_viewport.settingsTaskTabs._CurrentPageStack.ActionLibrary.actionLibraryList
+		12 text Description: 106 个动作 · 已选：三球抛接 · 正在播放：三球抛接, ID: QApplication.ModernSettingsDialog.QStackedWidget._SettingsPageShell.settingsScroll.qt_scrollarea_viewport.settingsTaskTabs._CurrentPageStack.ActionLibrary.ResponsiveActionRow.settingHint
+		13 button 刷新动作库, Secondary Actions: Raise, ID: QApplication.ModernSettingsDialog.QStackedWidget._SettingsPageShell.settingsScroll.qt_scrollarea_viewport.settingsTaskTabs._CurrentPageStack.ActionLibrary.ResponsiveActionRow.QPushButton
+		14 button 在桌宠窗口播放所选动作, Secondary Actions: Raise, ID: QApplication.ModernSettingsDialog.QStackedWidget._SettingsPageShell.settingsScroll.qt_scrollarea_viewport.settingsTaskTabs._CurrentPageStack.ActionLibrary.ResponsiveActionRow.actionPrimary
+	15 text Value: 基础设置 风险评分 Think 风控 卡住检测 行为重复检测 基础设置 语音 台词/歌词 基础设置 提醒时间 文案, ID: QApplication.ModernSettingsDialog.WatchdogSettingsPage.SettingsSection.sectionTitle
+	16 close button
+	17 zoom button
+	18 text seeky· pet · 设置
+19 menu bar
+	20 seeky· pet

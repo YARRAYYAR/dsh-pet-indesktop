@@ -1,0 +1,17 @@
+import json,statistics
+from pathlib import Path
+out=Path('docs/evidence/seeky7/performance');summary={}
+component_fields=['first_frame_unique_bytes','queue_referenced_bytes','ring_referenced_bytes','raw_unique_bytes_across_queues_and_rings','clip_display_image_bytes','window_scaled_image_bytes']
+for path in sorted(out.glob('*.json')):
+ if not(path.stem.startswith(('before-','after-')) and '-run' not in path.stem) and path.stem!='long-after':continue
+ d=json.loads(path.read_text());duration=d['inputs']['duration'];cutoff=duration-15 if d['inputs']['churn'] else duration-1
+ samples=[v for v in d['samples'] if 37<=v['time']<cutoff];components=[v for v in d['components'] if 37<=v['time']<cutoff]
+ med=lambda rows,key:statistics.median(v[key] for v in rows)/2**20 if rows else None
+ r=d['checks'];row={'exit_status':d['exit_status'],'fps':[round(v['fps'],3) for v in r['playback'].values()],'forward_gaps':[v['forward_gaps'] for v in r['playback'].values()],'queue_drops':r['queue_drops'],'peak_mib':round(r['peak_mib'],3),'fixed_window_footprint_mib':round(med(samples,'footprint'),3),'fixed_window_rss_mib':round(med(samples,'rss'),3),'ffmpeg_footprint_mib':round(med(samples,'ffmpeg_footprint'),3),'parent_footprint_mib':round(med(samples,'parent_footprint'),3),'unique_component_medians_mib':{key:round(med(components,key),3) for key in component_fields},'lifecycle':r['lifecycle'],'live_ffmpeg_after_cleanup':r['live_ffmpeg_after_cleanup'],'errors':d['errors']}
+ run=out/(path.stem+'-run.json')
+ if run.exists():
+  p=json.loads(run.read_text())['system_pressure'];row['system_cpu_median']=statistics.median(v['system_cpu_percent'] for v in p);row['minimum_available_gib']=min(v['available_bytes'] for v in p)/2**30
+ if duration>600:
+  trend=[v for v in samples if 100<=v['time']<600];xs=[v['time']/60 for v in trend];meanx=statistics.mean(xs);den=sum((x-meanx)**2 for x in xs);row['trend_window_seconds']=[100,600];row['slope_mib_per_minute']={key:sum((x-meanx)*(v[key]/2**20) for x,v in zip(xs,trend))/den for key in ('footprint','rss')};row['first_minute_medians_mib']={key:med([v for v in trend if v['time']<160],key) for key in ('footprint','rss')};row['last_minute_medians_mib']={key:med([v for v in trend if v['time']>=540],key) for key in ('footprint','rss')}
+ summary[path.stem]=row
+out.joinpath('summary.json').write_text(json.dumps({'method':'Same cached virtualenv (workspace .venv symlink), source/config/seed matched. Fixed cost window37..99s or37..85s withchurn; long trend100..600s excludes intentional close/respawn and early resize/warmup. CPU/load differences prevent causal claims. Raw/reference component values must not be added to process footprint.','runs':summary},indent=2));print(json.dumps(summary,indent=2))

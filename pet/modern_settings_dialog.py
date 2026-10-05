@@ -251,7 +251,7 @@ class ModernSettingsDialog(QDialog):
         self.standalone = bool(standalone)
         from .branding import NAME, brand_icon
         from .settings_commands import SettingsCommandClient
-        from .settings_brand import add_identity, add_footer, expand_domain_navigation
+        from .settings_brand import add_identity, add_footer, expand_domain_navigation, transition_page
         self.command_client = SettingsCommandClient(config, self)
         self.finished.connect(lambda _result: self.command_client.close())
         self.ai_page = None
@@ -284,9 +284,10 @@ class ModernSettingsDialog(QDialog):
         sidebar_pane.setObjectName("sidebarPane")
         sidebar_pane.setFixedWidth(200)
         sidebar_layout = QVBoxLayout(sidebar_pane)
-        sidebar_layout.setContentsMargins(12, 16, 12, 12)
-        sidebar_layout.setSpacing(9)
-        self.save_exit_button = QPushButton("保存并退出", sidebar_pane)
+        sidebar_layout.setContentsMargins(12, 12, 12, 12)
+        sidebar_layout.setSpacing(6)
+        from .settings_navigation import SidebarNavigationButton
+        self.save_exit_button = SidebarNavigationButton("退出软件", sidebar_pane, quit_action=True)
         self.save_exit_button.setObjectName("saveAndExit")
         self.save_exit_button.setIcon(vector_widget_icon(self.save_exit_button, "back", 16))
         self.save_exit_button.clicked.connect(self._save)
@@ -783,6 +784,7 @@ class ModernSettingsDialog(QDialog):
 
         self.festival_page = FestivalSettingsPage(self.config, self)
         self._rebuild_domain_navigation()
+        self.pages.currentChanged.connect(lambda _index: transition_page(self))
         self.sidebar.currentRowChanged.connect(self.pages.setCurrentIndex)
         self.sidebar.currentRowChanged.connect(lambda row: expand_domain_navigation(self, row))
         self.sidebar.setCurrentRow(0)
@@ -2134,28 +2136,26 @@ class ModernSettingsDialog(QDialog):
         if callable(cb):
             cb(text)
 
+    def hideEvent(self, event) -> None:  # noqa: N802 - Qt API
+        if hasattr(self, '_page_transition'):
+            self._page_transition.snap(1.0)
+        super().hideEvent(event)
+
     def reject(self) -> None:  # noqa: N802 - Qt API
-        """Esc 路径与关闭按钮一致：保存设置并应用开机自启。"""
-        if not getattr(self, "_saved_via_button", False):
-            try:
-                self._write_config()
-                self._apply_autostart()
-            except Exception:
-                logging.exception("Esc 关闭设置时保存配置失败")
+        """Esc saves first; failed persistence retains the editable form."""
+        from .settings_brand import save_before_close
+        if not getattr(self, '_saved_via_button', False):
+            if not save_before_close(self):
+                return
+            self._saved_via_button = True
         super().reject()
 
     def closeEvent(self, event) -> None:  # noqa: N802 - Qt API
-        """直接关闭（X / Esc）时同样落盘，避免修改丢失。
-
-        设置项都是即时型偏好，与右键菜单/托盘修改的写入时机保持一致；
-        已走「保存并退出」则跳过（防重复写入）。
-        """
-        if not getattr(self, "_saved_via_button", False):
-            try:
-                if not self._write_config():
-                    event.ignore()
-                    return
-                self._apply_autostart()
-            except Exception:
-                logging.exception("关闭设置时保存配置失败")
+        """The native close button uses the same save-before-close contract."""
+        from .settings_brand import save_before_close
+        if not getattr(self, '_saved_via_button', False):
+            if not save_before_close(self):
+                event.ignore()
+                return
+            self._saved_via_button = True
         super().closeEvent(event)

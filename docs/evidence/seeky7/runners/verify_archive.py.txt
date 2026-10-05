@@ -1,0 +1,12 @@
+import hashlib,json,plistlib,time,zipfile
+from pathlib import Path
+archive=Path('/Users/ray/Downloads/seeky-pet-4.2.1.7-macOS-arm64.zip');start=time.time()
+with zipfile.ZipFile(archive,metadata_encoding='utf-8') as z:
+ bad=z.testzip();assert bad is None
+ info=plistlib.loads(z.read('seeky· pet.app/Contents/Info.plist'));assert info['CFBundleVersion']=='4.2.1.7'
+ entries=len(z.infolist())
+h=hashlib.sha256()
+with archive.open('rb') as f:
+ for chunk in iter(lambda:f.read(1048576),b''):h.update(chunk)
+r={'command':['.venv/bin/python',str(Path(__file__).resolve())],'generation_command':['ditto','-c','-k','--sequesterRsrc','--keepParent','/Users/ray/Applications/seeky· pet.app',str(archive)],'source':'/Users/ray/Applications/seeky· pet.app','output':str(archive),'setup':'Installed signed source-equivalent bundle; macOS ditto UTF8 metadata read explicitly','assertions':'Every ZIP entry CRC valid; exact UTF8 bundle name; embedded4.2.1.7; SHA256','checks':{'zip_entries':entries,'bad_crc_entry':bad,'bundle_version':info['CFBundleVersion'],'sha256':h.hexdigest(),'bytes':archive.stat().st_size},'elapsed_seconds':time.time()-start,'exit_status':0}
+Path('docs/evidence/seeky7/package/archive.json').write_text(json.dumps(r,ensure_ascii=False,indent=2));print(r)

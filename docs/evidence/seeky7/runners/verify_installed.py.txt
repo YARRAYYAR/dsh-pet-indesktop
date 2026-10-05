@@ -1,0 +1,8 @@
+import json,os,subprocess,sys,time
+from pathlib import Path
+root=Path.cwd();out=root/'docs/evidence/seeky7/package';bundle=Path('/Users/ray/Applications/seeky· pet.app')
+for name,script in [('installed-static','verify_dsr_package.py'),('installed-runtime','verify_dsr_packaged_runtime.py')]:
+ cmd=[sys.executable,'scripts/'+script,'--app',str(bundle),'--output',str(out/(name+'.json'))];start=time.time()
+ with (out/(name+'-command.log')).open('w') as f:r=subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT)
+ (out/(name+'-run.json')).write_text(json.dumps({'command':cmd,'cwd':str(root),'setup':'Installed signed APFS clone, exact installed application path','assertions':'Source/license/media/version then native command list/play/invalid/quit/cleanup','start':start,'end':time.time(),'exit_status':r.returncode},indent=2));print(name,r.returncode,flush=True)
+ if r.returncode:sys.exit(r.returncode)

@@ -21,7 +21,7 @@ from .window_effects import (
 def _ceiling_clip_rect(host, width, height):
     from PySide6.QtCore import QRect
     top = getattr(host, '_top_flip', None)
-    if top is None or not top.active or top.edge_y is None:
+    if top is None or not top.placement_allowed or not top.active or top.edge_y is None:
         return None
     start = max(0, min(height, top.edge_y - host.y()))
     return QRect(0, start, width, height - start)
@@ -197,17 +197,28 @@ class WindowFeatureGateMixin:
         if (self._hidden_paused or getattr(self, '_closing', False)
                 or not self.isVisible() or self._dragging):
             return
-        from PySide6.QtGui import QCursor
+        from PySide6.QtCore import QPointF
+        from PySide6.QtGui import QCursor, QTransform
         from . import catalog
         from .interaction import cursor_facing
 
         cursor = QCursor.pos()
-        center = (self.x() + self._w / 2.0, self.y() + self._h / 2.0)
+        # 位置、mask 与绘制共用稳定身体框和偏移；旋转也使用 paint 的中心。
+        body = self._stable_body_local_rect().translated(self._draw_delta)
+        angle = self._effects_current_angle()
+        pivot = self._effects_rotation_rect(self._frame_draw_rect()).center()
+        transform = QTransform()
+        transform.translate(pivot.x(), pivot.y())
+        transform.rotate(angle)
+        transform.translate(-pivot.x(), -pivot.y())
+        local_center = transform.map(QPointF(body.center()))
+        center = (self.x() + local_center.x(), self.y() + local_center.y())
         target = cursor_facing(
             center,
             (float(cursor.x()), float(cursor.y())),
             catalog.CURSOR_REACTION_RADIUS,
             catalog.CURSOR_DEAD_ZONE,
+            rotation_deg=angle,
         )
         if target is None or target == self.facing:
             return
@@ -294,7 +305,7 @@ class WindowFeatureGateMixin:
         if self._effects_probe_active():
             return float(self._edge_probe.current_angle_deg())
         top = getattr(self, '_top_flip', None)
-        if top is not None and top.active:
+        if top is not None and top.placement_allowed and top.active:
             return top.current_angle_deg()
         egg = getattr(self, "_throw_egg", None)
         if egg is not None and egg.active:
@@ -321,7 +332,7 @@ class WindowFeatureGateMixin:
 
     def _effects_rotation_rect(self, rect):
         top = getattr(self, '_top_flip', None)
-        if top is not None and top.active and not self._effects_probe_active():
+        if top is not None and top.placement_allowed and top.active and not self._effects_probe_active():
             # The stable body centre keeps ceiling exposure unchanged at 180°.
             # Paint/mask pass frame-local coordinates; hit testing passes window
             # coordinates. Translate the same pivot into the caller's space.
@@ -381,11 +392,27 @@ class WindowFeatureGateMixin:
     def _effects_on_drag_started(self) -> None:
         if self._effects_probe_active():
             self._edge_probe.on_drag_started()
+        top = getattr(self, '_top_flip', None)
+        if top is not None:
+            top.begin_manual_drag()
 
     def _effects_on_release(self, was_dragging: bool) -> None:
         edge = getattr(self, "_edge_probe", None)
         if edge is not None:
             edge.on_release(bool(was_dragging))
+
+    def _effects_on_drag_cancelled(self) -> None:
+        top = getattr(self, '_top_flip', None)
+        if top is not None:
+            top.cancel_manual_drag()
+
+    def _effects_on_physics_mode(self, mode: str) -> None:
+        top = getattr(self, '_top_flip', None)
+        if mode == 'throw' and top is not None:
+            top.cancel('automatic_flight')
+            # 恢复普通边界后，物理积分从同一个合法虚拟位置继续。
+            point = self._virtual_pos()
+            self._phys_pos[:] = [float(point.x()), float(point.y())]
 
     def _effects_on_hidden(self) -> None:
         timer = getattr(self, '_cursor_facing_timer', None)

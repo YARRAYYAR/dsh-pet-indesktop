@@ -1,0 +1,593 @@
+FFFFFFEEFFEEFEFEFE                                                       [100%]
+==================================== ERRORS ====================================
+_ ERROR at teardown of test_save_failure_or_exception_never_closes_or_quits[false-escape] _
+
+item = <Function test_save_failure_or_exception_never_closes_or_quits[false-escape]>
+
+    @pytest.hookimpl(wrapper=True, trylast=True)
+    def pytest_runtest_teardown(item):
+        """
+        Hook called after each test tear down, to process any pending events and
+        avoiding leaking events to the next test. Also, if exceptions have
+        been captured during fixtures teardown, fail the test.
+        """
+        _process_events()
+>       _close_widgets(item)
+
+.venv/lib/python3.13/site-packages/pytestqt/plugin.py:203: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+item = <Function test_save_failure_or_exception_never_closes_or_quits[false-escape]>
+
+    def _close_widgets(item: pytest.Item) -> None:
+        """
+        Close all widgets registered in the pytest item.
+        """
+        widgets = getattr(item, "qt_widgets", None)
+        if widgets:
+            for w, before_close_func in item.qt_widgets:  # type: ignore[attr-defined]
+                w = w()
+                if w is not None:
+                    if before_close_func is not None:
+                        before_close_func(w)
+>                   w.close()
+E                   RuntimeError: libshiboken: Internal C++ object (ModernSettingsDialog) already deleted.
+
+.venv/lib/python3.13/site-packages/pytestqt/qtbot.py:808: RuntimeError
+----------------------------- Captured stderr call -----------------------------
+Exceptions caught in Qt event loop:
+________________________________________________________________________________
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/pet/modern_settings_dialog.py", line 256, in <lambda>
+    self.finished.connect(lambda _result: self.command_client.close())
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ControlledClient' object has no attribute 'close'
+________________________________________________________________________________
+_ ERROR at setup of test_save_failure_or_exception_never_closes_or_quits[false-close] _
+
+item = <Function test_save_failure_or_exception_never_closes_or_quits[false-close]>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+E       AssertionError: previous item was not torn down properly
+
+.venv/lib/python3.13/site-packages/pytestqt/plugin.py:178: AssertionError
+_ ERROR at teardown of test_save_failure_or_exception_never_closes_or_quits[raise-escape] _
+
+item = <Function test_save_failure_or_exception_never_closes_or_quits[raise-escape]>
+
+    @pytest.hookimpl(wrapper=True, trylast=True)
+    def pytest_runtest_teardown(item):
+        """
+        Hook called after each test tear down, to process any pending events and
+        avoiding leaking events to the next test. Also, if exceptions have
+        been captured during fixtures teardown, fail the test.
+        """
+        _process_events()
+>       _close_widgets(item)
+
+.venv/lib/python3.13/site-packages/pytestqt/plugin.py:203: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+item = <Function test_save_failure_or_exception_never_closes_or_quits[raise-escape]>
+
+    def _close_widgets(item: pytest.Item) -> None:
+        """
+        Close all widgets registered in the pytest item.
+        """
+        widgets = getattr(item, "qt_widgets", None)
+        if widgets:
+            for w, before_close_func in item.qt_widgets:  # type: ignore[attr-defined]
+                w = w()
+                if w is not None:
+                    if before_close_func is not None:
+                        before_close_func(w)
+>                   w.close()
+E                   RuntimeError: libshiboken: Internal C++ object (ModernSettingsDialog) already deleted.
+
+.venv/lib/python3.13/site-packages/pytestqt/qtbot.py:808: RuntimeError
+----------------------------- Captured stderr call -----------------------------
+Exceptions caught in Qt event loop:
+________________________________________________________________________________
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/pet/modern_settings_dialog.py", line 256, in <lambda>
+    self.finished.connect(lambda _result: self.command_client.close())
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ControlledClient' object has no attribute 'close'
+________________________________________________________________________________
+------------------------------ Captured log call -------------------------------
+ERROR    root:modern_settings_dialog.py:2144 Esc 关闭设置时保存配置失败
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/pet/modern_settings_dialog.py", line 2141, in reject
+    self._write_config()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/Users/ray/Documents/New project/dsr-pet/tests/test_seeky7_settings.py", line 148, in write
+    raise OSError('受控保存异常')
+OSError: 受控保存异常
+_ ERROR at setup of test_save_failure_or_exception_never_closes_or_quits[raise-close] _
+
+item = <Function test_save_failure_or_exception_never_closes_or_quits[raise-close]>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+E       AssertionError: previous item was not torn down properly
+
+.venv/lib/python3.13/site-packages/pytestqt/plugin.py:178: AssertionError
+_ ERROR at teardown of test_save_failure_or_exception_never_closes_or_quits[raise-quit] _
+TEARDOWN ERROR: Exceptions caught in Qt event loop:
+________________________________________________________________________________
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/pet/settings_brand.py", line 52, in <lambda>
+    dialog.quit_button.clicked.connect(lambda: _quit(dialog))
+                                               ~~~~~^^^^^^^^
+  File "/Users/ray/Documents/New project/dsr-pet/pet/settings_brand.py", line 60, in _quit
+    if not dialog._write_config():
+           ~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/ray/Documents/New project/dsr-pet/tests/test_seeky7_settings.py", line 148, in write
+    raise OSError('受控保存异常')
+OSError: 受控保存异常
+________________________________________________________________________________
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/pet/modern_settings_dialog.py", line 256, in <lambda>
+    self.finished.connect(lambda _result: self.command_client.close())
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ControlledClient' object has no attribute 'close'
+________________________________________________________________________________
+
+----------------------------- Captured stderr call -----------------------------
+Exceptions caught in Qt event loop:
+________________________________________________________________________________
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/pet/settings_brand.py", line 52, in <lambda>
+    dialog.quit_button.clicked.connect(lambda: _quit(dialog))
+                                               ~~~~~^^^^^^^^
+  File "/Users/ray/Documents/New project/dsr-pet/pet/settings_brand.py", line 60, in _quit
+    if not dialog._write_config():
+           ~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/ray/Documents/New project/dsr-pet/tests/test_seeky7_settings.py", line 148, in write
+    raise OSError('受控保存异常')
+OSError: 受控保存异常
+________________________________________________________________________________
+--------------------------- Captured stderr teardown ---------------------------
+Exceptions caught in Qt event loop:
+________________________________________________________________________________
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/pet/modern_settings_dialog.py", line 256, in <lambda>
+    self.finished.connect(lambda _result: self.command_client.close())
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ControlledClient' object has no attribute 'close'
+________________________________________________________________________________
+---------------------------- Captured log teardown -----------------------------
+ERROR    root:modern_settings_dialog.py:2160 关闭设置时保存配置失败
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/pet/modern_settings_dialog.py", line 2155, in closeEvent
+    if not self._write_config():
+           ~~~~~~~~~~~~~~~~~~^^
+  File "/Users/ray/Documents/New project/dsr-pet/tests/test_seeky7_settings.py", line 148, in write
+    raise OSError('受控保存异常')
+OSError: 受控保存异常
+ERROR    root:modern_settings_dialog.py:2144 Esc 关闭设置时保存配置失败
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/pet/modern_settings_dialog.py", line 2141, in reject
+    self._write_config()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/Users/ray/Documents/New project/dsr-pet/tests/test_seeky7_settings.py", line 148, in write
+    raise OSError('受控保存异常')
+OSError: 受控保存异常
+_ ERROR at teardown of test_single_footer_quit_deduplicates_errors_retry_and_external_reload _
+TEARDOWN ERROR: Exceptions caught in Qt event loop:
+________________________________________________________________________________
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/pet/modern_settings_dialog.py", line 256, in <lambda>
+    self.finished.connect(lambda _result: self.command_client.close())
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ControlledClient' object has no attribute 'close'
+________________________________________________________________________________
+
+--------------------------- Captured stderr teardown ---------------------------
+Exceptions caught in Qt event loop:
+________________________________________________________________________________
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/pet/modern_settings_dialog.py", line 256, in <lambda>
+    self.finished.connect(lambda _result: self.command_client.close())
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ControlledClient' object has no attribute 'close'
+________________________________________________________________________________
+_______ ERROR at teardown of test_raising_quit_transport_restores_retry ________
+TEARDOWN ERROR: Exceptions caught in Qt event loop:
+________________________________________________________________________________
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/pet/settings_brand.py", line 52, in <lambda>
+    dialog.quit_button.clicked.connect(lambda: _quit(dialog))
+                                               ~~~~~^^^^^^^^
+  File "/Users/ray/Documents/New project/dsr-pet/pet/settings_brand.py", line 74, in _quit
+    dialog.command_client.request('quit', {}, finished)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ray/Documents/New project/dsr-pet/tests/test_seeky7_settings.py", line 192, in request
+    raise OSError('连接中断')
+OSError: 连接中断
+________________________________________________________________________________
+
+----------------------------- Captured stderr call -----------------------------
+Exceptions caught in Qt event loop:
+________________________________________________________________________________
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/pet/settings_brand.py", line 52, in <lambda>
+    dialog.quit_button.clicked.connect(lambda: _quit(dialog))
+                                               ~~~~~^^^^^^^^
+  File "/Users/ray/Documents/New project/dsr-pet/pet/settings_brand.py", line 74, in _quit
+    dialog.command_client.request('quit', {}, finished)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ray/Documents/New project/dsr-pet/tests/test_seeky7_settings.py", line 192, in request
+    raise OSError('连接中断')
+OSError: 连接中断
+________________________________________________________________________________
+=================================== FAILURES ===================================
+____________________ test_compact_tokens_and_metric_growth _____________________
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x11272a900>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-54/test_compact_tokens_and_metric0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109d5d480>
+
+    def test_compact_tokens_and_metric_growth(qtbot, tmp_path, monkeypatch):
+        dialog = open_dialog(qtbot, tmp_path, monkeypatch)
+        sidebar = dialog.sidebar.parentWidget()
+        assert sidebar.width() == 200
+>       assert sidebar.layout().contentsMargins().top() == 12
+E       assert 16 == 12
+E        +  where 16 = <built-in method top of PySide6.QtCore.QMargins object at 0x133a97f40>()
+E        +    where <built-in method top of PySide6.QtCore.QMargins object at 0x133a97f40> = <PySide6.QtCore.QMargins(12, 16, 12, 12) at 0x133a97f40>.top
+E        +      where <PySide6.QtCore.QMargins(12, 16, 12, 12) at 0x133a97f40> = <built-in method contentsMargins of PySide6.QtWidgets.QVBoxLayout object at 0x113b2c280>()
+E        +        where <built-in method contentsMargins of PySide6.QtWidgets.QVBoxLayout object at 0x113b2c280> = <PySide6.QtWidgets.QVBoxLayout(0x7d7999a40) at 0x113b2c280>.contentsMargins
+E        +          where <PySide6.QtWidgets.QVBoxLayout(0x7d7999a40) at 0x113b2c280> = <built-in method layout of PySide6.QtWidgets.QFrame object at 0x113b2c240>()
+E        +            where <built-in method layout of PySide6.QtWidgets.QFrame object at 0x113b2c240> = <PySide6.QtWidgets.QFrame(0x7d7bc1500, name="sidebarPane") at 0x113b2c240>.layout
+
+tests/test_seeky7_settings.py:43: AssertionError
+----------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: Populating font family aliases took 246 ms. Replace uses of missing font family "Sans Serif" with one that exists to avoid this cost. 
+_________ test_label_and_arrow_disclosure_independent_and_reuse_pages __________
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x1343cb250>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-54/test_label_and_arrow_disclosur0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1092cd0f0>
+
+    def test_label_and_arrow_disclosure_independent_and_reuse_pages(qtbot, tmp_path, monkeypatch):
+        dialog = open_dialog(qtbot, tmp_path, monkeypatch)
+        pane = pane_for(dialog, '桌宠')
+        page_ids = [id(dialog.pages.widget(i)) for i in range(dialog.pages.count())]
+        pane_ids = [id(dialog.sidebar.itemWidget(dialog.sidebar.item(i))) for i in range(dialog.sidebar.count())]
+        pane.heading.click()
+        assert pane.children.isVisible()
+        action = next(button for button in pane.children.findChildren(QPushButton) if button.text() == '动作库')
+        action.click()
+        pane.heading.click()
+>       assert pane.children.isVisible() and dialog.pet_tabs.currentKey() == 'actions'
+E       assert (False)
+E        +  where False = <built-in method isVisible of PySide6.QtWidgets.QWidget object at 0x134651180>()
+E        +    where <built-in method isVisible of PySide6.QtWidgets.QWidget object at 0x134651180> = <PySide6.QtWidgets.QWidget(0x7d56d4380) at 0x134651180>.isVisible
+E        +      where <PySide6.QtWidgets.QWidget(0x7d56d4380) at 0x134651180> = <PySide6.QtWidgets.QFrame(0x7d9be2f40, name="expandedDomainNavigation") at 0x134650940>.children
+
+tests/test_seeky7_settings.py:69: AssertionError
+_______ test_keyboard_visual_order_disclose_activate_and_focus_modality ________
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x134754050>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-54/test_keyboard_visual_order_dis0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x13447fad0>
+
+    def test_keyboard_visual_order_disclose_activate_and_focus_modality(qtbot, tmp_path, monkeypatch):
+        dialog = open_dialog(qtbot, tmp_path, monkeypatch)
+        pane = pane_for(dialog, '桌宠')
+        qtbot.mouseClick(pane.heading, Qt.MouseButton.LeftButton)
+        assert pane.heading.hasFocus() and not pane.heading.property('keyboardFocus')
+        qtbot.keyClick(pane.heading, Qt.Key.Key_Left)
+        assert not pane.children.isVisible()
+        qtbot.keyClick(pane.heading, Qt.Key.Key_Right)
+>       assert pane.children.isVisible() and pane.heading.property('keyboardFocus')
+E       assert (True and None)
+E        +  where True = <built-in method isVisible of PySide6.QtWidgets.QWidget object at 0x1348421c0>()
+E        +    where <built-in method isVisible of PySide6.QtWidgets.QWidget object at 0x1348421c0> = <PySide6.QtWidgets.QWidget(0x7d56d4380) at 0x1348421c0>.isVisible
+E        +      where <PySide6.QtWidgets.QWidget(0x7d56d4380) at 0x1348421c0> = <PySide6.QtWidgets.QFrame(0x7d9e58380, name="expandedDomainNavigation") at 0x134661e00>.children
+E        +  and   None = <built-in method property of SidebarNavigationButton object at 0x134841c40>('keyboardFocus')
+E        +    where <built-in method property of SidebarNavigationButton object at 0x134841c40> = <pet.settings_navigation.SidebarNavigationButton(0x7d56d41c0, name="sidebarDomainHeading") at 0x134841c40>.property
+E        +      where <pet.settings_navigation.SidebarNavigationButton(0x7d56d41c0, name="sidebarDomainHeading") at 0x134841c40> = <PySide6.QtWidgets.QFrame(0x7d9e58380, name="expandedDomainNavigation") at 0x134661e00>.heading
+
+tests/test_seeky7_settings.py:89: AssertionError
+_______ test_motion_retarget_bounce_once_fixed_hit_rect_and_hidden_stop ________
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x13445f230>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-54/test_motion_retarget_bounce_on0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1344427a0>
+
+    def test_motion_retarget_bounce_once_fixed_hit_rect_and_hidden_stop(qtbot, tmp_path, monkeypatch):
+        from pet import ui_motion
+        monkeypatch.setattr(ui_motion, 'reduced_motion_requested', lambda: False)
+        dialog = open_dialog(qtbot, tmp_path, monkeypatch)
+        pane = pane_for(dialog, '桌宠')
+        button = pane.heading
+        geometry = button.geometry()
+        QApplication.sendEvent(button, QEvent(QEvent.Type.Enter))
+        qtbot.waitUntil(lambda: 0 < button._hover < 1)
+        midpoint = button._hover
+        QApplication.sendEvent(button, QEvent(QEvent.Type.Leave))
+        assert button._fade.startValue() == midpoint
+        qtbot.mousePress(button, Qt.MouseButton.LeftButton)
+        qtbot.waitUntil(lambda: button._press > .1)
+>       assert button.geometry() == geometry and button._paint_scale < 1
+                                                 ^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'SidebarNavigationButton' object has no attribute '_paint_scale'
+
+tests/test_seeky7_settings.py:116: AttributeError
+_______________________ test_reduced_motion_final_state ________________________
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x13445f5c0>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-54/test_reduced_motion_final_stat0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1344429c0>
+
+    def test_reduced_motion_final_state(qtbot, tmp_path, monkeypatch):
+        from pet import ui_motion
+        monkeypatch.setattr(ui_motion, 'reduced_motion_requested', lambda: True)
+        dialog = open_dialog(qtbot, tmp_path, monkeypatch)
+        button = pane_for(dialog, '桌宠').heading
+        button.click()
+>       assert button._icon_scale == 1
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'SidebarNavigationButton' object has no attribute '_icon_scale'
+
+tests/test_seeky7_settings.py:135: AttributeError
+______ test_save_failure_or_exception_never_closes_or_quits[false-escape] ______
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x13447f1d0>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-54/test_save_failure_or_exception0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x134467150>
+path = 'escape', result = 'false'
+
+    @pytest.mark.parametrize('path', ('escape', 'close', 'quit'))
+    @pytest.mark.parametrize('result', ('false', 'raise'))
+    def test_save_failure_or_exception_never_closes_or_quits(qtbot, tmp_path, monkeypatch, path, result):
+        dialog = open_dialog(qtbot, tmp_path, monkeypatch)
+        client = ControlledClient()
+        dialog.command_client = client
+        def write():
+            if result == 'raise':
+                raise OSError('受控保存异常')
+            return False
+        monkeypatch.setattr(dialog, '_write_config', write)
+        if path == 'escape':
+            qtbot.keyClick(dialog, Qt.Key.Key_Escape)
+        elif path == 'close':
+            dialog.close()
+        else:
+            dialog.quit_button.click()
+>       assert dialog.isVisible()
+E       assert False
+E        +  where False = <built-in method isVisible of ModernSettingsDialog object at 0x13472ea80>()
+E        +    where <built-in method isVisible of ModernSettingsDialog object at 0x13472ea80> = <pet.modern_settings_dialog.ModernSettingsDialog(0x7d89de800) at 0x13472ea80>.isVisible
+
+tests/test_seeky7_settings.py:157: AssertionError
+----------------------------- Captured stderr call -----------------------------
+Exceptions caught in Qt event loop:
+________________________________________________________________________________
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/pet/modern_settings_dialog.py", line 256, in <lambda>
+    self.finished.connect(lambda _result: self.command_client.close())
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ControlledClient' object has no attribute 'close'
+________________________________________________________________________________
+_______ test_save_failure_or_exception_never_closes_or_quits[false-quit] _______
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x134443df0>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-54/test_save_failure_or_exception1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x134467e50>
+path = 'quit', result = 'false'
+
+    @pytest.mark.parametrize('path', ('escape', 'close', 'quit'))
+    @pytest.mark.parametrize('result', ('false', 'raise'))
+    def test_save_failure_or_exception_never_closes_or_quits(qtbot, tmp_path, monkeypatch, path, result):
+        dialog = open_dialog(qtbot, tmp_path, monkeypatch)
+        client = ControlledClient()
+        dialog.command_client = client
+        def write():
+            if result == 'raise':
+                raise OSError('受控保存异常')
+            return False
+        monkeypatch.setattr(dialog, '_write_config', write)
+        if path == 'escape':
+            qtbot.keyClick(dialog, Qt.Key.Key_Escape)
+        elif path == 'close':
+            dialog.close()
+        else:
+            dialog.quit_button.click()
+        assert dialog.isVisible()
+        assert not client.calls
+        assert dialog.quit_button.isEnabled()
+>       assert dialog.footer_status.isVisible()
+               ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'ModernSettingsDialog' object has no attribute 'footer_status'
+
+tests/test_seeky7_settings.py:160: AttributeError
+______ test_save_failure_or_exception_never_closes_or_quits[raise-escape] ______
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x134443ce0>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-54/test_save_failure_or_exception2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x134555a90>
+path = 'escape', result = 'raise'
+
+    @pytest.mark.parametrize('path', ('escape', 'close', 'quit'))
+    @pytest.mark.parametrize('result', ('false', 'raise'))
+    def test_save_failure_or_exception_never_closes_or_quits(qtbot, tmp_path, monkeypatch, path, result):
+        dialog = open_dialog(qtbot, tmp_path, monkeypatch)
+        client = ControlledClient()
+        dialog.command_client = client
+        def write():
+            if result == 'raise':
+                raise OSError('受控保存异常')
+            return False
+        monkeypatch.setattr(dialog, '_write_config', write)
+        if path == 'escape':
+            qtbot.keyClick(dialog, Qt.Key.Key_Escape)
+        elif path == 'close':
+            dialog.close()
+        else:
+            dialog.quit_button.click()
+>       assert dialog.isVisible()
+E       assert False
+E        +  where False = <built-in method isVisible of ModernSettingsDialog object at 0x134612a00>()
+E        +    where <built-in method isVisible of ModernSettingsDialog object at 0x134612a00> = <pet.modern_settings_dialog.ModernSettingsDialog(0x7d868be00) at 0x134612a00>.isVisible
+
+tests/test_seeky7_settings.py:157: AssertionError
+----------------------------- Captured stderr call -----------------------------
+Exceptions caught in Qt event loop:
+________________________________________________________________________________
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/pet/modern_settings_dialog.py", line 256, in <lambda>
+    self.finished.connect(lambda _result: self.command_client.close())
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ControlledClient' object has no attribute 'close'
+________________________________________________________________________________
+------------------------------ Captured log call -------------------------------
+ERROR    root:modern_settings_dialog.py:2144 Esc 关闭设置时保存配置失败
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/pet/modern_settings_dialog.py", line 2141, in reject
+    self._write_config()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/Users/ray/Documents/New project/dsr-pet/tests/test_seeky7_settings.py", line 148, in write
+    raise OSError('受控保存异常')
+OSError: 受控保存异常
+_______ test_save_failure_or_exception_never_closes_or_quits[raise-quit] _______
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x13477c950>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-54/test_save_failure_or_exception3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x134557980>
+path = 'quit', result = 'raise'
+
+    @pytest.mark.parametrize('path', ('escape', 'close', 'quit'))
+    @pytest.mark.parametrize('result', ('false', 'raise'))
+    def test_save_failure_or_exception_never_closes_or_quits(qtbot, tmp_path, monkeypatch, path, result):
+        dialog = open_dialog(qtbot, tmp_path, monkeypatch)
+        client = ControlledClient()
+        dialog.command_client = client
+        def write():
+            if result == 'raise':
+                raise OSError('受控保存异常')
+            return False
+        monkeypatch.setattr(dialog, '_write_config', write)
+        if path == 'escape':
+            qtbot.keyClick(dialog, Qt.Key.Key_Escape)
+        elif path == 'close':
+            dialog.close()
+        else:
+            dialog.quit_button.click()
+        assert dialog.isVisible()
+        assert not client.calls
+        assert dialog.quit_button.isEnabled()
+>       assert dialog.footer_status.isVisible()
+               ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'ModernSettingsDialog' object has no attribute 'footer_status'
+
+tests/test_seeky7_settings.py:160: AttributeError
+----------------------------- Captured stderr call -----------------------------
+Exceptions caught in Qt event loop:
+________________________________________________________________________________
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/pet/settings_brand.py", line 52, in <lambda>
+    dialog.quit_button.clicked.connect(lambda: _quit(dialog))
+                                               ~~~~~^^^^^^^^
+  File "/Users/ray/Documents/New project/dsr-pet/pet/settings_brand.py", line 60, in _quit
+    if not dialog._write_config():
+           ~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/ray/Documents/New project/dsr-pet/tests/test_seeky7_settings.py", line 148, in write
+    raise OSError('受控保存异常')
+OSError: 受控保存异常
+________________________________________________________________________________
+____ test_single_footer_quit_deduplicates_errors_retry_and_external_reload _____
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x13477cf50>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-54/test_single_footer_quit_dedupl0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x134b20bb0>
+
+    def test_single_footer_quit_deduplicates_errors_retry_and_external_reload(qtbot, tmp_path, monkeypatch):
+        dialog = open_dialog(qtbot, tmp_path, monkeypatch)
+        client = ControlledClient()
+        dialog.command_client = client
+>       assert dialog.quit_button.text() == '退出软件'
+E       AssertionError: assert '退出 seeky· pet' == '退出软件'
+E         
+E         - 退出软件
+E         + 退出 seeky· pet
+
+tests/test_seeky7_settings.py:168: AssertionError
+__________________ test_raising_quit_transport_restores_retry __________________
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x134557980>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-54/test_raising_quit_transport_re0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x134b20830>
+
+    def test_raising_quit_transport_restores_retry(qtbot, tmp_path, monkeypatch):
+        dialog = open_dialog(qtbot, tmp_path, monkeypatch)
+        def request(*args):
+            raise OSError('连接中断')
+        monkeypatch.setattr(dialog.command_client, 'request', request)
+        dialog.quit_button.click()
+>       assert dialog.isVisible() and dialog.quit_button.isEnabled()
+E       assert (True and False)
+E        +  where True = <built-in method isVisible of ModernSettingsDialog object at 0x13473cec0>()
+E        +    where <built-in method isVisible of ModernSettingsDialog object at 0x13473cec0> = <pet.modern_settings_dialog.ModernSettingsDialog(0x7d868b200) at 0x13473cec0>.isVisible
+E        +  and   False = <built-in method isEnabled of PySide6.QtWidgets.QPushButton object at 0x1348b6340>()
+E        +    where <built-in method isEnabled of PySide6.QtWidgets.QPushButton object at 0x1348b6340> = <PySide6.QtWidgets.QPushButton(0x7d544c8c0, name="quitApplication") at 0x1348b6340>.isEnabled
+E        +      where <PySide6.QtWidgets.QPushButton(0x7d544c8c0, name="quitApplication") at 0x1348b6340> = <pet.modern_settings_dialog.ModernSettingsDialog(0x7d868b200) at 0x13473cec0>.quit_button
+
+tests/test_seeky7_settings.py:195: AssertionError
+----------------------------- Captured stderr call -----------------------------
+Exceptions caught in Qt event loop:
+________________________________________________________________________________
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/pet/settings_brand.py", line 52, in <lambda>
+    dialog.quit_button.clicked.connect(lambda: _quit(dialog))
+                                               ~~~~~^^^^^^^^
+  File "/Users/ray/Documents/New project/dsr-pet/pet/settings_brand.py", line 74, in _quit
+    dialog.command_client.request('quit', {}, finished)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ray/Documents/New project/dsr-pet/tests/test_seeky7_settings.py", line 192, in request
+    raise OSError('连接中断')
+OSError: 连接中断
+________________________________________________________________________________
+=========================== short test summary info ============================
+FAILED tests/test_seeky7_settings.py::test_compact_tokens_and_metric_growth
+FAILED tests/test_seeky7_settings.py::test_label_and_arrow_disclosure_independent_and_reuse_pages
+FAILED tests/test_seeky7_settings.py::test_keyboard_visual_order_disclose_activate_and_focus_modality
+FAILED tests/test_seeky7_settings.py::test_motion_retarget_bounce_once_fixed_hit_rect_and_hidden_stop
+FAILED tests/test_seeky7_settings.py::test_reduced_motion_final_state - Attri...
+FAILED tests/test_seeky7_settings.py::test_save_failure_or_exception_never_closes_or_quits[false-escape]
+FAILED tests/test_seeky7_settings.py::test_save_failure_or_exception_never_closes_or_quits[false-quit]
+FAILED tests/test_seeky7_settings.py::test_save_failure_or_exception_never_closes_or_quits[raise-escape]
+FAILED tests/test_seeky7_settings.py::test_save_failure_or_exception_never_closes_or_quits[raise-quit]
+FAILED tests/test_seeky7_settings.py::test_single_footer_quit_deduplicates_errors_retry_and_external_reload
+FAILED tests/test_seeky7_settings.py::test_raising_quit_transport_restores_retry
+ERROR tests/test_seeky7_settings.py::test_save_failure_or_exception_never_closes_or_quits[false-escape]
+ERROR tests/test_seeky7_settings.py::test_save_failure_or_exception_never_closes_or_quits[false-close]
+ERROR tests/test_seeky7_settings.py::test_save_failure_or_exception_never_closes_or_quits[raise-escape]
+ERROR tests/test_seeky7_settings.py::test_save_failure_or_exception_never_closes_or_quits[raise-close]
+ERROR tests/test_seeky7_settings.py::test_save_failure_or_exception_never_closes_or_quits[raise-quit]
+ERROR tests/test_seeky7_settings.py::test_single_footer_quit_deduplicates_errors_retry_and_external_reload
+ERROR tests/test_seeky7_settings.py::test_raising_quit_transport_restores_retry
+11 failed, 7 errors in 17.30s

@@ -1,0 +1,10 @@
+{
+  "command": "QT_QPA_PLATFORM=offscreen PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_seeky7_interactions.py tests/test_dsr_codex_and_ceiling.py tests/test_edge_reachability.py tests/test_edge_probe.py tests/test_drag_move_coalescing.py tests/test_pet_interaction_locks.py tests/test_move_sync.py tests/test_collision_window.py tests/test_architecture.py",
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Existing related regressions plus process-level public Qt/WebM manual ceiling E2E, now with both plain/physics drags releasing inside snap zone. Offscreen, temporary Config.",
+  "inputs": "Raw target inside40px snap band; actual spring physics convergence, QWidget release, immediate angle/attachment/physics/complete-offset assertions; existing drag/edge/collision/movement/architecture checks.",
+  "assertions": "Every test passes; the published physical position matches the full180 degree exposure before save.",
+  "actual_result": "167 passed in 7.73s",
+  "exit_status": 0,
+  "log": "/tmp/seeky7-runtime-evidence/focused-offset-final.log"
+}

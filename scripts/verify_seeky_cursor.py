@@ -81,8 +81,9 @@ def main():
             return
         name, offset, initial_facing, target = cases[case_index]
         case_index += 1
-        center_x = round(pet.x() + pet._w / 2)
-        center_y = round(pet.y() + pet._h / 2)
+        body = pet._stable_body_local_rect().translated(pet._draw_delta)
+        center_x = pet.x() + body.center().x()
+        center_y = pet.y() + body.center().y()
         requested_cursor = QPoint(center_x + offset, center_y)
         pet.facing = initial_facing
         pet._rebuild_frame()
@@ -109,7 +110,7 @@ def main():
         row = {'input': name, 'cursor': [cursor.x(), cursor.y()],
                'requested_cursor': [requested_cursor.x(), requested_cursor.y()],
                'offset_from_pet_center': offset,
-               'window_center': [pet.x() + pet._w/2, pet.y() + pet._h/2],
+               'body_center': list((pet.pos() + pet._draw_delta + pet._stable_body_local_rect().center()).toTuple()),
                'requested_facing': target, 'before': before, 'actual': actual,
                'expected': expected, 'cursor_moved': pointer_moved, 'pass': passed}
         results.append(row)

@@ -5,27 +5,29 @@ from pathlib import Path
 import tempfile
 import time
 
-from PySide6.QtCore import QRect, QTimer
+from PySide6.QtCore import QPoint, QRect, QTimer
 from PySide6.QtWidgets import QApplication
 
 from pet.app import AppShell
 from pet.config import Config
+from scripts.verify_seeky7_interactions import drag_to
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--label', default='ceiling-notches')
+    parser.add_argument('--output-dir', type=Path, default=Path('docs/evidence/dsr-pet'))
     args = parser.parse_args()
     app = QApplication([])
     app.setQuitOnLastWindowClosed(False)
-    output = Path('docs/evidence/dsr-pet')
+    output = args.output_dir
     output.mkdir(parents=True, exist_ok=True)
     checks, errors = {}, []
     fixture = Path(tempfile.mkdtemp(prefix='seeky-ceiling-'))
     cfg = Config(fixture)
     cfg.data.update({'top_flip_enabled': True, 'top_flip_exposure': 0.5, 'codex_link_enabled': False,
                      'no_move': True, 'self_talk_enabled': False, 'harness_autostart': False,
-                     'click_sound_enabled': False})
+                     'click_sound_enabled': False, 'drag_physics': False})
     cfg.save()
     shell = AppShell(app, cfg, enable_chat=False)
     shell.start()
@@ -62,7 +64,7 @@ def main():
             timing = []
             for label, center in (('left', 220), ('notch', notch.center().x()), ('right', screen.geometry().right() - 220)):
                 win._move_window_towards(center - body.center().x(), screen.geometry().top() + 250 - body.top())
-                win._move_window_towards(center - body.center().x(), screen.geometry().top() - body.top())
+                drag_to(win, QPoint(center - body.center().x(), screen.geometry().top() - body.top()))
                 app.processEvents()
                 edge = notch.y() + notch.height() if label == 'notch' else screen.availableGeometry().top()
                 position = win._virtual_pos()
@@ -75,6 +77,11 @@ def main():
                 assert win._top_flip.edge_y == edge, (label, win._top_flip.edge_y, edge)
                 assert abs(position.y() + body.top() - (edge - round(body.height() * 0.5))) <= 1, checks[label]
                 assert not win._top_flip._timer.isActive()
+                initial_position = position
+                win._move_window_towards(position.x(), position.y())
+                position = win._virtual_pos()
+                native_settle = position - initial_position
+                assert abs(native_settle.x()) <= 1 and abs(native_settle.y()) <= 1, native_settle
                 for _ in range(100):
                     t0 = time.perf_counter()
                     win._move_window_towards(position.x(), position.y())
@@ -88,13 +95,14 @@ def main():
                                  round(visible.width() * dpr), round(visible.height() * dpr))).save(str(output / f'ceiling-{label}.png'))
                 checks[label] = {'edge_y': edge, 'window': list(win.geometry().getRect()), 'body': list(body.getRect()),
                                  'angle': win._effects_current_angle(), 'exposure': win.top_flip_exposure,
+                                 'native_settle_delta': list(native_settle.toTuple()),
                                  'mask_visible_top': win.mask().boundingRect().top() + win.y()}
             checks['300_moves_mean_ms'] = sum(timing) / len(timing)
             checks['300_moves_max_ms'] = max(timing)
-            win._move_window_towards(position.x(), screen.geometry().top() + 250 - body.top())
+            drag_to(win, QPoint(position.x(), screen.geometry().top() + 250 - body.top()))
             assert win._effects_current_angle() == 0
             checks['pull_down_restored'] = True
-            win._move_window_towards(position.x(), screen.geometry().top() - body.top())
+            drag_to(win, QPoint(position.x(), screen.geometry().top() - body.top()))
             cfg.set('top_flip_enabled', False)
             assert cfg.save()
             QTimer.singleShot(400, disabled)
@@ -107,10 +115,10 @@ def main():
 
     QTimer.singleShot(500, verify)
     app.exec()
-    result = {'command': 'QT_QPA_PLATFORM=cocoa PYTHONPATH=. .venv/bin/python scripts/verify_seeky_ceiling.py --label ' + args.label,
+    result = {'command': 'QT_QPA_PLATFORM=cocoa PYTHONPATH=. .venv/bin/python scripts/verify_seeky_ceiling.py --label ' + args.label + ' --output-dir ' + str(output),
               'cwd': str(Path.cwd()), 'setup': 'Fresh temporary config, real Cocoa PetWindow and unchanged HD WebM',
               'reset': 'New config on each run; normal app shutdown closes services',
-              'inputs': 'Move to left, physical notch and right ceiling; half-body occlusion; 100 repeat moves each; pull down',
+              'inputs': 'Public threshold mouse drags to left, physical notch and right ceiling; half-body occlusion; 100 repeat placements each; down-drag',
               'assertions': 'Actual notch detected; distinct attachment edge; half body hidden; 180 degrees; matching mask; no drift or running flip timer; pull down restores zero',
               'checks': checks, 'errors': errors, 'exit_status': 1 if errors else 0}
     (output / (args.label + '.json')).write_text(json.dumps(result, ensure_ascii=False, indent=2))

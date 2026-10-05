@@ -1,0 +1,166 @@
+{
+  "command": "QT_QPA_PLATFORM=cocoa PYTHONPATH=. /Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python scripts/verify_seeky7_interactions.py --section all --label green-native-1 --output-dir /tmp/seeky7-runtime-evidence",
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "qt_version": "6.11.2",
+  "python_version": "3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]",
+  "platform": "cocoa",
+  "config_directory": "/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/seeky7-interactions-wzlr9ojo",
+  "setup": "Fresh temporary Config, actual AppShell/PetWindow and original HD WebM. Qt mouse events enter QWidget publicly; native pointer cases use real QCursor.setPos.",
+  "inputs": "Automatic ceiling placement/throw/collision; threshold click, preview, manual snap/down-drag/cancel/disable/hide/close; four edges at two scales, actual ±45 probes and manual 180 inversion; dead zone/range/no_mirror.",
+  "assertions": "Only manual drag attaches. Normal automatic bounds/offset/angle. Cursor preserves body position and produces expected actual rendered image, not merely facing field.",
+  "reset": "Close temporary AppShell; restore original OS pointer; no installed app/config or media modifications.",
+  "checks": [
+    {
+      "case": "automatic-ceiling",
+      "pass": true,
+      "angle": 0.0,
+      "virtual": [
+        525,
+        -32
+      ]
+    },
+    {
+      "case": "click-no-eligibility",
+      "pass": true
+    },
+    {
+      "case": "preview-release-outside-snap",
+      "pass": true
+    },
+    {
+      "case": "manual-snap-and-down",
+      "pass": false
+    },
+    {
+      "case": "flight-detaches",
+      "pass": true
+    },
+    {
+      "case": "collision-detaches",
+      "pass": true
+    },
+    {
+      "case": "cancel-drag-clears-preview",
+      "pass": true
+    },
+    {
+      "case": "hide-resume-keeps-attachment",
+      "pass": true
+    },
+    {
+      "case": "disable-restores-offset",
+      "pass": true
+    },
+    {
+      "case": "cursor-0.7-left",
+      "pass": false
+    },
+    {
+      "case": "cursor-0.7-right",
+      "pass": false
+    },
+    {
+      "case": "cursor-0.7-top",
+      "pass": false
+    },
+    {
+      "case": "cursor-0.7-bottom",
+      "pass": false
+    },
+    {
+      "case": "cursor-0.7-deadzone",
+      "pass": true,
+      "center": [
+        755,
+        476
+      ],
+      "cursor": [
+        755,
+        476
+      ],
+      "angle": 0.0,
+      "scale": 0.7,
+      "draw_delta": [
+        0,
+        0
+      ],
+      "facing": "left",
+      "render_hash": "ef7d6f87fef8b1a360554c0b72216cf72bafda40201ee0bf303e1ea2812306ce",
+      "expected_render_hash": "ef7d6f87fef8b1a360554c0b72216cf72bafda40201ee0bf303e1ea2812306ce"
+    },
+    {
+      "case": "cursor-0.7-outside",
+      "pass": true,
+      "center": [
+        755,
+        476
+      ],
+      "cursor": [
+        755,
+        796
+      ],
+      "angle": 0.0,
+      "scale": 0.7,
+      "draw_delta": [
+        0,
+        0
+      ],
+      "facing": "left",
+      "render_hash": "ef7d6f87fef8b1a360554c0b72216cf72bafda40201ee0bf303e1ea2812306ce",
+      "expected_render_hash": "ef7d6f87fef8b1a360554c0b72216cf72bafda40201ee0bf303e1ea2812306ce"
+    },
+    {
+      "case": "cursor-0.7-inverted-left",
+      "pass": false
+    },
+    {
+      "case": "cursor-0.7-inverted-right",
+      "pass": false
+    }
+  ],
+  "errors": [
+    {
+      "case": "manual-snap-and-down",
+      "error": "AssertionError: ",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky7_interactions.py\", line 127, in check\n    result = action() or {}\n             ~~~~~~^^\n  File \"/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky7_interactions.py\", line 195, in manual\n    assert win._virtual_pos().y() + body.top() == win._top_flip.edge_y - round(body.height() * 0.5)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+    },
+    {
+      "case": "cursor-0.7-left",
+      "error": "AssertionError: Facing changed but rendered image did not",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky7_interactions.py\", line 127, in check\n    result = action() or {}\n             ~~~~~~^^\n  File \"/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky7_interactions.py\", line 313, in <lambda>\n    check(f'cursor-{scale}-{edge}', lambda e=edge, o=offset: cursor_case(f'{scale}-{e}', QPoint(o, 0), before='left' if o > 0 else 'right'))\n                                                             ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky7_interactions.py\", line 284, in cursor_case\n    assert actual_render != before_render, 'Facing changed but rendered image did not'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Facing changed but rendered image did not\n"
+    },
+    {
+      "case": "cursor-0.7-right",
+      "error": "AssertionError: Facing changed but rendered image did not",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky7_interactions.py\", line 127, in check\n    result = action() or {}\n             ~~~~~~^^\n  File \"/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky7_interactions.py\", line 313, in <lambda>\n    check(f'cursor-{scale}-{edge}', lambda e=edge, o=offset: cursor_case(f'{scale}-{e}', QPoint(o, 0), before='left' if o > 0 else 'right'))\n                                                             ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky7_interactions.py\", line 284, in cursor_case\n    assert actual_render != before_render, 'Facing changed but rendered image did not'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Facing changed but rendered image did not\n"
+    },
+    {
+      "case": "cursor-0.7-top",
+      "error": "AssertionError: Facing changed but rendered image did not",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky7_interactions.py\", line 127, in check\n    result = action() or {}\n             ~~~~~~^^\n  File \"/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky7_interactions.py\", line 313, in <lambda>\n    check(f'cursor-{scale}-{edge}', lambda e=edge, o=offset: cursor_case(f'{scale}-{e}', QPoint(o, 0), before='left' if o > 0 else 'right'))\n                                                             ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky7_interactions.py\", line 284, in cursor_case\n    assert actual_render != before_render, 'Facing changed but rendered image did not'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Facing changed but rendered image did not\n"
+    },
+    {
+      "case": "cursor-0.7-bottom",
+      "error": "AssertionError: Facing changed but rendered image did not",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky7_interactions.py\", line 127, in check\n    result = action() or {}\n             ~~~~~~^^\n  File \"/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky7_interactions.py\", line 313, in <lambda>\n    check(f'cursor-{scale}-{edge}', lambda e=edge, o=offset: cursor_case(f'{scale}-{e}', QPoint(o, 0), before='left' if o > 0 else 'right'))\n                                                             ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky7_interactions.py\", line 284, in cursor_case\n    assert actual_render != before_render, 'Facing changed but rendered image did not'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Facing changed but rendered image did not\n"
+    },
+    {
+      "case": "cursor-0.7-inverted-left",
+      "error": "AssertionError: Facing changed but rendered image did not",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky7_interactions.py\", line 127, in check\n    result = action() or {}\n             ~~~~~~^^\n  File \"/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky7_interactions.py\", line 318, in <lambda>\n    check(f'cursor-{scale}-inverted-left', lambda: cursor_case(f'{scale}-inverted-left', QPoint(-70, 0), before='left'))\n                                                   ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky7_interactions.py\", line 284, in cursor_case\n    assert actual_render != before_render, 'Facing changed but rendered image did not'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Facing changed but rendered image did not\n"
+    },
+    {
+      "case": "cursor-0.7-inverted-right",
+      "error": "AssertionError: Facing changed but rendered image did not",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky7_interactions.py\", line 127, in check\n    result = action() or {}\n             ~~~~~~^^\n  File \"/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky7_interactions.py\", line 319, in <lambda>\n    check(f'cursor-{scale}-inverted-right', lambda: cursor_case(f'{scale}-inverted-right', QPoint(70, 0), before='right'))\n                                                    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky7_interactions.py\", line 284, in cursor_case\n    assert actual_render != before_render, 'Facing changed but rendered image did not'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Facing changed but rendered image did not\n"
+    },
+    {
+      "case": "harness",
+      "error": "AssertionError: Qt condition did not arrive within 5s",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky7_interactions.py\", line 325, in main\n    wait_until(lambda: win._edge_probe.mode == 'PEEKING', timeout=5)\n    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky7_interactions.py\", line 44, in wait_until\n    assert predicate(), f'Qt condition did not arrive within {timeout}s'\n           ~~~~~~~~~^^\nAssertionError: Qt condition did not arrive within 5s\n"
+    }
+  ],
+  "exit_status": 1,
+  "evidence_valid": false,
+  "in_progress": false
+}

@@ -1,0 +1,124 @@
+2026-10-05 11:37:34.377 Python[39972:5854475] error messaging the mach port for IMKCFRunLoopWakeUpReliable
+WARNING:root:保存配置失败: /var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/seeky7-settings-pwa2a8ag/dsr-pet/save-is-directory.json ([Errno 21] Is a directory: '/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/seeky7-settings-pwa2a8ag/dsr-pet/save-is-directory.json.39972.tmp' -> '/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/seeky7-settings-pwa2a8ag/dsr-pet/save-is-directory.json')
+qt.qpa.fonts: Populating font family aliases took 96 ms. Replace uses of missing font family "SF Pro Text" with one that exists to avoid this cost. 
+WARNING:root:保存配置失败: /var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/seeky7-settings-pwa2a8ag/dsr-pet/save-is-directory.json ([Errno 21] Is a directory: '/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/seeky7-settings-pwa2a8ag/dsr-pet/save-is-directory.json.39972.tmp' -> '/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/seeky7-settings-pwa2a8ag/dsr-pet/save-is-directory.json')
+WARNING:root:保存配置失败: /var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/seeky7-settings-pwa2a8ag/dsr-pet/save-is-directory.json ([Errno 21] Is a directory: '/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/seeky7-settings-pwa2a8ag/dsr-pet/save-is-directory.json.39972.tmp' -> '/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/seeky7-settings-pwa2a8ag/dsr-pet/save-is-directory.json')
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "scripts/verify_seeky7_settings.py",
+    "--output",
+    "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky7/ui/final-seven",
+    "--idle-seconds",
+    "30"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "python": "3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]",
+  "pyside": "6.11.2",
+  "platform": "cocoa",
+  "setup": "temporary Config; no installed app/config writes; autostart disabled",
+  "inputs": "actual Qt mouse/key events, repeated label/disclosure, real disk replacement failure, missing IPC endpoint, 30s idle",
+  "checks": [
+    {
+      "name": "compact logical tokens 200/28/12/6/32/28/32",
+      "passed": true
+    },
+    {
+      "name": "label retains independent arrow expansion",
+      "passed": true
+    },
+    {
+      "name": "mouse focus retained; keyboard arrows Tab Enter activation",
+      "passed": true
+    },
+    {
+      "name": "finite painted feedback; true selection bounce; hide stops",
+      "passed": true
+    },
+    {
+      "name": "idle has no running animations",
+      "passed": true
+    },
+    {
+      "name": "real disk failure X/Esc/quit retains window",
+      "passed": true
+    },
+    {
+      "name": "one quit button saves/rereads; missing actual IPC endpoint retry",
+      "passed": true
+    },
+    {
+      "name": "successful Esc saves and closes",
+      "passed": true
+    }
+  ],
+  "captures": [
+    {
+      "path": "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky7/ui/final-seven/compact-geometry.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0
+    },
+    {
+      "path": "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky7/ui/final-seven/independent-disclosure.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0
+    },
+    {
+      "path": "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky7/ui/final-seven/keyboard-scroll-last-row.png",
+      "logical_size": [
+        720,
+        500
+      ],
+      "dpr": 2.0
+    },
+    {
+      "path": "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky7/ui/final-seven/keyboard-focus.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0
+    },
+    {
+      "path": "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky7/ui/final-seven/motion-settled.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0
+    },
+    {
+      "path": "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky7/ui/final-seven/all-save-paths-retain-window.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0
+    },
+    {
+      "path": "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky7/ui/final-seven/quit-connection-retry.png",
+      "logical_size": [
+        1000,
+        680
+      ],
+      "dpr": 2.0
+    }
+  ],
+  "errors": [],
+  "exit_status": 0,
+  "reduced_motion": false,
+  "idle": {
+    "seconds": 30.206,
+    "cpu_seconds": 2.2863,
+    "rss_before": 179339264,
+    "rss_after": 125763584,
+    "running_animations": 0,
+    "active": []
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "source_final": true,
+  "native_slot_released": true,
+  "changed_this_repair": [
+    "pet/top_flip.py",
+    "scripts/verify_seeky7_interactions.py"
+  ],
+  "problem": "In-band preview raw y remains below the edge. On release, angle reaches180 and attachment is confirmed, but body still uses partial preview exposure until another position submission. Root native +3px case showed4px mismatch; public red +30px cases showed26px mismatch for both drag modes.",
+  "fix": "After confirmation sets full180 degree pose, TopFlipController reads current virtual position and submits it once via existing _move_window_towards. This recalculates full exposure before mouseReleaseEvent calls save. The move callback only invokes on_position with unchanged target1, so no recursive finish call. Header responsibility text updated.",
+  "red": {
+    "artifact": "/tmp/seeky7-runtime-evidence/red-release-offset.json",
+    "exit_status": 1,
+    "failed": [
+      [
+        "snap-offset-plain-drag",
+        "AssertionError: (-136, -162, 130.9090909090909)"
+      ],
+      [
+        "snap-offset-physics-drag",
+        "AssertionError: (-136, -162, 130.9090909090909)"
+      ]
+    ]
+  },
+  "green": {
+    "native_all": "/tmp/seeky7-runtime-evidence/green-native-offset-final.json",
+    "native_checks": 33,
+    "native_exit_status": 0,
+    "new_native_offset_cases": [
+      {
+        "case": "snap-offset-plain-drag",
+        "pass": true,
+        "drag_physics": false,
+        "target": [
+          525,
+          -2
+        ],
+        "preview_angle": 129.27272727272728,
+        "release_angle": 180.0,
+        "actual_y": -130,
+        "expected_y": -130
+      },
+      {
+        "case": "snap-offset-physics-drag",
+        "pass": true,
+        "drag_physics": true,
+        "target": [
+          525,
+          -2
+        ],
+        "preview_angle": 129.27272727272728,
+        "release_angle": 180.0,
+        "actual_y": -130,
+        "expected_y": -130
+      }
+    ],
+    "native_ceiling": "/tmp/seeky7-runtime-evidence/ceiling-native-offset-final.json",
+    "native_ceiling_exit_status": 0,
+    "focused": "/tmp/seeky7-runtime-evidence/focused-offset-final.json",
+    "focused_passed": 167,
+    "ruff": "All checks passed"
+  },
+  "performance_notes": "One extra unified position submission at manual confirmation only; finite draw-offset/mask update. No new timer/thread/network/config key/media operation. 300 native repeated placements measured0.033050ms mean,0.143875ms max under simultaneous root full-suite CPU background; do not compare as isolated baseline. Window remains4664<=4666 budget.",
+  "integration_remaining": "Root actual two-pet/save/reopen lifecycle acceptance, final full/highload checks, new package and final runtime/performance evidence after this source repair."
+}

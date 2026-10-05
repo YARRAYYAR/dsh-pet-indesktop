@@ -1,0 +1,628 @@
+{
+  "command": "QT_QPA_PLATFORM=cocoa PYTHONPATH=. /Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python scripts/verify_seeky7_interactions.py --section all --label green-native-offset-final --output-dir /tmp/seeky7-runtime-evidence",
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "qt_version": "6.11.2",
+  "python_version": "3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]",
+  "platform": "cocoa",
+  "config_directory": "/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/seeky7-interactions-iwhlgesd",
+  "setup": "Fresh temporary Config with minimal prewarm, actual AppShell/PetWindow and original HD WebM. Qt mouse events enter QWidget publicly; native pointer cases use real QCursor.setPos. Stop the clip publication timer to hold an actually decoded frame for mirror hash comparison; stop() would clear its display slot.",
+  "inputs": "Automatic ceiling placement/throw/collision; threshold click, preview, manual snap/down-drag/cancel/disable/hide/close; four edges at two scales, actual ±45 probes and manual 180 inversion; dead zone/range/no_mirror.",
+  "assertions": "Only manual drag attaches. Normal automatic bounds/offset/angle. Cursor preserves body position and produces expected actual rendered image, not merely facing field.",
+  "reset": "Close temporary AppShell; restore original OS pointer; no installed app/config or media modifications.",
+  "checks": [
+    {
+      "case": "automatic-ceiling",
+      "pass": true,
+      "angle": 0.0,
+      "virtual": [
+        525,
+        -32
+      ]
+    },
+    {
+      "case": "click-no-eligibility",
+      "pass": true
+    },
+    {
+      "case": "preview-release-outside-snap",
+      "pass": true
+    },
+    {
+      "case": "manual-snap-and-down",
+      "pass": true,
+      "initial_position": [
+        525,
+        -130
+      ],
+      "settled_position": [
+        525,
+        -130
+      ],
+      "native_settle_delta": [
+        0,
+        0
+      ],
+      "repeat_positions": [
+        [
+          525,
+          -130
+        ],
+        [
+          525,
+          -130
+        ],
+        [
+          525,
+          -130
+        ],
+        [
+          525,
+          -130
+        ],
+        [
+          525,
+          -130
+        ],
+        [
+          525,
+          -130
+        ],
+        [
+          525,
+          -130
+        ],
+        [
+          525,
+          -130
+        ],
+        [
+          525,
+          -130
+        ],
+        [
+          525,
+          -130
+        ],
+        [
+          525,
+          -130
+        ],
+        [
+          525,
+          -130
+        ],
+        [
+          525,
+          -130
+        ],
+        [
+          525,
+          -130
+        ],
+        [
+          525,
+          -130
+        ],
+        [
+          525,
+          -130
+        ],
+        [
+          525,
+          -130
+        ],
+        [
+          525,
+          -130
+        ],
+        [
+          525,
+          -130
+        ],
+        [
+          525,
+          -130
+        ],
+        [
+          525,
+          -130
+        ]
+      ]
+    },
+    {
+      "case": "snap-offset-plain-drag",
+      "pass": true,
+      "drag_physics": false,
+      "target": [
+        525,
+        -2
+      ],
+      "preview_angle": 129.27272727272728,
+      "release_angle": 180.0,
+      "actual_y": -130,
+      "expected_y": -130
+    },
+    {
+      "case": "snap-offset-physics-drag",
+      "pass": true,
+      "drag_physics": true,
+      "target": [
+        525,
+        -2
+      ],
+      "preview_angle": 129.27272727272728,
+      "release_angle": 180.0,
+      "actual_y": -130,
+      "expected_y": -130
+    },
+    {
+      "case": "flight-detaches",
+      "pass": true
+    },
+    {
+      "case": "collision-detaches",
+      "pass": true
+    },
+    {
+      "case": "cancel-drag-clears-preview",
+      "pass": true
+    },
+    {
+      "case": "hide-resume-keeps-attachment",
+      "pass": true
+    },
+    {
+      "case": "disable-restores-offset",
+      "pass": true
+    },
+    {
+      "case": "cursor-0.7-left",
+      "pass": true,
+      "center": [
+        75,
+        476
+      ],
+      "cursor": [
+        145,
+        476
+      ],
+      "angle": 0.0,
+      "scale": 0.7,
+      "draw_delta": [
+        -148,
+        0
+      ],
+      "facing": "right",
+      "render_hash": "3783d34441681d105a5a8b667cc68719b69db6ae355474028ead17c472fce679",
+      "expected_render_hash": "3783d34441681d105a5a8b667cc68719b69db6ae355474028ead17c472fce679"
+    },
+    {
+      "case": "cursor-0.7-right",
+      "pass": true,
+      "center": [
+        1436,
+        476
+      ],
+      "cursor": [
+        1366,
+        476
+      ],
+      "angle": 0.0,
+      "scale": 0.7,
+      "draw_delta": [
+        149,
+        0
+      ],
+      "facing": "left",
+      "render_hash": "387a39fcd5e9ce48705c1f047a7e745a24681489dec3553ec7330355127c7922",
+      "expected_render_hash": "387a39fcd5e9ce48705c1f047a7e745a24681489dec3553ec7330355127c7922"
+    },
+    {
+      "case": "cursor-0.7-top",
+      "pass": true,
+      "center": [
+        755,
+        127
+      ],
+      "cursor": [
+        825,
+        127
+      ],
+      "angle": 0.0,
+      "scale": 0.7,
+      "draw_delta": [
+        0,
+        -63
+      ],
+      "facing": "right",
+      "render_hash": "a85ecedaf2297058925f8f90b8ea6c6582eea1bf9d751093a73287d7f95e75bc",
+      "expected_render_hash": "a85ecedaf2297058925f8f90b8ea6c6582eea1bf9d751093a73287d7f95e75bc"
+    },
+    {
+      "case": "cursor-0.7-bottom",
+      "pass": true,
+      "center": [
+        755,
+        826
+      ],
+      "cursor": [
+        825,
+        826
+      ],
+      "angle": 0.0,
+      "scale": 0.7,
+      "draw_delta": [
+        0,
+        21
+      ],
+      "facing": "right",
+      "render_hash": "c314ad71a3f7a4d7f1eb12b03546e4d567a4ed2faca6fbc6f14c8ca6d355882f",
+      "expected_render_hash": "c314ad71a3f7a4d7f1eb12b03546e4d567a4ed2faca6fbc6f14c8ca6d355882f"
+    },
+    {
+      "case": "cursor-0.7-deadzone",
+      "pass": true,
+      "center": [
+        755,
+        476
+      ],
+      "cursor": [
+        755,
+        476
+      ],
+      "angle": 0.0,
+      "scale": 0.7,
+      "draw_delta": [
+        0,
+        0
+      ],
+      "facing": "left",
+      "render_hash": "d40220ac519ce6a4ebfe0dd7d493b6b8819d34009473cab8f40e5f1bc38e6ba9",
+      "expected_render_hash": "d40220ac519ce6a4ebfe0dd7d493b6b8819d34009473cab8f40e5f1bc38e6ba9"
+    },
+    {
+      "case": "cursor-0.7-outside",
+      "pass": true,
+      "center": [
+        755,
+        476
+      ],
+      "cursor": [
+        755,
+        796
+      ],
+      "angle": 0.0,
+      "scale": 0.7,
+      "draw_delta": [
+        0,
+        0
+      ],
+      "facing": "left",
+      "render_hash": "d40220ac519ce6a4ebfe0dd7d493b6b8819d34009473cab8f40e5f1bc38e6ba9",
+      "expected_render_hash": "d40220ac519ce6a4ebfe0dd7d493b6b8819d34009473cab8f40e5f1bc38e6ba9"
+    },
+    {
+      "case": "cursor-0.7-inverted-left",
+      "pass": true,
+      "center": [
+        755,
+        32
+      ],
+      "cursor": [
+        685,
+        32
+      ],
+      "angle": 180.0,
+      "scale": 0.7,
+      "draw_delta": [
+        0,
+        -158
+      ],
+      "facing": "right",
+      "render_hash": "36626cffce816784227b99f3c523cb385390a3616951330a0882a929470d1c91",
+      "expected_render_hash": "36626cffce816784227b99f3c523cb385390a3616951330a0882a929470d1c91"
+    },
+    {
+      "case": "cursor-0.7-inverted-right",
+      "pass": true,
+      "center": [
+        755,
+        32
+      ],
+      "cursor": [
+        825,
+        32
+      ],
+      "angle": 180.0,
+      "scale": 0.7,
+      "draw_delta": [
+        0,
+        -158
+      ],
+      "facing": "left",
+      "render_hash": "1f09b6f3ee22bbb41ff215d52ede9126b0fdc6daed71dcd91ab7e32dc2de80a4",
+      "expected_render_hash": "1f09b6f3ee22bbb41ff215d52ede9126b0fdc6daed71dcd91ab7e32dc2de80a4"
+    },
+    {
+      "case": "cursor-0.7-left-probe",
+      "pass": true,
+      "center": [
+        12,
+        473
+      ],
+      "cursor": [
+        82,
+        473
+      ],
+      "angle": 45.0,
+      "scale": 0.7,
+      "draw_delta": [
+        -203,
+        0
+      ],
+      "facing": "right",
+      "render_hash": "3eae5ddb38d21c62affe5d273a55644df9d2b301c4acd53055aaf925921b9a5f",
+      "expected_render_hash": "3eae5ddb38d21c62affe5d273a55644df9d2b301c4acd53055aaf925921b9a5f"
+    },
+    {
+      "case": "cursor-0.7-right-probe",
+      "pass": true,
+      "center": [
+        1498,
+        473
+      ],
+      "cursor": [
+        1428,
+        473
+      ],
+      "angle": -45.0,
+      "scale": 0.7,
+      "draw_delta": [
+        203,
+        0
+      ],
+      "facing": "left",
+      "render_hash": "558a7e593f9e6e7bac5a93df357851b1068767482eb367c321930455106e0663",
+      "expected_render_hash": "558a7e593f9e6e7bac5a93df357851b1068767482eb367c321930455106e0663"
+    },
+    {
+      "case": "cursor-1.3-left",
+      "pass": true,
+      "center": [
+        140,
+        476
+      ],
+      "cursor": [
+        210,
+        476
+      ],
+      "angle": 0.0,
+      "scale": 1.3,
+      "draw_delta": [
+        -276,
+        0
+      ],
+      "facing": "right",
+      "render_hash": "137bb88aa613459c055384e4f4a0abb55ea6e6cbb16bf5bb1ba5983c28809006",
+      "expected_render_hash": "137bb88aa613459c055384e4f4a0abb55ea6e6cbb16bf5bb1ba5983c28809006"
+    },
+    {
+      "case": "cursor-1.3-right",
+      "pass": true,
+      "center": [
+        1371,
+        476
+      ],
+      "cursor": [
+        1301,
+        476
+      ],
+      "angle": 0.0,
+      "scale": 1.3,
+      "draw_delta": [
+        275,
+        0
+      ],
+      "facing": "left",
+      "render_hash": "0102ecdb8719de966526ae3b62ed74c625491c20c86175ead529c2df0e75d507",
+      "expected_render_hash": "0102ecdb8719de966526ae3b62ed74c625491c20c86175ead529c2df0e75d507"
+    },
+    {
+      "case": "cursor-1.3-top",
+      "pass": true,
+      "center": [
+        755,
+        208
+      ],
+      "cursor": [
+        825,
+        208
+      ],
+      "angle": 0.0,
+      "scale": 1.3,
+      "draw_delta": [
+        0,
+        -117
+      ],
+      "facing": "right",
+      "render_hash": "13952af2117fae0e07ed8a2f73a2dd45d4b37918b81348e7e8490cba51492ba3",
+      "expected_render_hash": "13952af2117fae0e07ed8a2f73a2dd45d4b37918b81348e7e8490cba51492ba3"
+    },
+    {
+      "case": "cursor-1.3-bottom",
+      "pass": true,
+      "center": [
+        755,
+        745
+      ],
+      "cursor": [
+        825,
+        745
+      ],
+      "angle": 0.0,
+      "scale": 1.3,
+      "draw_delta": [
+        0,
+        39
+      ],
+      "facing": "right",
+      "render_hash": "6503a68de1f9f3f6c911a4740ef6da801680fde837f0a738b46b6d3450d8a6af",
+      "expected_render_hash": "6503a68de1f9f3f6c911a4740ef6da801680fde837f0a738b46b6d3450d8a6af"
+    },
+    {
+      "case": "cursor-1.3-deadzone",
+      "pass": true,
+      "center": [
+        755,
+        476
+      ],
+      "cursor": [
+        755,
+        476
+      ],
+      "angle": 0.0,
+      "scale": 1.3,
+      "draw_delta": [
+        0,
+        0
+      ],
+      "facing": "left",
+      "render_hash": "97195cb0595923f2fb5a8bca9e9621746011f130670227a8d99803860fb3d9dd",
+      "expected_render_hash": "97195cb0595923f2fb5a8bca9e9621746011f130670227a8d99803860fb3d9dd"
+    },
+    {
+      "case": "cursor-1.3-outside",
+      "pass": true,
+      "center": [
+        755,
+        476
+      ],
+      "cursor": [
+        755,
+        796
+      ],
+      "angle": 0.0,
+      "scale": 1.3,
+      "draw_delta": [
+        0,
+        0
+      ],
+      "facing": "left",
+      "render_hash": "97195cb0595923f2fb5a8bca9e9621746011f130670227a8d99803860fb3d9dd",
+      "expected_render_hash": "97195cb0595923f2fb5a8bca9e9621746011f130670227a8d99803860fb3d9dd"
+    },
+    {
+      "case": "cursor-1.3-inverted-left",
+      "pass": true,
+      "center": [
+        755,
+        31
+      ],
+      "cursor": [
+        685,
+        31
+      ],
+      "angle": 180.0,
+      "scale": 1.3,
+      "draw_delta": [
+        0,
+        -294
+      ],
+      "facing": "right",
+      "render_hash": "eda08a9840860f605938d5a0b7d1baa46d4bb00517dea6fc24e3ebbf7d4f36d3",
+      "expected_render_hash": "eda08a9840860f605938d5a0b7d1baa46d4bb00517dea6fc24e3ebbf7d4f36d3"
+    },
+    {
+      "case": "cursor-1.3-inverted-right",
+      "pass": true,
+      "center": [
+        755,
+        31
+      ],
+      "cursor": [
+        825,
+        31
+      ],
+      "angle": 180.0,
+      "scale": 1.3,
+      "draw_delta": [
+        0,
+        -294
+      ],
+      "facing": "left",
+      "render_hash": "461e4913a49a1e18cb3d0aa6a65509b00d20196e09c792755b6545db54c75241",
+      "expected_render_hash": "461e4913a49a1e18cb3d0aa6a65509b00d20196e09c792755b6545db54c75241"
+    },
+    {
+      "case": "cursor-1.3-left-probe",
+      "pass": true,
+      "center": [
+        25,
+        471
+      ],
+      "cursor": [
+        95,
+        471
+      ],
+      "angle": 45.0,
+      "scale": 1.3,
+      "draw_delta": [
+        -377,
+        0
+      ],
+      "facing": "right",
+      "render_hash": "6f2d35ac2698c326890a02b59d10c4697cce992b4bdf01c402f113739418f367",
+      "expected_render_hash": "6f2d35ac2698c326890a02b59d10c4697cce992b4bdf01c402f113739418f367"
+    },
+    {
+      "case": "cursor-1.3-right-probe",
+      "pass": true,
+      "center": [
+        1487,
+        469
+      ],
+      "cursor": [
+        1417,
+        469
+      ],
+      "angle": -45.0,
+      "scale": 1.3,
+      "draw_delta": [
+        377,
+        0
+      ],
+      "facing": "left",
+      "render_hash": "b34949af305e26787f81ab1ebc4a396fbe3e38ea7f451271ee5cbebeb10672d1",
+      "expected_render_hash": "b34949af305e26787f81ab1ebc4a396fbe3e38ea7f451271ee5cbebeb10672d1"
+    },
+    {
+      "case": "cursor-no-mirror",
+      "pass": true,
+      "center": [
+        755,
+        476
+      ],
+      "cursor": [
+        825,
+        476
+      ],
+      "angle": 0.0,
+      "scale": 1.3,
+      "draw_delta": [
+        0,
+        0
+      ],
+      "facing": "right",
+      "render_hash": "1229420cb11556d0324be41618675b1997eb335a706ccfd6e93f4ec3b23bcd53",
+      "expected_render_hash": "1229420cb11556d0324be41618675b1997eb335a706ccfd6e93f4ec3b23bcd53"
+    },
+    {
+      "case": "close-clears-state",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "exit_status": 0,
+  "evidence_valid": true,
+  "in_progress": false
+}

@@ -1,0 +1,42 @@
+{
+  "before": {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "-c",
+      "import importlib.metadata as m,json,sys,imageio_ffmpeg; print(json.dumps({\"python\":sys.version,\"versions\":{name:m.version(name) for name in [\"PySide6\",\"psutil\",\"imageio-ffmpeg\",\"pillow\"]},\"ffmpeg\":imageio_ffmpeg.get_ffmpeg_exe()}))"
+    ],
+    "exit_status": 0,
+    "output": {
+      "python": "3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]",
+      "versions": {
+        "PySide6": "6.11.2",
+        "psutil": "7.2.2",
+        "imageio-ffmpeg": "0.6.0",
+        "pillow": "12.3.0"
+      },
+      "ffmpeg": "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/imageio_ffmpeg/binaries/ffmpeg-macos-aarch64-v7.1"
+    },
+    "error": ""
+  },
+  "after": {
+    "command": [
+      "/Users/ray/Documents/New project/dsr-pet/.venv/bin/python",
+      "-c",
+      "import importlib.metadata as m,json,sys,imageio_ffmpeg; print(json.dumps({\"python\":sys.version,\"versions\":{name:m.version(name) for name in [\"PySide6\",\"psutil\",\"imageio-ffmpeg\",\"pillow\"]},\"ffmpeg\":imageio_ffmpeg.get_ffmpeg_exe()}))"
+    ],
+    "exit_status": 0,
+    "output": {
+      "python": "3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]",
+      "versions": {
+        "PySide6": "6.11.2",
+        "psutil": "7.2.2",
+        "imageio-ffmpeg": "0.6.0",
+        "pillow": "12.3.0"
+      },
+      "ffmpeg": "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/imageio_ffmpeg/binaries/ffmpeg-macos-aarch64-v7.1"
+    },
+    "error": ""
+  },
+  "same_environment": true,
+  "identical_runtime": true
+}

@@ -1,0 +1,17 @@
+import json,subprocess,sys,time,threading,psutil
+from pathlib import Path
+root=Path.cwd(); baseline=root; output=root/'docs/evidence/seeky7/performance';output.mkdir(parents=True,exist_ok=True)
+records=[]
+for index in range(1,5):
+ name=f'after-{index}' if index < 4 else 'long-after';dest=output/(name+'.json');command=[sys.executable,str(baseline/'scripts/verify_seeky_multi.py'),'--root',str(baseline),'--output',str(dest),'--probe',str(root/'.scratch/seeky-proc-memory'),'--duration',('620' if index==4 else '100'),'--steady-after','35','--scale','1.3','--prewarm','balanced','--spawn-api']
+ if index==2:command+=['--different-actions','--mixed-sizes']
+ if index>=3:command+=['--different-actions','--mixed-sizes','--exercise','--churn']
+ stop=threading.Event();pressure=[]
+ def monitor():
+  while not stop.wait(1):pressure.append({'time':time.time(),'system_cpu_percent':psutil.cpu_percent(),'available_bytes':psutil.virtual_memory().available,'swap_used':psutil.swap_memory().used})
+ thread=threading.Thread(target=monitor);thread.start();start=time.time()
+ with (output/(name+'.log')).open('w') as log: result=subprocess.run(command,cwd=baseline,stdout=log,stderr=subprocess.STDOUT)
+ stop.set();thread.join();r={'command':command,'cwd':str(baseline),'setup':'Final seeky.7 source, unchanged assets; same user app remains running; no concurrent agent native flow or load workers','inputs':command[2:],'assertions':'three pets >=22fps, no source gaps, lifecycle cleanup, physical footprint/RSS','start':start,'end':time.time(),'exit_status':result.returncode,'system_pressure':pressure}
+ (output/(name+'-run.json')).write_text(json.dumps(r,indent=2));records.append(r)
+ print(name,'exit',result.returncode,flush=True)
+(output/'after-runs.json').write_text(json.dumps(records,indent=2))

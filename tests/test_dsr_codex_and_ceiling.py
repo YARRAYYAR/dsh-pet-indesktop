@@ -25,7 +25,7 @@ def test_ceiling_settings_round_trip_and_navigation(qtbot, tmp_path, monkeypatch
     assert children and all(button.icon().isNull() for button in children)
 
 
-def test_ceiling_move_preserves_horizontal_position_and_can_leave(qapp, tmp_path):
+def test_ceiling_move_preserves_horizontal_position_without_manual_eligibility(qapp, tmp_path):
     from pet.config import Config
     from pet.window import PetWindow
     from pet.window_placement import stable_body_local_rect
@@ -38,7 +38,9 @@ def test_ceiling_move_preserves_horizontal_position_and_can_leave(qapp, tmp_path
         x = screen.availableGeometry().center().x() - body.center().x()
         top = screen.geometry().top() - body.top()
         window._move_window_towards(x, top)
-        assert window._effects_current_angle() == 180
+        assert window._effects_current_angle() == 0
+        assert window._top_flip.top_offset_px(body.height()) == 0
+        assert window._virtual_pos().y() + body.top() == screen.availableGeometry().top()
         assert window._virtual_pos().x() == x
         assert window._top_flip._timer.isActive() is False
         window._move_window_towards(x, top + 200)

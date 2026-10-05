@@ -85,3 +85,39 @@ class StateTransition(QVariantAnimation):
         if value is not None:
             self._target = float(value)
         self._advance(self._target)
+
+
+class RectTransition(QVariantAnimation):
+    """Finite rectangle motion, retargeted from the current painted position."""
+    def __init__(self, widget, duration, changed):
+        from PySide6.QtCore import QRectF
+        super().__init__(widget)
+        self._widget = widget
+        self._changed = changed
+        self._value = QRectF()
+        self._target = QRectF()
+        self.setDuration(duration)
+        self.setEasingCurve(QEasingCurve.Type.OutCubic)
+        self.valueChanged.connect(self._advance)
+
+    def _advance(self, value):
+        self._value = value
+        self._changed(value)
+
+    def move_to(self, value):
+        self.stop()
+        self._target = value
+        if not self._widget.isVisible() or reduced_motion_requested():
+            self.snap()
+            return
+        if self._value == self._target:
+            return
+        self.setStartValue(self._value)
+        self.setEndValue(self._target)
+        self.start()
+
+    def snap(self, value=None):
+        self.stop()
+        if value is not None:
+            self._target = value
+        self._advance(self._target)

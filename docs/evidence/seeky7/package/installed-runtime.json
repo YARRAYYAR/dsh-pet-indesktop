@@ -1,0 +1,40 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "/Users/ray/Documents/New project/dsr-pet/scripts/verify_dsr_packaged_runtime.py",
+    "--app",
+    "/Users/ray/Applications/seeky· pet.app",
+    "--output",
+    "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky7/package/installed-runtime.json"
+  ],
+  "bundle_command": [
+    "/Users/ray/Applications/seeky· pet.app/Contents/MacOS/seeky· pet",
+    "--slot",
+    "127"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Previously unused slot with temporary Config; actual installed bundle, 106 HD assets",
+  "assertions": "Directory/play/error/quit through real QLocalServer; child processes exit",
+  "reset": "Test instance config removed; packaged process and its children stopped",
+  "checks": {
+    "action_count": 106,
+    "play": {
+      "ok": true,
+      "data": {
+        "requested": "点击回应-元气挥手",
+        "current": "点击回应-元气挥手"
+      }
+    },
+    "invalid_error": {
+      "ok": false,
+      "error": "动作不存在，请刷新动作库"
+    },
+    "quit": {
+      "ok": true,
+      "data": {}
+    },
+    "remaining_child_pids": []
+  },
+  "errors": [],
+  "exit_status": 0
+}

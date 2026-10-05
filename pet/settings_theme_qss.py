@@ -19,18 +19,13 @@ QLabel#pageDescription { color: #9a9aa3; padding: 6px 0 12px 0; }
 QFrame#pageHeaderDivider { background: #29292c; }
 QLabel#brandTitle { color: #f5f5f7; font-size: 19px; font-weight: 600; }
 QLabel#brandVersion { color: #89898f; font-size: 11px; padding: 4px; }
-QPushButton#quitApplication { background: transparent; border: none; color: #9a9aa0; text-align: left; padding: 8px 4px; }
-QPushButton#quitApplication:hover { background: #242426; color: #f5f5f7; }
-QPushButton#quitApplication:focus { border: 1px solid #0a84ff; }
-QWidget#expandedDomainNavigation { background: transparent; border-radius: 10px; }
-QFrame#domainNavigation { background: #141416; }
-QListWidget#settingsSidebar::item { padding: 0; }
-QPushButton#sidebarDomainHeading { background: transparent; border: none; text-align: left; padding: 1px 0; color: #f5f5f7; }
-QPushButton#sidebarDomainHeading:focus { border: 1px solid #0a84ff; }
-QPushButton#sidebarSubtask { background: transparent; border: 1px solid transparent; text-align: left; padding: 3px 0; color: #9a9aa0; font-size: 12px; }
-QPushButton#sidebarSubtask:checked { color: #f5f5f7; }
-QPushButton#sidebarSubtask:hover { background: #38383c; }
-QPushButton#sidebarSubtask:focus { border-color: #0a84ff; }
+QLabel#footerStatus { color: #ff9d9d; padding: 0 4px; font-size: 12px; }
+QWidget#expandedDomainNavigation, QFrame#domainNavigation { background: transparent; border: none; }
+QListWidget#settingsSidebar::item, QListWidget#settingsSidebar::item:hover,
+QListWidget#settingsSidebar::item:selected { padding: 0; background: transparent; }
+QPushButton#sidebarDomainHeading, QPushButton#sidebarSubtask, QPushButton#sidebarDisclosure,
+QPushButton#quitApplication { background: transparent; border: none; padding: 0; min-height: 0; }
+QPushButton#sidebarSubtask { font-size: 12px; }
 QListWidget#actionLibraryList { background: #1c1c1e; color: #f5f5f7; border: 1px solid #303034; border-radius: 12px; padding: 8px; }
 QListWidget#actionLibraryList::item { padding: 10px 8px; border-radius: 6px; }
 QListWidget#actionLibraryList::item:selected { background: #2c2c2e; color: #ffffff; }
@@ -45,8 +40,8 @@ QLineEdit { placeholder-text-color: #929298; }
 QPushButton#saveAndExit { color: #e4e4e9; }
 QPushButton#saveAndExit:hover { background: #33333c; }
 QListWidget#settingsSidebar::item { color: #b8b8c0; }
-QListWidget#settingsSidebar::item:hover { background: #2e2e36; color: #f0f0f5; }
-QListWidget#settingsSidebar::item:selected { background: #2c2c2e; color: #ffffff; }
+QListWidget#settingsSidebar::item:hover { background: transparent; color: #f0f0f5; }
+QListWidget#settingsSidebar::item:selected { background: transparent; color: #ffffff; }
 QWidget#settingsTaskTabBar {
     background: #292930;
     border: none;

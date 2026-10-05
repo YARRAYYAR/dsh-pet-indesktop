@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky7/archive_zip.py", line 10, in <module>
+    info=plistlib.loads(z.read('seeky· pet.app/Contents/Info.plist'));assert info['CFBundleVersion']=='4.2.1.7'
+                        ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/zipfile/__init__.py", line 1603, in read
+    with self.open(name, "r", pwd) as fp:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/zipfile/__init__.py", line 1640, in open
+    zinfo = self.getinfo(name)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/zipfile/__init__.py", line 1568, in getinfo
+    raise KeyError(
+        'There is no item named %r in the archive' % name)
+KeyError: "There is no item named 'seeky· pet.app/Contents/Info.plist' in the archive"

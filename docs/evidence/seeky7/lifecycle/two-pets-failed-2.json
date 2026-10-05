@@ -1,0 +1,36 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky7/verify_lifecycle.py"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Actual Cocoa AppShell, real WebM, fresh persisted Config; public spawn and public QWidget mouse events with real cursor. Physics drag remains enabled.",
+  "inputs": "Two independent windows; manual top attach in physics mode, automatic child top move, child close; actual saved location reopened in a fresh process",
+  "assertions": [
+    "saved top position restores upright without manual eligibility"
+  ],
+  "errors": [
+    {
+      "error": "Qt condition did not arrive within 6s",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/ray/Documents/New project/dsr-pet/.scratch/seeky7/verify_lifecycle.py\", line 33, in <module>\n    wait_until(lambda:win._effects_current_angle()==180,timeout=6)\n    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky7_interactions.py\", line 44, in wait_until\n    assert predicate(), f'Qt condition did not arrive within {timeout}s'\n           ~~~~~~~~~^^\nAssertionError: Qt condition did not arrive within 6s\n",
+      "state": {
+        "dragging": true,
+        "mode": "drag",
+        "press": "PySide6.QtCore.QPoint(756, 194)",
+        "target": "PySide6.QtCore.QPoint(526, -29)",
+        "pos": "PySide6.QtCore.QPoint(526, -126)",
+        "physpos": [
+          526.0,
+          -28.999999999999982
+        ],
+        "manual_drag": true,
+        "attached": false,
+        "angle": 173.45454545454544,
+        "cursor": "PySide6.QtCore.QPoint(743, 408)",
+        "qtbuttons": "MouseButton.NoButton"
+      }
+    }
+  ],
+  "reset": "Original cursor restored; actual AppShell aboutToQuit cleanup; user config untouched",
+  "exit_status": 1
+}

@@ -1,0 +1,16 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "ruff",
+    "check",
+    "pet/",
+    "tests/",
+    "scripts/"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Final runtime script after offset regression additions",
+  "assertions": "Required source/tests/scripts Ruff succeeds",
+  "actual": "All checks passed!\n",
+  "exit_status": 0
+}

@@ -134,7 +134,7 @@ def vector_menu_icon(menu: QMenu, name: str, size: int | None = None) -> QIcon:
     pixmap, painter, color = _new_icon_canvas(menu, size)
     path = QPainterPath()
 
-    settings_svg = {'settings-click': 'mouse-pointer-click',
+    settings_svg = {'settings-face': 'face-slightly-smiling', 'settings-click': 'mouse-pointer-click',
                     'settings-menu': 'list-tree', 'settings-workflow': 'workflow'}.get(name)
     if settings_svg:
         from PySide6.QtSvg import QSvgRenderer

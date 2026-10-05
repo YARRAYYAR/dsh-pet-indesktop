@@ -1,0 +1,11 @@
+{
+  "command": [
+    "PYTHONPATH=.",
+    ".venv/bin/python",
+    ".scratch/seeky7/install.py"
+  ],
+  "setup": "Pre-install guard reads actual running package processes",
+  "actual": "Old installed primary PID45905 still running, started12:10:36; no staged or renamed application created",
+  "assertions": "Preserve running old app before intentional normal quit",
+  "exit_status": 1
+}

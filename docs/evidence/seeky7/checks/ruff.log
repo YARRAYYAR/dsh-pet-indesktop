@@ -1,0 +1,62 @@
+F401 [*] `os` imported but unused
+ --> docs/evidence/seeky6-performance/continuation/install-replay.py:1:21
+  |
+1 | import hashlib,json,os,plistlib,subprocess,time
+  |                     ^^
+2 | from pathlib import Path
+3 | import psutil
+  |
+help: Remove unused import: `os`
+  |
+  - import hashlib,json,os,plistlib,subprocess,time
+1 + import hashlib,json,plistlib,subprocess,time
+2 | from pathlib import Path
+  |
+
+F401 [*] `hashlib` imported but unused
+ --> docs/evidence/seeky6-performance/continuation/scale_candidate.py:1:8
+  |
+1 | import hashlib,json,sys,time,statistics
+  |        ^^^^^^^
+2 | from pathlib import Path
+3 | sys.path[:0]=[str(Path.cwd()),str(Path.cwd()/'scripts')]
+  |
+help: Remove unused import: `hashlib`
+  |
+  - import hashlib,json,sys,time,statistics
+1 + import json,sys,time,statistics
+2 | from pathlib import Path
+  |
+
+F401 [*] `time` imported but unused
+ --> docs/evidence/seeky6-performance/continuation/stop_installed.py:1:25
+  |
+1 | import hashlib,json,sys,time
+  |                         ^^^^
+2 | from pathlib import Path
+3 | import psutil
+  |
+help: Remove unused import: `time`
+  |
+  - import hashlib,json,sys,time
+1 + import hashlib,json,sys
+2 | from pathlib import Path
+  |
+
+F401 [*] `os` imported but unused
+ --> docs/evidence/seeky6-performance/experiments/install-replay.py:1:21
+  |
+1 | import hashlib,json,os,plistlib,subprocess,time
+  |                     ^^
+2 | from pathlib import Path
+3 | import psutil
+  |
+help: Remove unused import: `os`
+  |
+  - import hashlib,json,os,plistlib,subprocess,time
+1 + import hashlib,json,plistlib,subprocess,time
+2 | from pathlib import Path
+  |
+
+Found 4 errors.
+[*] 4 fixable with the `--fix` option.

@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky7/install.py", line 13, in <module>
+    assert not any(str(p).startswith(str(target/'Contents/MacOS')) or str(p).startswith(str(source/'Contents/MacOS')) for p in cmd), f'Preserve running process {proc.pid}'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Preserve running process 45905

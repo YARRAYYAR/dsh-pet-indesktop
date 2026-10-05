@@ -11,10 +11,14 @@ def cursor_facing(
     cursor: tuple[float, float],
     radius: float,
     dead_zone: float = 16.0,
+    *,
+    rotation_deg: float = 0.0,
 ) -> str | None:
-    """返回鼠标在角色窗口坐标中的朝向；中心死区或半径外不改变朝向。"""
+    """按屏幕水平差判朝向；倒转时补偿绘制镜像，死区或半径外保持。"""
     dx = cursor[0] - center[0]
     dy = cursor[1] - center[1]
     if math.hypot(dx, dy) > radius or abs(dx) < dead_zone:
         return None
+    if math.cos(math.radians(rotation_deg)) < 0:
+        dx = -dx
     return "right" if dx > 0 else "left"

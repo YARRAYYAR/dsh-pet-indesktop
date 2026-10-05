@@ -1,0 +1,17 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky7/quit_old.py"
+  ],
+  "setup": "Verified exact old installed primary PID45905; no settings lock",
+  "inputs": "Existing primary quit IPC",
+  "assertions": "Normal software shutdown acknowledges quit and exact primary exits; no forced termination",
+  "actual": [
+    {
+      "ok": true,
+      "data": {}
+    }
+  ],
+  "pid": 45905,
+  "exit_status": 0
+}

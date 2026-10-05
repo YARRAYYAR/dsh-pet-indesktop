@@ -21,8 +21,8 @@
 
 两侧共用同一个常量基准，环就断了。
 
-纯几何在 `flip_target()` 里（不碰 Qt，可直接单测）；`TopFlipController` 只负责
-按时间插值当前角度、同步遮罩并请求重绘。计时器由控制器自己持有，与
+纯几何在 `flip_target()` 里（不碰 Qt）；`TopFlipController` 管理手动悬挂资格、
+当前角度，并在确认悬挂时通过统一落位同步完整露出偏移。计时器由控制器自己持有，与
 `EdgeProbeController` 保持同一种生命周期形状（pause / resume / cancel）。
 """
 
@@ -38,6 +38,7 @@ from .window_effects import eased_progress
 # ---------------------------------------------------------------- 参数
 TOP_FLIP_DEG = 180.0        # 完全倒立
 TOP_FLIP_BAND_PX = 110      # 角色头顶进入屏幕顶端这么多像素内开始翻转
+TOP_FLIP_SNAP_PX = 40       # 真正手动拖拽在此区域松手才确认悬挂
 TOP_FLIP_MS = 0             # 0 = 直接到位（放到顶端就直接倒立进去，不播过场动画）
 TOP_FLIP_MIN_MS = 60        # 收尾/微小调整的最短时长，避免"咔"地跳一下
 TOP_FLIP_INTERVAL_MS = 16
@@ -88,6 +89,8 @@ class TopFlipController:
         self._transition_start = 0.0
         self._transition_ms = TOP_FLIP_MS
         self._hidden = False
+        self.manual_drag_active = False
+        self.manually_attached = False
         self.edge_y = None
         self.edge_kind = 'screen'
         # 宿主一定是 QWidget（QObject 子类）；Protocol 无法表达这一点。
@@ -105,6 +108,11 @@ class TopFlipController:
     def active(self) -> bool:
         return self._progress > 0.0
 
+    @property
+    def placement_allowed(self) -> bool:
+        """贴顶的旋转、边界和绘制偏移共用同一个临时资格。"""
+        return self.enabled and (self.manual_drag_active or self.manually_attached)
+
     def current_angle_deg(self) -> float:
         return TOP_FLIP_DEG * self._progress
 
@@ -117,16 +125,9 @@ class TopFlipController:
         self.edge_y = notch.y() + notch.height() if in_notch else screen.availableGeometry().top()
 
     def set_enabled(self, on: bool) -> None:
-        was_active = self.active
         self.enabled = bool(on)
         if not self.enabled:
             self.reset()
-            if was_active:
-                position = getattr(self.win, '_virtual_pos', None)
-                mover = getattr(self.win, '_move_window_towards', None)
-                if callable(position) and callable(mover):
-                    point = position()
-                    mover(point.x(), point.y())
 
     def pause(self) -> None:
         """暂停（托盘隐藏 / 空闲暂停 / 退出过程）：冻结当前姿态，不再推进。"""
@@ -142,16 +143,51 @@ class TopFlipController:
 
     def reset(self) -> None:
         """立即回正（不播动画）。"""
-        if not self._progress and not self._timer.isActive():
+        had_pose = self.active
+        self.manual_drag_active = False
+        self.manually_attached = False
+        if not had_pose and not self._timer.isActive():
             return
         self._progress = 0.0
         self._target = 0.0
         self._timer.stop()
         self._sync()
+        # 回正同时恢复普通身体边界，不能只清角度而留下藏到顶外的偏移。
+        position = getattr(self.win, '_virtual_pos', None)
+        mover = getattr(self.win, '_move_window_towards', None)
+        if had_pose and callable(position) and callable(mover):
+            point = position()
+            mover(point.x(), point.y())
 
     def cancel(self, reason: str = '') -> None:
         """与边缘探头同名的收尾入口（退出 / 切角色 / 换缩放时调用）。"""
         self.reset()
+
+    def begin_manual_drag(self) -> None:
+        """只由跨过拖拽阈值的公开鼠标路径授予资格。"""
+        self.manual_drag_active = self.enabled and not self._hidden
+
+    def finish_manual_drag(self, window_y: int) -> bool:
+        attached = (self.placement_allowed and self.manual_drag_active
+                    and int(window_y) <= self.reference_limit() + TOP_FLIP_SNAP_PX)
+        self.manual_drag_active = False
+        if attached:
+            self.manually_attached = True
+            self.on_position(window_y)
+            # 预览角度变成 180° 后，完整露出偏移也须在保存位置前落窗。
+            # 统一出口仅回调 on_position，目标已是 1，不会递归确认悬挂。
+            position = getattr(self.win, '_virtual_pos', None)
+            mover = getattr(self.win, '_move_window_towards', None)
+            if callable(position) and callable(mover):
+                point = position()
+                mover(point.x(), point.y())
+        else:
+            self.reset()
+        return attached
+
+    def cancel_manual_drag(self) -> None:
+        if self.manual_drag_active:
+            self.reset()
 
     # ------------------------------------------------------------ 触发
     def on_position(self, window_y: int) -> None:
@@ -160,7 +196,10 @@ class TopFlipController:
         位置提交统一走 `apply_window_move()`，所以拖拽跟手、物理抛掷、走动、
         贴顶逐帧对齐都会经过这里，不需要各自再挂一次。
         """
-        if not self.enabled or self._hidden:
+        if not self.placement_allowed:
+            self.reset()
+            return
+        if self._hidden:
             return
         # 探头与倒立不同族：探头期间（窗口被推出去一截）必须保持正立，
         # 否则 45°(探头) + 180°(倒立) 会叠成一个谁也没设计过的角度。
@@ -169,6 +208,8 @@ class TopFlipController:
             target = 0.0
         else:
             target = flip_target(window_y, self.reference_limit())
+        if target <= 0.0:
+            self.manually_attached = False
         if abs(target - self._target) < 1e-4:
             return
         self._target = target
@@ -191,7 +232,8 @@ class TopFlipController:
         逐帧对齐只在作用区内才介入：否则角色被拖到下方、进度还在回落的几百
         毫秒里会被对齐"抓"回顶端，表现为松手后又被吸上去。
         """
-        return int(window_y) <= self.reference_limit() + TOP_FLIP_BAND_PX
+        return (self.placement_allowed
+                and int(window_y) <= self.reference_limit() + TOP_FLIP_BAND_PX)
 
     @property
     def exposure(self) -> float:
@@ -213,7 +255,7 @@ class TopFlipController:
         注意这里**只**影响贴顶上限（对齐与拖拽钳制），不影响 `_reference_limit()`：
         触发进度始终对着"正立上限"算，保持与对齐基准同源、不自激。
         """
-        if self._progress <= 0.0 or character_height <= 0:
+        if not self.placement_allowed or self._progress <= 0.0 or character_height <= 0:
             return 0
         return int(round(character_height * self.exposure * self._progress))
 

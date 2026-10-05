@@ -1,0 +1,10 @@
+import json,os,subprocess,sys,time
+from pathlib import Path
+root=Path.cwd();out=root/'docs/evidence/seeky7/checks-final';out.mkdir(parents=True,exist_ok=True)
+env={**os.environ,'QT_QPA_PLATFORM':'offscreen','PYTHONPYCACHEPREFIX':'/tmp/seeky7-main-pycache'}
+commands=[('report-discipline',[sys.executable,'-m','pytest','-q','tests/test_pr_report_discipline.py']),('ruff',[sys.executable,'-m','ruff','check','pet/','tests/','scripts/']),('full-pytest',[sys.executable,'-m','pytest','-q'])]
+for name,command in commands:
+ start=time.time()
+ with (out/(name+'.log')).open('w') as log:r=subprocess.run(command,cwd=root,env=env,stdout=log,stderr=subprocess.STDOUT)
+ record={'command':command,'cwd':str(root),'setup':'Real repository runtime, Qt offscreen for existing full suite; native acceptance recorded separately; redirected pycache avoids dataless iCloud pyc reads','inputs':'Complete required Ruff / existing pytest suite','assertions':'All checks pass without deleting existing coverage','start':start,'end':time.time(),'exit_status':r.returncode}
+ (out/(name+'.json')).write_text(json.dumps(record,indent=2));print(name,r.returncode,flush=True)

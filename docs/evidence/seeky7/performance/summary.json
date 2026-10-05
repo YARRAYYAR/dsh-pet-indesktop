@@ -1,0 +1,278 @@
+{
+  "method": "Same cached virtualenv (workspace .venv symlink), source/config/seed matched. Fixed cost window37..99s or37..85s withchurn; long trend100..600s excludes intentional close/respawn and early resize/warmup. CPU/load differences prevent causal claims. Raw/reference component values must not be added to process footprint.",
+  "runs": {
+    "after-1": {
+      "exit_status": 1,
+      "fps": [
+        17.95,
+        17.898,
+        17.881
+      ],
+      "forward_gaps": [
+        0,
+        0,
+        0
+      ],
+      "queue_drops": 0,
+      "peak_mib": 1964.317,
+      "fixed_window_footprint_mib": 1154.722,
+      "fixed_window_rss_mib": 935.922,
+      "ffmpeg_footprint_mib": 705.017,
+      "parent_footprint_mib": 449.236,
+      "unique_component_medians_mib": {
+        "first_frame_unique_bytes": 24.609,
+        "queue_referenced_bytes": 28.125,
+        "ring_referenced_bytes": 0.0,
+        "raw_unique_bytes_across_queues_and_rings": 28.125,
+        "clip_display_image_bytes": 42.188,
+        "window_scaled_image_bytes": 17.824
+      },
+      "lifecycle": {},
+      "live_ffmpeg_after_cleanup": [],
+      "errors": [
+        "Pet 0: fps=17.95, skipped source frames=0",
+        "Pet 1: fps=17.90, skipped source frames=0",
+        "Pet 2: fps=17.88, skipped source frames=0"
+      ],
+      "system_cpu_median": 90.7,
+      "minimum_available_gib": 0.9105377197265625
+    },
+    "after-2": {
+      "exit_status": 0,
+      "fps": [
+        23.49,
+        23.487,
+        22.039
+      ],
+      "forward_gaps": [
+        0,
+        0,
+        0
+      ],
+      "queue_drops": 0,
+      "peak_mib": 1355.817,
+      "fixed_window_footprint_mib": 914.918,
+      "fixed_window_rss_mib": 938.422,
+      "ffmpeg_footprint_mib": 542.307,
+      "parent_footprint_mib": 375.064,
+      "unique_component_medians_mib": {
+        "first_frame_unique_bytes": 24.609,
+        "queue_referenced_bytes": 42.188,
+        "ring_referenced_bytes": 0.0,
+        "raw_unique_bytes_across_queues_and_rings": 42.188,
+        "clip_display_image_bytes": 21.094,
+        "window_scaled_image_bytes": 11.279
+      },
+      "lifecycle": {},
+      "live_ffmpeg_after_cleanup": [],
+      "errors": [],
+      "system_cpu_median": 80.75,
+      "minimum_available_gib": 1.0146636962890625
+    },
+    "after-3": {
+      "exit_status": 1,
+      "fps": [
+        17.689,
+        17.675,
+        17.686
+      ],
+      "forward_gaps": [
+        0,
+        0,
+        0
+      ],
+      "queue_drops": 0,
+      "peak_mib": 1731.005,
+      "fixed_window_footprint_mib": 1545.957,
+      "fixed_window_rss_mib": 933.547,
+      "ffmpeg_footprint_mib": 1090.198,
+      "parent_footprint_mib": 441.439,
+      "unique_component_medians_mib": {
+        "first_frame_unique_bytes": 24.609,
+        "queue_referenced_bytes": 21.094,
+        "ring_referenced_bytes": 0.0,
+        "raw_unique_bytes_across_queues_and_rings": 21.094,
+        "clip_display_image_bytes": 42.188,
+        "window_scaled_image_bytes": 17.824
+      },
+      "lifecycle": {
+        "windows_after_close": 2,
+        "windows_after_respawn": 3
+      },
+      "live_ffmpeg_after_cleanup": [],
+      "errors": [
+        "Pet 0: fps=17.69, skipped source frames=0",
+        "Pet 1: fps=17.68, skipped source frames=0",
+        "Pet 2: fps=17.69, skipped source frames=0"
+      ],
+      "system_cpu_median": 88.75,
+      "minimum_available_gib": 1.025177001953125
+    },
+    "before-1": {
+      "exit_status": 1,
+      "fps": [
+        8.32,
+        8.31,
+        8.236
+      ],
+      "forward_gaps": [
+        0,
+        0,
+        0
+      ],
+      "queue_drops": 0,
+      "peak_mib": 2042.443,
+      "fixed_window_footprint_mib": 1628.45,
+      "fixed_window_rss_mib": 680.414,
+      "ffmpeg_footprint_mib": 1178.542,
+      "parent_footprint_mib": 437.15,
+      "unique_component_medians_mib": {
+        "first_frame_unique_bytes": 14.062,
+        "queue_referenced_bytes": 0.0,
+        "ring_referenced_bytes": 0.0,
+        "raw_unique_bytes_across_queues_and_rings": 0.0,
+        "clip_display_image_bytes": 42.188,
+        "window_scaled_image_bytes": 17.824
+      },
+      "lifecycle": {},
+      "live_ffmpeg_after_cleanup": [],
+      "errors": [
+        "Pet 0: fps=8.32, skipped source frames=0",
+        "Pet 1: fps=8.31, skipped source frames=0",
+        "Pet 2: fps=8.24, skipped source frames=0"
+      ],
+      "system_cpu_median": 99.9,
+      "minimum_available_gib": 0.9677734375
+    },
+    "before-2": {
+      "exit_status": 1,
+      "fps": [
+        21.825,
+        21.817,
+        10.6
+      ],
+      "forward_gaps": [
+        0,
+        0,
+        0
+      ],
+      "queue_drops": 0,
+      "peak_mib": 1439.208,
+      "fixed_window_footprint_mib": 954.769,
+      "fixed_window_rss_mib": 572.609,
+      "ffmpeg_footprint_mib": 614.8,
+      "parent_footprint_mib": 338.611,
+      "unique_component_medians_mib": {
+        "first_frame_unique_bytes": 24.609,
+        "queue_referenced_bytes": 10.547,
+        "ring_referenced_bytes": 0.0,
+        "raw_unique_bytes_across_queues_and_rings": 10.547,
+        "clip_display_image_bytes": 21.094,
+        "window_scaled_image_bytes": 11.279
+      },
+      "lifecycle": {},
+      "live_ffmpeg_after_cleanup": [],
+      "errors": [
+        "Pet 0: fps=21.82, skipped source frames=0",
+        "Pet 1: fps=21.82, skipped source frames=0",
+        "Pet 2: fps=10.60, skipped source frames=0"
+      ],
+      "system_cpu_median": 98.5,
+      "minimum_available_gib": 0.963653564453125
+    },
+    "before-3": {
+      "exit_status": 1,
+      "fps": [
+        15.007,
+        18.942,
+        12.408
+      ],
+      "forward_gaps": [
+        0,
+        0,
+        0
+      ],
+      "queue_drops": 0,
+      "peak_mib": 1713.91,
+      "fixed_window_footprint_mib": 1305.238,
+      "fixed_window_rss_mib": 711.258,
+      "ffmpeg_footprint_mib": 888.042,
+      "parent_footprint_mib": 383.892,
+      "unique_component_medians_mib": {
+        "first_frame_unique_bytes": 24.609,
+        "queue_referenced_bytes": 21.094,
+        "ring_referenced_bytes": 0.0,
+        "raw_unique_bytes_across_queues_and_rings": 21.094,
+        "clip_display_image_bytes": 31.641,
+        "window_scaled_image_bytes": 17.824
+      },
+      "lifecycle": {
+        "windows_after_close": 2,
+        "windows_after_respawn": 3
+      },
+      "live_ffmpeg_after_cleanup": [],
+      "errors": [
+        "Pet 0: fps=15.01, skipped source frames=0",
+        "Pet 1: fps=18.94, skipped source frames=0",
+        "Pet 2: fps=12.41, skipped source frames=0"
+      ],
+      "system_cpu_median": 97.3,
+      "minimum_available_gib": 0.95703125
+    },
+    "long-after": {
+      "exit_status": 1,
+      "fps": [
+        14.755,
+        14.737,
+        14.715
+      ],
+      "forward_gaps": [
+        0,
+        0,
+        0
+      ],
+      "queue_drops": 0,
+      "peak_mib": 2092.146,
+      "fixed_window_footprint_mib": 1593.285,
+      "fixed_window_rss_mib": 962.125,
+      "ffmpeg_footprint_mib": 1136.534,
+      "parent_footprint_mib": 459.689,
+      "unique_component_medians_mib": {
+        "first_frame_unique_bytes": 24.609,
+        "queue_referenced_bytes": 14.062,
+        "ring_referenced_bytes": 0.0,
+        "raw_unique_bytes_across_queues_and_rings": 14.062,
+        "clip_display_image_bytes": 42.188,
+        "window_scaled_image_bytes": 17.824
+      },
+      "lifecycle": {
+        "windows_after_close": 2,
+        "windows_after_respawn": 3
+      },
+      "live_ffmpeg_after_cleanup": [],
+      "errors": [
+        "Pet 0: fps=14.75, skipped source frames=0",
+        "Pet 1: fps=14.74, skipped source frames=0",
+        "Pet 2: fps=14.71, skipped source frames=0"
+      ],
+      "system_cpu_median": 91.2,
+      "minimum_available_gib": 1.006683349609375,
+      "trend_window_seconds": [
+        100,
+        600
+      ],
+      "slope_mib_per_minute": {
+        "footprint": 2.0392870849132434,
+        "rss": -5.006796941303541
+      },
+      "first_minute_medians_mib": {
+        "footprint": 1582.480613708496,
+        "rss": 988.71875
+      },
+      "last_minute_medians_mib": {
+        "footprint": 1598.004051208496,
+        "rss": 949.421875
+      }
+    }
+  }
+}

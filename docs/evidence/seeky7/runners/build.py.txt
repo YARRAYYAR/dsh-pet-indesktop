@@ -1,0 +1,11 @@
+import json,os,subprocess,sys,time
+from pathlib import Path
+root=Path.cwd();out=root/'docs/evidence/seeky7/package';out.mkdir(parents=True,exist_ok=True);bundle=Path('/Users/ray/Library/Caches/dsr-pet-build/macos/seeky· pet.app')
+env={**os.environ,'PYTHONPYCACHEPREFIX':'/tmp/seeky7-main-pycache','PYTHON_BIN':'.venv/bin/python','PYTHONPATH':str(root)}
+commands=[('build',['bash','scripts/build_macos.sh','--variants','webm']),('static',[sys.executable,'scripts/verify_dsr_package.py','--app',str(bundle),'--output',str(out/'static.json')]),('runtime',[sys.executable,'scripts/verify_dsr_packaged_runtime.py','--app',str(bundle),'--output',str(out/'runtime.json')])]
+for name,command in commands:
+ start=time.time()
+ with (out/(name+'-command.log')).open('w') as log:r=subprocess.run(command,cwd=root,env=env,stdout=log,stderr=subprocess.STDOUT)
+ record={'command':command,'cwd':str(root),'setup':'Canonical macOS arm64 no-chat onedir build, cache outside cloud workspace; native actual package uses unused isolated test slot','inputs':str(bundle),'assertions':'Build/signature/source/media/license/version then actual list106/play/invalid/quit/cleanup','start':start,'end':time.time(),'exit_status':r.returncode}
+ (out/(name+'-run.json')).write_text(json.dumps(record,indent=2));print(name,r.returncode,flush=True)
+ if r.returncode:break

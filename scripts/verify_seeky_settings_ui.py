@@ -135,6 +135,8 @@ def main():
         # Source colours at full-coverage stroke interiors; antialias edge pixels
         # blend with the surface and are not separate foreground colours.
         samples = {
+            'quit_idle_text': ([160, 160, 166, round(255 * .78)], [20, 20, 22], 4.5),
+            'quit_idle_icon': ([160, 160, 166, round(255 * .62)], [20, 20, 22], 3),
             'sidebar_idle_text': ([255, 255, 255, round(255 * .78)], [20, 20, 22], 4.5),
             'brand_version': ([137, 137, 143], [20, 20, 22], 4.5),
             'setting_hint': ([160, 160, 167], [23, 23, 25], 4.5),
@@ -188,9 +190,9 @@ def main():
                 assert reused and focused
                 report['assertions'].append('domain buttons reused and keyboard focus preserved')
                 QTest.keyClick(target, Qt.Key.Key_Left)
-                assert not target.isChecked()
+                assert not dialog.sidebar.itemWidget(dialog.sidebar.currentItem()).children.isVisible()
                 QTest.keyClick(target, Qt.Key.Key_Right)
-                assert target.isChecked()
+                assert dialog.sidebar.itemWidget(dialog.sidebar.currentItem()).children.isVisible()
                 subtask = next(button for button in dialog.findChildren(QPushButton, 'sidebarSubtask')
                                if button.text() == '动作库')
                 subtask.setFocus()
@@ -412,7 +414,7 @@ def main():
 
                 watcher.timeout.connect(dismiss_save_error)
                 watcher.start()
-                dialog.save_exit_button.click()
+                QTest.keyClick(dialog, Qt.Key.Key_Escape)
                 watcher.stop()
                 config.path = original_path
                 report['save_failure'] = observed
@@ -420,8 +422,8 @@ def main():
                 assert dialog.isVisible() and not getattr(dialog, '_saved_via_button', False)
                 report['save_failure'] = observed[0]
                 capture('save-failure-settings-stays-open')
-                dialog.save_exit_button.click()
-                assert not dialog.isVisible() and dialog._saved_via_button
+                QTest.keyClick(dialog, Qt.Key.Key_Escape)
+                assert not dialog.isVisible()
                 assert json.loads(original_path.read_text())['no_move'] is True
                 report['assertions'].append('real disk replacement failure shows native save dialog and retains settings; restored destination saves and closes')
             else:
