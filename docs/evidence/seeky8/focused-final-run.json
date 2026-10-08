@@ -1,0 +1,38 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_seeky8_memory_lifecycle.py",
+    "tests/test_seeky8_thumbnail_lifecycle.py",
+    "tests/test_animation_thumbnail_cache.py",
+    "tests/test_webm_first_frame_lock.py",
+    "tests/test_predictive_prewarm.py",
+    "tests/test_window_pause.py",
+    "tests/test_switch_start_failure_window.py",
+    "tests/test_session_end_ffmpeg_guard.py",
+    "tests/test_first_frame_no_gui_decode.py",
+    "tests/test_first_frame_budget.py"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "offscreen Qt, external pycache, no concurrent native measurement",
+  "inputs": [
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_seeky8_memory_lifecycle.py",
+    "tests/test_seeky8_thumbnail_lifecycle.py",
+    "tests/test_animation_thumbnail_cache.py",
+    "tests/test_webm_first_frame_lock.py",
+    "tests/test_predictive_prewarm.py",
+    "tests/test_window_pause.py",
+    "tests/test_switch_start_failure_window.py",
+    "tests/test_session_end_ffmpeg_guard.py",
+    "tests/test_first_frame_no_gui_decode.py",
+    "tests/test_first_frame_budget.py"
+  ],
+  "assertions": "All required checks pass without changing installed user config",
+  "elapsed_seconds": 15.328401250008028,
+  "exit_status": 0
+}

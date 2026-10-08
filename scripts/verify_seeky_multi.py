@@ -19,6 +19,9 @@ def main():
     parser.add_argument('--probe', type=Path, required=True)
     parser.add_argument('--expect-warm-limit', type=int)
     parser.add_argument('--expect-shared-first-frames', action='store_true')
+    parser.add_argument('--require-hq', action='store_true')
+    parser.add_argument('--pets', type=int, choices=(1, 3), default=3)
+    parser.add_argument('--background', action='store_true')
     parser.add_argument('--scale', type=float, default=.72)
     parser.add_argument('--spawn-api', action='store_true')
     parser.add_argument('--churn', action='store_true')
@@ -30,6 +33,7 @@ def main():
     parser.add_argument('--exercise', action='store_true')
     args = parser.parse_args()
     args.output = args.output.resolve()
+    args.output.parent.mkdir(parents=True, exist_ok=True)
     args.probe = args.probe.resolve()
     root = args.root.resolve()
     sys.path.insert(0, str(root))
@@ -40,6 +44,13 @@ def main():
     from pet.app import AppShell
     from pet.config import Config
     from pet import perfstats
+    from pet.window import PetWindow
+    if args.background:
+        original_opacity = PetWindow._apply_opacity
+        def background_opacity(window):
+            original_opacity(window)
+            window.setWindowOpacity(0)
+        PetWindow._apply_opacity = background_opacity
     app = QApplication([])
     app.setQuitOnLastWindowClosed(False)
     assert app.platformName() == 'cocoa'
@@ -56,12 +67,17 @@ def main():
     shell = AppShell(app, cfg, enable_chat=False, slot_id=0)
     shell.start()
     wins = [shell.win]
-    frames = {0: [], 1: [], 2: []}
+    # Apply the public resize path explicitly; AppShell startup can normalize a
+    # saved scale before the frame's backing-screen DPR is available.
+    if abs(wins[0].scale - args.scale) > 1e-6:
+        wins[0].change_scale(args.scale)
+    frames = {index: [] for index in range(args.pets)}
     errors, samples, components = [], [], []
     start = time.monotonic()
     max_warm = 0
     stop = threading.Event()
     stage = 'startup'
+    finished_capture = False
     duplicates = []
     epochs = [0, 0, 0]
     actions = {}
@@ -102,13 +118,18 @@ def main():
             win.switch_clip(idle)
         movie = win.movie
         routes[index] = {'idle_eligible': idle in win.idles,
+                         'logical_scale': win.scale,
+                         'screen_dpr': win.screen().devicePixelRatio() if win.screen() else None,
+                         'hq_catalog_entries': len(win.lib._hq_paths),
                          'broker_active': win._broker_active(),
                          'feed': movie._feed_source is not None,
                          'publish': movie._publish_sink is not None,
                          'path': str(movie.path)}
+        if args.require_hq and '/characters_hq/' not in str(movie.path):
+            errors.append(f'Pet {index}: scale {win.scale} did not select the required HQ source')
 
     play(wins[0], 0)
-    for index in (1, 2):
+    for index in range(1, args.pets):
         if args.spawn_api:
             shell.spawn_pet()
             instance = shell.instances[-1]
@@ -212,7 +233,7 @@ def main():
         wins[2] = shell.instances[-1].win
         play(wins[2], 2)
         lifecycle['windows_after_respawn'] = len(shell.instances)
-    if args.churn:
+    if args.churn and args.pets == 3:
         QTimer.singleShot(int((args.duration-12)*1000), close_child)
         QTimer.singleShot(int((args.duration-9)*1000), respawn)
     if args.exercise:
@@ -226,7 +247,7 @@ def main():
     source_widths = []
     finish_deadline = None
     def finish():
-        nonlocal finish_deadline
+        nonlocal finish_deadline, finished_capture
         if finish_deadline is None:
             finish_deadline = time.monotonic() + 2
         pixmaps = [win.movie.currentPixmap() for win in wins]
@@ -238,13 +259,19 @@ def main():
         source_widths.extend(pm.width() if pm is not None else 0 for pm in pixmaps)
         component_sample()
         for index, win in enumerate(wins):
-            win.grab().save(str(args.output.with_name(args.output.stem+f'-pet-{index}.png')))
+            if not win.grab().save(str(args.output.with_name(args.output.stem+f'-pet-{index}.png'))):
+                errors.append(f'Pet {index}: native capture could not be saved')
+        finished_capture = True
         app.quit()
     QTimer.singleShot(int(args.duration*1000), finish)
     result = app.exec()
     probe_timer.stop()
     component_timer.stop()
     stop.set(); worker.join(5)
+    if not finished_capture:
+        errors.append('Application quit before the requested observation and final capture completed')
+    if not samples or samples[-1]['time'] < args.duration-3:
+        errors.append('Memory samples did not cover the requested observation duration')
     stable = [s['footprint'] for s in samples if s['stage'] == 'steady']
     checks = {'max_first_frame_decoders': max_warm, 'steady_mib': statistics.median(stable)/2**20 if stable else None,
               'peak_mib': max(s['footprint'] for s in samples)/2**20 if samples else None,
@@ -266,11 +293,13 @@ def main():
     checks['live_ffmpeg_after_cleanup'] = remaining
     if remaining:
         errors.append(f'Decoder processes survived window cleanup: {remaining}')
-    if args.different_actions and len(set(actions.values())) != 3:
+    if args.different_actions and len(set(actions.values())) != args.pets:
         errors.append(f'Different-action scenario did not play three distinct actions: {actions}')
-    if args.churn and lifecycle != {'windows_after_close': 2, 'windows_after_respawn': 3}:
+    if args.churn and args.pets == 3 and lifecycle != {'windows_after_close': 2, 'windows_after_respawn': 3}:
         errors.append(f'Child-only close/respawn did not preserve the other pets: {lifecycle}')
     for index, values in frames.items():
+        if not values or values[-1][0] < args.duration-3:
+            errors.append(f'Pet {index}: no delivered frames in the final three seconds')
         bins = []
         for offset in range(0, int(args.duration), 10):
             bucket = [v for v in values if offset <= v[0] < offset+10]
@@ -292,9 +321,9 @@ def main():
         errors.append(f'{len(duplicates)} clips retain separate identical first-frame buffers')
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps({'command': [sys.executable, str(Path(__file__).resolve()), *sys.argv[1:]],
-        'cwd': str(root), 'setup': 'Real Cocoa AppShell public spawn, three same-character windows, isolated config, seed 42; same initial action is not unnecessarily restarted',
+        'cwd': str(root), 'setup': 'Real Cocoa AppShell public spawn, isolated config, seed 42; background opacity zero keeps the Qt drawing path active; same initial action is not unnecessarily restarted',
         'inputs': vars(args) | {'root': str(root), 'output': str(args.output), 'probe': str(args.probe)},
-        'assertions': 'All three pets >=22 delivered fps, no forward source gaps; optional process-wide warm cap',
+        'assertions': 'Every requested pet >=22 delivered fps, no forward source gaps; optional HQ-path and process-wide warm-cap checks',
         'reset': 'aboutToQuit performs actual per-window cleanup; sampler stopped and joined',
         'checks': checks, 'samples': samples, 'components': components,
         'delivered_frames': frames,

@@ -1,0 +1,225 @@
+QSystemTrayIcon::setVisible: No Icon set
+WARNING:root:GUI 卡顿 2008ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（2008ms，15 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-1739ms] verify_multi.py:58:main <- app.py:1703:start <- app.py:1812:_create_ui_with_character_fallback <- app.py:572:_create_ui <- app.py:537:_build_window <- enum.py:695:__call__
+WARNING:pet.gui_stall_sampler:  [t-1559ms] verify_multi.py:58:main <- app.py:1703:start <- app.py:1812:_create_ui_with_character_fallback <- app.py:572:_create_ui <- app.py:537:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-1359ms] verify_multi.py:309:<module> <- verify_multi.py:58:main <- app.py:1719:start <- app.py:1613:_install_config_watcher <- app.py:1623:_watch_config_file
+WARNING:pet.gui_stall_sampler:  [t-1295ms] <frozen importlib._bootstrap_external>:1559:find_spec <- <frozen importlib._bootstrap_external>:1533:_get_spec <- <frozen importlib._bootstrap_external>:1651:find_spec <- <frozen importlib._bootstrap_external>:166:_path_isfile <- <frozen importlib._bootstrap_external>:158:_path_is_mode_type <- <frozen importlib._bootstrap_external>:152:_path_stat
+WARNING:pet.gui_stall_sampler:  [t-1177ms] <frozen importlib._bootstrap>:1360:_find_and_load <- <frozen importlib._bootstrap>:1331:_find_and_load_unlocked <- <frozen importlib._bootstrap>:935:_load_unlocked <- <frozen importlib._bootstrap_external>:1022:exec_module <- <frozen importlib._bootstrap_external>:1159:get_code <- <frozen importlib._bootstrap_external>:1218:get_data
+WARNING:pet.gui_stall_sampler:  [t-1098ms] verify_multi.py:309:<module> <- verify_multi.py:114:main <- app.py:2627:spawn_pet <- app.py:2768:spawn_in_process_window <- app.py:537:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-934ms] app.py:514:_build_window <- window.py:470:__init__ <- window.py:140:_resolve_self_talk_image_dir <- fun_image_popup.py:23:oijingjing_image_path <- _local.py:670:resolve <- <frozen posixpath>:445:realpath
+WARNING:pet.gui_stall_sampler:  [t-871ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:root:GUI 卡顿 1187ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（1187ms，11 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-1226ms] <frozen importlib._bootstrap>:1360:_find_and_load <- <frozen importlib._bootstrap>:1331:_find_and_load_unlocked <- <frozen importlib._bootstrap>:935:_load_unlocked <- <frozen importlib._bootstrap_external>:1022:exec_module <- <frozen importlib._bootstrap_external>:1159:get_code <- <frozen importlib._bootstrap_external>:1218:get_data
+WARNING:pet.gui_stall_sampler:  [t-1148ms] verify_multi.py:309:<module> <- verify_multi.py:114:main <- app.py:2627:spawn_pet <- app.py:2768:spawn_in_process_window <- app.py:537:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-983ms] app.py:514:_build_window <- window.py:470:__init__ <- window.py:140:_resolve_self_talk_image_dir <- fun_image_popup.py:23:oijingjing_image_path <- _local.py:670:resolve <- <frozen posixpath>:445:realpath
+WARNING:pet.gui_stall_sampler:  [t-921ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-0ms] webm_clip.py:2750:_process_frame <- window_optional_services.py:62:<lambda> <- verify_multi.py:93:observed_frame <- window.py:1917:_on_frame <- window.py:2124:_rebuild_frame <- window.py:2265:_sync_mask
+WARNING:root:GUI 卡顿 1080ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（1080ms，9 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-995ms] app.py:514:_build_window <- window.py:470:__init__ <- window.py:140:_resolve_self_talk_image_dir <- fun_image_popup.py:23:oijingjing_image_path <- _local.py:670:resolve <- <frozen posixpath>:445:realpath
+WARNING:pet.gui_stall_sampler:  [t-932ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-11ms] webm_clip.py:2750:_process_frame <- window_optional_services.py:62:<lambda> <- verify_multi.py:93:observed_frame <- window.py:1917:_on_frame <- window.py:2124:_rebuild_frame <- window.py:2265:_sync_mask
+WARNING:root:GUI 卡顿 263ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（263ms，3 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-232ms] verify_multi.py:309:<module> <- verify_multi.py:245:main <- webm_clip.py:2499:_poll <- webm_clip.py:2724:_process_frame
+WARNING:pet.gui_stall_sampler:  [t-138ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:root:GUI 卡顿 264ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（264ms，3 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-233ms] verify_multi.py:309:<module> <- verify_multi.py:245:main <- webm_clip.py:2499:_poll <- webm_clip.py:2724:_process_frame
+WARNING:pet.gui_stall_sampler:  [t-138ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:root:GUI 卡顿 264ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（264ms，3 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-233ms] verify_multi.py:309:<module> <- verify_multi.py:245:main <- webm_clip.py:2499:_poll <- webm_clip.py:2724:_process_frame
+WARNING:pet.gui_stall_sampler:  [t-138ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:root:GUI 卡顿 144ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（144ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-160ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-59ms] webm_clip.py:2499:_poll <- webm_clip.py:2750:_process_frame <- window_optional_services.py:62:<lambda> <- verify_multi.py:93:observed_frame <- window.py:1917:_on_frame <- window.py:2121:_rebuild_frame
+WARNING:root:GUI 卡顿 144ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（144ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-160ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-59ms] webm_clip.py:2499:_poll <- webm_clip.py:2750:_process_frame <- window_optional_services.py:62:<lambda> <- verify_multi.py:93:observed_frame <- window.py:1917:_on_frame <- window.py:2121:_rebuild_frame
+WARNING:root:GUI 卡顿 144ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（144ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-160ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-59ms] webm_clip.py:2499:_poll <- webm_clip.py:2750:_process_frame <- window_optional_services.py:62:<lambda> <- verify_multi.py:93:observed_frame <- window.py:1917:_on_frame <- window.py:2121:_rebuild_frame
+WARNING:root:GUI 卡顿 179ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（179ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-210ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-116ms] verify_multi.py:309:<module> <- verify_multi.py:245:main <- webm_clip.py:2499:_poll <- webm_clip.py:2724:_process_frame
+WARNING:root:GUI 卡顿 182ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（182ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-210ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-116ms] verify_multi.py:309:<module> <- verify_multi.py:245:main <- webm_clip.py:2499:_poll <- webm_clip.py:2724:_process_frame
+WARNING:root:GUI 卡顿 182ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（182ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-210ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-116ms] verify_multi.py:309:<module> <- verify_multi.py:245:main <- webm_clip.py:2499:_poll <- webm_clip.py:2724:_process_frame
+WARNING:root:GUI 卡顿 174ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（174ms，3 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-126ms] verify_multi.py:309:<module> <- verify_multi.py:245:main <- collision_client.py:429:_on_collision_impulse <- window.py:938:_move_window_towards <- window_placement.py:136:move_window_towards
+WARNING:pet.gui_stall_sampler:  [t-71ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:root:GUI 卡顿 174ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（174ms，3 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-126ms] verify_multi.py:309:<module> <- verify_multi.py:245:main <- collision_client.py:429:_on_collision_impulse <- window.py:938:_move_window_towards <- window_placement.py:136:move_window_towards
+WARNING:pet.gui_stall_sampler:  [t-71ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:root:GUI 卡顿 174ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（174ms，3 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-126ms] verify_multi.py:309:<module> <- verify_multi.py:245:main <- collision_client.py:429:_on_collision_impulse <- window.py:938:_move_window_towards <- window_placement.py:136:move_window_towards
+WARNING:pet.gui_stall_sampler:  [t-71ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:root:GUI 卡顿 129ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（129ms，1 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-142ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:root:GUI 卡顿 133ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（133ms，1 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-142ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:root:GUI 卡顿 133ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（133ms，1 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-142ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:root:GUI 卡顿 236ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（236ms，1 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-4ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:root:GUI 卡顿 236ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（236ms，1 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-4ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:root:GUI 卡顿 236ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（236ms，1 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-4ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:root:GUI 卡顿 245ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（245ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-283ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-143ms] verify_multi.py:309:<module> <- verify_multi.py:245:main <- webm_clip.py:2499:_poll <- webm_clip.py:2724:_process_frame
+WARNING:root:GUI 卡顿 247ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（247ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-284ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-144ms] verify_multi.py:309:<module> <- verify_multi.py:245:main <- webm_clip.py:2499:_poll <- webm_clip.py:2724:_process_frame
+WARNING:root:GUI 卡顿 247ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（247ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-284ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-144ms] verify_multi.py:309:<module> <- verify_multi.py:245:main <- webm_clip.py:2499:_poll <- webm_clip.py:2724:_process_frame
+WARNING:root:GUI 卡顿 106ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（106ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-121ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-16ms] webm_clip.py:2499:_poll <- webm_clip.py:2750:_process_frame <- window_optional_services.py:62:<lambda> <- verify_multi.py:93:observed_frame <- window.py:1917:_on_frame <- window.py:2099:_rebuild_frame
+WARNING:root:GUI 卡顿 110ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（110ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-122ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-16ms] webm_clip.py:2499:_poll <- webm_clip.py:2750:_process_frame <- window_optional_services.py:62:<lambda> <- verify_multi.py:93:observed_frame <- window.py:1917:_on_frame <- window.py:2099:_rebuild_frame
+WARNING:root:GUI 卡顿 110ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（110ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-122ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-16ms] webm_clip.py:2499:_poll <- webm_clip.py:2750:_process_frame <- window_optional_services.py:62:<lambda> <- verify_multi.py:93:observed_frame <- window.py:1917:_on_frame <- window.py:2099:_rebuild_frame
+WARNING:root:GUI 卡顿 115ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（115ms，1 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-78ms] webm_clip.py:2750:_process_frame <- window_optional_services.py:62:<lambda> <- verify_multi.py:93:observed_frame <- window.py:1917:_on_frame <- window.py:2106:_rebuild_frame <- window.py:2005:_frame_signature
+WARNING:root:GUI 卡顿 115ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（115ms，1 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-78ms] webm_clip.py:2750:_process_frame <- window_optional_services.py:62:<lambda> <- verify_multi.py:93:observed_frame <- window.py:1917:_on_frame <- window.py:2106:_rebuild_frame <- window.py:2005:_frame_signature
+WARNING:root:GUI 卡顿 115ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（115ms，1 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-78ms] webm_clip.py:2750:_process_frame <- window_optional_services.py:62:<lambda> <- verify_multi.py:93:observed_frame <- window.py:1917:_on_frame <- window.py:2106:_rebuild_frame <- window.py:2005:_frame_signature
+WARNING:root:GUI 卡顿 127ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（127ms，3 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-169ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-89ms] window_optional_services.py:62:<lambda> <- verify_multi.py:93:observed_frame <- window.py:1917:_on_frame <- window.py:2068:_rebuild_frame <- window.py:1993:_frame_signature <- window.py:2031:_frame_content_fingerprint
+WARNING:pet.gui_stall_sampler:  [t-19ms] verify_multi.py:309:<module> <- verify_multi.py:245:main <- webm_clip.py:2499:_poll <- webm_clip.py:2724:_process_frame
+WARNING:root:GUI 卡顿 129ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（129ms，3 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-169ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-90ms] window_optional_services.py:62:<lambda> <- verify_multi.py:93:observed_frame <- window.py:1917:_on_frame <- window.py:2068:_rebuild_frame <- window.py:1993:_frame_signature <- window.py:2031:_frame_content_fingerprint
+WARNING:pet.gui_stall_sampler:  [t-20ms] verify_multi.py:309:<module> <- verify_multi.py:245:main <- webm_clip.py:2499:_poll <- webm_clip.py:2724:_process_frame
+WARNING:root:GUI 卡顿 130ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（130ms，3 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-169ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-90ms] window_optional_services.py:62:<lambda> <- verify_multi.py:93:observed_frame <- window.py:1917:_on_frame <- window.py:2068:_rebuild_frame <- window.py:1993:_frame_signature <- window.py:2031:_frame_content_fingerprint
+WARNING:pet.gui_stall_sampler:  [t-20ms] verify_multi.py:309:<module> <- verify_multi.py:245:main <- webm_clip.py:2499:_poll <- webm_clip.py:2724:_process_frame
+WARNING:root:GUI 卡顿 145ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（145ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-151ms] webm_clip.py:2499:_poll <- webm_clip.py:2750:_process_frame <- window_optional_services.py:62:<lambda> <- verify_multi.py:93:observed_frame <- window.py:1917:_on_frame <- window.py:2114:_rebuild_frame
+WARNING:pet.gui_stall_sampler:  [t-35ms] verify_multi.py:309:<module> <- verify_multi.py:245:main <- webm_clip.py:2499:_poll <- webm_clip.py:2724:_process_frame
+WARNING:root:GUI 卡顿 146ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（146ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-152ms] webm_clip.py:2499:_poll <- webm_clip.py:2750:_process_frame <- window_optional_services.py:62:<lambda> <- verify_multi.py:93:observed_frame <- window.py:1917:_on_frame <- window.py:2114:_rebuild_frame
+WARNING:pet.gui_stall_sampler:  [t-35ms] verify_multi.py:309:<module> <- verify_multi.py:245:main <- webm_clip.py:2499:_poll <- webm_clip.py:2724:_process_frame
+WARNING:root:GUI 卡顿 146ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（146ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-152ms] webm_clip.py:2499:_poll <- webm_clip.py:2750:_process_frame <- window_optional_services.py:62:<lambda> <- verify_multi.py:93:observed_frame <- window.py:1917:_on_frame <- window.py:2114:_rebuild_frame
+WARNING:pet.gui_stall_sampler:  [t-35ms] verify_multi.py:309:<module> <- verify_multi.py:245:main <- webm_clip.py:2499:_poll <- webm_clip.py:2724:_process_frame
+WARNING:root:GUI 卡顿 147ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（147ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-182ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-8ms] webm_clip.py:2499:_poll <- webm_clip.py:2750:_process_frame <- window_optional_services.py:62:<lambda> <- verify_multi.py:93:observed_frame <- window.py:1917:_on_frame <- window.py:2106:_rebuild_frame
+WARNING:root:GUI 卡顿 148ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（148ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-182ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-8ms] webm_clip.py:2499:_poll <- webm_clip.py:2750:_process_frame <- window_optional_services.py:62:<lambda> <- verify_multi.py:93:observed_frame <- window.py:1917:_on_frame <- window.py:2106:_rebuild_frame
+WARNING:root:GUI 卡顿 148ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（148ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-182ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-9ms] webm_clip.py:2499:_poll <- webm_clip.py:2750:_process_frame <- window_optional_services.py:62:<lambda> <- verify_multi.py:93:observed_frame <- window.py:1917:_on_frame <- window.py:2106:_rebuild_frame
+WARNING:root:GUI 卡顿 127ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（127ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-158ms] verify_multi.py:309:<module> <- verify_multi.py:245:main <- window_optional_services.py:214:_on_cursor_facing_tick
+WARNING:pet.gui_stall_sampler:  [t-26ms] webm_clip.py:2499:_poll <- webm_clip.py:2750:_process_frame <- window_optional_services.py:62:<lambda> <- verify_multi.py:93:observed_frame <- window.py:1919:_on_frame <- window.py:2126:_rebuild_frame
+WARNING:root:GUI 卡顿 129ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（129ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-158ms] verify_multi.py:309:<module> <- verify_multi.py:245:main <- window_optional_services.py:214:_on_cursor_facing_tick
+WARNING:pet.gui_stall_sampler:  [t-27ms] webm_clip.py:2499:_poll <- webm_clip.py:2750:_process_frame <- window_optional_services.py:62:<lambda> <- verify_multi.py:93:observed_frame <- window.py:1919:_on_frame <- window.py:2126:_rebuild_frame
+WARNING:root:GUI 卡顿 129ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（129ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-158ms] verify_multi.py:309:<module> <- verify_multi.py:245:main <- window_optional_services.py:214:_on_cursor_facing_tick
+WARNING:pet.gui_stall_sampler:  [t-27ms] webm_clip.py:2499:_poll <- webm_clip.py:2750:_process_frame <- window_optional_services.py:62:<lambda> <- verify_multi.py:93:observed_frame <- window.py:1919:_on_frame <- window.py:2126:_rebuild_frame
+WARNING:root:GUI 卡顿 147ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（147ms，3 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-164ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-104ms] verify_multi.py:309:<module> <- verify_multi.py:245:main <- webm_clip.py:2499:_poll <- webm_clip.py:2724:_process_frame
+WARNING:pet.gui_stall_sampler:  [t-29ms] verify_multi.py:309:<module> <- verify_multi.py:245:main <- webm_clip.py:2499:_poll <- webm_clip.py:2750:_process_frame
+WARNING:root:GUI 卡顿 148ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（148ms，3 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-164ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-105ms] verify_multi.py:309:<module> <- verify_multi.py:245:main <- webm_clip.py:2499:_poll <- webm_clip.py:2724:_process_frame
+WARNING:pet.gui_stall_sampler:  [t-30ms] verify_multi.py:309:<module> <- verify_multi.py:245:main <- webm_clip.py:2499:_poll <- webm_clip.py:2750:_process_frame
+WARNING:root:GUI 卡顿 150ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（150ms，3 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-166ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-106ms] verify_multi.py:309:<module> <- verify_multi.py:245:main <- webm_clip.py:2499:_poll <- webm_clip.py:2724:_process_frame
+WARNING:pet.gui_stall_sampler:  [t-31ms] verify_multi.py:309:<module> <- verify_multi.py:245:main <- webm_clip.py:2499:_poll <- webm_clip.py:2750:_process_frame
+WARNING:root:GUI 卡顿 241ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（241ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-241ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-86ms] webm_clip.py:2499:_poll <- webm_clip.py:2750:_process_frame <- window_optional_services.py:62:<lambda> <- verify_multi.py:93:observed_frame <- window.py:1917:_on_frame <- window.py:2106:_rebuild_frame
+WARNING:root:GUI 卡顿 242ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（242ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-242ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-87ms] webm_clip.py:2499:_poll <- webm_clip.py:2750:_process_frame <- window_optional_services.py:62:<lambda> <- verify_multi.py:93:observed_frame <- window.py:1917:_on_frame <- window.py:2106:_rebuild_frame
+WARNING:root:GUI 卡顿 242ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（242ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-242ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-87ms] webm_clip.py:2499:_poll <- webm_clip.py:2750:_process_frame <- window_optional_services.py:62:<lambda> <- verify_multi.py:93:observed_frame <- window.py:1917:_on_frame <- window.py:2106:_rebuild_frame
+WARNING:root:GUI 卡顿 114ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（114ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-127ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-25ms] webm_clip.py:2750:_process_frame <- window_optional_services.py:62:<lambda> <- verify_multi.py:93:observed_frame <- window.py:1917:_on_frame <- window.py:2124:_rebuild_frame <- window.py:2266:_sync_mask
+WARNING:root:GUI 卡顿 119ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（119ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-128ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-25ms] webm_clip.py:2750:_process_frame <- window_optional_services.py:62:<lambda> <- verify_multi.py:93:observed_frame <- window.py:1917:_on_frame <- window.py:2124:_rebuild_frame <- window.py:2266:_sync_mask
+WARNING:root:GUI 卡顿 120ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（120ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-128ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-26ms] webm_clip.py:2750:_process_frame <- window_optional_services.py:62:<lambda> <- verify_multi.py:93:observed_frame <- window.py:1917:_on_frame <- window.py:2124:_rebuild_frame <- window.py:2266:_sync_mask
+WARNING:root:GUI 卡顿 122ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（122ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-144ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-54ms] verify_multi.py:309:<module> <- verify_multi.py:245:main <- webm_clip.py:2499:_poll <- webm_clip.py:2750:_process_frame
+WARNING:root:GUI 卡顿 124ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（124ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-144ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-55ms] verify_multi.py:309:<module> <- verify_multi.py:245:main <- webm_clip.py:2499:_poll <- webm_clip.py:2750:_process_frame
+WARNING:root:GUI 卡顿 124ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（124ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-144ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:pet.gui_stall_sampler:  [t-55ms] verify_multi.py:309:<module> <- verify_multi.py:245:main <- webm_clip.py:2499:_poll <- webm_clip.py:2750:_process_frame
+{'max_first_frame_decoders': 2, 'steady_mib': 1219.9717712402344, 'peak_mib': 1609.6757431030273, 'growth_mib': 55.18758010864258, 'playback': {0: {'fps': 9.873363382700152, 'forward_gaps': 0, 'frames': 346, 'ten_second_bins': [{'start': 0, 'fps': 19.733308423437098, 'frames': 170}, {'start': 10, 'fps': 13.121782158382915, 'frames': 132}, {'start': 20, 'fps': 9.61528729466301, 'frames': 96}, {'start': 30, 'fps': 12.363996043521263, 'frames': 116}, {'start': 40, 'fps': 8.880636176482462, 'frames': 89}]}, 1: {'fps': 9.872404906355648, 'forward_gaps': 0, 'frames': 345, 'ten_second_bins': [{'start': 0, 'fps': 19.764232586424665, 'frames': 170}, {'start': 10, 'fps': 13.384813384813384, 'frames': 131}, {'start': 20, 'fps': 9.836201362572735, 'frames': 96}, {'start': 30, 'fps': 11.671898897206793, 'frames': 117}, {'start': 40, 'fps': 8.882428940568472, 'frames': 89}]}, 2: {'fps': 9.943861599786795, 'forward_gaps': 0, 'frames': 348, 'ten_second_bins': [{'start': 0, 'fps': 19.76746906215641, 'frames': 170}, {'start': 10, 'fps': 12.996639150344715, 'frames': 129}, {'start': 20, 'fps': 9.897111280644962, 'frames': 97}, {'start': 30, 'fps': 12.132875909965692, 'frames': 117}, {'start': 40, 'fps': 8.84290128476175, 'frames': 88}]}}, 'queue_drops': 0, 'duplicate_first_images': [], 'lifecycle': {}, 'shared_process_enabled': True, 'source_widths': [2560, 2560, 2560], 'actions': {0: '待机呼吸休闲', 1: '待机呼吸休闲', 2: '待机呼吸休闲'}, 'initial_decode_routes': {0: {'idle_eligible': True, 'broker_active': True, 'feed': False, 'publish': True, 'path': '/Users/ray/Library/Caches/seeky8-baseline-3bc58a7/assets/characters_hq/shenshen/videos/idle/待机呼吸休闲.webm'}, 1: {'idle_eligible': True, 'broker_active': True, 'feed': True, 'publish': False, 'path': '/Users/ray/Library/Caches/seeky8-baseline-3bc58a7/assets/characters_hq/shenshen/videos/idle/待机呼吸休闲.webm'}, 2: {'idle_eligible': True, 'broker_active': True, 'feed': True, 'publish': False, 'path': '/Users/ray/Library/Caches/seeky8-baseline-3bc58a7/assets/characters_hq/shenshen/videos/idle/待机呼吸休闲.webm'}}, 'live_ffmpeg_after_cleanup': []} ['Pet 0: fps=9.87, skipped source frames=0', 'Pet 1: fps=9.87, skipped source frames=0', 'Pet 2: fps=9.94, skipped source frames=0']

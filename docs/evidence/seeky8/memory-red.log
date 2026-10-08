@@ -1,0 +1,44 @@
+.F                                                                       [100%]
+=================================== FAILURES ===================================
+________ test_cached_prediction_is_usable_when_os_cannot_create_threads ________
+
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-79/test_cached_prediction_is_usab0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1085076f0>
+caplog = <_pytest.logging.LogCaptureFixture object at 0x1132c9be0>
+
+    def test_cached_prediction_is_usable_when_os_cannot_create_threads(tmp_path, monkeypatch, caplog):
+        from pet import library
+    
+        app = QApplication.instance() or QApplication([])
+        path = tmp_path / 'sample.webm'
+        path.write_bytes(b'asset')
+        lib = library.MovieLibrary(asset_dir=tmp_path)
+        clip = lib.movie('sample')
+        clip._w, clip._h = 2, 2
+        clip._process_frame((bytes(range(16)), 0))
+    
+        def unavailable_thread(*args, **kwargs):
+            raise RuntimeError('OS thread creation unavailable')
+    
+        monkeypatch.setattr(library.threading, 'Thread', unavailable_thread)
+        try:
+            with caplog.at_level(logging.ERROR):
+                lib.warm_predicted('sample')
+>           assert not caplog.records, 'An already usable first frame must not require a new thread'
+E           AssertionError: An already usable first frame must not require a new thread
+E           assert not [<LogRecord: root, 40, /Users/ray/Documents/New project/dsr-pet/pet/library.py, 866, "启动预测动画预热线程失败: %s">]
+E            +  where [<LogRecord: root, 40, /Users/ray/Documents/New project/dsr-pet/pet/library.py, 866, "启动预测动画预热线程失败: %s">] = <_pytest.logging.LogCaptureFixture object at 0x1132c9be0>.records
+
+tests/test_seeky8_memory_lifecycle.py:63: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    root:library.py:866 启动预测动画预热线程失败: sample
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/pet/library.py", line 864, in warm_predicted
+    threading.Thread(target=_run, daemon=True).start()
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ray/Documents/New project/dsr-pet/tests/test_seeky8_memory_lifecycle.py", line 57, in unavailable_thread
+    raise RuntimeError('OS thread creation unavailable')
+RuntimeError: OS thread creation unavailable
+=========================== short test summary info ============================
+FAILED tests/test_seeky8_memory_lifecycle.py::test_cached_prediction_is_usable_when_os_cannot_create_threads
+1 failed, 1 passed in 21.35s

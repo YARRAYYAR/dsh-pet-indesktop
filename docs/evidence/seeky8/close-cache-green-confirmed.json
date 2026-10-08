@@ -1,0 +1,196 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "scripts/verify_seeky8_memory.py",
+    "--root",
+    "/Users/ray/Library/Caches/seeky8-candidate",
+    "--mode",
+    "window",
+    "--background",
+    "--output",
+    "docs/evidence/seeky8/close-cache-green-confirmed.json",
+    "--probe",
+    ".scratch/seeky-proc-memory"
+  ],
+  "cwd": "/Users/ray/Library/Caches/seeky8-candidate",
+  "setup": "Real Cocoa AppShell, isolated config and thumbnail disk cache; one pet; background opacity zero. Probe pauses optional prewarm; window mode explicitly exercises hide/show/close lifecycle",
+  "inputs": {
+    "mode": "window",
+    "names": [
+      "\u4e09\u7403\u629b\u63a5",
+      "\u4f59\u989d-\u91d1\u888b\u53ee\u5f53",
+      "\u539f\u5730\u4e13\u5fc3\u73a9\u9b54\u65b9",
+      "\u5403Token",
+      "\u5403\u767d\u996d",
+      "\u5403\u997a\u5b50",
+      "\u5c0f\u63d0\u7434\u6f14\u594f",
+      "\u5f85\u673a\u547c\u5438\u4f11\u95f2",
+      "\u64b8\u732b",
+      "\u6668\u95f4\u5237\u7259",
+      "\u70b9\u51fb\u56de\u5e94-\u6320\u75d2\u54af\u54af\u7b11",
+      "\u7a7f\u9488\u4e5e\u5de7"
+    ],
+    "background": true
+  },
+  "assertions": "owned <=128px pixel-identical images, bounded window cache, cache hit equality, no leftover decoders",
+  "checks": {
+    "name": "\u4e09\u7403\u629b\u63a5",
+    "thumbnail_hash": "4aae6fdd63936c1161e1d62fa3168a0765e954670a26c8b4e2090accba5920f1",
+    "cache_bytes": 36864,
+    "visible_frames": 0,
+    "hide_restore": true,
+    "p95_latency_ms": null,
+    "physical_peak_mib": 252.75233459472656,
+    "rss_peak_mib": 361.375,
+    "physical_median_mib": 226.50176239013672,
+    "max_ffmpeg_threads": 12,
+    "decoders_after_cleanup": []
+  },
+  "results": [],
+  "samples": [
+    {
+      "time": 2.5796204170328565,
+      "physical": 229623560,
+      "rss": 275791872,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 2.642765042022802,
+      "physical": 232769672,
+      "rss": 284508160,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 7
+    },
+    {
+      "time": 2.708102292031981,
+      "physical": 229509328,
+      "rss": 292454400,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 7
+    },
+    {
+      "time": 2.77342145802686,
+      "physical": 265030032,
+      "rss": 358580224,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 2.844078249996528,
+      "physical": 255199704,
+      "rss": 374849536,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 2.9173846670310013,
+      "physical": 258296280,
+      "rss": 369065984,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 2.982472667004913,
+      "physical": 260786648,
+      "rss": 371458048,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 3.0480683330097236,
+      "physical": 257296856,
+      "rss": 375537664,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 3.1087042919825763,
+      "physical": 257346008,
+      "rss": 378929152,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 3.2389590829843655,
+      "physical": 230377248,
+      "rss": 280559616,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 5
+    },
+    {
+      "time": 3.3013860000064597,
+      "physical": 236341048,
+      "rss": 279838720,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 5
+    },
+    {
+      "time": 3.3615677499910817,
+      "physical": 237487928,
+      "rss": 261734400,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 4
+    },
+    {
+      "time": 3.427208708017133,
+      "physical": 237504312,
+      "rss": 261701632,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 4
+    },
+    {
+      "time": 3.4870886669959873,
+      "physical": 237504312,
+      "rss": 259653632,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 4
+    },
+    {
+      "time": 3.552511667017825,
+      "physical": 237504312,
+      "rss": 259653632,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 4
+    },
+    {
+      "time": 3.622735292010475,
+      "physical": 237504312,
+      "rss": 259653632,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 4
+    },
+    {
+      "time": 3.694163916981779,
+      "physical": 237504312,
+      "rss": 259719168,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 4
+    },
+    {
+      "time": 3.765123874996789,
+      "physical": 237569824,
+      "rss": 250609664,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 4
+    },
+    {
+      "time": 3.8345294169848785,
+      "physical": 239535904,
+      "rss": 233832448,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 4
+    },
+    {
+      "time": 3.9222292919876054,
+      "physical": 133088312,
+      "rss": 122224640,
+      "ffmpeg_count": 0,
+      "ffmpeg_threads": 0
+    }
+  ],
+  "errors": [
+    "NameError: name 'owner' is not defined"
+  ],
+  "exit_status": 1
+}

@@ -200,15 +200,11 @@ _FFMPEG_EXE_LOCK = threading.Lock()
 # reader，且仅当帧数精确已知（count_frames_and_secs 或其缓存）时由
 # _reader_local 按 clip 追加（帧数未知/估算则退化为播一遍自然结束，
 # 现状路径）；首帧解码只读一帧即关，绝不带循环参数。
-_FFMPEG_INPUT_PARAMS = [
-    '-c:v', 'libvpx-vp9',
-    '-threads', '1',
-    '-filter_threads', '1',
-]
+from .ffmpeg_params import INPUT_PARAMS as _FFMPEG_INPUT_PARAMS
 # Input -threads only limits the decoder. Auto filter/rawvideo output pools
 # still created 30 OS threads per HQ process; these options retain byte-exact
 # RGBA while limiting those pools (native pipeline-parity evidence, seeky.6).
-_FFMPEG_OUTPUT_PARAMS = ['-threads', '1']
+from .ffmpeg_params import OUTPUT_PARAMS as _FFMPEG_OUTPUT_PARAMS
 
 # ------------------------------------------------------------ 会话结束（关机/注销）spawn 闸门（issue #111）
 # 现象：Windows 关机/注销时必弹「ffmpeg-*.exe - 应用程序无法正常启动
@@ -1883,7 +1879,7 @@ class WebMClip(QObject):
                     pix_fmt='rgba',
                     bits_per_pixel=self._bpp * 8,
                     input_params=list(_FFMPEG_INPUT_PARAMS),
-                    output_params=list(_FFMPEG_OUTPUT_PARAMS),
+                    output_params=[*_FFMPEG_OUTPUT_PARAMS, '-frames:v', '1'],
                 )
                 meta = next(g)  # ffmpeg 进程在此拉起；capture 即时登记句柄
                 frame = next(g)
@@ -1927,10 +1923,11 @@ class WebMClip(QObject):
                 except Exception:
                     pass
 
-    def _store_first_frame(self, img) -> list:
+    def _store_first_frame(self, img, *, copy_on_miss: bool = False) -> list:
         """把解码结果写入 _first_image 缓存（调用方须已持有 _first_frame_lock）。
 
         幂等：缓存已存在则跳过；写入后 set _first_frame_done。
+        copy_on_miss：显示槽传入时，只有共享未命中才建立缓存隔离副本。
         返回待逐出列表——调用方必须在释放本 clip 锁后再 _ffr_evict
         （R3 复审：锁内逐出会取 victim 的锁，构成跨对象持锁嵌套）。
         """
@@ -1945,8 +1942,12 @@ class WebMClip(QObject):
                         # QImage value copy shares immutable pixel storage. Keep
                         # the existing drawing copies and per-clip cancellation.
                         img = QImage(shared)
+                    elif copy_on_miss:
+                        img = img.copy()
                     _shared_first_images[key] = img
                 self._first_image_source_key = key
+            elif copy_on_miss:
+                img = img.copy()
             self._first_image = img
             self._first_frame_done.set()
             # 预算 LRU 登记；逐出返回给调用方、在释放本 clip 锁后执行
@@ -2014,6 +2015,14 @@ class WebMClip(QObject):
                 return commit(QImage(flight.image))
             # Failed owner: a still live consumer can claim and retry.
         return []
+
+    def first_frame_ready(self) -> bool:
+        """Non-blocking cache observation; warm_first_frame rechecks ownership.
+
+        The GUI must never wait for the first-frame lock held by a decoder.
+        Cache eviction after this observation remains an ordinary cache miss.
+        """
+        return self._first_image is not None and not self._cleaned
 
     def warm_first_frame(self) -> None:
         """后台线程预解码首帧缓存（仅 QImage，线程安全）。
@@ -2730,7 +2739,7 @@ class WebMClip(QObject):
                 try:
                     # 私有深拷贝入缓存：首帧缓存与显示槽之间不共享别名
                     # （2026-09-22 崩溃消融实验，与 window.py:2089 同批）。
-                    victims = self._store_first_frame(self._current_image.copy())
+                    victims = self._store_first_frame(self._current_image, copy_on_miss=True)
                 finally:
                     self._first_frame_lock.release()
                 _ffr_evict(victims)  # 锁外逐出（与既有路径同序）

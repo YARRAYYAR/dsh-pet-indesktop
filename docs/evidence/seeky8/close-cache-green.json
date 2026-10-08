@@ -1,0 +1,258 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "scripts/verify_seeky8_memory.py",
+    "--root",
+    "/Users/ray/Library/Caches/seeky8-candidate",
+    "--mode",
+    "window",
+    "--background",
+    "--output",
+    "docs/evidence/seeky8/close-cache-green.json",
+    "--probe",
+    ".scratch/seeky-proc-memory"
+  ],
+  "cwd": "/Users/ray/Library/Caches/seeky8-candidate",
+  "setup": "Real Cocoa AppShell, isolated config and thumbnail disk cache; one pet continues playing; background uses opacity zero without hide/pause",
+  "inputs": {
+    "mode": "window",
+    "names": [
+      "\u4e09\u7403\u629b\u63a5",
+      "\u4f59\u989d-\u91d1\u888b\u53ee\u5f53",
+      "\u539f\u5730\u4e13\u5fc3\u73a9\u9b54\u65b9",
+      "\u5403Token",
+      "\u5403\u767d\u996d",
+      "\u5403\u997a\u5b50",
+      "\u5c0f\u63d0\u7434\u6f14\u594f",
+      "\u5f85\u673a\u547c\u5438\u4f11\u95f2",
+      "\u64b8\u732b",
+      "\u6668\u95f4\u5237\u7259",
+      "\u70b9\u51fb\u56de\u5e94-\u6320\u75d2\u54af\u54af\u7b11",
+      "\u7a7f\u9488\u4e5e\u5de7"
+    ],
+    "background": true
+  },
+  "assertions": "owned <=128px pixel-identical images, bounded window cache, cache hit equality, no leftover decoders",
+  "checks": {
+    "name": "\u4e09\u7403\u629b\u63a5",
+    "thumbnail_hash": "4aae6fdd63936c1161e1d62fa3168a0765e954670a26c8b4e2090accba5920f1",
+    "cache_bytes": 36864,
+    "visible_frames": 0,
+    "hide_restore": true,
+    "closed_cache_empty": true,
+    "p95_latency_ms": null,
+    "physical_peak_mib": 282.72108459472656,
+    "rss_peak_mib": 420.671875,
+    "physical_median_mib": 186.84539794921875,
+    "max_ffmpeg_threads": 12,
+    "decoders_after_cleanup": []
+  },
+  "results": [],
+  "samples": [
+    {
+      "time": 2.456895084003918,
+      "physical": 213911208,
+      "rss": 265388032,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 2.523157917021308,
+      "physical": 216729496,
+      "rss": 263487488,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 7
+    },
+    {
+      "time": 2.586608959012665,
+      "physical": 217253928,
+      "rss": 279625728,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 7
+    },
+    {
+      "time": 2.6508593750186265,
+      "physical": 214435952,
+      "rss": 282951680,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 7
+    },
+    {
+      "time": 2.7186912919860333,
+      "physical": 263670088,
+      "rss": 334184448,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 2.785822209028993,
+      "physical": 277727632,
+      "rss": 359497728,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 2.8554209590074606,
+      "physical": 287377808,
+      "rss": 380698624,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 2.928844333975576,
+      "physical": 281495952,
+      "rss": 395411456,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 2.9984115419792943,
+      "physical": 288524688,
+      "rss": 398508032,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 3.0783151669893414,
+      "physical": 283085200,
+      "rss": 403685376,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 3.1532884999760427,
+      "physical": 296454544,
+      "rss": 411926528,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 3.2226645839982666,
+      "physical": 291735952,
+      "rss": 441106432,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 3.682057583995629,
+      "physical": 228624064,
+      "rss": 291061760,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 3.7498444999800995,
+      "physical": 169641640,
+      "rss": 201867264,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 3.814359624986537,
+      "physical": 195905216,
+      "rss": 228130816,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 3
+    },
+    {
+      "time": 3.8794774590060115,
+      "physical": 195905216,
+      "rss": 228098048,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 3
+    },
+    {
+      "time": 3.9435615420225076,
+      "physical": 195921600,
+      "rss": 227721216,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 3
+    },
+    {
+      "time": 4.0123324589803815,
+      "physical": 195921600,
+      "rss": 227721216,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 3
+    },
+    {
+      "time": 4.076764375029597,
+      "physical": 195921600,
+      "rss": 226508800,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 3
+    },
+    {
+      "time": 4.145935959008057,
+      "physical": 195937984,
+      "rss": 226525184,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 3
+    },
+    {
+      "time": 4.355224375030957,
+      "physical": 155551424,
+      "rss": 221937664,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 4.425852084008511,
+      "physical": 166774464,
+      "rss": 238125056,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 4.49897770897951,
+      "physical": 159270592,
+      "rss": 221446144,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 4.568215666979086,
+      "physical": 155879104,
+      "rss": 216776704,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 4.63795800000662,
+      "physical": 159598272,
+      "rss": 218972160,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 4.707002791983541,
+      "physical": 163464896,
+      "rss": 225050624,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 4.7765744170174,
+      "physical": 159712960,
+      "rss": 226820096,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 4.852257416991051,
+      "physical": 125305840,
+      "rss": 128057344,
+      "ffmpeg_count": 0,
+      "ffmpeg_threads": 0
+    },
+    {
+      "time": 4.927574584027752,
+      "physical": 125649928,
+      "rss": 137412608,
+      "ffmpeg_count": 0,
+      "ffmpeg_threads": 0
+    }
+  ],
+  "errors": [],
+  "exit_status": 0
+}

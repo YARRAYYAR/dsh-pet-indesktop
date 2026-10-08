@@ -1,0 +1,271 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky8_memory.py",
+    "--root",
+    "/Users/ray/Library/Caches/seeky8-candidate",
+    "--output",
+    "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/after-first-frames-3.json",
+    "--probe",
+    "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+    "--mode",
+    "first-frames",
+    "--count",
+    "12"
+  ],
+  "cwd": "/Users/ray/Library/Caches/seeky8-candidate",
+  "setup": "Real Cocoa AppShell, isolated config and thumbnail disk cache; live pet continues playing",
+  "inputs": {
+    "mode": "first-frames",
+    "names": [
+      "\u4e09\u7403\u629b\u63a5",
+      "\u4f59\u989d-\u91d1\u888b\u53ee\u5f53",
+      "\u539f\u5730\u4e13\u5fc3\u73a9\u9b54\u65b9",
+      "\u5403Token",
+      "\u5403\u767d\u996d",
+      "\u5403\u997a\u5b50",
+      "\u5c0f\u63d0\u7434\u6f14\u594f",
+      "\u5f85\u673a\u547c\u5438\u4f11\u95f2",
+      "\u64b8\u732b",
+      "\u6668\u95f4\u5237\u7259",
+      "\u70b9\u51fb\u56de\u5e94-\u6320\u75d2\u54af\u54af\u7b11",
+      "\u7a7f\u9488\u4e5e\u5de7"
+    ]
+  },
+  "assertions": "owned <=128px pixel-identical images, bounded window cache, cache hit equality, no leftover decoders",
+  "checks": {
+    "visible_frames": 53,
+    "p95_latency_ms": 69.58104198565707,
+    "physical_peak_mib": 236.7990264892578,
+    "rss_peak_mib": 344.46875,
+    "physical_median_mib": 223.20475006103516,
+    "max_ffmpeg_threads": 11,
+    "decoders_after_cleanup": []
+  },
+  "results": [
+    {
+      "name": "\u4e09\u7403\u629b\u63a5",
+      "hash": "46c684e76f1d580bbb4b2f9a9fddd819b60981c5597744529427771f3763a8d7",
+      "width": 1280,
+      "height": 720,
+      "fps": 24.0,
+      "duration": 10.04,
+      "latency_ms": 69.58104198565707
+    },
+    {
+      "name": "\u4f59\u989d-\u91d1\u888b\u53ee\u5f53",
+      "hash": "fb80a85770b68bfc1e4b0efa882ef05269bc5c234a143b654ab20d19d9c9c207",
+      "width": 1280,
+      "height": 720,
+      "fps": 24.0,
+      "duration": 10.04,
+      "latency_ms": 41.49812500691041
+    },
+    {
+      "name": "\u539f\u5730\u4e13\u5fc3\u73a9\u9b54\u65b9",
+      "hash": "17b94975aad352be10f47f142ff6f2ec54c25fb6ae9f57a14a3e2f12c40a5576",
+      "width": 1280,
+      "height": 720,
+      "fps": 24.0,
+      "duration": 10.04,
+      "latency_ms": 40.08729197084904
+    },
+    {
+      "name": "\u5403Token",
+      "hash": "488a291963b5facc0d125728d917db0fd5d79cb7482cae7db8810924d8824748",
+      "width": 1280,
+      "height": 720,
+      "fps": 24.0,
+      "duration": 10.04,
+      "latency_ms": 41.000833036378026
+    },
+    {
+      "name": "\u5403\u767d\u996d",
+      "hash": "568dd9dd79859a50202bc3b3f3fab76d10b39ac04396a95b033ab0978345a5d0",
+      "width": 1280,
+      "height": 720,
+      "fps": 24.0,
+      "duration": 10.04,
+      "latency_ms": 45.81625002902001
+    },
+    {
+      "name": "\u5403\u997a\u5b50",
+      "hash": "21d9517b896b933b3ac58957a244686c13134e694a346ee70f1d077a440424bf",
+      "width": 1280,
+      "height": 720,
+      "fps": 24.0,
+      "duration": 10.04,
+      "latency_ms": 55.50112499622628
+    },
+    {
+      "name": "\u5c0f\u63d0\u7434\u6f14\u594f",
+      "hash": "e8ea14bcc283a08f8870d40cf930c68a022b04a1a6f719e263987ab30874d4d9",
+      "width": 1280,
+      "height": 720,
+      "fps": 24.0,
+      "duration": 10.04,
+      "latency_ms": 43.898292002268136
+    },
+    {
+      "name": "\u5f85\u673a\u547c\u5438\u4f11\u95f2",
+      "hash": "87e09e049ce36b77fdb62af77d44c281f3b3a5377e7073d3a8dfe85a3083d866",
+      "width": 1280,
+      "height": 720,
+      "fps": 24.0,
+      "duration": 0.0,
+      "latency_ms": 0.2465000143274665
+    },
+    {
+      "name": "\u64b8\u732b",
+      "hash": "d9ce26b22f302c0052eba90e9c22faaadb3db90dcb8652183c6c1a2540297d74",
+      "width": 1280,
+      "height": 720,
+      "fps": 24.0,
+      "duration": 10.04,
+      "latency_ms": 50.549125007819384
+    },
+    {
+      "name": "\u6668\u95f4\u5237\u7259",
+      "hash": "c0bfafc8a6d03e5596730b5a50a9022a62324e26ac7ecd0e556c3fe6a6d5bee6",
+      "width": 1280,
+      "height": 720,
+      "fps": 24.0,
+      "duration": 10.04,
+      "latency_ms": 49.40529097802937
+    },
+    {
+      "name": "\u70b9\u51fb\u56de\u5e94-\u6320\u75d2\u54af\u54af\u7b11",
+      "hash": "8ec9c606d4df8f1084d90370b76470434cd4a2e8ca3c0bebd9f425e39f682fad",
+      "width": 1280,
+      "height": 720,
+      "fps": 24.0,
+      "duration": 10.04,
+      "latency_ms": 43.1200839811936
+    },
+    {
+      "name": "\u7a7f\u9488\u4e5e\u5de7",
+      "hash": "4e63369782953cfc9edb71ef5aa107d03dd81c74031643a026a800a0f120d7d1",
+      "width": 1280,
+      "height": 720,
+      "fps": 24.0,
+      "duration": 10.04,
+      "latency_ms": 42.29945898987353
+    }
+  ],
+  "samples": [
+    {
+      "time": 2.7608809579978697,
+      "physical": 248301776,
+      "rss": 360726528,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 11
+    },
+    {
+      "time": 2.887693750031758,
+      "physical": 240207984,
+      "rss": 348504064,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 7
+    },
+    {
+      "time": 2.95331316703232,
+      "physical": 238946560,
+      "rss": 361201664,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 11
+    },
+    {
+      "time": 3.0823525830055587,
+      "physical": 230934184,
+      "rss": 342392832,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 3.1433642500196584,
+      "physical": 237832352,
+      "rss": 360628224,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 7
+    },
+    {
+      "time": 3.2063577080261894,
+      "physical": 230901416,
+      "rss": 346079232,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 3.272083667048719,
+      "physical": 230966952,
+      "rss": 349143040,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 5
+    },
+    {
+      "time": 3.336312125029508,
+      "physical": 230966952,
+      "rss": 349143040,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 5
+    },
+    {
+      "time": 3.4005371250095777,
+      "physical": 230426280,
+      "rss": 349159424,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 5
+    },
+    {
+      "time": 3.465124125010334,
+      "physical": 230426280,
+      "rss": 349159424,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 5
+    },
+    {
+      "time": 3.529183417034801,
+      "physical": 230426280,
+      "rss": 349159424,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 5
+    },
+    {
+      "time": 3.588742625026498,
+      "physical": 234047144,
+      "rss": 348946432,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 5
+    },
+    {
+      "time": 3.654764333041385,
+      "physical": 234047144,
+      "rss": 349388800,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 5
+    },
+    {
+      "time": 3.7286399580189027,
+      "physical": 235865768,
+      "rss": 345538560,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 5
+    },
+    {
+      "time": 3.7886208750423975,
+      "physical": 237110952,
+      "rss": 343719936,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 5
+    },
+    {
+      "time": 3.8536861670436338,
+      "physical": 239240872,
+      "rss": 341573632,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 5
+    }
+  ],
+  "errors": [],
+  "exit_status": 0
+}

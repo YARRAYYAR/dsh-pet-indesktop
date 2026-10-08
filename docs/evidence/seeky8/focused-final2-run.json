@@ -1,0 +1,43 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_seeky8_memory_lifecycle.py",
+    "tests/test_seeky8_thumbnail_lifecycle.py",
+    "tests/test_animation_thumbnail_cache.py",
+    "tests/test_desktop_pet_features.py::test_representative_animation_image_is_cached_on_pet",
+    "tests/test_desktop_pet_features.py::test_reopened_animation_menu_reuses_cached_images_immediately",
+    "tests/test_webm_first_frame_lock.py",
+    "tests/test_predictive_prewarm.py",
+    "tests/test_window_pause.py",
+    "tests/test_switch_start_failure_window.py",
+    "tests/test_session_end_ffmpeg_guard.py",
+    "tests/test_first_frame_no_gui_decode.py",
+    "tests/test_first_frame_budget.py",
+    "tests/test_architecture.py::test_window_py_line_budget"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "offscreen Qt, external pycache, serial execution; installed user app untouched",
+  "inputs": [
+    "pytest",
+    "-q",
+    "tests/test_seeky8_memory_lifecycle.py",
+    "tests/test_seeky8_thumbnail_lifecycle.py",
+    "tests/test_animation_thumbnail_cache.py",
+    "tests/test_desktop_pet_features.py::test_representative_animation_image_is_cached_on_pet",
+    "tests/test_desktop_pet_features.py::test_reopened_animation_menu_reuses_cached_images_immediately",
+    "tests/test_webm_first_frame_lock.py",
+    "tests/test_predictive_prewarm.py",
+    "tests/test_window_pause.py",
+    "tests/test_switch_start_failure_window.py",
+    "tests/test_session_end_ffmpeg_guard.py",
+    "tests/test_first_frame_no_gui_decode.py",
+    "tests/test_first_frame_budget.py",
+    "tests/test_architecture.py::test_window_py_line_budget"
+  ],
+  "assertions": "All listed gates pass",
+  "elapsed_seconds": 157.28,
+  "exit_status": -15
+}

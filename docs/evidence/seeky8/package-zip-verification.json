@@ -1,0 +1,20 @@
+{
+  "command": [
+    "/usr/bin/unzip",
+    "-tq",
+    "/Users/ray/Downloads/seeky-pet-4.2.1.8-macOS-arm64.zip"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Created ZIP from package-verified app; no previous archive existed",
+  "inputs": "/Users/ray/Downloads/seeky-pet-4.2.1.8-macOS-arm64.zip",
+  "assertions": "unzip -tq returns 0; app Info.plist exists inside archive; SHA-256 recorded",
+  "result": "No errors detected in compressed data of /Users/ray/Downloads/seeky-pet-4.2.1.8-macOS-arm64.zip.\n",
+  "elapsed_seconds": 9.996,
+  "exit_status": 0,
+  "archive_size_bytes": 1553295691,
+  "sha256": "10521c1ba2e927a97a016111b95fbe6353359e1ce44ca2668b5b9e35e6965ffa",
+  "bundle_plist_entries": [
+    "seeky· pet.app/Contents/Info.plist"
+  ],
+  "zip_entries": 2242
+}

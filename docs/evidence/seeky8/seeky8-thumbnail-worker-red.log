@@ -1,0 +1,47 @@
+F
+=================================== FAILURES ===================================
+__ test_representative_thumbnail_owns_pixels_after_reader_close[False-size0] ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106ed5a70>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-75/test_representative_thumbnail_0')
+size = (640, 390), close_error = False
+
+    @pytest.mark.parametrize("size", [(640, 390), (64, 32)])
+    @pytest.mark.parametrize("close_error", [False, True])
+    def test_representative_thumbnail_owns_pixels_after_reader_close(
+        monkeypatch, tmp_path, size, close_error,
+    ):
+        width, height = size
+        intro = bytearray(bytes((10, 20, 30, 40)) * (width * height))
+        rgba = bytearray()
+        for index in range(width * height):
+            rgba.extend((index % 256, 37, 181, (index * 7) % 256))
+        expected = thumbnail._as_thumbnail(
+            QImage(rgba, width, height, width * 4, QImage.Format.Format_RGBA8888).copy(),
+        )
+        expected_bytes = bytes(expected.constBits())
+        reader = _Reader(
+            {"fps": 3, "duration": 1, "size": size},
+            [intro, rgba], close_error=close_error,
+        )
+        _install_reader(monkeypatch, reader)
+    
+        image = thumbnail._decode_webm(tmp_path / "clip.webm")
+    
+        assert reader.closed
+        assert not any(rgba)
+        assert not image.isNull()
+>       assert image.size() == expected.size()
+E       assert PySide6.QtCore.QSize(640, 390) == PySide6.QtCore.QSize(128, 78)
+E        +  where PySide6.QtCore.QSize(640, 390) = <built-in method size of PySide6.QtGui.QImage object at 0x1104178c0>()
+E        +    where <built-in method size of PySide6.QtGui.QImage object at 0x1104178c0> = <PySide6.QtGui.QImage(QSize(640, 390),format=QImage::Format_RGBA8888,depth=32,devicePixelRatio=1,bytesPerLine=2560,sizeInBytes=998400) at 0x1104178c0>.size
+E        +  and   PySide6.QtCore.QSize(128, 78) = <built-in method size of PySide6.QtGui.QImage object at 0x1104176c0>()
+E        +    where <built-in method size of PySide6.QtGui.QImage object at 0x1104176c0> = <PySide6.QtGui.QImage(QSize(128, 78),format=QImage::Format_RGBA8888,depth=32,devicePixelRatio=1,bytesPerLine=512,sizeInBytes=39936) at 0x1104176c0>.size
+
+tests/test_seeky8_thumbnail_lifecycle.py:70: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_seeky8_thumbnail_lifecycle.py::test_representative_thumbnail_owns_pixels_after_reader_close[False-size0]
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! KeyboardInterrupt !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+<frozen importlib._bootstrap_external>:1218: KeyboardInterrupt
+(to show a full traceback on KeyboardInterrupt use --full-trace)
+1 failed in 58.36s

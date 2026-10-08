@@ -1,0 +1,7 @@
+QSystemTrayIcon::setVisible: No Icon set
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky8_memory.py", line 225, in poll
+    assert not decode_returned.is_set() and owner.is_alive(), 'Owner decoder completed before its release'
+                                            ^^^^^
+NameError: name 'owner' is not defined
+{'name': '三球抛接', 'thumbnail_hash': '4aae6fdd63936c1161e1d62fa3168a0765e954670a26c8b4e2090accba5920f1', 'cache_bytes': 36864, 'visible_frames': 0, 'hide_restore': True, 'p95_latency_ms': None, 'physical_peak_mib': 252.75233459472656, 'rss_peak_mib': 361.375, 'physical_median_mib': 226.50176239013672, 'max_ffmpeg_threads': 12, 'decoders_after_cleanup': []} ["NameError: name 'owner' is not defined"]

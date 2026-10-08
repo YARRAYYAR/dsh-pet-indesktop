@@ -1,0 +1,45 @@
+{
+  "status": "INVALID_INCOMPLETE",
+  "cause": "User steered task priority to build and upload the package; current long sample was stopped early. Preserve the raw verifier output below, do not use it as a 620-second comparison.",
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky_multi.py",
+    "--root",
+    "/Users/ray/Library/Caches/seeky8-candidate",
+    "--output",
+    "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/background-single/verified-long/after-long.json",
+    "--probe",
+    "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+    "--pets",
+    "1",
+    "--background",
+    "--scale",
+    "0.72",
+    "--duration",
+    "620",
+    "--steady-after",
+    "12",
+    "--prewarm",
+    "balanced",
+    "--expect-warm-limit",
+    "2",
+    "--expect-shared-first-frames"
+  ],
+  "cwd": "/Users/ray/Library/Caches/seeky8-candidate",
+  "setup": "Real Cocoa AppShell public spawn, isolated config, seed 42; background opacity zero keeps the Qt drawing path active; same initial action is not unnecessarily restarted",
+  "requested_duration_seconds": 620,
+  "captured_sample_interval_seconds": [
+    0.531,
+    251.333
+  ],
+  "sample_count": 455,
+  "delivered_frames": 5302,
+  "verifier_errors": [
+    "Memory samples did not cover the requested observation duration",
+    "Pet 0: no delivered frames in the final three seconds"
+  ],
+  "verifier_exit_status": 1,
+  "raw_result": "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/background-single/verified-long/after-long.json",
+  "run_record": "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/background-single/verified-long/after-long-run.json",
+  "recorded_at": "2026-10-08T16:39:45+0800"
+}

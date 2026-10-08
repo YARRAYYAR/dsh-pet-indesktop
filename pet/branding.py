@@ -4,7 +4,7 @@ from PySide6.QtCore import QRectF, Qt
 from PySide6.QtGui import QIcon, QImage, QPainter, QPainterPath
 
 NAME = 'seeky· pet'
-DISPLAY_VERSION = '4.2.1 · seeky.7'
+DISPLAY_VERSION = '4.2.1 · seeky.8'
 
 
 def brand_icon() -> QIcon:

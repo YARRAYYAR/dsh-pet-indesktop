@@ -1,0 +1,4549 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky_multi.py",
+    "--root",
+    "/Users/ray/Library/Caches/seeky8-candidate",
+    "--output",
+    "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/background-single/after-hq-1.json",
+    "--probe",
+    "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+    "--pets",
+    "1",
+    "--background",
+    "--scale",
+    "1.3",
+    "--duration",
+    "35",
+    "--steady-after",
+    "12",
+    "--prewarm",
+    "balanced",
+    "--expect-warm-limit",
+    "2",
+    "--expect-shared-first-frames"
+  ],
+  "cwd": "/Users/ray/Library/Caches/seeky8-candidate",
+  "setup": "Real Cocoa AppShell public spawn, isolated config, seed 42; background opacity zero keeps the Qt drawing path active; same initial action is not unnecessarily restarted",
+  "inputs": {
+    "root": "/Users/ray/Library/Caches/seeky8-candidate",
+    "output": "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/background-single/after-hq-1.json",
+    "probe": "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+    "expect_warm_limit": 2,
+    "expect_shared_first_frames": true,
+    "pets": 1,
+    "background": true,
+    "scale": 1.3,
+    "spawn_api": false,
+    "churn": false,
+    "duration": 35.0,
+    "steady_after": 12.0,
+    "prewarm": "balanced",
+    "different_actions": false,
+    "mixed_sizes": false,
+    "exercise": false
+  },
+  "assertions": "Every requested pet >=22 delivered fps, no forward source gaps; optional process-wide warm cap",
+  "reset": "aboutToQuit performs actual per-window cleanup; sampler stopped and joined",
+  "checks": {
+    "max_first_frame_decoders": 2,
+    "steady_mib": 627.798957824707,
+    "peak_mib": 674.4087219238281,
+    "growth_mib": 37.15625,
+    "playback": {
+      "0": {
+        "fps": 10.228555304740405,
+        "forward_gaps": 0,
+        "frames": 204,
+        "ten_second_bins": [
+          {
+            "start": 0,
+            "fps": 11.247920929509041,
+            "frames": 95
+          },
+          {
+            "start": 10,
+            "fps": 14.824974535332855,
+            "frames": 148
+          },
+          {
+            "start": 20,
+            "fps": 10.36686628755473,
+            "frames": 104
+          },
+          {
+            "start": 30,
+            "fps": 4.867621849273027,
+            "frames": 24
+          }
+        ]
+      }
+    },
+    "queue_drops": 0,
+    "duplicate_first_images": [],
+    "lifecycle": {},
+    "shared_process_enabled": true,
+    "source_widths": [
+      2560
+    ],
+    "actions": {
+      "0": "\u5f85\u673a\u547c\u5438\u4f11\u95f2"
+    },
+    "initial_decode_routes": {
+      "0": {
+        "idle_eligible": true,
+        "broker_active": true,
+        "feed": false,
+        "publish": true,
+        "path": "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm"
+      }
+    },
+    "live_ffmpeg_after_cleanup": []
+  },
+  "samples": [
+    {
+      "time": 0.842,
+      "stage": "startup",
+      "footprint": 511150768,
+      "ffmpeg_count": 2,
+      "ffmpeg_footprint": 424396360,
+      "parent_footprint": 86754408,
+      "rss": 269533184
+    },
+    {
+      "time": 1.495,
+      "stage": "startup",
+      "footprint": 592121120,
+      "ffmpeg_count": 3,
+      "ffmpeg_footprint": 475809952,
+      "parent_footprint": 116311168,
+      "rss": 190889984
+    },
+    {
+      "time": 2.111,
+      "stage": "startup",
+      "footprint": 692652840,
+      "ffmpeg_count": 2,
+      "ffmpeg_footprint": 476530296,
+      "parent_footprint": 216122544,
+      "rss": 272826368
+    },
+    {
+      "time": 2.688,
+      "stage": "startup",
+      "footprint": 653641840,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 431244248,
+      "parent_footprint": 222397592,
+      "rss": 208715776
+    },
+    {
+      "time": 3.399,
+      "stage": "startup",
+      "footprint": 676513904,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 453788632,
+      "parent_footprint": 222725272,
+      "rss": 68435968
+    },
+    {
+      "time": 4.12,
+      "stage": "startup",
+      "footprint": 677791856,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 453870552,
+      "parent_footprint": 223921304,
+      "rss": 74416128
+    },
+    {
+      "time": 4.65,
+      "stage": "startup",
+      "footprint": 653035632,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 414335960,
+      "parent_footprint": 238699672,
+      "rss": 342097920
+    },
+    {
+      "time": 5.267,
+      "stage": "startup",
+      "footprint": 648611952,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 409879512,
+      "parent_footprint": 238732440,
+      "rss": 352436224
+    },
+    {
+      "time": 5.804,
+      "stage": "startup",
+      "footprint": 632096880,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 393364440,
+      "parent_footprint": 238732440,
+      "rss": 421740544
+    },
+    {
+      "time": 6.345,
+      "stage": "startup",
+      "footprint": 629459056,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 390710232,
+      "parent_footprint": 238748824,
+      "rss": 404602880
+    },
+    {
+      "time": 6.908,
+      "stage": "startup",
+      "footprint": 620677232,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 381830104,
+      "parent_footprint": 238847128,
+      "rss": 416645120
+    },
+    {
+      "time": 7.462,
+      "stage": "startup",
+      "footprint": 620398704,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 381518808,
+      "parent_footprint": 238879896,
+      "rss": 427950080
+    },
+    {
+      "time": 8.05,
+      "stage": "startup",
+      "footprint": 650889328,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 412025816,
+      "parent_footprint": 238863512,
+      "rss": 289832960
+    },
+    {
+      "time": 8.628,
+      "stage": "startup",
+      "footprint": 622086256,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 383271896,
+      "parent_footprint": 238814360,
+      "rss": 396673024
+    },
+    {
+      "time": 9.163,
+      "stage": "startup",
+      "footprint": 621217928,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 367592408,
+      "parent_footprint": 253625520,
+      "rss": 470843392
+    },
+    {
+      "time": 9.711,
+      "stage": "startup",
+      "footprint": 635635848,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 382010328,
+      "parent_footprint": 253625520,
+      "rss": 438124544
+    },
+    {
+      "time": 10.252,
+      "stage": "startup",
+      "footprint": 643434632,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 389809112,
+      "parent_footprint": 253625520,
+      "rss": 379863040
+    },
+    {
+      "time": 10.808,
+      "stage": "startup",
+      "footprint": 647415944,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 393675736,
+      "parent_footprint": 253740208,
+      "rss": 378912768
+    },
+    {
+      "time": 11.344,
+      "stage": "startup",
+      "footprint": 687638664,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 433947608,
+      "parent_footprint": 253691056,
+      "rss": 268386304
+    },
+    {
+      "time": 11.879,
+      "stage": "steady",
+      "footprint": 635799688,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 382108632,
+      "parent_footprint": 253691056,
+      "rss": 423477248
+    },
+    {
+      "time": 12.453,
+      "stage": "steady",
+      "footprint": 637110408,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 383402968,
+      "parent_footprint": 253707440,
+      "rss": 407797760
+    },
+    {
+      "time": 12.988,
+      "stage": "steady",
+      "footprint": 625330312,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 371606488,
+      "parent_footprint": 253723824,
+      "rss": 443940864
+    },
+    {
+      "time": 13.534,
+      "stage": "steady",
+      "footprint": 611829896,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 358089688,
+      "parent_footprint": 253740208,
+      "rss": 521191424
+    },
+    {
+      "time": 14.095,
+      "stage": "steady",
+      "footprint": 635652232,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 366167000,
+      "parent_footprint": 269485232,
+      "rss": 498991104
+    },
+    {
+      "time": 14.637,
+      "stage": "steady",
+      "footprint": 656558216,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 387105752,
+      "parent_footprint": 269452464,
+      "rss": 422805504
+    },
+    {
+      "time": 15.208,
+      "stage": "steady",
+      "footprint": 699107464,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 429655000,
+      "parent_footprint": 269452464,
+      "rss": 255590400
+    },
+    {
+      "time": 15.822,
+      "stage": "steady",
+      "footprint": 691259528,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 440386520,
+      "parent_footprint": 250873008,
+      "rss": 255016960
+    },
+    {
+      "time": 16.382,
+      "stage": "steady",
+      "footprint": 676759688,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 425886680,
+      "parent_footprint": 250873008,
+      "rss": 295895040
+    },
+    {
+      "time": 16.916,
+      "stage": "steady",
+      "footprint": 633260168,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 382436312,
+      "parent_footprint": 250823856,
+      "rss": 459014144
+    },
+    {
+      "time": 17.465,
+      "stage": "steady",
+      "footprint": 652986504,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 402179032,
+      "parent_footprint": 250807472,
+      "rss": 377126912
+    },
+    {
+      "time": 18.026,
+      "stage": "steady",
+      "footprint": 624904328,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 373949400,
+      "parent_footprint": 250954928,
+      "rss": 433700864
+    },
+    {
+      "time": 18.591,
+      "stage": "steady",
+      "footprint": 657361032,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 406389720,
+      "parent_footprint": 250971312,
+      "rss": 335413248
+    },
+    {
+      "time": 19.42,
+      "stage": "steady",
+      "footprint": 707168800,
+      "ffmpeg_count": 2,
+      "ffmpeg_footprint": 456082776,
+      "parent_footprint": 251086024,
+      "rss": 166363136
+    },
+    {
+      "time": 19.975,
+      "stage": "steady",
+      "footprint": 651774088,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 400753624,
+      "parent_footprint": 251020464,
+      "rss": 393953280
+    },
+    {
+      "time": 20.534,
+      "stage": "steady",
+      "footprint": 671942792,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 427328472,
+      "parent_footprint": 244614320,
+      "rss": 281821184
+    },
+    {
+      "time": 21.098,
+      "stage": "steady",
+      "footprint": 628328584,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 383681496,
+      "parent_footprint": 244647088,
+      "rss": 414384128
+    },
+    {
+      "time": 21.622,
+      "stage": "steady",
+      "footprint": 628344968,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 383484888,
+      "parent_footprint": 244860080,
+      "rss": 432783360
+    },
+    {
+      "time": 22.166,
+      "stage": "steady",
+      "footprint": 658294920,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 413434840,
+      "parent_footprint": 244860080,
+      "rss": 319143936
+    },
+    {
+      "time": 22.716,
+      "stage": "steady",
+      "footprint": 643696776,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 398820312,
+      "parent_footprint": 244876464,
+      "rss": 314556416
+    },
+    {
+      "time": 23.388,
+      "stage": "steady",
+      "footprint": 683640968,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 455197656,
+      "parent_footprint": 228443312,
+      "rss": 65339392
+    },
+    {
+      "time": 23.918,
+      "stage": "steady",
+      "footprint": 654477448,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 426066904,
+      "parent_footprint": 228410544,
+      "rss": 316358656
+    },
+    {
+      "time": 24.599,
+      "stage": "steady",
+      "footprint": 669632648,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 441205720,
+      "parent_footprint": 228426928,
+      "rss": 234192896
+    },
+    {
+      "time": 25.273,
+      "stage": "steady",
+      "footprint": 655837320,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 427426776,
+      "parent_footprint": 228410544,
+      "rss": 151093248
+    },
+    {
+      "time": 25.845,
+      "stage": "steady",
+      "footprint": 645712008,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 417301464,
+      "parent_footprint": 228410544,
+      "rss": 300711936
+    },
+    {
+      "time": 26.386,
+      "stage": "steady",
+      "footprint": 656099464,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 427688920,
+      "parent_footprint": 228410544,
+      "rss": 273416192
+    },
+    {
+      "time": 26.94,
+      "stage": "steady",
+      "footprint": 660932744,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 432522200,
+      "parent_footprint": 228410544,
+      "rss": 282181632
+    },
+    {
+      "time": 27.594,
+      "stage": "steady",
+      "footprint": 684165256,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 455279576,
+      "parent_footprint": 228885680,
+      "rss": 170950656
+    },
+    {
+      "time": 28.233,
+      "stage": "steady",
+      "footprint": 680347784,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 451462104,
+      "parent_footprint": 228885680,
+      "rss": 169263104
+    },
+    {
+      "time": 28.775,
+      "stage": "steady",
+      "footprint": 659556488,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 430670808,
+      "parent_footprint": 228885680,
+      "rss": 265732096
+    },
+    {
+      "time": 29.316,
+      "stage": "steady",
+      "footprint": 655755400,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 426869720,
+      "parent_footprint": 228885680,
+      "rss": 287752192
+    },
+    {
+      "time": 29.881,
+      "stage": "steady",
+      "footprint": 628066440,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 397968344,
+      "parent_footprint": 230098096,
+      "rss": 348618752
+    },
+    {
+      "time": 30.453,
+      "stage": "steady",
+      "footprint": 670926984,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 440812504,
+      "parent_footprint": 230114480,
+      "rss": 201293824
+    },
+    {
+      "time": 31.06,
+      "stage": "steady",
+      "footprint": 670566536,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 440468440,
+      "parent_footprint": 230098096,
+      "rss": 221036544
+    },
+    {
+      "time": 31.673,
+      "stage": "steady",
+      "footprint": 675235976,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 445137880,
+      "parent_footprint": 230098096,
+      "rss": 210763776
+    },
+    {
+      "time": 32.243,
+      "stage": "steady",
+      "footprint": 672286856,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 442172376,
+      "parent_footprint": 230114480,
+      "rss": 214237184
+    },
+    {
+      "time": 32.78,
+      "stage": "steady",
+      "footprint": 660015240,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 429900760,
+      "parent_footprint": 230114480,
+      "rss": 222740480
+    },
+    {
+      "time": 33.43,
+      "stage": "steady",
+      "footprint": 685410440,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 455263192,
+      "parent_footprint": 230147248,
+      "rss": 111345664
+    },
+    {
+      "time": 34.012,
+      "stage": "steady",
+      "footprint": 681363592,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 451232728,
+      "parent_footprint": 230130864,
+      "rss": 206258176
+    },
+    {
+      "time": 35.254,
+      "stage": "steady",
+      "footprint": 675727496,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 455279576,
+      "parent_footprint": 220447920,
+      "rss": 63864832
+    },
+    {
+      "time": 36.032,
+      "stage": "steady",
+      "footprint": 675596424,
+      "ffmpeg_count": 1,
+      "ffmpeg_footprint": 455148504,
+      "parent_footprint": 220447920,
+      "rss": 67452928
+    }
+  ],
+  "components": [
+    {
+      "time": 2.079,
+      "stage": "startup",
+      "shared_sources": 1,
+      "shared_subscribers": 0,
+      "library_prewarm": [
+        {
+          "low_done": true,
+          "low_in_flight": false
+        }
+      ],
+      "first_frame_unique_bytes": 22118400,
+      "queue_referenced_bytes": 0,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 0,
+      "clip_display_image_bytes": 14745600,
+      "window_scaled_image_bytes": 6230016,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 3,
+          "total": 0.05705041601322591
+        },
+        "rebuild.calls": {
+          "count": 3,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 4,
+          "total": 0.016174916992895305
+        },
+        "webm.first_frame": {
+          "count": 6,
+          "total": 3.143773126997985
+        },
+        "jank.100ms+": {
+          "count": 4,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 15,
+          "total": 0.0
+        },
+        "jank.50_100ms": {
+          "count": 2,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 2,
+          "total": 1.2793642079923302
+        },
+        "webm.queue_wait": {
+          "count": 2,
+          "total": 0.008777124050538987
+        },
+        "webm.consume": {
+          "count": 2,
+          "total": 0.108824375027325
+        },
+        "rebuild.scale": {
+          "count": 2,
+          "total": 0.12797087494982406
+        },
+        "rebuild.total": {
+          "count": 2,
+          "total": 0.19025941705331206
+        }
+      }
+    },
+    {
+      "time": 4.091,
+      "stage": "startup",
+      "shared_sources": 1,
+      "shared_subscribers": 0,
+      "library_prewarm": [
+        {
+          "low_done": true,
+          "low_in_flight": false
+        }
+      ],
+      "first_frame_unique_bytes": 25804800,
+      "queue_referenced_bytes": 0,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 0,
+      "clip_display_image_bytes": 14745600,
+      "window_scaled_image_bytes": 6230016,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 9,
+          "total": 0.08105616603279486
+        },
+        "rebuild.calls": {
+          "count": 9,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 10,
+          "total": 0.03153650101739913
+        },
+        "webm.first_frame": {
+          "count": 7,
+          "total": 3.490458710992243
+        },
+        "jank.100ms+": {
+          "count": 5,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 54,
+          "total": 0.0
+        },
+        "jank.50_100ms": {
+          "count": 6,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 8,
+          "total": 3.02883266704157
+        },
+        "webm.queue_wait": {
+          "count": 8,
+          "total": 0.009094167093280703
+        },
+        "webm.consume": {
+          "count": 8,
+          "total": 0.31379033502889797
+        },
+        "rebuild.scale": {
+          "count": 8,
+          "total": 0.2868438748992048
+        },
+        "rebuild.total": {
+          "count": 8,
+          "total": 0.3755341240321286
+        }
+      }
+    },
+    {
+      "time": 6.07,
+      "stage": "startup",
+      "shared_sources": 1,
+      "shared_subscribers": 0,
+      "library_prewarm": [
+        {
+          "low_done": true,
+          "low_in_flight": false
+        }
+      ],
+      "first_frame_unique_bytes": 25804800,
+      "queue_referenced_bytes": 0,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 0,
+      "clip_display_image_bytes": 14745600,
+      "window_scaled_image_bytes": 6230016,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 35,
+          "total": 0.15473412623396143
+        },
+        "rebuild.calls": {
+          "count": 35,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 36,
+          "total": 0.06481087516294792
+        },
+        "webm.first_frame": {
+          "count": 7,
+          "total": 3.490458710992243
+        },
+        "jank.100ms+": {
+          "count": 5,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 76,
+          "total": 0.0
+        },
+        "jank.50_100ms": {
+          "count": 9,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 34,
+          "total": 5.352806876122486
+        },
+        "webm.queue_wait": {
+          "count": 34,
+          "total": 0.010040790250059217
+        },
+        "webm.consume": {
+          "count": 34,
+          "total": 0.5321623359341174
+        },
+        "rebuild.scale": {
+          "count": 34,
+          "total": 0.5286359990132041
+        },
+        "rebuild.total": {
+          "count": 34,
+          "total": 0.6969042479177006
+        }
+      }
+    },
+    {
+      "time": 8.071,
+      "stage": "startup",
+      "shared_sources": 1,
+      "shared_subscribers": 0,
+      "library_prewarm": [
+        {
+          "low_done": true,
+          "low_in_flight": false
+        }
+      ],
+      "first_frame_unique_bytes": 25804800,
+      "queue_referenced_bytes": 0,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 0,
+      "clip_display_image_bytes": 14745600,
+      "window_scaled_image_bytes": 6230016,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 64,
+          "total": 0.240417999913916
+        },
+        "rebuild.calls": {
+          "count": 64,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 65,
+          "total": 0.10625229100696743
+        },
+        "webm.first_frame": {
+          "count": 7,
+          "total": 3.490458710992243
+        },
+        "jank.100ms+": {
+          "count": 5,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 95,
+          "total": 0.0
+        },
+        "jank.50_100ms": {
+          "count": 10,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 63,
+          "total": 7.251266374252737
+        },
+        "webm.queue_wait": {
+          "count": 63,
+          "total": 0.01255683327326551
+        },
+        "webm.consume": {
+          "count": 63,
+          "total": 0.7287410851567984
+        },
+        "rebuild.scale": {
+          "count": 63,
+          "total": 0.7361577059491538
+        },
+        "rebuild.total": {
+          "count": 63,
+          "total": 1.00791478989413
+        }
+      }
+    },
+    {
+      "time": 10.069,
+      "stage": "startup",
+      "shared_sources": 1,
+      "shared_subscribers": 0,
+      "library_prewarm": [
+        {
+          "low_done": true,
+          "low_in_flight": false
+        }
+      ],
+      "first_frame_unique_bytes": 25804800,
+      "queue_referenced_bytes": 14745600,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 14745600,
+      "clip_display_image_bytes": 14745600,
+      "window_scaled_image_bytes": 6230016,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 97,
+          "total": 0.33755695389118046
+        },
+        "rebuild.calls": {
+          "count": 97,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 98,
+          "total": 0.14380716503364965
+        },
+        "webm.first_frame": {
+          "count": 7,
+          "total": 3.490458710992243
+        },
+        "jank.100ms+": {
+          "count": 5,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 109,
+          "total": 0.0
+        },
+        "jank.50_100ms": {
+          "count": 10,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 97,
+          "total": 9.387390456045978
+        },
+        "webm.queue_wait": {
+          "count": 97,
+          "total": 0.013787498348392546
+        },
+        "webm.consume": {
+          "count": 96,
+          "total": 0.9191229180432856
+        },
+        "rebuild.scale": {
+          "count": 96,
+          "total": 0.9696508301422
+        },
+        "rebuild.total": {
+          "count": 96,
+          "total": 1.369296748074703
+        }
+      }
+    },
+    {
+      "time": 12.07,
+      "stage": "steady",
+      "shared_sources": 1,
+      "shared_subscribers": 0,
+      "library_prewarm": [
+        {
+          "low_done": true,
+          "low_in_flight": false
+        }
+      ],
+      "first_frame_unique_bytes": 25804800,
+      "queue_referenced_bytes": 14745600,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 14745600,
+      "clip_display_image_bytes": 14745600,
+      "window_scaled_image_bytes": 6230016,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 125,
+          "total": 0.4425757437129505
+        },
+        "rebuild.calls": {
+          "count": 125,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 126,
+          "total": 0.18687587301246822
+        },
+        "webm.first_frame": {
+          "count": 7,
+          "total": 3.490458710992243
+        },
+        "jank.100ms+": {
+          "count": 5,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 129,
+          "total": 0.0
+        },
+        "jank.50_100ms": {
+          "count": 11,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 125,
+          "total": 11.386624289036263
+        },
+        "webm.queue_wait": {
+          "count": 125,
+          "total": 0.014372207398992032
+        },
+        "webm.consume": {
+          "count": 124,
+          "total": 1.1092321678297594
+        },
+        "rebuild.scale": {
+          "count": 124,
+          "total": 1.2235581603599712
+        },
+        "rebuild.total": {
+          "count": 124,
+          "total": 1.7348273342940956
+        }
+      }
+    },
+    {
+      "time": 14.073,
+      "stage": "steady",
+      "shared_sources": 1,
+      "shared_subscribers": 0,
+      "library_prewarm": [
+        {
+          "low_done": true,
+          "low_in_flight": false
+        }
+      ],
+      "first_frame_unique_bytes": 25804800,
+      "queue_referenced_bytes": 14745600,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 14745600,
+      "clip_display_image_bytes": 14745600,
+      "window_scaled_image_bytes": 6230016,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 167,
+          "total": 0.5529407057329081
+        },
+        "rebuild.calls": {
+          "count": 167,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 168,
+          "total": 0.22365745494607836
+        },
+        "webm.first_frame": {
+          "count": 7,
+          "total": 3.490458710992243
+        },
+        "jank.100ms+": {
+          "count": 5,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 134,
+          "total": 0.0
+        },
+        "jank.50_100ms": {
+          "count": 11,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 167,
+          "total": 13.122601829119958
+        },
+        "webm.queue_wait": {
+          "count": 167,
+          "total": 0.2500749983009882
+        },
+        "webm.consume": {
+          "count": 166,
+          "total": 1.319742623833008
+        },
+        "rebuild.scale": {
+          "count": 166,
+          "total": 1.4483967464766465
+        },
+        "rebuild.total": {
+          "count": 166,
+          "total": 2.0821928813820705
+        }
+      }
+    },
+    {
+      "time": 16.069,
+      "stage": "steady",
+      "shared_sources": 1,
+      "shared_subscribers": 0,
+      "library_prewarm": [
+        {
+          "low_done": true,
+          "low_in_flight": false
+        }
+      ],
+      "first_frame_unique_bytes": 25804800,
+      "queue_referenced_bytes": 0,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 0,
+      "clip_display_image_bytes": 14745600,
+      "window_scaled_image_bytes": 6230016,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 191,
+          "total": 0.6386564099229872
+        },
+        "rebuild.calls": {
+          "count": 191,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 192,
+          "total": 0.2885866230353713
+        },
+        "webm.first_frame": {
+          "count": 7,
+          "total": 3.490458710992243
+        },
+        "jank.100ms+": {
+          "count": 5,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 157,
+          "total": 0.0
+        },
+        "jank.50_100ms": {
+          "count": 16,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 190,
+          "total": 15.08136770623969
+        },
+        "webm.queue_wait": {
+          "count": 190,
+          "total": 0.25164962525013834
+        },
+        "webm.consume": {
+          "count": 190,
+          "total": 1.5391049548634328
+        },
+        "rebuild.scale": {
+          "count": 190,
+          "total": 1.7373535381630063
+        },
+        "rebuild.total": {
+          "count": 190,
+          "total": 2.466215171618387
+        }
+      }
+    },
+    {
+      "time": 18.07,
+      "stage": "steady",
+      "shared_sources": 1,
+      "shared_subscribers": 0,
+      "library_prewarm": [
+        {
+          "low_done": true,
+          "low_in_flight": false
+        }
+      ],
+      "first_frame_unique_bytes": 25804800,
+      "queue_referenced_bytes": 14745600,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 14745600,
+      "clip_display_image_bytes": 14745600,
+      "window_scaled_image_bytes": 6230016,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 224,
+          "total": 0.7406709910719655
+        },
+        "rebuild.calls": {
+          "count": 224,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 225,
+          "total": 0.319654667051509
+        },
+        "webm.first_frame": {
+          "count": 7,
+          "total": 3.490458710992243
+        },
+        "jank.100ms+": {
+          "count": 6,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 170,
+          "total": 0.0
+        },
+        "jank.50_100ms": {
+          "count": 17,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 224,
+          "total": 17.093644621258136
+        },
+        "webm.queue_wait": {
+          "count": 224,
+          "total": 0.3056248341454193
+        },
+        "webm.consume": {
+          "count": 223,
+          "total": 1.7647239138605073
+        },
+        "rebuild.scale": {
+          "count": 223,
+          "total": 2.028380580013618
+        },
+        "rebuild.total": {
+          "count": 223,
+          "total": 2.8672346244566143
+        }
+      }
+    },
+    {
+      "time": 20.07,
+      "stage": "steady",
+      "shared_sources": 1,
+      "shared_subscribers": 0,
+      "library_prewarm": [
+        {
+          "low_done": true,
+          "low_in_flight": false
+        }
+      ],
+      "first_frame_unique_bytes": 25804800,
+      "queue_referenced_bytes": 0,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 0,
+      "clip_display_image_bytes": 14745600,
+      "window_scaled_image_bytes": 6230016,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 245,
+          "total": 0.8080700729624368
+        },
+        "rebuild.calls": {
+          "count": 246,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 246,
+          "total": 0.35702920996118337
+        },
+        "webm.first_frame": {
+          "count": 8,
+          "total": 4.608704502985347
+        },
+        "jank.100ms+": {
+          "count": 7,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 188,
+          "total": 0.0
+        },
+        "jank.50_100ms": {
+          "count": 19,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 244,
+          "total": 19.00302466127323
+        },
+        "webm.queue_wait": {
+          "count": 244,
+          "total": 0.3069908352335915
+        },
+        "webm.consume": {
+          "count": 244,
+          "total": 1.956584621919319
+        },
+        "rebuild.scale": {
+          "count": 244,
+          "total": 2.460754703031853
+        },
+        "rebuild.total": {
+          "count": 244,
+          "total": 3.3896009574527852
+        },
+        "predict.made": {
+          "count": 1,
+          "total": 0.0
+        },
+        "prewarm.ff_ms": {
+          "count": 1,
+          "total": 1.1605549170053564
+        }
+      }
+    },
+    {
+      "time": 22.07,
+      "stage": "steady",
+      "shared_sources": 1,
+      "shared_subscribers": 0,
+      "library_prewarm": [
+        {
+          "low_done": true,
+          "low_in_flight": false
+        }
+      ],
+      "first_frame_unique_bytes": 25804800,
+      "queue_referenced_bytes": 0,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 0,
+      "clip_display_image_bytes": 14745600,
+      "window_scaled_image_bytes": 6230016,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 272,
+          "total": 0.8927068692282774
+        },
+        "rebuild.calls": {
+          "count": 273,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 273,
+          "total": 0.4050465452019125
+        },
+        "webm.first_frame": {
+          "count": 8,
+          "total": 4.608704502985347
+        },
+        "jank.100ms+": {
+          "count": 7,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 209,
+          "total": 0.0
+        },
+        "jank.50_100ms": {
+          "count": 20,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 271,
+          "total": 20.975435080123134
+        },
+        "webm.queue_wait": {
+          "count": 271,
+          "total": 0.3078152951784432
+        },
+        "webm.consume": {
+          "count": 271,
+          "total": 2.143029702885542
+        },
+        "rebuild.scale": {
+          "count": 271,
+          "total": 2.669955825782381
+        },
+        "rebuild.total": {
+          "count": 271,
+          "total": 3.6946200443198904
+        },
+        "predict.made": {
+          "count": 1,
+          "total": 0.0
+        },
+        "prewarm.ff_ms": {
+          "count": 1,
+          "total": 1.1605549170053564
+        }
+      }
+    },
+    {
+      "time": 24.07,
+      "stage": "steady",
+      "shared_sources": 1,
+      "shared_subscribers": 0,
+      "library_prewarm": [
+        {
+          "low_done": true,
+          "low_in_flight": false
+        }
+      ],
+      "first_frame_unique_bytes": 25804800,
+      "queue_referenced_bytes": 14745600,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 14745600,
+      "clip_display_image_bytes": 14745600,
+      "window_scaled_image_bytes": 6230016,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 288,
+          "total": 0.9555143714533187
+        },
+        "rebuild.calls": {
+          "count": 289,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 289,
+          "total": 0.4479429622297175
+        },
+        "webm.first_frame": {
+          "count": 8,
+          "total": 4.608704502985347
+        },
+        "jank.100ms+": {
+          "count": 7,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 240,
+          "total": 0.0
+        },
+        "jank.50_100ms": {
+          "count": 25,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 288,
+          "total": 23.032320289115887
+        },
+        "webm.queue_wait": {
+          "count": 288,
+          "total": 0.30995846103178337
+        },
+        "webm.consume": {
+          "count": 287,
+          "total": 2.318169577862136
+        },
+        "rebuild.scale": {
+          "count": 287,
+          "total": 2.8685728677664883
+        },
+        "rebuild.total": {
+          "count": 287,
+          "total": 3.9607095871469937
+        },
+        "predict.made": {
+          "count": 1,
+          "total": 0.0
+        },
+        "prewarm.ff_ms": {
+          "count": 1,
+          "total": 1.1605549170053564
+        }
+      }
+    },
+    {
+      "time": 26.095,
+      "stage": "steady",
+      "shared_sources": 1,
+      "shared_subscribers": 0,
+      "library_prewarm": [
+        {
+          "low_done": true,
+          "low_in_flight": false
+        }
+      ],
+      "first_frame_unique_bytes": 25804800,
+      "queue_referenced_bytes": 14745600,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 14745600,
+      "clip_display_image_bytes": 14745600,
+      "window_scaled_image_bytes": 6230016,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 310,
+          "total": 1.0438768764142878
+        },
+        "rebuild.calls": {
+          "count": 311,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 311,
+          "total": 0.4969193780561909
+        },
+        "webm.first_frame": {
+          "count": 8,
+          "total": 4.608704502985347
+        },
+        "jank.100ms+": {
+          "count": 7,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 265,
+          "total": 0.0
+        },
+        "jank.50_100ms": {
+          "count": 29,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 310,
+          "total": 25.038641871127766
+        },
+        "webm.queue_wait": {
+          "count": 310,
+          "total": 0.31099958607228473
+        },
+        "webm.consume": {
+          "count": 309,
+          "total": 2.5544326646486297
+        },
+        "rebuild.scale": {
+          "count": 309,
+          "total": 3.095593242032919
+        },
+        "rebuild.total": {
+          "count": 309,
+          "total": 4.2919840881368145
+        },
+        "predict.made": {
+          "count": 1,
+          "total": 0.0
+        },
+        "prewarm.ff_ms": {
+          "count": 1,
+          "total": 1.1605549170053564
+        }
+      }
+    },
+    {
+      "time": 28.106,
+      "stage": "steady",
+      "shared_sources": 1,
+      "shared_subscribers": 0,
+      "library_prewarm": [
+        {
+          "low_done": true,
+          "low_in_flight": false
+        }
+      ],
+      "first_frame_unique_bytes": 25804800,
+      "queue_referenced_bytes": 0,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 0,
+      "clip_display_image_bytes": 14745600,
+      "window_scaled_image_bytes": 6230016,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 328,
+          "total": 1.1336637954809703
+        },
+        "rebuild.calls": {
+          "count": 329,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 329,
+          "total": 0.5295238360995427
+        },
+        "webm.first_frame": {
+          "count": 8,
+          "total": 4.608704502985347
+        },
+        "jank.100ms+": {
+          "count": 8,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 290,
+          "total": 0.0
+        },
+        "jank.50_100ms": {
+          "count": 30,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 327,
+          "total": 27.01071095414227
+        },
+        "webm.queue_wait": {
+          "count": 327,
+          "total": 0.31152837816625834
+        },
+        "webm.consume": {
+          "count": 327,
+          "total": 2.919508707767818
+        },
+        "rebuild.scale": {
+          "count": 327,
+          "total": 3.329807741101831
+        },
+        "rebuild.total": {
+          "count": 327,
+          "total": 4.623480879119597
+        },
+        "predict.made": {
+          "count": 1,
+          "total": 0.0
+        },
+        "prewarm.ff_ms": {
+          "count": 1,
+          "total": 1.1605549170053564
+        }
+      }
+    },
+    {
+      "time": 30.07,
+      "stage": "steady",
+      "shared_sources": 1,
+      "shared_subscribers": 0,
+      "library_prewarm": [
+        {
+          "low_done": true,
+          "low_in_flight": false
+        }
+      ],
+      "first_frame_unique_bytes": 25804800,
+      "queue_referenced_bytes": 0,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 0,
+      "clip_display_image_bytes": 14745600,
+      "window_scaled_image_bytes": 6230016,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 349,
+          "total": 1.2232719644671306
+        },
+        "rebuild.calls": {
+          "count": 350,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 350,
+          "total": 0.5706781690823846
+        },
+        "webm.first_frame": {
+          "count": 8,
+          "total": 4.608704502985347
+        },
+        "jank.100ms+": {
+          "count": 8,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 313,
+          "total": 0.0
+        },
+        "jank.50_100ms": {
+          "count": 34,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 348,
+          "total": 29.012416120967828
+        },
+        "webm.queue_wait": {
+          "count": 348,
+          "total": 0.31224829115672037
+        },
+        "webm.consume": {
+          "count": 348,
+          "total": 3.183299125521444
+        },
+        "rebuild.scale": {
+          "count": 348,
+          "total": 3.599408282258082
+        },
+        "rebuild.total": {
+          "count": 348,
+          "total": 4.989054172241595
+        },
+        "predict.made": {
+          "count": 1,
+          "total": 0.0
+        },
+        "prewarm.ff_ms": {
+          "count": 1,
+          "total": 1.1605549170053564
+        }
+      }
+    },
+    {
+      "time": 32.079,
+      "stage": "steady",
+      "shared_sources": 1,
+      "shared_subscribers": 0,
+      "library_prewarm": [
+        {
+          "low_done": true,
+          "low_in_flight": false
+        }
+      ],
+      "first_frame_unique_bytes": 25804800,
+      "queue_referenced_bytes": 14745600,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 14745600,
+      "clip_display_image_bytes": 14745600,
+      "window_scaled_image_bytes": 6230016,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 359,
+          "total": 1.2910755455959588
+        },
+        "rebuild.calls": {
+          "count": 360,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 360,
+          "total": 0.5959691690513864
+        },
+        "webm.first_frame": {
+          "count": 8,
+          "total": 4.608704502985347
+        },
+        "jank.100ms+": {
+          "count": 10,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 345,
+          "total": 0.0
+        },
+        "jank.50_100ms": {
+          "count": 40,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 359,
+          "total": 31.044606788898818
+        },
+        "webm.queue_wait": {
+          "count": 359,
+          "total": 0.3136972101056017
+        },
+        "webm.consume": {
+          "count": 358,
+          "total": 3.472626582486555
+        },
+        "rebuild.scale": {
+          "count": 358,
+          "total": 3.8724962823907845
+        },
+        "rebuild.total": {
+          "count": 358,
+          "total": 5.338473841315135
+        },
+        "predict.made": {
+          "count": 1,
+          "total": 0.0
+        },
+        "prewarm.ff_ms": {
+          "count": 1,
+          "total": 1.1605549170053564
+        }
+      }
+    },
+    {
+      "time": 34.07,
+      "stage": "steady",
+      "shared_sources": 1,
+      "shared_subscribers": 0,
+      "library_prewarm": [
+        {
+          "low_done": true,
+          "low_in_flight": false
+        }
+      ],
+      "first_frame_unique_bytes": 25804800,
+      "queue_referenced_bytes": 0,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 0,
+      "clip_display_image_bytes": 14745600,
+      "window_scaled_image_bytes": 6230016,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 370,
+          "total": 1.3528477535001002
+        },
+        "rebuild.calls": {
+          "count": 371,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 371,
+          "total": 0.6347545011085458
+        },
+        "webm.first_frame": {
+          "count": 8,
+          "total": 4.608704502985347
+        },
+        "jank.100ms+": {
+          "count": 13,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 373,
+          "total": 0.0
+        },
+        "jank.50_100ms": {
+          "count": 45,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 369,
+          "total": 32.79182461986784
+        },
+        "webm.queue_wait": {
+          "count": 369,
+          "total": 0.3143900841823779
+        },
+        "webm.consume": {
+          "count": 369,
+          "total": 3.782850958465133
+        },
+        "rebuild.scale": {
+          "count": 369,
+          "total": 4.2476734484080225
+        },
+        "rebuild.total": {
+          "count": 369,
+          "total": 5.7846947143552825
+        },
+        "predict.made": {
+          "count": 1,
+          "total": 0.0
+        },
+        "prewarm.ff_ms": {
+          "count": 1,
+          "total": 1.1605549170053564
+        }
+      }
+    },
+    {
+      "time": 34.863,
+      "stage": "steady",
+      "shared_sources": 1,
+      "shared_subscribers": 0,
+      "library_prewarm": [
+        {
+          "low_done": true,
+          "low_in_flight": false
+        }
+      ],
+      "first_frame_unique_bytes": 25804800,
+      "queue_referenced_bytes": 0,
+      "ring_referenced_bytes": 0,
+      "raw_unique_bytes_across_queues_and_rings": 0,
+      "clip_display_image_bytes": 14745600,
+      "window_scaled_image_bytes": 6230016,
+      "performance_counters": {
+        "rebuild.mask": {
+          "count": 372,
+          "total": 1.3718356704921462
+        },
+        "rebuild.calls": {
+          "count": 373,
+          "total": 0.0
+        },
+        "paint.draw": {
+          "count": 373,
+          "total": 0.6389055431354791
+        },
+        "webm.first_frame": {
+          "count": 8,
+          "total": 4.608704502985347
+        },
+        "jank.100ms+": {
+          "count": 15,
+          "total": 0.0
+        },
+        "webm.poll_empty": {
+          "count": 379,
+          "total": 0.0
+        },
+        "jank.50_100ms": {
+          "count": 45,
+          "total": 0.0
+        },
+        "webm.decode": {
+          "count": 371,
+          "total": 33.49197449587518
+        },
+        "webm.queue_wait": {
+          "count": 371,
+          "total": 0.31521979317767546
+        },
+        "webm.consume": {
+          "count": 371,
+          "total": 4.065290249476675
+        },
+        "rebuild.scale": {
+          "count": 371,
+          "total": 4.424661907425616
+        },
+        "rebuild.total": {
+          "count": 371,
+          "total": 6.007770047348458
+        },
+        "predict.made": {
+          "count": 1,
+          "total": 0.0
+        },
+        "prewarm.ff_ms": {
+          "count": 1,
+          "total": 1.1605549170053564
+        }
+      }
+    }
+  ],
+  "delivered_frames": {
+    "0": [
+      [
+        1.6042,
+        0,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        2.0138,
+        1,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        2.2702,
+        2,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        2.4514,
+        3,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        2.7136,
+        4,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        2.9455,
+        5,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        3.6095,
+        6,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        3.751,
+        7,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        4.3077,
+        8,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        4.3873,
+        9,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        4.5006,
+        10,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        4.5855,
+        11,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        4.6687,
+        12,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        4.7904,
+        13,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        4.833,
+        14,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        4.8742,
+        15,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        4.9188,
+        16,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        5.0,
+        17,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        5.0898,
+        18,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        5.207,
+        19,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        5.3068,
+        20,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        5.3774,
+        21,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        5.4234,
+        22,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        5.4657,
+        23,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        5.5454,
+        24,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        5.5979,
+        25,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        5.6381,
+        26,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        5.6796,
+        27,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        5.7668,
+        28,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        5.8406,
+        29,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        5.8825,
+        30,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        5.9269,
+        31,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        6.0159,
+        32,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        6.0526,
+        33,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        6.0919,
+        34,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        6.1758,
+        35,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        6.2611,
+        36,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        6.3106,
+        37,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        6.3966,
+        38,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        6.4301,
+        39,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        6.471,
+        40,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        6.555,
+        41,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        6.5963,
+        42,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        6.6379,
+        43,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        6.6864,
+        44,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        6.7669,
+        45,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        6.8556,
+        46,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        6.8913,
+        47,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        6.975,
+        48,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        7.0184,
+        49,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        7.101,
+        50,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        7.1541,
+        51,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        7.2262,
+        52,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        7.3108,
+        53,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        7.3515,
+        54,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        7.3982,
+        55,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        7.4483,
+        56,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        7.5283,
+        57,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        7.6079,
+        58,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        7.6492,
+        59,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        7.6993,
+        60,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        7.8463,
+        61,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        7.947,
+        62,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        8.1189,
+        63,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        8.1988,
+        64,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        8.28,
+        65,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        8.3604,
+        66,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        8.4016,
+        67,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        8.4452,
+        68,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        8.4896,
+        69,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        8.5878,
+        70,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        8.6629,
+        71,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        8.7413,
+        72,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        8.7831,
+        73,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        8.8654,
+        74,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        8.9065,
+        75,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        8.9508,
+        76,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        9.0393,
+        77,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        9.0746,
+        78,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        9.1232,
+        79,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        9.2078,
+        80,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        9.2425,
+        81,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        9.2836,
+        82,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        9.3249,
+        83,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        9.3701,
+        84,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        9.4104,
+        85,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        9.4511,
+        86,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        9.498,
+        87,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        9.5822,
+        88,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        9.6665,
+        89,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        9.7489,
+        90,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        9.791,
+        91,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        9.833,
+        92,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        9.881,
+        93,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        9.9613,
+        94,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        10.0502,
+        95,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        10.0829,
+        96,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        10.1268,
+        97,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        10.2157,
+        98,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        10.3043,
+        99,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        10.386,
+        100,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        10.4229,
+        101,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        10.5048,
+        102,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        10.629,
+        103,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        10.6697,
+        104,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        10.754,
+        105,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        10.7971,
+        106,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        10.8523,
+        107,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        10.932,
+        108,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        11.0983,
+        109,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        11.2275,
+        110,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        11.3975,
+        111,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        11.4317,
+        112,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        11.5147,
+        113,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        11.5932,
+        114,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        11.6369,
+        115,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        11.6804,
+        116,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        11.723,
+        117,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        11.7637,
+        118,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        11.8047,
+        119,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        11.8477,
+        120,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        11.9336,
+        121,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        11.9798,
+        122,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        12.0559,
+        123,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        12.099,
+        124,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        12.146,
+        125,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        12.1819,
+        126,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        12.2275,
+        127,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        12.2737,
+        128,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        12.3502,
+        129,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        12.4019,
+        130,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        12.4865,
+        131,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        12.5189,
+        132,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        12.6144,
+        133,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        12.6478,
+        134,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        12.6863,
+        135,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        12.7278,
+        136,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        12.7756,
+        137,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        12.8136,
+        138,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        12.8576,
+        139,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        12.8989,
+        140,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        12.9479,
+        141,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        13.0327,
+        142,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        13.1136,
+        143,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        13.1469,
+        144,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        13.1915,
+        145,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        13.2328,
+        146,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        13.2736,
+        147,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        13.3162,
+        148,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        13.3575,
+        149,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        13.4016,
+        150,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        13.4446,
+        151,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        13.4843,
+        152,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        13.5276,
+        153,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        13.5691,
+        154,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        13.6106,
+        155,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        13.6521,
+        156,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        13.6928,
+        157,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        13.7412,
+        158,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        13.7823,
+        159,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        13.8274,
+        160,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        13.8617,
+        161,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        13.9058,
+        162,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        13.9523,
+        163,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        13.9906,
+        164,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        14.0321,
+        165,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        14.0787,
+        166,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        14.1569,
+        167,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        14.2039,
+        168,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        14.2392,
+        169,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        14.2821,
+        170,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        14.3276,
+        171,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        14.3697,
+        172,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        14.4571,
+        173,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        14.5356,
+        174,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        14.5825,
+        175,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        14.6182,
+        176,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        14.663,
+        177,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        14.7037,
+        178,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        14.7451,
+        179,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        14.788,
+        180,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        14.9284,
+        181,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        14.9988,
+        182,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        15.0874,
+        183,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        15.3043,
+        184,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        15.4216,
+        185,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        15.5917,
+        186,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        15.7367,
+        187,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        15.9121,
+        188,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        16.0225,
+        189,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        16.0987,
+        190,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        16.198,
+        191,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        16.3532,
+        192,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        16.4316,
+        193,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        16.5492,
+        194,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        16.726,
+        195,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        16.8069,
+        196,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        16.8509,
+        197,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        16.8856,
+        198,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        16.9333,
+        199,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        16.9722,
+        200,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        17.0147,
+        201,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        17.054,
+        202,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        17.0964,
+        203,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        17.141,
+        204,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        17.1818,
+        205,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        17.2296,
+        206,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        17.3113,
+        207,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        17.3923,
+        208,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        17.4387,
+        209,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        17.4795,
+        210,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        17.5178,
+        211,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        17.5569,
+        212,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        17.6,
+        213,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        17.6425,
+        214,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        17.6847,
+        215,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        17.7266,
+        216,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        17.7753,
+        217,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        17.8135,
+        218,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        17.851,
+        219,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        17.8951,
+        220,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        17.937,
+        221,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        17.9783,
+        222,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        18.1167,
+        223,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        18.194,
+        224,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        18.2817,
+        225,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        18.3321,
+        226,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        18.3641,
+        227,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        18.4466,
+        228,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        18.4913,
+        229,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        18.5304,
+        230,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        18.6622,
+        231,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        18.7003,
+        232,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        18.7495,
+        233,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        18.7883,
+        234,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        18.8684,
+        235,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        18.9519,
+        236,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        19.0694,
+        237,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        19.5237,
+        238,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        19.752,
+        239,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        19.8666,
+        240,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        19.9198,
+        0,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        19.9659,
+        1,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        20.0513,
+        2,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        20.187,
+        3,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        20.3633,
+        4,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        20.4693,
+        5,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        20.6455,
+        6,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        20.7209,
+        7,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        20.7595,
+        8,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        20.8028,
+        9,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        20.8468,
+        10,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        20.9715,
+        11,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        21.0728,
+        12,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        21.1439,
+        13,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        21.222,
+        14,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        21.3065,
+        15,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        21.3509,
+        16,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        21.3908,
+        17,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        21.4396,
+        18,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        21.5214,
+        19,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        21.5609,
+        20,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        21.6446,
+        21,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        21.6862,
+        22,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        21.725,
+        23,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        21.7676,
+        24,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        21.8111,
+        25,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        21.8521,
+        26,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        21.895,
+        27,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        21.9375,
+        28,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        22.0325,
+        29,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        22.1997,
+        30,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        22.2775,
+        31,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        22.313,
+        32,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        22.3545,
+        33,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        22.398,
+        34,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        22.4489,
+        35,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        22.5356,
+        36,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        22.7414,
+        37,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        22.9589,
+        38,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        23.477,
+        39,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        23.5474,
+        40,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        23.6579,
+        41,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        23.8043,
+        42,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        23.8789,
+        43,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        23.9541,
+        44,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        23.9943,
+        45,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        24.0821,
+        46,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        24.1268,
+        47,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        24.214,
+        48,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        24.298,
+        49,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        24.5609,
+        50,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        24.6791,
+        51,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        24.756,
+        52,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        24.7911,
+        53,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        24.8333,
+        54,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        24.8794,
+        55,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        24.9175,
+        56,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        24.9597,
+        57,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        25.0593,
+        58,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        25.3297,
+        59,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        25.4312,
+        60,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        25.5084,
+        61,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        25.6175,
+        62,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        25.687,
+        63,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        25.7192,
+        64,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        25.8029,
+        65,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        25.9371,
+        66,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        26.0583,
+        67,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        26.1017,
+        68,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        26.1795,
+        69,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        26.2211,
+        70,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        26.3133,
+        71,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        26.4448,
+        72,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        26.5211,
+        73,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        26.6473,
+        74,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        26.7377,
+        75,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        26.8137,
+        76,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        26.8524,
+        77,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        27.0382,
+        78,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        27.1966,
+        79,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        27.4864,
+        80,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        27.7013,
+        81,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        27.7721,
+        82,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        27.8975,
+        83,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        27.9947,
+        84,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        28.075,
+        85,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        28.2746,
+        86,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        28.4657,
+        87,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        28.5439,
+        88,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        28.5803,
+        89,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        28.6676,
+        90,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        28.836,
+        91,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        28.9182,
+        92,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        29.0123,
+        93,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        29.0965,
+        94,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        29.1766,
+        95,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        29.3493,
+        96,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        29.4329,
+        97,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        29.4697,
+        98,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        29.6121,
+        99,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        29.694,
+        100,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        29.7303,
+        101,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        29.7757,
+        102,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        29.868,
+        103,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        29.9512,
+        104,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        29.9868,
+        105,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        30.025,
+        106,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        30.1332,
+        107,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        30.3455,
+        108,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        30.5012,
+        109,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        30.6789,
+        110,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        30.7877,
+        111,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        30.9212,
+        112,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        31.3177,
+        113,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        31.5422,
+        114,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        31.8241,
+        115,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        31.9335,
+        116,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        32.1191,
+        117,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        32.2817,
+        118,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        32.3906,
+        119,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        32.4957,
+        120,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        32.6268,
+        121,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        32.8281,
+        122,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        32.9071,
+        123,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        33.0214,
+        124,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        33.1342,
+        125,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        33.5638,
+        126,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        33.8785,
+        127,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        34.1787,
+        128,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ],
+      [
+        34.7501,
+        129,
+        1,
+        "/Users/ray/Library/Caches/seeky8-candidate/assets/characters_hq/shenshen/videos/idle/\u5f85\u673a\u547c\u5438\u4f11\u95f2.webm",
+        1
+      ]
+    ]
+  },
+  "accounting": "Raw frame bytes deduplicated by object identity across queue/ring; QImage storage by cacheKey. Clip/window images are separate categories; QPixmap aliases are not added. Process footprint includes native allocators/ffmpeg and is not the sum of reference categories.",
+  "errors": [
+    "Pet 0: fps=10.23, skipped source frames=0"
+  ],
+  "exit_status": 1
+}

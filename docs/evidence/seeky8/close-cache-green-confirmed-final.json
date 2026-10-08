@@ -1,0 +1,184 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "scripts/verify_seeky8_memory.py",
+    "--root",
+    "/Users/ray/Library/Caches/seeky8-candidate",
+    "--mode",
+    "window",
+    "--background",
+    "--output",
+    "docs/evidence/seeky8/close-cache-green-confirmed-final.json",
+    "--probe",
+    ".scratch/seeky-proc-memory"
+  ],
+  "cwd": "/Users/ray/Library/Caches/seeky8-candidate",
+  "setup": "Real Cocoa AppShell, isolated config and thumbnail disk cache; one pet; background opacity zero. Probe pauses optional prewarm; window mode explicitly exercises hide/show/close lifecycle",
+  "inputs": {
+    "mode": "window",
+    "names": [
+      "\u4e09\u7403\u629b\u63a5",
+      "\u4f59\u989d-\u91d1\u888b\u53ee\u5f53",
+      "\u539f\u5730\u4e13\u5fc3\u73a9\u9b54\u65b9",
+      "\u5403Token",
+      "\u5403\u767d\u996d",
+      "\u5403\u997a\u5b50",
+      "\u5c0f\u63d0\u7434\u6f14\u594f",
+      "\u5f85\u673a\u547c\u5438\u4f11\u95f2",
+      "\u64b8\u732b",
+      "\u6668\u95f4\u5237\u7259",
+      "\u70b9\u51fb\u56de\u5e94-\u6320\u75d2\u54af\u54af\u7b11",
+      "\u7a7f\u9488\u4e5e\u5de7"
+    ],
+    "background": true
+  },
+  "assertions": "owned <=128px pixel-identical images, bounded window cache, cache hit equality, no leftover decoders",
+  "checks": {
+    "name": "\u4e09\u7403\u629b\u63a5",
+    "thumbnail_hash": "4aae6fdd63936c1161e1d62fa3168a0765e954670a26c8b4e2090accba5920f1",
+    "cache_bytes": 36864,
+    "visible_frames": 0,
+    "hide_restore": true,
+    "close_wakes_waiter_before_owner": true,
+    "closed_cache_empty": true,
+    "p95_latency_ms": null,
+    "physical_peak_mib": 282.70543670654297,
+    "rss_peak_mib": 413.046875,
+    "physical_median_mib": 225.29861450195312,
+    "max_ffmpeg_threads": 12,
+    "decoders_after_cleanup": []
+  },
+  "results": [],
+  "samples": [
+    {
+      "time": 2.6942395829828456,
+      "physical": 235783920,
+      "rss": 308822016,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 2.767537874984555,
+      "physical": 236767200,
+      "rss": 312623104,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 7
+    },
+    {
+      "time": 2.8327376659726724,
+      "physical": 237521032,
+      "rss": 314785792,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 7
+    },
+    {
+      "time": 2.9002534999744967,
+      "physical": 296438136,
+      "rss": 378208256,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 2.9649727909709327,
+      "physical": 290392512,
+      "rss": 433111040,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 3.0389887499623,
+      "physical": 292686272,
+      "rss": 399769600,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 3.1052259159623645,
+      "physical": 292899288,
+      "rss": 376979456,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 3.169494832982309,
+      "physical": 291277296,
+      "rss": 377503744,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 3.2376147909672,
+      "physical": 292817392,
+      "rss": 388366336,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 3.421157500008121,
+      "physical": 236128032,
+      "rss": 282935296,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 5
+    },
+    {
+      "time": 3.4833462910028175,
+      "physical": 236357408,
+      "rss": 289865728,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 5
+    },
+    {
+      "time": 3.6183859579614364,
+      "physical": 156731072,
+      "rss": 231735296,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 3.6835984159843065,
+      "physical": 153224920,
+      "rss": 243023872,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 3.7440244159661233,
+      "physical": 153290456,
+      "rss": 243138560,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 3.808585040969774,
+      "physical": 153405144,
+      "rss": 243253248,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 3.8762935829581693,
+      "physical": 153519832,
+      "rss": 243417088,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 3.9406904579955153,
+      "physical": 153634520,
+      "rss": 247250944,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 4.008850957965478,
+      "physical": 133432352,
+      "rss": 154468352,
+      "ffmpeg_count": 0,
+      "ffmpeg_threads": 0
+    }
+  ],
+  "errors": [
+    "AssertionError: Owner decoder completed before its release"
+  ],
+  "exit_status": 1
+}

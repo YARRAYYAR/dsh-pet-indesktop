@@ -1,0 +1,18 @@
+QSystemTrayIcon::setVisible: No Icon set
+WARNING:root:GUI 卡顿 1551ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（1551ms，11 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-1381ms] verify_seeky_multi.py:67:main <- app.py:1703:start <- app.py:1812:_create_ui_with_character_fallback <- app.py:572:_create_ui <- app.py:537:_build_window <- enum.py:695:__call__
+WARNING:pet.gui_stall_sampler:  [t-1312ms] app.py:572:_create_ui <- app.py:537:_build_window <- window.py:1132:showEvent <- window.py:1095:_schedule_macos_window_level <- window.py:1090:apply_current_native_window <- platform_mac.py:78:_mac_set_window_level
+WARNING:pet.gui_stall_sampler:  [t-1228ms] verify_seeky_multi.py:67:main <- app.py:1703:start <- app.py:1812:_create_ui_with_character_fallback <- app.py:572:_create_ui <- app.py:539:_build_window <- app.py:3250:_build_tray
+WARNING:pet.gui_stall_sampler:  [t-955ms] verify_seeky_multi.py:319:<module> <- verify_seeky_multi.py:67:main <- app.py:1719:start <- app.py:1613:_install_config_watcher <- app.py:1623:_watch_config_file
+WARNING:pet.gui_stall_sampler:  [t-903ms] verify_seeky_multi.py:319:<module> <- verify_seeky_multi.py:255:main
+WARNING:root:GUI 卡顿 258ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（258ms，4 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-299ms] verify_seeky_multi.py:319:<module> <- verify_seeky_multi.py:255:main
+WARNING:root:GUI 卡顿 476ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（476ms，10 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-503ms] verify_seeky_multi.py:319:<module> <- verify_seeky_multi.py:255:main
+WARNING:root:GUI 卡顿 299ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（299ms，6 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-323ms] verify_seeky_multi.py:319:<module> <- verify_seeky_multi.py:255:main
+{'max_first_frame_decoders': 1, 'steady_mib': 249.11892700195312, 'peak_mib': 366.73677825927734, 'growth_mib': 9.843772888183594, 'playback': {0: {'fps': 22.269597245576104, 'forward_gaps': 0, 'frames': 446, 'ten_second_bins': [{'start': 0, 'fps': 23.295473544590212, 'frames': 210}, {'start': 10, 'fps': 20.456254700426175, 'frames': 205}, {'start': 20, 'fps': 22.573363431151247, 'frames': 226}, {'start': 30, 'fps': 22.37136465324386, 'frames': 105}]}}, 'queue_drops': 0, 'duplicate_first_images': [], 'lifecycle': {}, 'shared_process_enabled': True, 'source_widths': [1280], 'actions': {0: '待机呼吸休闲'}, 'initial_decode_routes': {0: {'idle_eligible': True, 'broker_active': True, 'feed': False, 'publish': True, 'path': '/Users/ray/Library/Caches/seeky8-baseline-3bc58a7/assets/characters/shenshen/videos/idle/待机呼吸休闲.webm'}}, 'live_ffmpeg_after_cleanup': []} []

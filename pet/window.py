@@ -402,7 +402,7 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
         self.on_exit_window = None  # 由 app 注入：批5.2「退出这只」窗级退出回调
         self._position_listeners = []
         self._position_sync_pending = False  # moveEvent 同帧合并：气泡/监听器 0ms 去抖待处理
-        self._animation_icon_image_cache: dict[str, QImage] = {}
+        self._animation_icon_image_cache = ByteBudgetLru(8 * 1024 * 1024)
         self._animation_icon_inflight: dict[str, threading.Event] = {}
         self._animation_icon_cache_lock = threading.Lock()
 
@@ -2511,51 +2511,6 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
                          Qt.AspectRatioMode.KeepAspectRatio,
                          Qt.TransformationMode.SmoothTransformation)
 
-    def animation_icon_image(self, name: str) -> QImage:
-        """Decode a representative frame as QImage; safe to call in a worker."""
-        lock = getattr(self, "_animation_icon_cache_lock", None)
-        if lock is None:
-            lock = threading.Lock()
-            self._animation_icon_cache_lock = lock
-            self._animation_icon_image_cache = ByteBudgetLru(8 * 1024 * 1024)
-            self._animation_icon_inflight = {}
-        with lock:
-            cached = self._animation_icon_image_cache.get(name)
-            if cached is not None:
-                return QImage(cached)
-            pending = self._animation_icon_inflight.get(name)
-            owner = pending is None
-            if owner:
-                pending = threading.Event()
-                self._animation_icon_inflight[name] = pending
-        if not owner:
-            if not pending.wait(timeout=30.0):
-                # 解码线程病态卡死的逃生口：不永久挂起等待线程（审查 GLM-L5）
-                return QImage()
-            with lock:
-                return QImage(self._animation_icon_image_cache.get(name) or QImage())
-        path = self.lib.clip_path(name)  # 不在 worker 线程构造 WebMClip（Qt 线程亲和）
-        try:
-            image = decode_representative_frame(path) if path is not None else QImage()
-            with lock:
-                if not image.isNull():
-                    cache = self._animation_icon_image_cache
-                    cache.put(name, QImage(image), byte_size=image.sizeInBytes())
-            return image
-        finally:
-            with lock:
-                event = self._animation_icon_inflight.pop(name, None)
-                if event is not None:
-                    event.set()
-
-    def animation_icon_cached_image(self, name: str) -> QImage:
-        """Return a decoded thumbnail without starting any work."""
-        lock = getattr(self, "_animation_icon_cache_lock", None)
-        if lock is None:
-            return QImage()
-        with lock:
-            return QImage(self._animation_icon_image_cache.get(name) or QImage())
-
     def _on_clip_finished(self, name: str) -> None:
         """WebMClip 播完兜底：正常路径在末尾帧处由 _on_frame 提前 stop，
         这里只处理“末尾帧被丢弃、结束标记被消费”的异常路径，推进动画链。"""
@@ -4584,6 +4539,7 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
         if self._codex_link is not None:
             self._codex_link.stop()
         self._closing = True  # 关闭后丢弃迟到的动画事件（生命周期守卫）
+        self._clear_animation_icon_cache()
         bubble = getattr(self, '_speech_bubble', None)
         if bubble is not None:
             # 气泡是独立 Tool 窗口，不能依赖 PetWindow 的 QObject 父链自动销毁。

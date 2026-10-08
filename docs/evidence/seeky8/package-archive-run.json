@@ -1,0 +1,20 @@
+{
+  "command": [
+    "/usr/bin/ditto",
+    "-c",
+    "-k",
+    "--sequesterRsrc",
+    "--keepParent",
+    "/Users/ray/Library/Caches/seeky8-build-output-final/seeky· pet.app",
+    "/Users/ray/Downloads/seeky-pet-4.2.1.8-macOS-arm64.zip"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "arm64 app passed package verifier; destination did not exist",
+  "inputs": "/Users/ray/Library/Caches/seeky8-build-output-final/seeky· pet.app",
+  "assertions": "ditto creates a ZIP archive at the user Downloads path",
+  "result": "",
+  "elapsed_seconds": 41.576,
+  "exit_status": 0,
+  "archive_exists": true,
+  "archive_size_bytes": 1553295691
+}

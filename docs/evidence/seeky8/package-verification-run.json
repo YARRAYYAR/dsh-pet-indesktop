@@ -1,0 +1,17 @@
+{
+  "attempts": [
+    {
+      "command": "PYTHONPYCACHEPREFIX=/tmp/seeky8-package-verify .venv/bin/python <verify_dsr_package.py> --app <candidate.app> --output <package-verification.json>",
+      "cwd": "/Users/ray/Library/Caches/seeky8-build-source-final",
+      "result": "exit 127: .venv/bin/python was relative to the isolated workspace and did not exist there; verifier did not run",
+      "exit_status": 127
+    },
+    {
+      "command": "PYTHONPYCACHEPREFIX=/tmp/seeky8-package-verify /Users/ray/Documents/New project/dsr-pet/.venv/bin/python /Users/ray/Library/Caches/seeky8-build-source-final/scripts/verify_dsr_package.py --app /Users/ray/Library/Caches/seeky8-build-output-final/seeky· pet.app --output /Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/package-verification.json",
+      "cwd": "/Users/ray/Library/Caches/seeky8-build-source-final",
+      "result": "PASS; version 4.2.1.8, arm64, 32 source modules, 106 ordinary assets, 106 HQ assets, 5 settings icons, codesign success",
+      "exit_status": 0
+    }
+  ],
+  "zip_verification": "The first byte-safe listing parser rejected UTF-8 decoding of a platform metadata entry although unzip -tq passed. Corrected byte-path check passes; see package-zip-verification-failed.json and package-zip-verification.json."
+}

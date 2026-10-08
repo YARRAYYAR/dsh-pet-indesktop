@@ -1,0 +1,18 @@
+{
+  "command": [
+    "/usr/bin/unzip",
+    "-tq",
+    "/Users/ray/Downloads/seeky-pet-4.2.1.8-macOS-arm64.zip",
+    "then",
+    "/usr/bin/unzip",
+    "-Z1"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "ZIP integrity passed; Python text decoding used UTF-8 for an archive containing platform metadata names",
+  "inputs": "seeky-pet-4.2.1.8-macOS-arm64.zip",
+  "assertions": "ZIP integrity and app Info.plist listing",
+  "result": "ZIP integrity returned 0. The text-mode directory listing raised UnicodeDecodeError for a non-UTF-8 entry name. This was an evidence parser issue; retried with byte-safe listing.",
+  "zip_integrity_exit_status": 0,
+  "listing_parser_exit_status": 1,
+  "recorded_at": "2026-10-08T16:43:50+0800"
+}

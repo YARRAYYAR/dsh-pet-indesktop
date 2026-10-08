@@ -1,0 +1,151 @@
+已生成: /Users/ray/Library/Caches/seeky8-build-source-final/assets/icon.ico（尺寸 (256, 128, 96, 64, 48, 40, 32, 24, 20, 16)）
+预览图: /Users/ray/Library/Caches/seeky8-build-source-final/assets/icon-preview.png
+已生成 iconset: /Users/ray/Library/Caches/seeky8-build-source-final/assets/icon.iconset（10 个尺寸）
+已生成: /Users/ray/Library/Caches/seeky8-build-source-final/assets/icon.icns
+==> 构建 seeky· pet.app
+64 INFO: PyInstaller: 6.22.3, contrib hooks: 2026.8
+65 INFO: Python: 3.13.2
+75 INFO: Platform: macOS-26.6.2-arm64-arm-64bit-Mach-O
+76 INFO: Python environment: /Users/ray/Library/Caches/dsr-pet-runtime-20261002
+76 INFO: wrote /Users/ray/Library/Caches/seeky8-build-source-final/seeky· pet.spec
+80 INFO: Removing temporary files and cleaning cache in /Users/ray/Library/Application Support/pyinstaller
+597 WARNING: collect_data_files - skipping data collection for module 'PySide6.QtMultimedia' as it is not a package.
+666 WARNING: collect_dynamic_libs - skipping library collection for module 'PySide6.QtMultimedia' as it is not a package.
+1260 INFO: Module search paths (PYTHONPATH):
+['/Users/ray/Library/Caches/seeky8-build-source-final',
+ '/Library/Frameworks/Python.framework/Versions/3.13/lib/python313.zip',
+ '/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13',
+ '/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/lib-dynload',
+ '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages',
+ '/Users/ray/Library/Caches/seeky8-build-source-final/packaging',
+ '/Users/ray/Library/Caches/seeky8-build-source-final']
+1366 INFO: Appending 'datas' from .spec
+1379 INFO: checking Analysis
+1379 INFO: Building Analysis because Analysis-00.toc is non existent
+1379 INFO: Looking for Python shared library...
+1382 INFO: Using Python shared library: /Library/Frameworks/Python.framework/Versions/3.13/Python
+1382 INFO: Running Analysis Analysis-00.toc
+1382 INFO: Target bytecode optimization level: 0
+1382 INFO: Initializing module dependency graph...
+1383 INFO: Initializing module graph hook caches...
+1389 INFO: Analyzing modules for base_library.zip ...
+1917 INFO: Processing standard module hook 'hook-encodings.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+2079 INFO: Processing standard module hook 'hook-math.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+2674 INFO: Processing standard module hook 'hook-pickle.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+3229 INFO: Processing standard module hook 'hook-heapq.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+3437 INFO: Caching module dependency graph...
+3455 INFO: Analyzing /Users/ray/Library/Caches/seeky8-build-source-final/packaging/pet_entry_no_chat.py
+3460 INFO: Processing standard module hook 'hook-PySide6.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+3554 INFO: Processing standard module hook 'hook-shiboken6.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+3650 INFO: Processing standard module hook 'hook-PySide6.QtNetwork.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+4246 INFO: Processing standard module hook 'hook-PySide6.QtCore.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+4810 INFO: Processing standard module hook 'hook-PySide6.QtGui.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+5418 INFO: Processing standard module hook 'hook-PySide6.QtWidgets.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+5624 INFO: Processing standard module hook 'hook-_ctypes.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+5924 INFO: Processing standard module hook 'hook-multiprocessing.util.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+5999 INFO: Processing standard module hook 'hook-xml.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+6382 INFO: Processing standard module hook 'hook-psutil.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/_pyinstaller_hooks_contrib/stdhooks'
+6540 INFO: Processing standard module hook 'hook-platform.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+6640 INFO: Processing standard module hook 'hook-PySide6.QtMultimedia.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+6991 INFO: Processing standard module hook 'hook-webbrowser.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+7054 INFO: Processing standard module hook 'hook-PySide6.QtSvg.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+7401 INFO: Processing standard module hook 'hook-PIL.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+7465 INFO: Processing standard module hook 'hook-PIL.Image.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+7630 INFO: Processing standard module hook 'hook-xml.etree.cElementTree.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+7733 INFO: Processing standard module hook 'hook-PIL.ImageFilter.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+8241 INFO: Processing standard module hook 'hook-sqlite3.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+8603 INFO: Processing standard module hook 'hook-imageio_ffmpeg.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/_pyinstaller_hooks_contrib/stdhooks'
+8860 INFO: Processing standard module hook 'hook-zoneinfo.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/_pyinstaller_hooks_contrib/stdhooks'
+8871 INFO: Processing standard module hook 'hook-sysconfig.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+8880 INFO: Processing standard module hook 'hook-_osx_support.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+9194 INFO: Processing pre-safe-import-module hook 'hook-typing_extensions.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks/pre_safe_import_module'
+9195 INFO: SetuptoolsInfo: initializing cached setuptools info...
+9866 INFO: Processing pre-safe-import-module hook 'hook-backports.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks/pre_safe_import_module'
+9866 INFO: Setuptools: 'backports' appears to be a full setuptools-vendored copy - creating alias to 'setuptools._vendor.backports'!
+9870 INFO: Processing standard module hook 'hook-setuptools.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+9879 INFO: Processing pre-safe-import-module hook 'hook-distutils.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks/pre_safe_import_module'
+9912 INFO: Processing pre-safe-import-module hook 'hook-jaraco.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks/pre_safe_import_module'
+9913 INFO: Setuptools: 'jaraco' appears to be a partial setuptools-vendored copy - extending search paths to ['/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/jaraco', '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/setuptools/_vendor/jaraco']!
+9914 INFO: Processing pre-safe-import-module hook 'hook-jaraco.functools.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks/pre_safe_import_module'
+9935 INFO: Processing pre-safe-import-module hook 'hook-more_itertools.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks/pre_safe_import_module'
+10021 INFO: Processing pre-safe-import-module hook 'hook-packaging.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks/pre_safe_import_module'
+10249 INFO: Processing pre-safe-import-module hook 'hook-jaraco.text.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks/pre_safe_import_module'
+10250 INFO: Setuptools: 'jaraco.text' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.jaraco.text'!
+10262 INFO: Processing standard module hook 'hook-setuptools._vendor.jaraco.text.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+10264 INFO: Processing pre-safe-import-module hook 'hook-importlib_resources.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks/pre_safe_import_module'
+10264 INFO: Processing pre-safe-import-module hook 'hook-jaraco.context.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks/pre_safe_import_module'
+10619 INFO: Processing pre-safe-import-module hook 'hook-tomli.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks/pre_safe_import_module'
+10619 INFO: Setuptools: 'tomli' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.tomli'!
+10931 INFO: Processing pre-safe-import-module hook 'hook-wheel.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks/pre_safe_import_module'
+10932 INFO: Setuptools: 'wheel' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.wheel'!
+11233 INFO: Processing standard module hook 'hook-certifi.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/_pyinstaller_hooks_contrib/stdhooks'
+11469 INFO: Analyzing hidden import 'imageio_ffmpeg.binaries'
+11469 INFO: Analyzing hidden import 'certifi.__main__'
+11470 INFO: Analyzing hidden import 'certifi.tests'
+11470 INFO: Analyzing hidden import 'certifi.tests.test_certify'
+11518 INFO: Processing standard module hook 'hook-difflib.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+11549 INFO: Analyzing hidden import 'edge_tts.__main__'
+11588 INFO: Analyzing hidden import 'psutil._psaix'
+11596 INFO: Analyzing hidden import 'psutil._psbsd'
+11609 INFO: Analyzing hidden import 'psutil._pslinux'
+11643 INFO: Analyzing hidden import 'psutil._pssunos'
+11654 INFO: Analyzing hidden import 'psutil._pswindows'
+11668 INFO: Processing module hooks (post-graph stage)...
+12201 INFO: Processing standard module hook 'hook-PySide6.QtConcurrent.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+12355 INFO: Processing standard module hook 'hook-PySide6.QtMultimediaWidgets.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+12723 INFO: Processing standard module hook 'hook-PIL.SpiderImagePlugin.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+12806 INFO: Processing standard module hook 'hook-PySide6.QtDBus.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+12906 INFO: Performing binary vs. data reclassification (492 entries)
+13053 INFO: Looking for ctypes DLLs
+13066 WARNING: Library winmm required via ctypes not found
+13110 INFO: Analyzing run-time hooks ...
+13112 INFO: Including run-time hook 'pyi_rth_inspect.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks/rthooks'
+13114 INFO: Including run-time hook 'pyi_rth_pkgutil.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks/rthooks'
+13115 INFO: Including run-time hook 'pyi_rth_multiprocessing.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks/rthooks'
+13116 INFO: Including run-time hook 'pyi_rth_pyside6.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks/rthooks'
+13117 INFO: Processing pre-find-module-path hook 'hook-_pyi_rth_utils.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks/pre_find_module_path'
+13118 INFO: Processing standard module hook 'hook-_pyi_rth_utils.py' from '/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/hooks'
+13130 INFO: Creating base_library.zip...
+13140 INFO: Looking for dynamic libraries
+13699 INFO: Warnings written to /Users/ray/Library/Caches/seeky8-build-source-final/build/.pyinstaller/macos/seeky· pet/warn-seeky· pet.txt
+13719 INFO: Graph cross-reference written to /Users/ray/Library/Caches/seeky8-build-source-final/build/.pyinstaller/macos/seeky· pet/xref-seeky· pet.html
+13894 INFO: checking PYZ
+13894 INFO: Building PYZ because PYZ-00.toc is non existent
+13894 INFO: Building PYZ (ZlibArchive) /Users/ray/Library/Caches/seeky8-build-source-final/build/.pyinstaller/macos/seeky· pet/PYZ-00.pyz
+14280 INFO: Building PYZ (ZlibArchive) /Users/ray/Library/Caches/seeky8-build-source-final/build/.pyinstaller/macos/seeky· pet/PYZ-00.pyz completed successfully.
+14286 INFO: EXE target arch: arm64
+14286 INFO: Code signing identity: None
+14288 INFO: checking PKG
+14288 INFO: Building PKG because PKG-00.toc is non existent
+14288 INFO: Building PKG (CArchive) seeky· pet.pkg
+14297 INFO: Building PKG (CArchive) seeky· pet.pkg completed successfully.
+14297 INFO: Bootloader /Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/PyInstaller/bootloader/Darwin-64bit/runw
+14297 INFO: checking EXE
+14297 INFO: Building EXE because EXE-00.toc is non existent
+14297 INFO: Building EXE from EXE-00.toc
+14297 INFO: Copying bootloader EXE to /Users/ray/Library/Caches/seeky8-build-source-final/build/.pyinstaller/macos/seeky· pet/seeky· pet
+14298 INFO: Converting EXE to target arch (arm64)
+14346 INFO: Removing signature(s) from EXE
+14373 INFO: Modifying Mach-O image UUID(s) in EXE
+14377 INFO: Appending PKG archive to EXE
+14379 INFO: Fixing EXE headers for code signing
+14384 INFO: Rewriting the executable's macOS SDK version (26.2.0) to match the SDK version of the Python library (14.5.0) in order to avoid inconsistent behavior and potential UI issues in the frozen application.
+14385 INFO: Re-signing the EXE
+14403 INFO: Building EXE from EXE-00.toc completed successfully.
+14407 INFO: checking COLLECT
+14407 INFO: Building COLLECT because COLLECT-00.toc is non existent
+14407 INFO: Building COLLECT COLLECT-00.toc
+35702 INFO: Building COLLECT COLLECT-00.toc completed successfully.
+35713 INFO: checking BUNDLE
+35713 INFO: Building BUNDLE because BUNDLE-00.toc is non existent
+35713 INFO: Building BUNDLE BUNDLE-00.toc
+42544 INFO: Signing the BUNDLE...
+48145 INFO: Building BUNDLE BUNDLE-00.toc completed successfully.
+48157 INFO: Build complete! The results are available in: /Users/ray/Library/Caches/seeky8-build-output-final
+[encoding-check] 扫描产物目录: /Users/ray/Library/Caches/seeky8-build-output-final/seeky· pet.app
+[encoding-check] PASS: 中文编码检查全部通过（字面量/资源/文件名原样保持 UTF-8）
+bridge zero-dependency smoke: import + envelope + source bans OK
+[bridge] running zero-dependency import smoke on bundle copy...
+[bridge] zero-dependency bundle OK
+/Users/ray/Library/Caches/seeky8-build-output-final/seeky· pet.app: replacing existing signature
+macOS 构建完成：/Users/ray/Library/Caches/seeky8-build-output-final

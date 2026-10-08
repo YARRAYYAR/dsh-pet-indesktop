@@ -132,6 +132,7 @@
 | 文档 | 一句话内容 | 何时必读 |
 |---|---|---|
 | [`PR-REPORT-DSR-PET-2026-10-02.md`](PR-REPORT-DSR-PET-2026-10-02.md) | dsr · pet 内存、透明边缘、两级设置导航与 macOS 图标交付证据。 | 运行、复测或继续本地桌宠优化时。 |
+| [`PR-REPORT-SEEKY8-MEMORY-2026-10-08.md`](PR-REPORT-SEEKY8-MEMORY-2026-10-08.md) | seeky.8 无损内存优化：共享首帧延迟复制、缩略图隔离/线程参数、缓存就绪与原生对照证据。 | 修改图像缓存/预热、复测内存或回退seeky.8时。 |
 | [`PR-REPORT-SEEKY7-2026-10-05.md`](PR-REPORT-SEEKY7-2026-10-05.md) | seeky.7 紧凑侧栏、有限动效、保存退出、手动贴顶与四边朝向；原生验证及性能限制。 | 修改设置交互、贴顶资格、鼠标朝向或回退 seeky.7 时。 |
 | [`PR-REPORT-SEEKY6-2026-10-04.md`](PR-REPORT-SEEKY6-2026-10-04.md) | seeky.6 共享首帧、固定侧栏、动作库、原生性能与安装验收。 | 修改首帧预热、设置导航/动作库、复测或回退 seeky.6 时。 |
 | [`PR-REPORT-TEMPLATE.md`](PR-REPORT-TEMPLATE.md) | PR 报告模板：三份交付证据（修改文件说明 / 性能分析 / 实机运行记录）的逐节骨架与判定标准。 | **开新 PR 写报告前必读并整份复制**；2026-09-22 起三份证据是硬要求（`AGENTS.md` Delivery evidence discipline），由 `tests/test_pr_report_discipline.py` 机器化校验。 |

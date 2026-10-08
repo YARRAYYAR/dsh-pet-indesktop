@@ -1,0 +1,14 @@
+QSystemTrayIcon::setVisible: No Icon set
+WARNING:root:GUI 卡顿 1352ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（1352ms，7 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-1200ms] verify_multi.py:58:main <- app.py:1703:start <- app.py:1812:_create_ui_with_character_fallback <- app.py:572:_create_ui <- app.py:537:_build_window <- enum.py:695:__call__
+WARNING:pet.gui_stall_sampler:  [t-1092ms] verify_multi.py:58:main <- app.py:1703:start <- app.py:1812:_create_ui_with_character_fallback <- app.py:572:_create_ui <- app.py:537:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-784ms] verify_multi.py:309:<module> <- verify_multi.py:58:main <- app.py:1719:start <- app.py:1613:_install_config_watcher <- app.py:1623:_watch_config_file
+WARNING:pet.gui_stall_sampler:  [t-183ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:root:GUI 卡顿 127ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（127ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-136ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+WARNING:root:GUI 卡顿 134ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（134ms，3 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-177ms] verify_multi.py:309:<module> <- verify_multi.py:245:main
+{'max_first_frame_decoders': 1, 'steady_mib': 252.42359161376953, 'peak_mib': 272.53296661376953, 'growth_mib': -3.375, 'playback': {0: {'fps': 23.67219590388001, 'forward_gaps': 0, 'frames': 828, 'ten_second_bins': [{'start': 0, 'fps': 23.441929434340793, 'frames': 216}, {'start': 10, 'fps': 23.805951487871965, 'frames': 239}, {'start': 20, 'fps': 23.804501762738415, 'frames': 238}, {'start': 30, 'fps': 23.455982282176485, 'frames': 234}, {'start': 40, 'fps': 23.579462789600964, 'frames': 236}]}}, 'queue_drops': 0, 'duplicate_first_images': [], 'lifecycle': {}, 'shared_process_enabled': True, 'source_widths': [1280], 'actions': {0: '待机呼吸休闲'}, 'initial_decode_routes': {0: {'idle_eligible': True, 'broker_active': True, 'feed': False, 'publish': True, 'path': '/Users/ray/Library/Caches/seeky8-candidate/assets/characters/shenshen/videos/idle/待机呼吸休闲.webm'}}, 'live_ffmpeg_after_cleanup': []} []

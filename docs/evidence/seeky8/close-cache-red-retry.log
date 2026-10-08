@@ -1,0 +1,7 @@
+QSystemTrayIcon::setVisible: No Icon set
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky8_memory.py", line 210, in poll
+    assert cache_empty, 'Closed window retained its thumbnail cache'
+           ^^^^^^^^^^^
+AssertionError: Closed window retained its thumbnail cache
+{'name': '三球抛接', 'thumbnail_hash': '4aae6fdd63936c1161e1d62fa3168a0765e954670a26c8b4e2090accba5920f1', 'cache_bytes': 36864, 'visible_frames': 63, 'hide_restore': True, 'p95_latency_ms': None, 'physical_peak_mib': 326.86175537109375, 'rss_peak_mib': 386.484375, 'physical_median_mib': 246.15853881835938, 'max_ffmpeg_threads': 12, 'decoders_after_cleanup': []} ['AssertionError: Closed window retained its thumbnail cache']

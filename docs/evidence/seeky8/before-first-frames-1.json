@@ -1,0 +1,306 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky8_memory.py",
+    "--root",
+    "/Users/ray/Library/Caches/seeky8-baseline-3bc58a7",
+    "--output",
+    "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/before-first-frames-1.json",
+    "--probe",
+    "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+    "--mode",
+    "first-frames",
+    "--count",
+    "12"
+  ],
+  "cwd": "/Users/ray/Library/Caches/seeky8-baseline-3bc58a7",
+  "setup": "Real Cocoa AppShell, isolated config and thumbnail disk cache; live pet continues playing",
+  "inputs": {
+    "mode": "first-frames",
+    "names": [
+      "\u4e09\u7403\u629b\u63a5",
+      "\u4f59\u989d-\u91d1\u888b\u53ee\u5f53",
+      "\u539f\u5730\u4e13\u5fc3\u73a9\u9b54\u65b9",
+      "\u5403Token",
+      "\u5403\u767d\u996d",
+      "\u5403\u997a\u5b50",
+      "\u5c0f\u63d0\u7434\u6f14\u594f",
+      "\u5f85\u673a\u547c\u5438\u4f11\u95f2",
+      "\u64b8\u732b",
+      "\u6668\u95f4\u5237\u7259",
+      "\u70b9\u51fb\u56de\u5e94-\u6320\u75d2\u54af\u54af\u7b11",
+      "\u7a7f\u9488\u4e5e\u5de7"
+    ]
+  },
+  "assertions": "owned <=128px pixel-identical images, bounded window cache, cache hit equality, no leftover decoders",
+  "checks": {
+    "visible_frames": 47,
+    "p95_latency_ms": 103.7745830253698,
+    "physical_peak_mib": 297.45552825927734,
+    "rss_peak_mib": 362.671875,
+    "physical_median_mib": 230.8772201538086,
+    "max_ffmpeg_threads": 12,
+    "decoders_after_cleanup": []
+  },
+  "results": [
+    {
+      "name": "\u4e09\u7403\u629b\u63a5",
+      "hash": "46c684e76f1d580bbb4b2f9a9fddd819b60981c5597744529427771f3763a8d7",
+      "width": 1280,
+      "height": 720,
+      "fps": 24.0,
+      "duration": 10.04,
+      "latency_ms": 87.02191698830575
+    },
+    {
+      "name": "\u4f59\u989d-\u91d1\u888b\u53ee\u5f53",
+      "hash": "fb80a85770b68bfc1e4b0efa882ef05269bc5c234a143b654ab20d19d9c9c207",
+      "width": 1280,
+      "height": 720,
+      "fps": 24.0,
+      "duration": 10.04,
+      "latency_ms": 71.62420800887048
+    },
+    {
+      "name": "\u539f\u5730\u4e13\u5fc3\u73a9\u9b54\u65b9",
+      "hash": "17b94975aad352be10f47f142ff6f2ec54c25fb6ae9f57a14a3e2f12c40a5576",
+      "width": 1280,
+      "height": 720,
+      "fps": 24.0,
+      "duration": 10.04,
+      "latency_ms": 103.7745830253698
+    },
+    {
+      "name": "\u5403Token",
+      "hash": "488a291963b5facc0d125728d917db0fd5d79cb7482cae7db8810924d8824748",
+      "width": 1280,
+      "height": 720,
+      "fps": 24.0,
+      "duration": 10.04,
+      "latency_ms": 88.26133300317451
+    },
+    {
+      "name": "\u5403\u767d\u996d",
+      "hash": "568dd9dd79859a50202bc3b3f3fab76d10b39ac04396a95b033ab0978345a5d0",
+      "width": 1280,
+      "height": 720,
+      "fps": 24.0,
+      "duration": 10.04,
+      "latency_ms": 88.42679101508111
+    },
+    {
+      "name": "\u5403\u997a\u5b50",
+      "hash": "21d9517b896b933b3ac58957a244686c13134e694a346ee70f1d077a440424bf",
+      "width": 1280,
+      "height": 720,
+      "fps": 24.0,
+      "duration": 10.04,
+      "latency_ms": 66.98195898206905
+    },
+    {
+      "name": "\u5c0f\u63d0\u7434\u6f14\u594f",
+      "hash": "e8ea14bcc283a08f8870d40cf930c68a022b04a1a6f719e263987ab30874d4d9",
+      "width": 1280,
+      "height": 720,
+      "fps": 24.0,
+      "duration": 10.04,
+      "latency_ms": 54.7295410069637
+    },
+    {
+      "name": "\u5f85\u673a\u547c\u5438\u4f11\u95f2",
+      "hash": "87e09e049ce36b77fdb62af77d44c281f3b3a5377e7073d3a8dfe85a3083d866",
+      "width": 1280,
+      "height": 720,
+      "fps": 24.0,
+      "duration": 0.0,
+      "latency_ms": 0.21187495440244675
+    },
+    {
+      "name": "\u64b8\u732b",
+      "hash": "d9ce26b22f302c0052eba90e9c22faaadb3db90dcb8652183c6c1a2540297d74",
+      "width": 1280,
+      "height": 720,
+      "fps": 24.0,
+      "duration": 10.04,
+      "latency_ms": 54.565833997912705
+    },
+    {
+      "name": "\u6668\u95f4\u5237\u7259",
+      "hash": "c0bfafc8a6d03e5596730b5a50a9022a62324e26ac7ecd0e556c3fe6a6d5bee6",
+      "width": 1280,
+      "height": 720,
+      "fps": 24.0,
+      "duration": 10.04,
+      "latency_ms": 66.03287503821775
+    },
+    {
+      "name": "\u70b9\u51fb\u56de\u5e94-\u6320\u75d2\u54af\u54af\u7b11",
+      "hash": "8ec9c606d4df8f1084d90370b76470434cd4a2e8ca3c0bebd9f425e39f682fad",
+      "width": 1280,
+      "height": 720,
+      "fps": 24.0,
+      "duration": 10.04,
+      "latency_ms": 75.31200000084937
+    },
+    {
+      "name": "\u7a7f\u9488\u4e5e\u5de7",
+      "hash": "4e63369782953cfc9edb71ef5aa107d03dd81c74031643a026a800a0f120d7d1",
+      "width": 1280,
+      "height": 720,
+      "fps": 24.0,
+      "duration": 10.04,
+      "latency_ms": 77.77874998282641
+    }
+  ],
+  "samples": [
+    {
+      "time": 2.512476667005103,
+      "physical": 260360616,
+      "rss": 331939840,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 10
+    },
+    {
+      "time": 2.578519625007175,
+      "physical": 275253720,
+      "rss": 348143616,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 10
+    },
+    {
+      "time": 2.646975333977025,
+      "physical": 289769896,
+      "rss": 348946432,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 2.7780604590079747,
+      "physical": 271600064,
+      "rss": 352043008,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 10
+    },
+    {
+      "time": 2.850853250012733,
+      "physical": 311904728,
+      "rss": 378454016,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 2.915686624997761,
+      "physical": 256051528,
+      "rss": 315031552,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 7
+    },
+    {
+      "time": 2.9804463339969516,
+      "physical": 252627272,
+      "rss": 319832064,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 7
+    },
+    {
+      "time": 3.0454487499664538,
+      "physical": 247908680,
+      "rss": 339951616,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 11
+    },
+    {
+      "time": 3.109436166996602,
+      "physical": 281151912,
+      "rss": 380289024,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 3.175017458968796,
+      "physical": 264423896,
+      "rss": 362594304,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 3.236600667005405,
+      "physical": 242092312,
+      "rss": 336642048,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 7
+    },
+    {
+      "time": 3.3912250839639455,
+      "physical": 229558072,
+      "rss": 323256320,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 3.455315375002101,
+      "physical": 233113400,
+      "rss": 319062016,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 3.5219329170067795,
+      "physical": 233146168,
+      "rss": 310984704,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 5
+    },
+    {
+      "time": 3.584126583999023,
+      "physical": 233195320,
+      "rss": 310853632,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 5
+    },
+    {
+      "time": 3.6444042089860886,
+      "physical": 233195320,
+      "rss": 310853632,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 5
+    },
+    {
+      "time": 3.710181874979753,
+      "physical": 233195320,
+      "rss": 307625984,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 5
+    },
+    {
+      "time": 3.7843562089838088,
+      "physical": 233195320,
+      "rss": 301383680,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 5
+    },
+    {
+      "time": 3.8587641670019366,
+      "physical": 233195320,
+      "rss": 294191104,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 5
+    },
+    {
+      "time": 3.934243791969493,
+      "physical": 233195320,
+      "rss": 290390016,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 5
+    },
+    {
+      "time": 4.00774845900014,
+      "physical": 233195320,
+      "rss": 284377088,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 5
+    }
+  ],
+  "errors": [],
+  "exit_status": 0
+}

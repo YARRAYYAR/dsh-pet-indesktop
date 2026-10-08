@@ -1,0 +1,24 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "-m",
+    "ruff",
+    "check",
+    "pet",
+    "tests",
+    "scripts/verify_seeky8_memory.py",
+    "scripts/verify_seeky_multi.py",
+    "scripts/verify_dsr_package.py"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "PYTHONPYCACHEPREFIX": "/tmp/seeky8-pycache"
+  },
+  "setup": "Final source after window service extraction",
+  "inputs": "All changed product, test, and packaging Python files",
+  "assertions": "Ruff returns exit status 0",
+  "result": "All checks passed!\n",
+  "elapsed_seconds": 0.14922213554382324,
+  "exit_status": 0
+}

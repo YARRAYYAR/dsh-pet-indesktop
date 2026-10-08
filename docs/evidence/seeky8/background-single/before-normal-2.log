@@ -1,0 +1,32 @@
+QSystemTrayIcon::setVisible: No Icon set
+WARNING:root:GUI 卡顿 1606ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（1606ms，8 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-1246ms] inspect.py:1074:findsource <- linecache.py:41:getlines <- linecache.py:148:updatecache <- tokenize.py:457:open <- tokenize.py:426:detect_encoding <- tokenize.py:384:read_or_stop
+WARNING:pet.gui_stall_sampler:  [t-1139ms] verify_seeky_multi.py:67:main <- app.py:1703:start <- app.py:1812:_create_ui_with_character_fallback <- app.py:572:_create_ui <- app.py:537:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-1078ms] verify_seeky_multi.py:67:main <- app.py:1703:start <- app.py:1812:_create_ui_with_character_fallback <- app.py:572:_create_ui <- app.py:539:_build_window <- app.py:3250:_build_tray
+WARNING:pet.gui_stall_sampler:  [t-922ms] verify_seeky_multi.py:319:<module> <- verify_seeky_multi.py:161:main <- threading.py:979:start <- threading.py:659:wait <- threading.py:359:wait
+WARNING:pet.gui_stall_sampler:  [t-265ms] verify_seeky_multi.py:319:<module> <- verify_seeky_multi.py:255:main
+WARNING:root:GUI 卡顿 405ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（405ms，3 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-432ms] verify_seeky_multi.py:319:<module> <- verify_seeky_multi.py:255:main
+WARNING:root:GUI 卡顿 305ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（305ms，6 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-344ms] verify_seeky_multi.py:319:<module> <- verify_seeky_multi.py:255:main <- library.py:746:_warm_low_priority_background <- threading.py:979:start <- threading.py:659:wait <- threading.py:359:wait
+WARNING:pet.gui_stall_sampler:  [t-270ms] verify_seeky_multi.py:319:<module> <- verify_seeky_multi.py:255:main
+WARNING:root:GUI 卡顿 130ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（130ms，1 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-165ms] verify_seeky_multi.py:319:<module> <- verify_seeky_multi.py:255:main
+WARNING:root:GUI 卡顿 127ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（127ms，1 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-16ms] webm_clip.py:2750:_process_frame <- window_optional_services.py:62:<lambda> <- verify_seeky_multi.py:102:observed_frame <- window.py:1917:_on_frame <- window.py:2068:_rebuild_frame <- window.py:1990:_frame_signature
+WARNING:root:GUI 卡顿 132ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（132ms，1 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-19ms] verify_seeky_multi.py:319:<module> <- verify_seeky_multi.py:255:main <- webm_clip.py:2499:_poll <- webm_clip.py:2724:_process_frame
+WARNING:root:GUI 卡顿 114ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（114ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-133ms] verify_seeky_multi.py:319:<module> <- verify_seeky_multi.py:255:main <- webm_clip.py:2499:_poll <- webm_clip.py:2724:_process_frame
+WARNING:pet.gui_stall_sampler:  [t-6ms] verify_seeky_multi.py:319:<module> <- verify_seeky_multi.py:255:main
+WARNING:root:GUI 卡顿 193ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（193ms，4 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-241ms] verify_seeky_multi.py:319:<module> <- verify_seeky_multi.py:255:main
+{'max_first_frame_decoders': 2, 'steady_mib': 240.50176239013672, 'peak_mib': 382.2373962402344, 'growth_mib': 7.6484375, 'playback': {0: {'fps': 23.089829956675267, 'forward_gaps': 0, 'frames': 462, 'ten_second_bins': [{'start': 0, 'fps': 20.959041620244225, 'frames': 191}, {'start': 10, 'fps': 22.824392941531347, 'frames': 228}, {'start': 20, 'fps': 22.85426629750818, 'frames': 228}, {'start': 30, 'fps': 23.562876793750554, 'frames': 112}]}}, 'queue_drops': 0, 'duplicate_first_images': [], 'lifecycle': {}, 'shared_process_enabled': True, 'source_widths': [1280], 'actions': {0: '待机呼吸休闲'}, 'initial_decode_routes': {0: {'idle_eligible': True, 'broker_active': True, 'feed': False, 'publish': True, 'path': '/Users/ray/Library/Caches/seeky8-baseline-3bc58a7/assets/characters/shenshen/videos/idle/待机呼吸休闲.webm'}}, 'live_ffmpeg_after_cleanup': []} []

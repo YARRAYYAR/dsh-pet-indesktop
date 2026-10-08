@@ -1,0 +1,20 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_desktop_pet_features.py::test_representative_animation_image_is_cached_on_pet",
+    "tests/test_desktop_pet_features.py::test_reopened_animation_menu_reuses_cached_images_immediately"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "isolated process, offscreen Qt, external pycache; installed pet untouched",
+  "inputs": [
+    "tests/test_desktop_pet_features.py::test_representative_animation_image_is_cached_on_pet",
+    "tests/test_desktop_pet_features.py::test_reopened_animation_menu_reuses_cached_images_immediately"
+  ],
+  "assertions": "All selected affected regressions complete and pass",
+  "elapsed_seconds": 0.492,
+  "timed_out": false,
+  "exit_status": 0
+}

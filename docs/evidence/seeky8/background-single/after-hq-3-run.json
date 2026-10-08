@@ -1,0 +1,267 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky_multi.py",
+    "--root",
+    "/Users/ray/Library/Caches/seeky8-candidate",
+    "--output",
+    "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/background-single/after-hq-3.json",
+    "--probe",
+    "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+    "--pets",
+    "1",
+    "--background",
+    "--scale",
+    "1.3",
+    "--duration",
+    "35",
+    "--steady-after",
+    "12",
+    "--prewarm",
+    "balanced",
+    "--expect-warm-limit",
+    "2",
+    "--expect-shared-first-frames"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Serial Cocoa AppShell; single pet, opacity zero without hide/pause; isolated config; identical media/Python/Qt; no foreground interaction",
+  "inputs": {
+    "phase": "after",
+    "scale": 1.3,
+    "duration": 35
+  },
+  "assertions": ">=22fps, no forward gaps, max2 warm decoders, no decoder leftovers; physical/RSS and 10min trend recorded",
+  "start": 1791434554.277022,
+  "end": 1791434592.477021,
+  "exit_status": 0,
+  "system_pressure": [
+    {
+      "time": 1791434555.2824929,
+      "cpu_percent": 80.9,
+      "available_bytes": 1087143936,
+      "swap_used": 9390391296
+    },
+    {
+      "time": 1791434556.285917,
+      "cpu_percent": 73.4,
+      "available_bytes": 1207205888,
+      "swap_used": 9356836864
+    },
+    {
+      "time": 1791434557.287028,
+      "cpu_percent": 88.0,
+      "available_bytes": 1054425088,
+      "swap_used": 9605414912
+    },
+    {
+      "time": 1791434558.2898061,
+      "cpu_percent": 56.2,
+      "available_bytes": 1407664128,
+      "swap_used": 9666297856
+    },
+    {
+      "time": 1791434559.291475,
+      "cpu_percent": 75.5,
+      "available_bytes": 1187233792,
+      "swap_used": 9632743424
+    },
+    {
+      "time": 1791434560.2943559,
+      "cpu_percent": 91.8,
+      "available_bytes": 1105002496,
+      "swap_used": 9632743424
+    },
+    {
+      "time": 1791434561.298157,
+      "cpu_percent": 79.3,
+      "available_bytes": 1150418944,
+      "swap_used": 9632743424
+    },
+    {
+      "time": 1791434562.299971,
+      "cpu_percent": 72.0,
+      "available_bytes": 1197096960,
+      "swap_used": 9632743424
+    },
+    {
+      "time": 1791434563.304838,
+      "cpu_percent": 75.1,
+      "available_bytes": 1302069248,
+      "swap_used": 9632743424
+    },
+    {
+      "time": 1791434564.3107462,
+      "cpu_percent": 84.5,
+      "available_bytes": 1209188352,
+      "swap_used": 9632743424
+    },
+    {
+      "time": 1791434565.313241,
+      "cpu_percent": 91.7,
+      "available_bytes": 1230766080,
+      "swap_used": 9632743424
+    },
+    {
+      "time": 1791434566.315597,
+      "cpu_percent": 91.7,
+      "available_bytes": 1201520640,
+      "swap_used": 9624354816
+    },
+    {
+      "time": 1791434567.3198621,
+      "cpu_percent": 74.6,
+      "available_bytes": 1211645952,
+      "swap_used": 9624354816
+    },
+    {
+      "time": 1791434568.321978,
+      "cpu_percent": 74.3,
+      "available_bytes": 1197916160,
+      "swap_used": 9615966208
+    },
+    {
+      "time": 1791434569.328492,
+      "cpu_percent": 77.4,
+      "available_bytes": 1259503616,
+      "swap_used": 9615966208
+    },
+    {
+      "time": 1791434570.332057,
+      "cpu_percent": 74.1,
+      "available_bytes": 1207943168,
+      "swap_used": 9615966208
+    },
+    {
+      "time": 1791434571.336926,
+      "cpu_percent": 73.5,
+      "available_bytes": 1276329984,
+      "swap_used": 9615966208
+    },
+    {
+      "time": 1791434572.342381,
+      "cpu_percent": 73.6,
+      "available_bytes": 1195819008,
+      "swap_used": 9615966208
+    },
+    {
+      "time": 1791434573.347955,
+      "cpu_percent": 68.8,
+      "available_bytes": 1191477248,
+      "swap_used": 9615966208
+    },
+    {
+      "time": 1791434574.356334,
+      "cpu_percent": 75.0,
+      "available_bytes": 1180696576,
+      "swap_used": 9607577600
+    },
+    {
+      "time": 1791434575.360821,
+      "cpu_percent": 70.5,
+      "available_bytes": 1187250176,
+      "swap_used": 9607577600
+    },
+    {
+      "time": 1791434576.364832,
+      "cpu_percent": 72.6,
+      "available_bytes": 1290633216,
+      "swap_used": 9607577600
+    },
+    {
+      "time": 1791434577.369063,
+      "cpu_percent": 73.9,
+      "available_bytes": 1225949184,
+      "swap_used": 9607577600
+    },
+    {
+      "time": 1791434578.371066,
+      "cpu_percent": 70.5,
+      "available_bytes": 1205125120,
+      "swap_used": 9607577600
+    },
+    {
+      "time": 1791434579.377357,
+      "cpu_percent": 73.9,
+      "available_bytes": 1233518592,
+      "swap_used": 9607577600
+    },
+    {
+      "time": 1791434580.383532,
+      "cpu_percent": 81.1,
+      "available_bytes": 1232896000,
+      "swap_used": 9607577600
+    },
+    {
+      "time": 1791434581.387867,
+      "cpu_percent": 68.3,
+      "available_bytes": 1152073728,
+      "swap_used": 9607577600
+    },
+    {
+      "time": 1791434582.3901272,
+      "cpu_percent": 73.0,
+      "available_bytes": 1212301312,
+      "swap_used": 9607577600
+    },
+    {
+      "time": 1791434583.393321,
+      "cpu_percent": 72.9,
+      "available_bytes": 1227767808,
+      "swap_used": 9607577600
+    },
+    {
+      "time": 1791434584.393736,
+      "cpu_percent": 70.5,
+      "available_bytes": 1193279488,
+      "swap_used": 9599188992
+    },
+    {
+      "time": 1791434585.398983,
+      "cpu_percent": 69.9,
+      "available_bytes": 1196523520,
+      "swap_used": 9599188992
+    },
+    {
+      "time": 1791434586.401356,
+      "cpu_percent": 83.1,
+      "available_bytes": 1186545664,
+      "swap_used": 9590800384
+    },
+    {
+      "time": 1791434587.407168,
+      "cpu_percent": 86.1,
+      "available_bytes": 1199538176,
+      "swap_used": 9590800384
+    },
+    {
+      "time": 1791434588.4123678,
+      "cpu_percent": 77.0,
+      "available_bytes": 1196752896,
+      "swap_used": 9590800384
+    },
+    {
+      "time": 1791434589.41371,
+      "cpu_percent": 75.6,
+      "available_bytes": 1291190272,
+      "swap_used": 9582411776
+    },
+    {
+      "time": 1791434590.418376,
+      "cpu_percent": 74.8,
+      "available_bytes": 1209024512,
+      "swap_used": 9582411776
+    },
+    {
+      "time": 1791434591.4242508,
+      "cpu_percent": 70.5,
+      "available_bytes": 1295155200,
+      "swap_used": 9582411776
+    },
+    {
+      "time": 1791434592.425327,
+      "cpu_percent": 74.6,
+      "available_bytes": 1371455488,
+      "swap_used": 9582411776
+    }
+  ]
+}

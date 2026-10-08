@@ -832,10 +832,15 @@ class MovieLibrary(QObject):
         if session_ending():
             return  # 会话结束（关机/注销）：绝不起预热线程拉 ffmpeg（issue #111）
         clip = self.movie(name)
+        ready = getattr(clip, 'first_frame_ready', None)
+        if callable(ready) and ready():
+            return
         generation = self._warm_generation
 
         def _run() -> None:
             try:
+                if callable(ready) and ready():
+                    return
                 if not self._await_interaction_clear(generation):
                     return
                 if self._warm_paused or generation != self._warm_generation:
@@ -850,6 +855,8 @@ class MovieLibrary(QObject):
                 try:
                     if (self._shutdown or self._warm_paused or session_ending()
                             or generation != self._warm_generation):
+                        return
+                    if callable(ready) and ready():
                         return
                     t0 = perfstats.clock() if perfstats.ENABLED else 0.0
                     warm()

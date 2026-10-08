@@ -14,7 +14,7 @@ from PyInstaller.archive.readers import CArchiveReader
 MODULES = (
     'app', 'animation_thumbnail', 'branding', 'ceiling_geometry', 'codex_link', 'config',
     'context_menus.icons', 'context_menus.shared', 'decode_fanout', 'frame_edges',
-    'gui_stall_sampler', 'interaction', 'library', 'modern_settings_dialog', 'settings_actions',
+    'ffmpeg_params', 'gui_stall_sampler', 'interaction', 'library', 'modern_settings_dialog', 'settings_actions',
     'settings_brand', 'settings_codex', 'settings_task_appearance', 'task_bubble', 'task_bubble_style', 'settings_commands', 'settings_navigation',
     'settings_pet_controls', 'settings_theme_qss', 'settings_widgets', 'top_flip',
     'ui_motion', 'webm_clip', 'window', 'window_optional_services', 'window_placement',
@@ -116,7 +116,7 @@ def main():
         notice = digest(root / 'THIRD_PARTY_NOTICES')
         assert digest(bundle / 'Contents/Resources/THIRD_PARTY_NOTICES') == notice
         checks['third_party_notice_sha256'] = notice
-        assert info['CFBundleVersion'] == '4.2.1.7'
+        assert info['CFBundleVersion'] == '4.2.1.8'
         result = subprocess.run(['codesign', '--verify', '--deep', '--strict', str(bundle)],
                                 capture_output=True, text=True)
         checks['codesign'] = {'exit_status': result.returncode, 'output': result.stdout + result.stderr}
@@ -127,7 +127,7 @@ def main():
     output.write_text(json.dumps({'command': [sys.executable, str(Path(__file__).resolve()),
                                  '--app', str(bundle), '--output', str(output)], 'cwd': str(root),
                                  'setup': 'Completed arm64 bundle and source tree; read-only verification',
-                                 'assertions': 'Source bytecode matches; 106 source and 106 HQ hashes plus index and settings SVG/license match; pure modules excluded; signature valid; bundle version 4.2.1.7',
+                                 'assertions': 'Source bytecode matches; 106 source and 106 HQ hashes plus index and settings SVG/license match; pure modules excluded; signature valid; bundle version 4.2.1.8',
                                  'reset': 'Read-only; no configuration or application state changed',
                                  'checks': checks, 'errors': errors, 'exit_status': int(bool(errors))},
                                 ensure_ascii=False, indent=2))

@@ -7,10 +7,13 @@
 from __future__ import annotations
 
 import logging
+import threading
 from typing import Any
 
 import shiboken6
+from PySide6.QtGui import QImage
 
+from .frame_cache import ByteBudgetLru
 from .window_effects import (
     begin_rotation,
     end_rotation,
@@ -46,6 +49,67 @@ def effects_coverage(host, canvas):
 
 class WindowFeatureGateMixin:
     """供 PetWindow 混入的可选服务/效果懒装配能力。"""
+
+    def _clear_animation_icon_cache(self) -> None:
+        """Release thumbnails and wake pending readers when the window closes."""
+        lock = getattr(self, '_animation_icon_cache_lock', None)
+        if lock is None:
+            return
+        with lock:
+            self._animation_icon_image_cache.clear()
+            for pending in self._animation_icon_inflight.values():
+                pending.set()
+            self._animation_icon_inflight.clear()
+
+    def animation_icon_image(self, name: str) -> QImage:
+        """Decode one budgeted thumbnail; coalesce concurrent requests by name."""
+        lock = getattr(self, '_animation_icon_cache_lock', None)
+        if lock is None:
+            lock = threading.Lock()
+            self._animation_icon_cache_lock = lock
+            self._animation_icon_image_cache = ByteBudgetLru(8 * 1024 * 1024)
+            self._animation_icon_inflight = {}
+        with lock:
+            if getattr(self, '_closing', False):
+                return QImage()
+            cached = self._animation_icon_image_cache.get(name)
+            if cached is not None:
+                return QImage(cached)
+            pending = self._animation_icon_inflight.get(name)
+            owner = pending is None
+            if owner:
+                pending = threading.Event()
+                self._animation_icon_inflight[name] = pending
+        if not owner:
+            if not pending.wait(timeout=30.0):
+                # 避免病态解码永久挂住动作库工作线程。
+                return QImage()
+            with lock:
+                return QImage(self._animation_icon_image_cache.get(name) or QImage())
+        path = self.lib.clip_path(name)  # 不在 worker 线程创建 Qt 播放对象。
+        try:
+            # 保留 PetWindow 模块级 seam，现有调用方和生命周期检查可沿用它。
+            from . import window as window_module
+            image = window_module.decode_representative_frame(path) if path is not None else QImage()
+            with lock:
+                if getattr(self, '_closing', False):
+                    return QImage()
+                if not image.isNull():
+                    self._animation_icon_image_cache.put(name, QImage(image), byte_size=image.sizeInBytes())
+            return image
+        finally:
+            with lock:
+                event = self._animation_icon_inflight.pop(name, None)
+                if event is not None:
+                    event.set()
+
+    def animation_icon_cached_image(self, name: str) -> QImage:
+        """Return a decoded thumbnail without starting any work."""
+        lock = getattr(self, '_animation_icon_cache_lock', None)
+        if lock is None:
+            return QImage()
+        with lock:
+            return QImage(self._animation_icon_image_cache.get(name) or QImage())
 
     def _connect_movie(self, name: str, movie) -> None:
         """按需连接 clip 信号（懒加载）：同一动画只连接一次。

@@ -1,0 +1,1106 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky8_memory.py",
+    "--root",
+    "/Users/ray/Library/Caches/seeky8-baseline-3bc58a7",
+    "--output",
+    "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/before-thumbnails-1.json",
+    "--probe",
+    "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+    "--mode",
+    "thumbnails",
+    "--count",
+    "12"
+  ],
+  "cwd": "/Users/ray/Library/Caches/seeky8-baseline-3bc58a7",
+  "setup": "Real Cocoa AppShell, isolated config and thumbnail disk cache; live pet continues playing",
+  "inputs": {
+    "mode": "thumbnails",
+    "names": [
+      "\u4e09\u7403\u629b\u63a5",
+      "\u4f59\u989d-\u91d1\u888b\u53ee\u5f53",
+      "\u539f\u5730\u4e13\u5fc3\u73a9\u9b54\u65b9",
+      "\u5403Token",
+      "\u5403\u767d\u996d",
+      "\u5403\u997a\u5b50",
+      "\u5c0f\u63d0\u7434\u6f14\u594f",
+      "\u5f85\u673a\u547c\u5438\u4f11\u95f2",
+      "\u64b8\u732b",
+      "\u6668\u95f4\u5237\u7259",
+      "\u70b9\u51fb\u56de\u5e94-\u6320\u75d2\u54af\u54af\u7b11",
+      "\u7a7f\u9488\u4e5e\u5de7"
+    ]
+  },
+  "assertions": "owned <=128px pixel-identical images, bounded window cache, cache hit equality, no leftover decoders",
+  "checks": {
+    "visible_frames": 47,
+    "p95_latency_ms": 1458.1755839753896,
+    "physical_peak_mib": 423.89371490478516,
+    "rss_peak_mib": 482.5625,
+    "physical_median_mib": 313.68992614746094,
+    "max_ffmpeg_threads": 56,
+    "decoders_after_cleanup": []
+  },
+  "results": [
+    {
+      "name": "\u4e09\u7403\u629b\u63a5",
+      "hash": "4aae6fdd63936c1161e1d62fa3168a0765e954670a26c8b4e2090accba5920f1",
+      "width": 128,
+      "height": 72,
+      "latency_ms": 746.2374169845134,
+      "cached_latency_ms": 0.17012498574331403
+    },
+    {
+      "name": "\u4f59\u989d-\u91d1\u888b\u53ee\u5f53",
+      "hash": "3734bf33ba1dca26d44ed8ecc175c9c71923017443c7ca4a2e1581cec51fabc4",
+      "width": 128,
+      "height": 72,
+      "latency_ms": 619.8666249983944,
+      "cached_latency_ms": 0.14533300418406725
+    },
+    {
+      "name": "\u539f\u5730\u4e13\u5fc3\u73a9\u9b54\u65b9",
+      "hash": "3a086b79e1a75164bc59b95f27e2390ab3a24ad5b3a6e1b8840205bbd8b5e3cf",
+      "width": 128,
+      "height": 72,
+      "latency_ms": 655.7774159591645,
+      "cached_latency_ms": 0.23475004127249122
+    },
+    {
+      "name": "\u5403Token",
+      "hash": "18364d2f770836cd2a49fa6867500d160b424eaf18f9ef659bdf49433882b021",
+      "width": 128,
+      "height": 72,
+      "latency_ms": 465.11775004910305,
+      "cached_latency_ms": 0.1335840206593275
+    },
+    {
+      "name": "\u5403\u767d\u996d",
+      "hash": "eca6a56593dc6186c6cae95fff4485e9d25105a3fe3601e6ca9312008b0509d9",
+      "width": 128,
+      "height": 72,
+      "latency_ms": 605.0431249896064,
+      "cached_latency_ms": 0.19870896358042955
+    },
+    {
+      "name": "\u5403\u997a\u5b50",
+      "hash": "06359f83f6b3c2f589268b557bb93b9e2e43dd599246065672e07c9868a3b36b",
+      "width": 128,
+      "height": 72,
+      "latency_ms": 714.0952920308337,
+      "cached_latency_ms": 0.14387501869350672
+    },
+    {
+      "name": "\u5c0f\u63d0\u7434\u6f14\u594f",
+      "hash": "c5824f8532d7ac0bef42fa3cd47c54a731daf2fc21ecea60c09337a5b3c26d24",
+      "width": 128,
+      "height": 72,
+      "latency_ms": 807.2019580285996,
+      "cached_latency_ms": 0.12979202438145876
+    },
+    {
+      "name": "\u5f85\u673a\u547c\u5438\u4f11\u95f2",
+      "hash": "e1ff7f5fa49347109d2e5b6d55283098082d3e34f09779f8f53fb5e6e2a93a36",
+      "width": 128,
+      "height": 72,
+      "latency_ms": 662.4102080240846,
+      "cached_latency_ms": 0.16808300279080868
+    },
+    {
+      "name": "\u64b8\u732b",
+      "hash": "386bbca21f1d9d91278d9be8131839c3c3aaac9823fd522f8cfc278341fbea55",
+      "width": 128,
+      "height": 72,
+      "latency_ms": 1124.082709022332,
+      "cached_latency_ms": 0.18162501510232687
+    },
+    {
+      "name": "\u6668\u95f4\u5237\u7259",
+      "hash": "3ac2fc947426c2d64d1885c2cf71ea8c394e9523d4cd86e16431b4389c387d05",
+      "width": 128,
+      "height": 72,
+      "latency_ms": 1458.1755839753896,
+      "cached_latency_ms": 0.4319999716244638
+    },
+    {
+      "name": "\u70b9\u51fb\u56de\u5e94-\u6320\u75d2\u54af\u54af\u7b11",
+      "hash": "6a9ab04df80bfa596ec0fbd38fe1f4081aa34d684ba2158126d37a635f659cc4",
+      "width": 128,
+      "height": 72,
+      "latency_ms": 1273.946417029947,
+      "cached_latency_ms": 0.18762500258162618
+    },
+    {
+      "name": "\u7a7f\u9488\u4e5e\u5de7",
+      "hash": "1d083953b84b6994b43ae67072ed90b72e912d557f2ea8dd86564aa06cf1bd06",
+      "width": 128,
+      "height": 72,
+      "latency_ms": 1114.0820409636945,
+      "cached_latency_ms": 0.3458339488133788
+    }
+  ],
+  "samples": [
+    {
+      "time": 2.4422199580003507,
+      "physical": 213845744,
+      "rss": 321372160,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 2.5133912499877624,
+      "physical": 271518216,
+      "rss": 391905280,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 2.5872087919851765,
+      "physical": 351783456,
+      "rss": 457654272,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 2.655620582983829,
+      "physical": 338889248,
+      "rss": 482050048,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 2.7284867499838583,
+      "physical": 346917432,
+      "rss": 472547328,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 2.797219291969668,
+      "physical": 337087032,
+      "rss": 481378304,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 2.8627239579800516,
+      "physical": 329222736,
+      "rss": 494436352,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 2.9299410419771448,
+      "physical": 311675472,
+      "rss": 504086528,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 2.9934283329639584,
+      "physical": 312396368,
+      "rss": 494665728,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 3.0607112500001676,
+      "physical": 303516240,
+      "rss": 506003456,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 3.125626166991424,
+      "physical": 219547400,
+      "rss": 300711936,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 3.1968430830165744,
+      "physical": 273336744,
+      "rss": 411549696,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 3.2819221249665134,
+      "physical": 303843800,
+      "rss": 456491008,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 3.3561392499832436,
+      "physical": 320408024,
+      "rss": 465223680,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 3.422763583017513,
+      "physical": 313133552,
+      "rss": 475987968,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 3.494224249967374,
+      "physical": 339937776,
+      "rss": 435372032,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 3.561326499970164,
+      "physical": 328927728,
+      "rss": 451887104,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 3.6267421249649487,
+      "physical": 316197360,
+      "rss": 472039424,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 3.691730958002154,
+      "physical": 306809328,
+      "rss": 477872128,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 3.7581329999957234,
+      "physical": 227182848,
+      "rss": 302399488,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 7
+    },
+    {
+      "time": 3.8270953749888577,
+      "physical": 274008584,
+      "rss": 420970496,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 3.8953320420114323,
+      "physical": 290261536,
+      "rss": 458244096,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 3.9644307079724967,
+      "physical": 336611872,
+      "rss": 446316544,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 4.0420954169821925,
+      "physical": 350308896,
+      "rss": 407617536,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 4.106074333016295,
+      "physical": 326732344,
+      "rss": 431652864,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 4.169782541983295,
+      "physical": 314083920,
+      "rss": 447889408,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 4.236136332969181,
+      "physical": 319294056,
+      "rss": 464306176,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 4.301247207971755,
+      "physical": 320752232,
+      "rss": 479330304,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 4.449288500007242,
+      "physical": 299141592,
+      "rss": 368705536,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 4.516424166969955,
+      "physical": 273566192,
+      "rss": 425181184,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 4.58256737497868,
+      "physical": 286181896,
+      "rss": 460259328,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 4.650909000018146,
+      "physical": 294603272,
+      "rss": 478511104,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 4.717273792019114,
+      "physical": 304663048,
+      "rss": 475283456,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 4.785022166965064,
+      "physical": 342526496,
+      "rss": 461996032,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 4.8556808329885826,
+      "physical": 316607032,
+      "rss": 466845696,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 14
+    },
+    {
+      "time": 4.926375625014771,
+      "physical": 313199136,
+      "rss": 395493376,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 4.999804708000738,
+      "physical": 332253728,
+      "rss": 442662912,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 5.072950750007294,
+      "physical": 342297144,
+      "rss": 448806912,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 5.139667375013232,
+      "physical": 345721424,
+      "rss": 439500800,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 5.202378582966048,
+      "physical": 328714856,
+      "rss": 451084288,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 5.2723359579686075,
+      "physical": 336169576,
+      "rss": 465043456,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 5.34272608300671,
+      "physical": 325356160,
+      "rss": 482328576,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 5.407230000011623,
+      "physical": 319081088,
+      "rss": 479543296,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 5.472840957983863,
+      "physical": 223282976,
+      "rss": 283967488,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 5.542276082967874,
+      "physical": 275663344,
+      "rss": 391659520,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 5.610856957966462,
+      "physical": 289606128,
+      "rss": 442138624,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 5.6808309580083005,
+      "physical": 331876872,
+      "rss": 449593344,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 5.746520332992077,
+      "physical": 346360328,
+      "rss": 436125696,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 5.8140030420036055,
+      "physical": 330926624,
+      "rss": 450789376,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 5.878751375013962,
+      "physical": 331631136,
+      "rss": 467927040,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 5.947219041991048,
+      "physical": 324225568,
+      "rss": 467025920,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 6.019069792004302,
+      "physical": 317819424,
+      "rss": 467845120,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 6.1025362919899635,
+      "physical": 338381344,
+      "rss": 443957248,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 6.242201457964256,
+      "physical": 259967520,
+      "rss": 351502336,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 6.307871332974173,
+      "physical": 273615416,
+      "rss": 411107328,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 6.3762081249733455,
+      "physical": 286001744,
+      "rss": 445562880,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 6.445092000009026,
+      "physical": 293947984,
+      "rss": 460718080,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 6.518803957966156,
+      "physical": 315509328,
+      "rss": 454246400,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 6.593178500013892,
+      "physical": 315820624,
+      "rss": 430096384,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 6.660076542000752,
+      "physical": 328272464,
+      "rss": 426459136,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 6.737198832968716,
+      "physical": 332188240,
+      "rss": 439025664,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 6.821176333003677,
+      "physical": 327486032,
+      "rss": 426901504,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 6.893084832991008,
+      "physical": 331729512,
+      "rss": 447430656,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 6.967525749991182,
+      "physical": 289344128,
+      "rss": 463781888,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 29
+    },
+    {
+      "time": 7.0328937919694,
+      "physical": 289229272,
+      "rss": 334610432,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 7.099021875008475,
+      "physical": 297912840,
+      "rss": 395755520,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 7.166537957964465,
+      "physical": 297650720,
+      "rss": 431112192,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 7.240167375013698,
+      "physical": 305334840,
+      "rss": 455376896,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 7.423320124973543,
+      "physical": 321620536,
+      "rss": 461258752,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 7.493071958015207,
+      "physical": 362318392,
+      "rss": 420675584,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 7.563264207972679,
+      "physical": 351128120,
+      "rss": 430997504,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 7.634246041998267,
+      "physical": 344001104,
+      "rss": 453181440,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 48
+    },
+    {
+      "time": 7.702240000013262,
+      "physical": 266799528,
+      "rss": 302956544,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 7.779150749964174,
+      "physical": 311790064,
+      "rss": 399507456,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 7.842739875020925,
+      "physical": 319687176,
+      "rss": 437993472,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 7.909276042017154,
+      "physical": 317147656,
+      "rss": 461750272,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 7.979839542007539,
+      "physical": 308644384,
+      "rss": 467075072,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 8.044305207964499,
+      "physical": 321899040,
+      "rss": 448544768,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 8.1738637079834,
+      "physical": 365824544,
+      "rss": 341983232,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 8.293860792007763,
+      "physical": 360614432,
+      "rss": 340901888,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 8.389820292009972,
+      "physical": 353684000,
+      "rss": 353304576,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 8.466902582964394,
+      "physical": 358304288,
+      "rss": 365461504,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 8.553925333020743,
+      "physical": 372197920,
+      "rss": 417103872,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 48
+    },
+    {
+      "time": 8.749759332975373,
+      "physical": 375818760,
+      "rss": 345964544,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 39
+    },
+    {
+      "time": 8.816739875008352,
+      "physical": 281184704,
+      "rss": 301154304,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 8.893882500007749,
+      "physical": 337643992,
+      "rss": 355696640,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 8.993151874979958,
+      "physical": 358550000,
+      "rss": 335970304,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 9.073151707998477,
+      "physical": 360286704,
+      "rss": 359841792,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 9.157461166963913,
+      "physical": 345049584,
+      "rss": 388415488,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 9.235332083015237,
+      "physical": 342149616,
+      "rss": 393216000,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 9.305317332968116,
+      "physical": 349850096,
+      "rss": 393052160,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 9.372633791994303,
+      "physical": 356469232,
+      "rss": 391053312,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 9.439099791983608,
+      "physical": 356846088,
+      "rss": 410370048,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 9.514321374997962,
+      "physical": 359352840,
+      "rss": 396394496,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 9.615929499967024,
+      "physical": 366463496,
+      "rss": 388513792,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 9.733483957999852,
+      "physical": 364481032,
+      "rss": 351584256,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 9.817828750004992,
+      "physical": 354683400,
+      "rss": 348389376,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 9.893557041999884,
+      "physical": 350882312,
+      "rss": 390447104,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 9.96289479197003,
+      "physical": 356403720,
+      "rss": 397000704,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 10.030694832967129,
+      "physical": 338561544,
+      "rss": 415383552,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 10.104929832974449,
+      "physical": 339839496,
+      "rss": 413089792,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 10.17168904200662,
+      "physical": 356387336,
+      "rss": 393674752,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 49
+    },
+    {
+      "time": 10.241956249985378,
+      "physical": 253216544,
+      "rss": 236453888,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 10.312600791978184,
+      "physical": 319261168,
+      "rss": 338280448,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 10.391107917006593,
+      "physical": 365791728,
+      "rss": 371048448,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 10.484245874977205,
+      "physical": 366266864,
+      "rss": 352288768,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 10.551613166986499,
+      "physical": 356780528,
+      "rss": 383516672,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 10.629268374992535,
+      "physical": 389254288,
+      "rss": 447397888,
+      "ffmpeg_count": 3,
+      "ffmpeg_threads": 56
+    },
+    {
+      "time": 10.757375125016551,
+      "physical": 425774224,
+      "rss": 406405120,
+      "ffmpeg_count": 3,
+      "ffmpeg_threads": 56
+    },
+    {
+      "time": 10.836140458006412,
+      "physical": 434506896,
+      "rss": 312360960,
+      "ffmpeg_count": 3,
+      "ffmpeg_threads": 56
+    },
+    {
+      "time": 10.904522457974963,
+      "physical": 424266896,
+      "rss": 365854720,
+      "ffmpeg_count": 3,
+      "ffmpeg_threads": 56
+    },
+    {
+      "time": 10.980949332995806,
+      "physical": 444484776,
+      "rss": 403963904,
+      "ffmpeg_count": 3,
+      "ffmpeg_threads": 56
+    },
+    {
+      "time": 11.050425499968696,
+      "physical": 422268072,
+      "rss": 415842304,
+      "ffmpeg_count": 3,
+      "ffmpeg_threads": 56
+    },
+    {
+      "time": 11.117427582968958,
+      "physical": 425036992,
+      "rss": 415367168,
+      "ffmpeg_count": 3,
+      "ffmpeg_threads": 56
+    },
+    {
+      "time": 11.184063749969937,
+      "physical": 427396288,
+      "rss": 399736832,
+      "ffmpeg_count": 3,
+      "ffmpeg_threads": 56
+    },
+    {
+      "time": 11.250027875008527,
+      "physical": 415517912,
+      "rss": 407519232,
+      "ffmpeg_count": 3,
+      "ffmpeg_threads": 56
+    },
+    {
+      "time": 11.322553791978862,
+      "physical": 406834392,
+      "rss": 410173440,
+      "ffmpeg_count": 3,
+      "ffmpeg_threads": 56
+    },
+    {
+      "time": 11.390233499987517,
+      "physical": 404294872,
+      "rss": 413614080,
+      "ffmpeg_count": 3,
+      "ffmpeg_threads": 56
+    },
+    {
+      "time": 11.476407166977879,
+      "physical": 402377944,
+      "rss": 421330944,
+      "ffmpeg_count": 3,
+      "ffmpeg_threads": 54
+    },
+    {
+      "time": 11.551001166983042,
+      "physical": 332647568,
+      "rss": 277528576,
+      "ffmpeg_count": 3,
+      "ffmpeg_threads": 56
+    },
+    {
+      "time": 11.626537167001516,
+      "physical": 353062056,
+      "rss": 339738624,
+      "ffmpeg_count": 3,
+      "ffmpeg_threads": 56
+    },
+    {
+      "time": 11.71143512497656,
+      "physical": 366496936,
+      "rss": 378961920,
+      "ffmpeg_count": 3,
+      "ffmpeg_threads": 56
+    },
+    {
+      "time": 11.781577582994942,
+      "physical": 367676584,
+      "rss": 403521536,
+      "ffmpeg_count": 3,
+      "ffmpeg_threads": 56
+    },
+    {
+      "time": 11.844697416992858,
+      "physical": 388140224,
+      "rss": 400867328,
+      "ffmpeg_count": 3,
+      "ffmpeg_threads": 56
+    },
+    {
+      "time": 11.914424207992852,
+      "physical": 398609624,
+      "rss": 381976576,
+      "ffmpeg_count": 3,
+      "ffmpeg_threads": 56
+    },
+    {
+      "time": 12.00210420798976,
+      "physical": 437423320,
+      "rss": 362102784,
+      "ffmpeg_count": 3,
+      "ffmpeg_threads": 56
+    },
+    {
+      "time": 12.089100832992699,
+      "physical": 307349976,
+      "rss": 358350848,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 12.167523792013526,
+      "physical": 303991256,
+      "rss": 373424128,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 12.25177099998109,
+      "physical": 308759000,
+      "rss": 357941248,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 12.322240250010509,
+      "physical": 297896408,
+      "rss": 360300544,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 12.39024433301529,
+      "physical": 280103384,
+      "rss": 364822528,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 12.4691224580165,
+      "physical": 306661848,
+      "rss": 363462656,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 12.547197457985021,
+      "physical": 314804696,
+      "rss": 348291072,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 50
+    },
+    {
+      "time": 12.692814541980624,
+      "physical": 195544816,
+      "rss": 207912960,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 12.759441291971598,
+      "physical": 191760112,
+      "rss": 211107840,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 3
+    },
+    {
+      "time": 12.824578541971277,
+      "physical": 191760112,
+      "rss": 211107840,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 3
+    },
+    {
+      "time": 12.889800833014306,
+      "physical": 140543008,
+      "rss": 122273792,
+      "ffmpeg_count": 0,
+      "ffmpeg_threads": 0
+    }
+  ],
+  "errors": [],
+  "exit_status": 0
+}

@@ -1,0 +1,9 @@
+{
+  "reason": "Harness audit found two validity gaps. The three-round scale=1.3 runs did not verify that the library switched from assets/characters to assets/characters_hq, so they are not accepted as HQ measurements. The first after-long run exited before the requested 620 seconds and final capture; the strengthened harness now rejects that early exit. Raw original artifacts are retained unchanged.",
+  "hq_runs": ["before-hq-1.json", "before-hq-2.json", "before-hq-3.json", "after-hq-1.json", "after-hq-2.json", "after-hq-3.json"],
+  "short_baseline_normal_runs_remain_valid": ["before-normal-1.json", "before-normal-2.json", "before-normal-3.json"],
+  "short_candidate_normal_runs_remain_valid": ["after-normal-1.json", "after-normal-2.json", "after-normal-3.json"],
+  "long_runs_not_accepted": ["before-long.json", "after-long.json"],
+  "corrected_baseline_hq_path_check": "hq-path-check.json",
+  "exit_status": 0
+}

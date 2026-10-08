@@ -1,0 +1,18 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_switch_start_failure_window.py"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "isolated process, offscreen Qt, external pycache; installed pet untouched",
+  "inputs": [
+    "tests/test_switch_start_failure_window.py"
+  ],
+  "assertions": "All selected affected regressions complete and pass",
+  "elapsed_seconds": 0.482,
+  "timed_out": false,
+  "exit_status": 0
+}

@@ -12,6 +12,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QImage, QImageReader
 
 from . import catalog
+from .ffmpeg_params import INPUT_PARAMS, OUTPUT_PARAMS
 from .frame_cache import ByteBudgetLru
 
 try:
@@ -73,7 +74,8 @@ def _decode_webm(path: Path) -> QImage:
             str(path),
             pix_fmt="rgba",
             bits_per_pixel=32,
-            input_params=["-c:v", "libvpx-vp9"],
+            input_params=list(INPUT_PARAMS),
+            output_params=list(OUTPUT_PARAMS),
         )
         meta = next(generator)
         fps = float(meta.get("fps") or 24.0)
@@ -88,9 +90,11 @@ def _decode_webm(path: Path) -> QImage:
                 continue
             if len(frame) != expected:
                 return QImage()
-            return QImage(
+            image = QImage(
                 frame, width, height, width * 4, QImage.Format.Format_RGBA8888,
-            ).copy()
+            )
+            # 原始 RGBA 仍有效时缩放，只独立复制最终缩略图；小图也要脱离解码缓冲。
+            return _as_thumbnail(image).copy()
     except Exception:
         return QImage()
     finally:

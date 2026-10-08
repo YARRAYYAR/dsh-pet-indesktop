@@ -1,0 +1,55 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "scripts/verify_seeky8_memory.py",
+    "--root",
+    "/Users/ray/Library/Caches/seeky8-candidate",
+    "--mode",
+    "window",
+    "--background",
+    "--output",
+    "docs/evidence/seeky8/close-cache-red.json",
+    "--probe",
+    ".scratch/seeky-proc-memory"
+  ],
+  "cwd": "/Users/ray/Library/Caches/seeky8-candidate",
+  "setup": "Real Cocoa AppShell, isolated config and thumbnail disk cache; one pet continues playing; background uses opacity zero without hide/pause",
+  "inputs": {
+    "mode": "window",
+    "names": [
+      "\u4e09\u7403\u629b\u63a5",
+      "\u4f59\u989d-\u91d1\u888b\u53ee\u5f53",
+      "\u539f\u5730\u4e13\u5fc3\u73a9\u9b54\u65b9",
+      "\u5403Token",
+      "\u5403\u767d\u996d",
+      "\u5403\u997a\u5b50",
+      "\u5c0f\u63d0\u7434\u6f14\u594f",
+      "\u5f85\u673a\u547c\u5438\u4f11\u95f2",
+      "\u64b8\u732b",
+      "\u6668\u95f4\u5237\u7259",
+      "\u70b9\u51fb\u56de\u5e94-\u6320\u75d2\u54af\u54af\u7b11",
+      "\u7a7f\u9488\u4e5e\u5de7"
+    ],
+    "background": true
+  },
+  "assertions": "owned <=128px pixel-identical images, bounded window cache, cache hit equality, no leftover decoders",
+  "checks": {
+    "name": "\u4e09\u7403\u629b\u63a5",
+    "thumbnail_hash": "4aae6fdd63936c1161e1d62fa3168a0765e954670a26c8b4e2090accba5920f1",
+    "cache_bytes": 36864,
+    "visible_frames": 25,
+    "p95_latency_ms": null,
+    "physical_peak_mib": 0.0,
+    "rss_peak_mib": 0.0,
+    "physical_median_mib": null,
+    "max_ffmpeg_threads": 0,
+    "decoders_after_cleanup": []
+  },
+  "results": [],
+  "samples": [],
+  "errors": [
+    "sampler: [Errno 2] No such file or directory: '.scratch/seeky-proc-memory'",
+    "No valid memory samples; memory cost is unverified"
+  ],
+  "exit_status": 1
+}

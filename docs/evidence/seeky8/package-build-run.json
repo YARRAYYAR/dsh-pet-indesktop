@@ -1,0 +1,19 @@
+{
+  "command": [
+    "/bin/bash",
+    "/Users/ray/Library/Caches/seeky8-build-source-final/scripts/build_macos.sh",
+    "--dist",
+    "/Users/ray/Library/Caches/seeky8-build-output-final",
+    "--variants",
+    "webm"
+  ],
+  "cwd": "/Users/ray/Library/Caches/seeky8-build-source-final",
+  "environment": {
+    "PYTHON_BIN": "/Users/ray/Documents/New project/dsr-pet/.venv/bin/python"
+  },
+  "setup": "isolated APFS clone workspace; physical cloned assets; user app bundle and project worktree untouched",
+  "inputs": "seeky.8 current pet/scripts/packaging source and installed seeky.7 media hashes",
+  "assertions": "Build script completes arm64 webm onedir app, encoding checks and bundle bridge checks pass",
+  "elapsed_seconds": 57.229,
+  "exit_status": 0
+}

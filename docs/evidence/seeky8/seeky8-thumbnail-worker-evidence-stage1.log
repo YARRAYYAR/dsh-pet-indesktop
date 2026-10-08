@@ -1,0 +1,20 @@
+cwd: /Users/ray/Documents/New project/dsr-pet
+runtime: .venv/bin/python (Python 3.13.2)
+scope: pet/animation_thumbnail.py; tests/test_seeky8_thumbnail_lifecycle.py
+Isolation rationale: native E2E cannot deterministically create malformed decoder payloads, invalidate a generator-owned buffer on close, or fail cache insertion while a waiter is blocked. No native ffmpeg or application benchmarks in this worker.
+Expected: owned max128px representative QImage with byte-identical Smooth RGBA/alpha after close; malformed/decode failures yield empty image and close reader; owner decode/cache exceptions propagate and release waiter; waiter receives empty fallback and subsequent retry succeeds.
+Preimplementation command: QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest --noconftest -q tests/test_seeky8_thumbnail_lifecycle.py tests/test_animation_thumbnail_cache.py
+Actual: 2 failed, 14 passed in 1.78s; large representative remained 640x390 instead of 128x78; exit status 1
+Output: /tmp/seeky8-thumbnail-worker-red-isolated.log
+Original conftest run: first test failed then teardown import blocked on existing iCloud .pyc; SIGINT exit status 2; evidence /tmp/seeky8-thumbnail-worker-red.log and /tmp/seeky8-thumbnail-worker-red-stack.log
+Postimplementation command: QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest --noconftest -q tests/test_seeky8_thumbnail_lifecycle.py tests/test_animation_thumbnail_cache.py
+Actual: 16 passed in 0.88s; exit status 0
+Output: /tmp/seeky8-thumbnail-worker-green-stage1.log
+Complete fixture rerun: PYTHONPYCACHEPREFIX=/tmp/seeky8-thumbnail-pycache QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest -q tests/test_seeky8_thumbnail_lifecycle.py tests/test_animation_thumbnail_cache.py
+Actual: 16 passed in 33.55s; exit status 0
+Output: /tmp/seeky8-thumbnail-worker-green-stage1-conftest.log
+Lint command: PYTHONPYCACHEPREFIX=/tmp/seeky8-thumbnail-pycache .venv/bin/python -m ruff check pet/animation_thumbnail.py tests/test_seeky8_thumbnail_lifecycle.py
+Actual: All checks passed; exit status 0
+Output: /tmp/seeky8-thumbnail-worker-ruff-stage1.log
+Diff: /tmp/seeky8-thumbnail-worker-stage1.diff
+Unverified in this worker: real ffmpeg pixels, process-tree memory, native menu/AppShell acceptance; main owns these E2E checks. Stage2 shared ffmpeg parameters pending.

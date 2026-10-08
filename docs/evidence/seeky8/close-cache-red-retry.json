@@ -1,0 +1,287 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "scripts/verify_seeky8_memory.py",
+    "--root",
+    "/Users/ray/Library/Caches/seeky8-candidate",
+    "--mode",
+    "window",
+    "--background",
+    "--output",
+    "docs/evidence/seeky8/close-cache-red-retry.json",
+    "--probe",
+    ".scratch/seeky-proc-memory"
+  ],
+  "cwd": "/Users/ray/Library/Caches/seeky8-candidate",
+  "setup": "Real Cocoa AppShell, isolated config and thumbnail disk cache; one pet continues playing; background uses opacity zero without hide/pause",
+  "inputs": {
+    "mode": "window",
+    "names": [
+      "\u4e09\u7403\u629b\u63a5",
+      "\u4f59\u989d-\u91d1\u888b\u53ee\u5f53",
+      "\u539f\u5730\u4e13\u5fc3\u73a9\u9b54\u65b9",
+      "\u5403Token",
+      "\u5403\u767d\u996d",
+      "\u5403\u997a\u5b50",
+      "\u5c0f\u63d0\u7434\u6f14\u594f",
+      "\u5f85\u673a\u547c\u5438\u4f11\u95f2",
+      "\u64b8\u732b",
+      "\u6668\u95f4\u5237\u7259",
+      "\u70b9\u51fb\u56de\u5e94-\u6320\u75d2\u54af\u54af\u7b11",
+      "\u7a7f\u9488\u4e5e\u5de7"
+    ],
+    "background": true
+  },
+  "assertions": "owned <=128px pixel-identical images, bounded window cache, cache hit equality, no leftover decoders",
+  "checks": {
+    "name": "\u4e09\u7403\u629b\u63a5",
+    "thumbnail_hash": "4aae6fdd63936c1161e1d62fa3168a0765e954670a26c8b4e2090accba5920f1",
+    "cache_bytes": 36864,
+    "visible_frames": 63,
+    "hide_restore": true,
+    "p95_latency_ms": null,
+    "physical_peak_mib": 326.86175537109375,
+    "rss_peak_mib": 386.484375,
+    "physical_median_mib": 246.15853881835938,
+    "max_ffmpeg_threads": 12,
+    "decoders_after_cleanup": []
+  },
+  "results": [],
+  "samples": [
+    {
+      "time": 2.500074499985203,
+      "physical": 218318552,
+      "rss": 236158976,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 2.5658041249844246,
+      "physical": 226887528,
+      "rss": 242515968,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 7
+    },
+    {
+      "time": 2.6310784999514,
+      "physical": 223971248,
+      "rss": 259276800,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 7
+    },
+    {
+      "time": 2.701519833994098,
+      "physical": 221890696,
+      "rss": 248315904,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 7
+    },
+    {
+      "time": 2.777501749980729,
+      "physical": 258115936,
+      "rss": 293683200,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 2.8459550839615986,
+      "physical": 254216592,
+      "rss": 351469568,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 2.954418499954045,
+      "physical": 275138960,
+      "rss": 358285312,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 3.0559022919624113,
+      "physical": 291260840,
+      "rss": 363003904,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 3.1308091249666177,
+      "physical": 318622120,
+      "rss": 372293632,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 3.2055924169835635,
+      "physical": 315394496,
+      "rss": 378748928,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 3.276297958975192,
+      "physical": 315378112,
+      "rss": 382091264,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 3.3514899169676937,
+      "physical": 333040064,
+      "rss": 388743168,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 3.437702916970011,
+      "physical": 320391616,
+      "rss": 393461760,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 3.515547749993857,
+      "physical": 342739392,
+      "rss": 387497984,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 12
+    },
+    {
+      "time": 3.5903206669609062,
+      "physical": 279497152,
+      "rss": 405258240,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 7
+    },
+    {
+      "time": 3.6567062919493765,
+      "physical": 245057288,
+      "rss": 235896832,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 3.8048314999905415,
+      "physical": 242042632,
+      "rss": 245727232,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 5
+    },
+    {
+      "time": 3.877110624976922,
+      "physical": 311855600,
+      "rss": 328941568,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 9
+    },
+    {
+      "time": 3.9445362919941545,
+      "physical": 311790064,
+      "rss": 328712192,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 8
+    },
+    {
+      "time": 4.0125083339517005,
+      "physical": 311790064,
+      "rss": 326008832,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 8
+    },
+    {
+      "time": 4.081635249953251,
+      "physical": 313412080,
+      "rss": 287653888,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 8
+    },
+    {
+      "time": 4.151960583985783,
+      "physical": 313412080,
+      "rss": 280002560,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 8
+    },
+    {
+      "time": 4.219973833998665,
+      "physical": 313428464,
+      "rss": 265830400,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 8
+    },
+    {
+      "time": 4.296053833968472,
+      "physical": 313428464,
+      "rss": 231292928,
+      "ffmpeg_count": 2,
+      "ffmpeg_threads": 8
+    },
+    {
+      "time": 4.450534458970651,
+      "physical": 169592512,
+      "rss": 189333504,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 4.524239541962743,
+      "physical": 167904984,
+      "rss": 207945728,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 4.596231458999682,
+      "physical": 169756376,
+      "rss": 208650240,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 4.674224416958168,
+      "physical": 175130328,
+      "rss": 190562304,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 4.74355208396446,
+      "physical": 164464344,
+      "rss": 193019904,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 4.816813708981499,
+      "physical": 161941208,
+      "rss": 188645376,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 4.890475708991289,
+      "physical": 169756376,
+      "rss": 185024512,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 6
+    },
+    {
+      "time": 4.960040249978192,
+      "physical": 165643992,
+      "rss": 185532416,
+      "ffmpeg_count": 1,
+      "ffmpeg_threads": 5
+    },
+    {
+      "time": 5.053069208981469,
+      "physical": 126403592,
+      "rss": 90177536,
+      "ffmpeg_count": 0,
+      "ffmpeg_threads": 0
+    }
+  ],
+  "errors": [
+    "AssertionError: Closed window retained its thumbnail cache"
+  ],
+  "exit_status": 1
+}

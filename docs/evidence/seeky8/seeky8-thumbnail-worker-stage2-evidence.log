@@ -1,0 +1,18 @@
+cwd: /Users/ray/Documents/New project/dsr-pet
+owned changes: pet/animation_thumbnail.py; tests/test_seeky8_thumbnail_lifecycle.py
+Stage2: read_frames(input_params=list(INPUT_PARAMS), output_params=list(OUTPUT_PARAMS)); no frame-count, scale, fps, loop or representative-fraction changes.
+Upstream contract: pet.ffmpeg_params INPUT_PARAMS and OUTPUT_PARAMS are immutable tuples; callers pass fresh lists.
+Frozen stage1: raw RGBA resized via existing _as_thumbnail then final image.copy() before reader closes; small images copy too.
+Failure test rationale and preimplementation red evidence: /tmp/seeky8-thumbnail-worker-evidence-stage1.log
+Command: PYTHONPYCACHEPREFIX=/tmp/seeky8-thumbnail-pycache QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest -q tests/test_seeky8_thumbnail_lifecycle.py tests/test_animation_thumbnail_cache.py
+Actual: 16 passed in 1.68s; exit status 0
+Output: /tmp/seeky8-thumbnail-worker-stage2-tests.log
+Command: PYTHONPYCACHEPREFIX=/tmp/seeky8-thumbnail-pycache .venv/bin/python -m ruff check pet/animation_thumbnail.py tests/test_seeky8_thumbnail_lifecycle.py
+Actual: All checks passed!; exit status 0
+Output: /tmp/seeky8-thumbnail-worker-stage2-ruff.log
+Command: git diff --check -- pet/animation_thumbnail.py tests/test_seeky8_thumbnail_lifecycle.py
+Actual: no whitespace errors; exit status 0
+Output: /tmp/seeky8-thumbnail-worker-stage2-diff-check.log
+Diff: /tmp/seeky8-thumbnail-worker-stage2.diff
+Product total delta: 7 added, 3 removed; tests added: 173 lines.
+Unverified here: real FFmpeg RGBA equality / thumbnail latency / process-tree memory / AppShell. Native E2E remains main-thread-owned; no extra decoder process or application operation was run by this worker.

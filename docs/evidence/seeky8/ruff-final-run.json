@@ -1,0 +1,27 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "-m",
+    "ruff",
+    "check",
+    "pet",
+    "tests",
+    "scripts/verify_seeky8_memory.py",
+    "scripts/verify_seeky_multi.py",
+    "scripts/verify_dsr_package.py"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "offscreen Qt, external pycache, serial execution; installed user app untouched",
+  "inputs": [
+    "ruff",
+    "check",
+    "pet",
+    "tests",
+    "scripts/verify_seeky8_memory.py",
+    "scripts/verify_seeky_multi.py",
+    "scripts/verify_dsr_package.py"
+  ],
+  "assertions": "All listed gates pass",
+  "elapsed_seconds": 0.135,
+  "exit_status": 0
+}

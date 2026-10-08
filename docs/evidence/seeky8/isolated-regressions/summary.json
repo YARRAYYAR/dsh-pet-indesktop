@@ -1,0 +1,156 @@
+[
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/test_seeky8_memory_lifecycle.py",
+      "tests/test_seeky8_thumbnail_lifecycle.py",
+      "tests/test_animation_thumbnail_cache.py"
+    ],
+    "cwd": "/Users/ray/Documents/New project/dsr-pet",
+    "setup": "isolated process, offscreen Qt, external pycache; installed pet untouched",
+    "inputs": [
+      "tests/test_seeky8_memory_lifecycle.py",
+      "tests/test_seeky8_thumbnail_lifecycle.py",
+      "tests/test_animation_thumbnail_cache.py"
+    ],
+    "assertions": "All selected affected regressions complete and pass",
+    "elapsed_seconds": 1.58,
+    "timed_out": false,
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/test_desktop_pet_features.py::test_representative_animation_image_is_cached_on_pet",
+      "tests/test_desktop_pet_features.py::test_reopened_animation_menu_reuses_cached_images_immediately"
+    ],
+    "cwd": "/Users/ray/Documents/New project/dsr-pet",
+    "setup": "isolated process, offscreen Qt, external pycache; installed pet untouched",
+    "inputs": [
+      "tests/test_desktop_pet_features.py::test_representative_animation_image_is_cached_on_pet",
+      "tests/test_desktop_pet_features.py::test_reopened_animation_menu_reuses_cached_images_immediately"
+    ],
+    "assertions": "All selected affected regressions complete and pass",
+    "elapsed_seconds": 0.492,
+    "timed_out": false,
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/test_webm_first_frame_lock.py",
+      "tests/test_first_frame_no_gui_decode.py",
+      "tests/test_first_frame_budget.py"
+    ],
+    "cwd": "/Users/ray/Documents/New project/dsr-pet",
+    "setup": "isolated process, offscreen Qt, external pycache; installed pet untouched",
+    "inputs": [
+      "tests/test_webm_first_frame_lock.py",
+      "tests/test_first_frame_no_gui_decode.py",
+      "tests/test_first_frame_budget.py"
+    ],
+    "assertions": "All selected affected regressions complete and pass",
+    "elapsed_seconds": 6.123,
+    "timed_out": false,
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/test_predictive_prewarm.py"
+    ],
+    "cwd": "/Users/ray/Documents/New project/dsr-pet",
+    "setup": "isolated process, offscreen Qt, external pycache; installed pet untouched",
+    "inputs": [
+      "tests/test_predictive_prewarm.py"
+    ],
+    "assertions": "All selected affected regressions complete and pass",
+    "elapsed_seconds": 0.715,
+    "timed_out": false,
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/test_window_pause.py"
+    ],
+    "cwd": "/Users/ray/Documents/New project/dsr-pet",
+    "setup": "isolated process, offscreen Qt, external pycache; installed pet untouched",
+    "inputs": [
+      "tests/test_window_pause.py"
+    ],
+    "assertions": "All selected affected regressions complete and pass",
+    "elapsed_seconds": 0.424,
+    "timed_out": false,
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/test_switch_start_failure_window.py"
+    ],
+    "cwd": "/Users/ray/Documents/New project/dsr-pet",
+    "setup": "isolated process, offscreen Qt, external pycache; installed pet untouched",
+    "inputs": [
+      "tests/test_switch_start_failure_window.py"
+    ],
+    "assertions": "All selected affected regressions complete and pass",
+    "elapsed_seconds": 0.482,
+    "timed_out": false,
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/test_session_end_ffmpeg_guard.py"
+    ],
+    "cwd": "/Users/ray/Documents/New project/dsr-pet",
+    "setup": "isolated process, offscreen Qt, external pycache; installed pet untouched",
+    "inputs": [
+      "tests/test_session_end_ffmpeg_guard.py"
+    ],
+    "assertions": "All selected affected regressions complete and pass",
+    "elapsed_seconds": 0.463,
+    "timed_out": false,
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/test_architecture.py::test_window_py_line_budget"
+    ],
+    "cwd": "/Users/ray/Documents/New project/dsr-pet",
+    "setup": "isolated process, offscreen Qt, external pycache; installed pet untouched",
+    "inputs": [
+      "tests/test_architecture.py::test_window_py_line_budget"
+    ],
+    "assertions": "All selected affected regressions complete and pass",
+    "elapsed_seconds": 0.412,
+    "timed_out": false,
+    "exit_status": 0
+  }
+]

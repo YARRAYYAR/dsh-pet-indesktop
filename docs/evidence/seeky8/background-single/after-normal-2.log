@@ -1,0 +1,16 @@
+QSystemTrayIcon::setVisible: No Icon set
+WARNING:root:GUI 卡顿 1380ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（1380ms，8 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-1255ms] verify_seeky_multi.py:67:main <- app.py:1703:start <- app.py:1812:_create_ui_with_character_fallback <- app.py:572:_create_ui <- app.py:537:_build_window <- enum.py:695:__call__
+WARNING:pet.gui_stall_sampler:  [t-1192ms] verify_seeky_multi.py:67:main <- app.py:1703:start <- app.py:1812:_create_ui_with_character_fallback <- app.py:572:_create_ui <- app.py:537:_build_window <- file_eater.py:150:eventFilter
+WARNING:pet.gui_stall_sampler:  [t-1118ms] <frozen importlib._bootstrap>:1322:_find_and_load_unlocked <- <frozen importlib._bootstrap>:1262:_find_spec <- <frozen importlib._bootstrap_external>:1559:find_spec <- <frozen importlib._bootstrap_external>:1533:_get_spec <- <frozen importlib._bootstrap_external>:1632:find_spec <- <frozen importlib._bootstrap_external>:152:_path_stat
+WARNING:pet.gui_stall_sampler:  [t-969ms] verify_seeky_multi.py:319:<module> <- verify_seeky_multi.py:67:main <- app.py:1719:start <- app.py:1613:_install_config_watcher <- app.py:1623:_watch_config_file
+WARNING:pet.gui_stall_sampler:  [t-354ms] verify_seeky_multi.py:319:<module> <- verify_seeky_multi.py:255:main
+WARNING:root:GUI 卡顿 104ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（104ms，3 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-126ms] verify_seeky_multi.py:319:<module> <- verify_seeky_multi.py:255:main
+WARNING:root:GUI 卡顿 184ms state=IDLE anim=待机呼吸休闲 physics=None
+WARNING:pet.gui_stall_sampler:GUI 冻结现场（184ms，2 个采样点，旧→新）：
+WARNING:pet.gui_stall_sampler:  [t-222ms] verify_seeky_multi.py:319:<module> <- verify_seeky_multi.py:255:main
+WARNING:pet.gui_stall_sampler:  [t-42ms] webm_clip.py:2508:_poll <- webm_clip.py:2759:_process_frame <- window_optional_services.py:62:<lambda> <- verify_seeky_multi.py:102:observed_frame <- window.py:1917:_on_frame <- window.py:2106:_rebuild_frame
+{'max_first_frame_decoders': 1, 'steady_mib': 251.8299560546875, 'peak_mib': 268.8924560546875, 'growth_mib': 2.0859375, 'playback': {0: {'fps': 23.584668961572046, 'forward_gaps': 0, 'frames': 471, 'ten_second_bins': [{'start': 0, 'fps': 23.595142962080825, 'frames': 213}, {'start': 10, 'fps': 23.8178985980604, 'frames': 238}, {'start': 20, 'fps': 23.37081356510226, 'frames': 234}, {'start': 30, 'fps': 23.811397984886643, 'frames': 122}]}}, 'queue_drops': 0, 'duplicate_first_images': [], 'lifecycle': {}, 'shared_process_enabled': True, 'source_widths': [1280], 'actions': {0: '待机呼吸休闲'}, 'initial_decode_routes': {0: {'idle_eligible': True, 'broker_active': True, 'feed': False, 'publish': True, 'path': '/Users/ray/Library/Caches/seeky8-candidate/assets/characters/shenshen/videos/idle/待机呼吸休闲.webm'}}, 'live_ffmpeg_after_cleanup': []} []

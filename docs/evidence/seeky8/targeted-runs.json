@@ -1,0 +1,506 @@
+[
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky8/pipeline_probe.py",
+      "--root",
+      "/Users/ray/Library/Caches/seeky8-baseline-3bc58a7",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/before-pipeline-1.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory"
+    ],
+    "setup": "sequential native pipeline variants",
+    "inputs": "realHQ shared-frame delivery",
+    "assertions": "pixel/ownership identity and measured copies",
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky8/pipeline_probe.py",
+      "--root",
+      "/Users/ray/Library/Caches/seeky8-stage1",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/stage1-pipeline-1.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory"
+    ],
+    "setup": "sequential native pipeline variants",
+    "inputs": "realHQ shared-frame delivery",
+    "assertions": "pixel/ownership identity and measured copies",
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky8/pipeline_probe.py",
+      "--root",
+      "/Users/ray/Library/Caches/seeky8-candidate",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/after-pipeline-1.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory"
+    ],
+    "setup": "sequential native pipeline variants",
+    "inputs": "realHQ shared-frame delivery",
+    "assertions": "pixel/ownership identity and measured copies",
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky8_memory.py",
+      "--root",
+      "/Users/ray/Library/Caches/seeky8-baseline-3bc58a7",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/before-thumbnails-1.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+      "--mode",
+      "thumbnails",
+      "--count",
+      "12"
+    ],
+    "setup": "real Cocoa AppShell, same media, isolated thumbnail disk cache",
+    "inputs": "thumbnails",
+    "assertions": "valid <=128px pixels, cache equality, no decoder leftovers; record latency/memory",
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky8_memory.py",
+      "--root",
+      "/Users/ray/Library/Caches/seeky8-baseline-3bc58a7",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/before-first-frames-1.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+      "--mode",
+      "first-frames",
+      "--count",
+      "12"
+    ],
+    "setup": "real Cocoa AppShell, same media, isolated thumbnail disk cache",
+    "inputs": "first-frames",
+    "assertions": "valid <=128px pixels, cache equality, no decoder leftovers; record latency/memory",
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky8_memory.py",
+      "--root",
+      "/Users/ray/Library/Caches/seeky8-stage1",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/stage1-thumbnails-1.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+      "--mode",
+      "thumbnails",
+      "--count",
+      "12"
+    ],
+    "setup": "real Cocoa AppShell, same media, isolated thumbnail disk cache",
+    "inputs": "thumbnails",
+    "assertions": "valid <=128px pixels, cache equality, no decoder leftovers; record latency/memory",
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky8_memory.py",
+      "--root",
+      "/Users/ray/Library/Caches/seeky8-stage1",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/stage1-first-frames-1.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+      "--mode",
+      "first-frames",
+      "--count",
+      "12"
+    ],
+    "setup": "real Cocoa AppShell, same media, isolated thumbnail disk cache",
+    "inputs": "first-frames",
+    "assertions": "valid <=128px pixels, cache equality, no decoder leftovers; record latency/memory",
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky8_memory.py",
+      "--root",
+      "/Users/ray/Library/Caches/seeky8-candidate",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/after-thumbnails-1.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+      "--mode",
+      "thumbnails",
+      "--count",
+      "12"
+    ],
+    "setup": "real Cocoa AppShell, same media, isolated thumbnail disk cache",
+    "inputs": "thumbnails",
+    "assertions": "valid <=128px pixels, cache equality, no decoder leftovers; record latency/memory",
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky8_memory.py",
+      "--root",
+      "/Users/ray/Library/Caches/seeky8-candidate",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/after-first-frames-1.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+      "--mode",
+      "first-frames",
+      "--count",
+      "12"
+    ],
+    "setup": "real Cocoa AppShell, same media, isolated thumbnail disk cache",
+    "inputs": "first-frames",
+    "assertions": "valid <=128px pixels, cache equality, no decoder leftovers; record latency/memory",
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky8/pipeline_probe.py",
+      "--root",
+      "/Users/ray/Library/Caches/seeky8-baseline-3bc58a7",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/before-pipeline-2.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory"
+    ],
+    "setup": "sequential native pipeline variants",
+    "inputs": "realHQ shared-frame delivery",
+    "assertions": "pixel/ownership identity and measured copies",
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky8/pipeline_probe.py",
+      "--root",
+      "/Users/ray/Library/Caches/seeky8-stage1",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/stage1-pipeline-2.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory"
+    ],
+    "setup": "sequential native pipeline variants",
+    "inputs": "realHQ shared-frame delivery",
+    "assertions": "pixel/ownership identity and measured copies",
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky8/pipeline_probe.py",
+      "--root",
+      "/Users/ray/Library/Caches/seeky8-candidate",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/after-pipeline-2.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory"
+    ],
+    "setup": "sequential native pipeline variants",
+    "inputs": "realHQ shared-frame delivery",
+    "assertions": "pixel/ownership identity and measured copies",
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky8_memory.py",
+      "--root",
+      "/Users/ray/Library/Caches/seeky8-baseline-3bc58a7",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/before-thumbnails-2.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+      "--mode",
+      "thumbnails",
+      "--count",
+      "12"
+    ],
+    "setup": "real Cocoa AppShell, same media, isolated thumbnail disk cache",
+    "inputs": "thumbnails",
+    "assertions": "valid <=128px pixels, cache equality, no decoder leftovers; record latency/memory",
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky8_memory.py",
+      "--root",
+      "/Users/ray/Library/Caches/seeky8-baseline-3bc58a7",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/before-first-frames-2.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+      "--mode",
+      "first-frames",
+      "--count",
+      "12"
+    ],
+    "setup": "real Cocoa AppShell, same media, isolated thumbnail disk cache",
+    "inputs": "first-frames",
+    "assertions": "valid <=128px pixels, cache equality, no decoder leftovers; record latency/memory",
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky8_memory.py",
+      "--root",
+      "/Users/ray/Library/Caches/seeky8-stage1",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/stage1-thumbnails-2.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+      "--mode",
+      "thumbnails",
+      "--count",
+      "12"
+    ],
+    "setup": "real Cocoa AppShell, same media, isolated thumbnail disk cache",
+    "inputs": "thumbnails",
+    "assertions": "valid <=128px pixels, cache equality, no decoder leftovers; record latency/memory",
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky8_memory.py",
+      "--root",
+      "/Users/ray/Library/Caches/seeky8-stage1",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/stage1-first-frames-2.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+      "--mode",
+      "first-frames",
+      "--count",
+      "12"
+    ],
+    "setup": "real Cocoa AppShell, same media, isolated thumbnail disk cache",
+    "inputs": "first-frames",
+    "assertions": "valid <=128px pixels, cache equality, no decoder leftovers; record latency/memory",
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky8_memory.py",
+      "--root",
+      "/Users/ray/Library/Caches/seeky8-candidate",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/after-thumbnails-2.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+      "--mode",
+      "thumbnails",
+      "--count",
+      "12"
+    ],
+    "setup": "real Cocoa AppShell, same media, isolated thumbnail disk cache",
+    "inputs": "thumbnails",
+    "assertions": "valid <=128px pixels, cache equality, no decoder leftovers; record latency/memory",
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky8_memory.py",
+      "--root",
+      "/Users/ray/Library/Caches/seeky8-candidate",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/after-first-frames-2.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+      "--mode",
+      "first-frames",
+      "--count",
+      "12"
+    ],
+    "setup": "real Cocoa AppShell, same media, isolated thumbnail disk cache",
+    "inputs": "first-frames",
+    "assertions": "valid <=128px pixels, cache equality, no decoder leftovers; record latency/memory",
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky8/pipeline_probe.py",
+      "--root",
+      "/Users/ray/Library/Caches/seeky8-baseline-3bc58a7",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/before-pipeline-3.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory"
+    ],
+    "setup": "sequential native pipeline variants",
+    "inputs": "realHQ shared-frame delivery",
+    "assertions": "pixel/ownership identity and measured copies",
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky8/pipeline_probe.py",
+      "--root",
+      "/Users/ray/Library/Caches/seeky8-stage1",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/stage1-pipeline-3.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory"
+    ],
+    "setup": "sequential native pipeline variants",
+    "inputs": "realHQ shared-frame delivery",
+    "assertions": "pixel/ownership identity and measured copies",
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky8/pipeline_probe.py",
+      "--root",
+      "/Users/ray/Library/Caches/seeky8-candidate",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/after-pipeline-3.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory"
+    ],
+    "setup": "sequential native pipeline variants",
+    "inputs": "realHQ shared-frame delivery",
+    "assertions": "pixel/ownership identity and measured copies",
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky8_memory.py",
+      "--root",
+      "/Users/ray/Library/Caches/seeky8-baseline-3bc58a7",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/before-thumbnails-3.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+      "--mode",
+      "thumbnails",
+      "--count",
+      "12"
+    ],
+    "setup": "real Cocoa AppShell, same media, isolated thumbnail disk cache",
+    "inputs": "thumbnails",
+    "assertions": "valid <=128px pixels, cache equality, no decoder leftovers; record latency/memory",
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky8_memory.py",
+      "--root",
+      "/Users/ray/Library/Caches/seeky8-baseline-3bc58a7",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/before-first-frames-3.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+      "--mode",
+      "first-frames",
+      "--count",
+      "12"
+    ],
+    "setup": "real Cocoa AppShell, same media, isolated thumbnail disk cache",
+    "inputs": "first-frames",
+    "assertions": "valid <=128px pixels, cache equality, no decoder leftovers; record latency/memory",
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky8_memory.py",
+      "--root",
+      "/Users/ray/Library/Caches/seeky8-stage1",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/stage1-thumbnails-3.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+      "--mode",
+      "thumbnails",
+      "--count",
+      "12"
+    ],
+    "setup": "real Cocoa AppShell, same media, isolated thumbnail disk cache",
+    "inputs": "thumbnails",
+    "assertions": "valid <=128px pixels, cache equality, no decoder leftovers; record latency/memory",
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky8_memory.py",
+      "--root",
+      "/Users/ray/Library/Caches/seeky8-stage1",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/stage1-first-frames-3.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+      "--mode",
+      "first-frames",
+      "--count",
+      "12"
+    ],
+    "setup": "real Cocoa AppShell, same media, isolated thumbnail disk cache",
+    "inputs": "first-frames",
+    "assertions": "valid <=128px pixels, cache equality, no decoder leftovers; record latency/memory",
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky8_memory.py",
+      "--root",
+      "/Users/ray/Library/Caches/seeky8-candidate",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/after-thumbnails-3.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+      "--mode",
+      "thumbnails",
+      "--count",
+      "12"
+    ],
+    "setup": "real Cocoa AppShell, same media, isolated thumbnail disk cache",
+    "inputs": "thumbnails",
+    "assertions": "valid <=128px pixels, cache equality, no decoder leftovers; record latency/memory",
+    "exit_status": 0
+  },
+  {
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "/Users/ray/Documents/New project/dsr-pet/scripts/verify_seeky8_memory.py",
+      "--root",
+      "/Users/ray/Library/Caches/seeky8-candidate",
+      "--output",
+      "/Users/ray/Documents/New project/dsr-pet/docs/evidence/seeky8/after-first-frames-3.json",
+      "--probe",
+      "/Users/ray/Documents/New project/dsr-pet/.scratch/seeky-proc-memory",
+      "--mode",
+      "first-frames",
+      "--count",
+      "12"
+    ],
+    "setup": "real Cocoa AppShell, same media, isolated thumbnail disk cache",
+    "inputs": "first-frames",
+    "assertions": "valid <=128px pixels, cache equality, no decoder leftovers; record latency/memory",
+    "exit_status": 0
+  }
+]
