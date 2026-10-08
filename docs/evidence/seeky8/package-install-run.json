@@ -1,0 +1,24 @@
+{
+  "command": [
+    "/usr/bin/ditto",
+    "-x",
+    "-k",
+    "/Users/ray/Downloads/seeky-pet-4.2.1.8-macOS-arm64.zip",
+    "/Users/ray/Applications"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "setup": "Old 4.2.1.7 app was permanently deleted; candidate ZIP passed unzip integrity and package verification; target absent before extraction",
+  "inputs": "/Users/ray/Downloads/seeky-pet-4.2.1.8-macOS-arm64.zip",
+  "assertions": "Installed CFBundleVersion is 4.2.1.8; codesign valid; extracted executable equals verified build executable",
+  "result": "",
+  "elapsed_seconds": 10.646,
+  "exit_status": 0,
+  "installed_path": "/Users/ray/Applications/seeky· pet.app",
+  "bundle_version": "4.2.1.8",
+  "architecture": "/Users/ray/Applications/seeky· pet.app/Contents/MacOS/seeky· pet: Mach-O 64-bit executable arm64",
+  "codesign_exit_status": 0,
+  "codesign_output": "",
+  "installed_binary_sha256": "8c094c9f18e8700084dc0b762e6352f903548658f2196d4c141980516ce61d45",
+  "verified_build_binary_sha256": "8c094c9f18e8700084dc0b762e6352f903548658f2196d4c141980516ce61d45",
+  "all_assertions_pass": true
+}

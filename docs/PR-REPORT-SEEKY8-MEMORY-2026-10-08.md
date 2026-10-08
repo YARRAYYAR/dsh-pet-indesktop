@@ -42,6 +42,6 @@
 
 ## 5. 交付状态与限制
 
-按用户最新要求，优先完成打包、下载及 GitHub 分支上传。构建、包校验和 ZIP 完整性检查均通过。下载包：`/Users/ray/Downloads/seeky-pet-4.2.1.8-macOS-arm64.zip`，SHA-256 `10521c1ba2e927a97a016111b95fbe6353359e1ce44ca2668b5b9e35e6965ffa`，大小 1,553,295,691 字节；证据见 `package-build-run.json`、`package-verification.json`、`package-zip-verification.json`。候选长测仅覆盖约 251 秒且验证器拒绝，三轮 CPU 高负载复跑未开始，均不作为通过项。
+按用户最新要求，优先完成打包、下载及 GitHub 分支上传。构建、包校验、ZIP 完整性检查和解包安装检查均通过。下载包：`/Users/ray/Downloads/seeky-pet-4.2.1.8-macOS-arm64.zip`，SHA-256 `10521c1ba2e927a97a016111b95fbe6353359e1ce44ca2668b5b9e35e6965ffa`，大小 1,553,295,691 字节。已从该 ZIP 安装到 `/Users/ray/Applications/seeky· pet.app`；版本 4.2.1.8，arm64，签名有效，二进制哈希与候选构建相同。安装后未自动启动 app。证据见 `package-build-run.json`、`package-verification.json`、`package-zip-verification.json`、`package-install-run.json`。候选长测仅覆盖约 251 秒且验证器拒绝，三轮 CPU 高负载复跑未开始，均不作为通过项。
 
 按用户要求，旧 4.2.1.7 `/Users/ray/Applications/seeky· pet.app` 和 `/Users/ray/Downloads/seeky-pet-4.2.1.7-macOS-arm64.zip` 已永久删除，不留备份；删除证据见 `old-install-removal.json`。旧 app 删除前已正常退出。应用配置目录没有被删除；正常退出可能触发应用自身的常规保存流程。
