@@ -2,9 +2,11 @@
 """Phase 2：动画预热门控测试（预热由省电模式联动，见 app._create_library）。"""
 from __future__ import annotations
 
+from types import SimpleNamespace
+
 from PySide6.QtWidgets import QApplication
 
-import pet.library as library_mod
+import pet.prewarm_scheduler as scheduler_mod
 from pet.library import MovieLibrary
 
 
@@ -19,7 +21,9 @@ def test_disabled_prewarm_does_not_schedule_low_or_high(tmp_path, monkeypatch):
         def __init__(self, *a, **kw):
             raise AssertionError("动画预热关闭时不应创建预热线程")
 
-    monkeypatch.setattr(library_mod.threading, "Thread", BoomThread)
+    # Only replace the scheduler boundary. Patching threading.Thread globally
+    # also traps unrelated application callbacks when Qt drains queued events.
+    monkeypatch.setattr(scheduler_mod, "threading", SimpleNamespace(Thread=BoomThread))
     lib = MovieLibrary(character_id="shenshen", prewarm_enabled=False)
     try:
         lib.schedule_high_priority_warm()  # 不应创建线程
@@ -35,9 +39,9 @@ def test_enable_prewarm_reschedules_when_visible(tmp_path, monkeypatch):
     app = _qapp()
     started_threads = []
     monkeypatch.setattr(
-        library_mod.threading,
-        "Thread",
-        lambda *a, **kw: _CaptureThread(started_threads, *a, **kw),
+        scheduler_mod,
+        "threading",
+        SimpleNamespace(Thread=lambda *a, **kw: _CaptureThread(started_threads, *a, **kw)),
     )
     lib = MovieLibrary(character_id="shenshen", prewarm_enabled=False)
     try:

@@ -11,7 +11,7 @@
 - `PetWindow` 正确初始化 8 MiB 字节预算缩略图缓存；关闭窗口时释放缓存并唤醒等待者，延迟完成的 owner 不再回填关闭后的窗口缓存。
 - 未修改素材、动作时长、分辨率、RGBA、透明像素、源帧顺序、播放速度、缓存预算、两帧播放队列、四槽共享环、设置保存语义或动作 IPC。包显示版本改为 4.2.1.8。
 
-## 2. 单宠后台性能实测
+## 2. 性能分析：单宠后台性能实测
 
 每轮真实 Cocoa `AppShell`，只启动一只宠物；零透明度保持 Qt 绘制和帧交付路径活动，不触发 hide-pause；使用隔离配置、不与用户窗口交互。短测为基线/候选各三轮，普通 1280px 与 HQ 2560px 分别运行 35 秒。指标是测试进程树物理占用及 RSS 采样；共享内存按实际进程树采样，不以图像引用分类简单求和。原始记录在 `docs/evidence/seeky8/background-single/verified/`。
 
@@ -26,7 +26,7 @@
 
 **620 秒单宠观察：** 基线运行覆盖采样时间 0.5–619.6 秒（1189 个进程树采样点），物理占用峰值 421.0 MiB、固定观察窗中位数 248.2 MiB，首尾窗口变化 -49.1 MiB，23.77fps、缺帧 0、退出后无 FFmpeg。候选曾采样 0.5–251.3 秒即按用户将优先级转为交付打包/上传的要求停止；验证器以退出码 1 拒绝此不完整记录及末三秒无帧情形。原始输出和 `INVALID_INCOMPLETE` 标记保留在 `background-single/verified-long/`；不作长时前后对比，也不声称候选十分钟增长趋势通过。
 
-## 3. 图像、生命周期与回归证据
+## 3. 实机运行记录：图像、生命周期与回归证据
 
 - 安装包 215 个原始/HQ 媒体、索引及图标文件与基线 SHA-256 全部一致（215/215）：`docs/evidence/seeky8/media-after-final.json`。
 - 真实 Cocoa 生命周期关闭窗口用例通过：持有中的解码 owner 期间关闭窗口，等待者被唤醒、缓存为空、迟到结果不回填、无解码器残留；对应 `close-cache-green-confirmed-pass1.json`。同一缺陷的原生红灯记录为 `close-cache-red-retry.json`。
@@ -34,7 +34,7 @@
 - Ruff 检查通过；命令与环境见 `ruff-final2-run.json`。
 - 单独测试组均通过；人工拼接的非默认测试顺序曾卡在弱引用清理用例，完整项目收集顺序最终全量套件正常通过。已保留诊断记录，不将该非默认顺序当成全量失败。
 
-## 4. 修改文件
+## 4. 修改文件说明
 
 - 新增：`pet/ffmpeg_params.py`、`pet/window_optional_services.py`、`scripts/verify_seeky8_memory.py`、`tests/test_seeky8_memory_lifecycle.py`、`tests/test_seeky8_thumbnail_lifecycle.py`。
 - 修改：`pet/animation_thumbnail.py`、`pet/branding.py`、`pet/library.py`、`pet/webm_clip.py`、`pet/window.py`、`scripts/build_macos.sh`、`scripts/verify_dsr_package.py`、`scripts/verify_seeky_multi.py`、`docs/INDEX.md`。

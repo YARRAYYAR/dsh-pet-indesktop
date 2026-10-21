@@ -10,7 +10,7 @@
    阻塞必须是真正的 Condition 等待（不是 Event.wait 忙循环空转 CPU）；
 4. pause_warm（隐藏/切角色）代次作废旧批次：旧角色/旧库的预热不会复活；
    迟到 end_interaction（旧代次 token）不会误释放换代后新交互的持有；
-5. 低优先级批次去重：同一时间最多一个在飞批次，timer/50ms 重试/resume 重排
+5. 低优先级批次去重：同一时间最多一个在飞批次，timer/交互释放/resume 重排
    的并发触发不会重复起批、不会重复启动 ffmpeg。
 
 已知测试局限（保留，不修）：
@@ -197,7 +197,7 @@ def test_low_warm_defers_while_interaction_active(tmp_path, monkeypatch, app):
     assert "写代码" in lib._movies
     assert lib._movies["写代码"].warmed_meta is True
     assert lib._movies["写代码"].warmed_frame is True
-    app.processEvents()  # 排干让路期遗留的重试 timer
+    app.processEvents()  # 排干交互释放的 queued 恢复通知
 
 
 def test_no_busy_loop_while_waiting_gate(tmp_path, monkeypatch):
@@ -295,10 +295,10 @@ def test_low_warm_batch_dedup_in_flight(tmp_path, monkeypatch):
 
 
 def test_pause_cancels_queued_interaction_retry(tmp_path, monkeypatch, app):
-    """P1：pause_warm 必须取消交互期间排队的 50ms 重排期，不能遗留触发。"""
+    """P1：pause_warm 必须取消交互期间挂起的重排期，不能遗留触发。"""
     lib = _make_lib(tmp_path, monkeypatch)
     lib.begin_interaction()
-    lib._warm_low_priority_background()  # 交互中：安排 50ms 重排期
+    lib._warm_low_priority_background()  # 交互中：等待最终持有者释放
     assert "写代码" not in lib._movies
     lib.pause_warm()  # 隐藏：取消排队的重排期
     lib.end_interaction()

@@ -490,10 +490,9 @@ class PetInstance:
 
     def _build_window(self, character_id: str, lib: MovieLibrary | None = None,
                       build_tray: bool = True) -> PetWindow:
-        """创建新窗口并完成接线、音效预热与旧对象延迟销毁（创建与切换共用）。
+        """Prepare a replacement completely before retiring the current window.
 
-        从 _create_ui 与 switch_character 两处历史逐行重复的公共序列（约 25 行）
-        抽出：步骤顺序与 deleteLater / QTimer.singleShot 时序与原实现完全一致。
+        Construction/wiring failures release the candidate and leave self.win intact.
         lib 可预传入（switch_character 先预创建、失败则保留当前角色），
         缺省时按 character_id 创建（_create_ui 启动路径）。
         托盘为进程级（AppShell 持有），经 ``self.shell`` 路由。
@@ -510,33 +509,48 @@ class PetInstance:
         _prev_slot = getattr(_pet_log_slot, "slot", None)
         if shared is not None and self.slot_id is not None:
             _pet_log_slot.slot = f"slot-{self.slot_id}"
+        win = None
+        tray = None
         try:
             win = PetWindow(lib, self.config, collision_session=self.collision_ipc,
                             broker_facade=self.broker_facade,
                             single_process_spawn=self.shell._single_process_spawn,
                             agent_link_manager=shared.agent_link if shared else None,
                             proactive_watcher=shared.proactive if shared else None)
+            if isinstance(lib, MovieLibrary) and lib.parent() is None:
+                lib.setParent(win)
+            # P1-2：窗级 runtime 标记版本化 / 日志前缀读进程级 flag 快照（不读每窗 config）。
+            # N-1：快照经构造参数在 _restore_position 之前生效（窗构造期就会写标记）。
+            self._wire_window(win)
+            # 文件投喂（拖文件模拟吃掉）：PR73 引入的接线在批5.2 重构时被丢，
+            # 必须随每只窗的创建（启动/切角色/多窗）挂载，缺失则拖放无效。
+            win.install_file_eater()
+            # 拖文件解读（确认 → 新会话请求 → 进度冒泡 → 摘要），与投喂共用接缝。
+            win.install_file_interpreter()
+            # 预热点击音效：首次创建 QSoundEffect/QMediaPlayer 池并等待加载完成，
+            # 在显示窗口前完成，避免窗口出现后主线程被音频初始化阻塞、
+            # 首次点击 Q 弹卡顿。音效关闭时不预热，避免无谓拉起 QtMultimedia 池。
+            if self.config.get("click_sound_enabled", True) or self.config.get("collision_sound_enabled", True):
+                click_sound.warm_click_sound_effects(
+                    self.config.get("click_sound_pack"),
+                    data_dir=self.config.dir,
+                )
+            win.show()
+
+            tray = self.shell._build_tray(win) if build_tray else None
+
+        except Exception:
+            if win is not None:
+                win.release_resources()
+                win.hide(notify=False)
+                win.deleteLater()
+            lib.shutdown()
+            if tray is not None:
+                tray.hide()
+                tray.deleteLater()
+            raise
         finally:
             _pet_log_slot.slot = _prev_slot
-        # P1-2：窗级 runtime 标记版本化 / 日志前缀读进程级 flag 快照（不读每窗 config）。
-        # N-1：快照经构造参数在 _restore_position 之前生效（窗构造期就会写标记）。
-        self._wire_window(win)
-        # 文件投喂（拖文件模拟吃掉）：PR73 引入的接线在批5.2 重构时被丢，
-        # 必须随每只窗的创建（启动/切角色/多窗）挂载，缺失则拖放无效。
-        win.install_file_eater()
-        # 拖文件解读（确认 → 新会话请求 → 进度冒泡 → 摘要），与投喂共用接缝。
-        win.install_file_interpreter()
-        # 预热点击音效：首次创建 QSoundEffect/QMediaPlayer 池并等待加载完成，
-        # 在显示窗口前完成，避免窗口出现后主线程被音频初始化阻塞、
-        # 首次点击 Q 弹卡顿。音效关闭时不预热，避免无谓拉起 QtMultimedia 池。
-        if self.config.get("click_sound_enabled", True) or self.config.get("collision_sound_enabled", True):
-            click_sound.warm_click_sound_effects(
-                self.config.get("click_sound_pack"),
-                data_dir=self.config.dir,
-            )
-        win.show()
-
-        tray = self.shell._build_tray(win) if build_tray else None
 
         # 清理旧对象（热切换时使用）
         old_win = self.win
@@ -559,6 +573,9 @@ class PetInstance:
             self.shell._wire_shared_subsystems()
 
         if old_win is not None:
+            # Permanent release precedes hide: hide must not pause shared services
+            # after they have already been wired to the replacement.
+            old_win.release_resources()
             old_win.hide(notify=False)
             QTimer.singleShot(0, old_win.deleteLater)
             # 仅主窗（build_tray=True）换托盘；非主窗绝不 hide/deleteLater 共享托盘。
@@ -579,39 +596,42 @@ class PetInstance:
         if character_id == current:
             return
 
-        # 先保存配置，即使后续加载失败也记住用户选择
+        old_session = self.collision_ipc
+        candidate_session = None
+        lib = None
         self.config.set('character', character_id)
-        self.config.save()
-
         try:
-            # 预创建新库，失败则保留当前角色（在动旧窗口之前完成）
             lib = self._create_library(character_id)
+            candidate_session = CollisionIpcSession(self.config, self.shell)
+            candidate_session.start()
+            self.collision_ipc = candidate_session
+            # Persist before committing the new window; a build failure restores
+            # both the in-memory selection and its saved value.
+            self.config.save()
+            self._build_window(character_id, lib=lib,
+                               build_tray=(self is self.shell.instance))
         except Exception as exc:
+            self.collision_ipc = old_session
+            self.config.set('character', current)
+            try:
+                self.config.save()
+            except Exception:
+                logging.exception('切换失败后恢复角色配置失败')
+            if lib is not None:
+                lib.shutdown()
+            if candidate_session is not None:
+                candidate_session.stop()
+                candidate_session.deleteLater()
             logging.exception('切换角色失败: %s', character_id)
             _show_startup_error('切换角色失败', str(exc))
             return
 
         logging.info('切换角色: %s -> %s', current, character_id)
-
-        # 批5.2 P1-1：碰撞会话由**本窗**自持（每窗一个）——热切换
-        # 只重建本窗的 session（detach 旧窗 client → 停/重建本窗会话 →
-        # 新窗 attach 到新会话）。C2 前向地雷（多窗下任一窗热切换拆共享进程级
-        # IPC）随「不再共享」自然消解。
-        # 批5.3 起共享解码为进程级 hub（DecodeFanoutHub），不随热切换停；
-        # 窗侧只经 _broker_unregister 逐素材收尾。
-        old_win = self.win
-        old_win.detach_collision_session()
-        # 停本窗旧碰撞会话并重建（影响仅限本窗，不碰其它窗）
         try:
-            self.collision_ipc.stop()
+            old_session.stop()
         except Exception:
             logging.exception("切换角色：停止本窗碰撞会话失败")
-        self.collision_ipc = CollisionIpcSession(self.config, self.shell)
-        self.collision_ipc.start()
-        if getattr(old_win, 'agent_link_manager', None) is not None:
-            old_win.agent_link_manager.shutdown()
-        # 主窗热切换才换托盘（进程级单托盘）；非主窗热切换不动共享托盘。
-        self._build_window(character_id, lib=lib, build_tray=(self is self.shell.instance))
+        old_session.deleteLater()
         if self.enable_chat:
             for chat_window in (self.legacy_chat_window, self.modern_chat_window):
                 if chat_window is not None:
@@ -1910,11 +1930,15 @@ class AppShell:
                 except Exception:
                     logging.exception("退出时保存位置失败")
                 try:
-                    if getattr(win, 'lib', None) is not None:
-                        win.lib.pause_warm()
+                    release = getattr(win, 'release_resources', None)
+                    if callable(release):
+                        release()
+                    elif getattr(win, 'lib', None) is not None:
+                        win.lib.pause_warm()  # Legacy window adapters.
                 except Exception:
-                    logging.exception("退出时暂停预热失败")
-                if getattr(win, 'agent_link_manager', None) is not None:
+                    logging.exception("退出时释放窗口资源失败")
+                if (getattr(win, 'owns_agent_link_manager', True)
+                        and getattr(win, 'agent_link_manager', None) is not None):
                     try:
                         win.agent_link_manager.shutdown()
                     except Exception:
@@ -2815,7 +2839,7 @@ class AppShell:
             except Exception:
                 logging.exception("退出这只：暂停预热失败")
             agent_mgr = getattr(win, 'agent_link_manager', None)
-            if agent_mgr is not None:
+            if agent_mgr is not None and getattr(win, 'owns_agent_link_manager', True):
                 if defer_heavy_teardown:
                     # 摘下引用再关窗：closeEvent 也会调 shutdown()，不在 UI
                     # 线程重复 join（reaper 统一收口，shutdown 幂等）。

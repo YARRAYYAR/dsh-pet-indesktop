@@ -7,7 +7,10 @@ DshStateTracker 的事件/在线轮询，验证 edge-trigger 去重、离线恢�
 from __future__ import annotations
 
 import json
+from threading import Thread
 
+import pytest
+from PySide6.QtCore import QEventLoop, QTimer
 from PySide6.QtWidgets import QApplication
 
 from pet import harness_launcher
@@ -18,7 +21,7 @@ def _qapp():
     return QApplication.instance() or QApplication([])
 
 
-def _make_tracker(tmp_path, monkeypatch, online=False, *, name="base"):
+def _make_tracker(tmp_path, monkeypatch, online=False, *, name="base", clock=None):
     """构造一个指向临时桥目录的跟踪器，并把在线探测钉死到 online。"""
     _qapp()
     root = tmp_path / name
@@ -27,7 +30,7 @@ def _make_tracker(tmp_path, monkeypatch, online=False, *, name="base"):
     bridge_dir = root / "dsh-pet-bridge"
     bridge_dir.mkdir(parents=True, exist_ok=True)
     monkeypatch.setattr(harness_launcher, "is_running", lambda port: online)
-    tracker = DshStateTracker(config_dir, parent=None, scan_interval=0.0)
+    tracker = DshStateTracker(config_dir, parent=None, scan_interval=0.0, clock=clock)
     # 关闭 ByteOffsetTailer 的 backfill 防护，让测试能立即读到已写入内容
     tracker._tailer._initial_backfill_done = True
     return tracker, bridge_dir
@@ -49,6 +52,254 @@ def _records_for(*events):
         else:
             out.append({"event": ev})
     return out
+
+
+def _drain_qt_events():
+    """消费已经排队的跨线程通知，不用 sleep 猜测工作线程何时完成。"""
+    loop = QEventLoop()
+    QTimer.singleShot(0, loop.quit)
+    loop.exec()
+
+
+def _queue_probe_result(tracker, monkeypatch, online):
+    """真实工作线程入 Qt 队列；join 确认投递完成后才推进 GUI 事件循环。"""
+    monkeypatch.setattr(harness_launcher, "is_running", lambda port: online)
+    worker = Thread(target=tracker._probe_worker, args=(tracker._probe_generation, [38080]))
+    worker.start()
+    worker.join(timeout=2.0)
+    assert not worker.is_alive(), "仅使用内存探测替身的工作线程必须按时退出"
+
+
+def test_started_offline_keeps_only_online_timer(tmp_path, monkeypatch):
+    tracker, _ = _make_tracker(tmp_path, monkeypatch, online=False)
+    tracker.start()
+    _drain_qt_events()
+
+    assert tracker.current_state is DshState.OFFLINE
+    assert tracker._online_timer.isActive()
+    assert tracker._online_timer.interval() == 3000
+    assert not tracker._event_timer.isActive(), "离线时不得有 1.2 秒事件轮询唤醒"
+
+
+def test_started_online_reads_events_before_first_timer_tick(tmp_path, monkeypatch):
+    tracker, bridge_dir = _make_tracker(tmp_path, monkeypatch, online=True)
+    wrote = False
+
+    def online_with_new_event(_port):
+        nonlocal wrote
+        if not wrote:
+            _write(bridge_dir, *_records_for("working"))
+            wrote = True
+        return True
+
+    # 首查前初始化旧文件书签；探测期间新到达的事件仍须在 timer 首跳前读到。
+    monkeypatch.setattr(harness_launcher, 'is_running', online_with_new_event)
+    tracker.start()
+
+    assert tracker.current_state is DshState.WORKING
+    assert tracker._event_timer.isActive()
+    assert tracker._event_timer.interval() == 1200
+
+
+def test_online_edge_immediately_reads_events_and_resumes_timer(tmp_path, monkeypatch):
+    tracker, bridge_dir = _make_tracker(tmp_path, monkeypatch, online=False)
+    tracker.start()
+    _write(bridge_dir, *_records_for("working"))
+    _queue_probe_result(tracker, monkeypatch, True)
+    assert tracker.current_state is DshState.OFFLINE
+    _drain_qt_events()
+
+    assert tracker.current_state is DshState.WORKING, "上线结果在 GUI 线程立即补读事件"
+    assert tracker._event_timer.isActive()
+
+    # 重复 online 不能变成额外的事件轮询；后续事件留给正常事件 timer。
+    tracker._event_timer.setInterval(60_000)
+    _write(bridge_dir, *_records_for("success"))
+    _queue_probe_result(tracker, monkeypatch, True)
+    _drain_qt_events()
+    assert tracker.current_state is DshState.WORKING
+    tracker._poll_events()
+    assert tracker.current_state is DshState.SUCCESS
+
+    _queue_probe_result(tracker, monkeypatch, False)
+    _drain_qt_events()
+    assert tracker.current_state is DshState.OFFLINE
+    assert not tracker._event_timer.isActive()
+    assert tracker._online_timer.isActive()
+
+
+@pytest.mark.parametrize('online_at_start', [False, True])
+def test_online_recovery_reads_first_events_from_new_bridge_file(
+        tmp_path, monkeypatch, online_at_start):
+    """使用生产默认 scan/backfill 设置；只忽略启动前历史，不漏离线期新 PID 文件。"""
+    _qapp()
+    config_dir = tmp_path / 'cfg'
+    config_dir.mkdir()
+    bridge_dir = tmp_path / 'dsh-pet-bridge'
+    bridge_dir.mkdir()
+    (bridge_dir / 'dsh-100.jsonl').write_text(
+        json.dumps({'event': 'AgentStatus', 'state': 'success'}) + '\n',
+        encoding='utf-8',
+    )
+    monkeypatch.setattr(harness_launcher, 'is_running', lambda port: online_at_start)
+    tracker = DshStateTracker(config_dir)
+    tracker.start()
+    initial_state = DshState.IDLE if online_at_start else DshState.OFFLINE
+    assert tracker.current_state is initial_state, '启动前历史仍不得重放'
+
+    _queue_probe_result(tracker, monkeypatch, False)
+    _drain_qt_events()
+    assert tracker.current_state is DshState.OFFLINE
+    assert not tracker._event_timer.isActive()
+    (bridge_dir / 'dsh-200.jsonl').write_text(
+        json.dumps({'event': 'AgentStatus', 'state': 'working'}) + '\n',
+        encoding='utf-8',
+    )
+    _queue_probe_result(tracker, monkeypatch, True)
+    _drain_qt_events()
+
+    assert tracker.current_state is DshState.WORKING, '恢复在线必须消费新桥文件的首批事件'
+    assert tracker._event_timer.isActive()
+
+
+def test_restart_keeps_startup_history_filter_for_large_bridge_file(tmp_path, monkeypatch):
+    _qapp()
+    config_dir = tmp_path / 'cfg'
+    config_dir.mkdir()
+    bridge_dir = tmp_path / 'dsh-pet-bridge'
+    bridge_dir.mkdir()
+    monkeypatch.setattr(harness_launcher, 'is_running', lambda port: True)
+    tracker = DshStateTracker(config_dir)
+    tracker.start()
+    tracker.stop()
+    # 重新启动必须建立 EOF 书签，不能只丢弃一个读取 chunk 后重放剩余历史。
+    record = json.dumps({'event': 'AgentStatus', 'state': 'success'}) + '\n'
+    (bridge_dir / 'dsh-100.jsonl').write_text(record * 50_000, encoding='utf-8')
+    tracker.start()
+    assert tracker.current_state is DshState.IDLE
+    tracker._poll_events()
+    assert tracker.current_state is DshState.IDLE
+
+
+def test_stop_discards_already_queued_probe_result(tmp_path, monkeypatch):
+    tracker, _ = _make_tracker(tmp_path, monkeypatch, online=False)
+    tracker.start()
+    _queue_probe_result(tracker, monkeypatch, True)
+    tracker.stop()
+    _drain_qt_events()
+
+    assert tracker.current_state is DshState.OFFLINE
+    assert tracker._online is False
+    assert not tracker._event_timer.isActive()
+    assert not tracker._online_timer.isActive()
+
+
+def test_restart_discards_previous_generation_queued_result(tmp_path, monkeypatch):
+    tracker, _ = _make_tracker(tmp_path, monkeypatch, online=False)
+    tracker.start()
+    _queue_probe_result(tracker, monkeypatch, True)
+    tracker.stop()
+    monkeypatch.setattr(harness_launcher, "is_running", lambda port: False)
+    tracker.start()
+    tracker._probe_inflight = True  # 新代探测在途，旧结果不得替它清除标记。
+    _drain_qt_events()
+
+    assert tracker._probe_inflight
+    assert tracker.current_state is DshState.OFFLINE
+    assert tracker._online is False
+    assert tracker._online_timer.isActive()
+    assert not tracker._event_timer.isActive()
+
+
+def test_stop_during_online_transition_does_not_restart_timers(tmp_path, monkeypatch):
+    tracker, bridge_dir = _make_tracker(tmp_path, monkeypatch, online=False)
+    tracker.start()
+    _write(bridge_dir, *_records_for("working"))
+
+    def stop_on_idle(_previous, current):
+        if current == "idle":
+            tracker.stop()
+
+    tracker.state_changed.connect(stop_on_idle)
+    _queue_probe_result(tracker, monkeypatch, True)
+    _drain_qt_events()
+
+    assert tracker.current_state is DshState.IDLE
+    assert not tracker._started
+    assert not tracker._event_timer.isActive()
+    assert not tracker._online_timer.isActive()
+
+
+def test_start_state_listener_can_stop_tracker(tmp_path, monkeypatch):
+    tracker, _ = _make_tracker(tmp_path, monkeypatch, online=True)
+    tracker.state_changed.connect(lambda _previous, _current: tracker.stop())
+    tracker.start()
+    _drain_qt_events()
+
+    assert not tracker._started
+    assert not tracker._event_timer.isActive()
+    assert not tracker._online_timer.isActive()
+
+
+def test_stop_while_resuming_drops_remaining_event_batch(tmp_path, monkeypatch):
+    tracker, bridge_dir = _make_tracker(tmp_path, monkeypatch, online=False)
+    tracker.start()
+    _write(bridge_dir, *_records_for("working", "success"))
+
+    def stop_on_working(_previous, current):
+        if current == "working":
+            tracker.stop()
+
+    tracker.state_changed.connect(stop_on_working)
+    _queue_probe_result(tracker, monkeypatch, True)
+    _drain_qt_events()
+
+    assert tracker.current_state is DshState.WORKING
+    assert not tracker._started
+    assert not tracker._event_timer.isActive()
+    assert not tracker._online_timer.isActive()
+
+
+def test_probe_start_failure_pauses_event_timer(tmp_path, monkeypatch, caplog):
+    """隔离 OS 线程创建失败：真实耗尽系统线程不适合安全、可靠的原生验证。"""
+    from pet import dsh_state as dsh_state_mod
+
+    tracker, _ = _make_tracker(tmp_path, monkeypatch, online=True)
+    tracker.start()
+
+    def cannot_create_thread(*args, **kwargs):
+        raise RuntimeError("injected thread creation failure")
+
+    monkeypatch.setattr(dsh_state_mod, "Thread", cannot_create_thread)
+    with caplog.at_level("ERROR"):
+        tracker._schedule_online_probe()
+    _drain_qt_events()
+
+    assert tracker.current_state is DshState.OFFLINE
+    assert not tracker._probe_inflight
+    assert not tracker._event_timer.isActive()
+    assert tracker._online_timer.isActive()
+    assert "DSH 在线探测线程启动失败" in caplog.text
+
+
+@pytest.mark.parametrize("state", [DshState.WAITING_APPROVAL, DshState.WAITING_QUESTION])
+def test_resumed_event_timer_preserves_latch_timeout(tmp_path, monkeypatch, state):
+    now = [10.0]
+    tracker, bridge_dir = _make_tracker(tmp_path, monkeypatch, clock=lambda: now[0])
+    tracker.start()
+    _write(bridge_dir, *_records_for(state.value, "working"))
+    _queue_probe_result(tracker, monkeypatch, True)
+    _drain_qt_events()
+    assert tracker.current_state is state
+
+    now[0] = 129.0
+    QTimer.singleShot(0, tracker._event_timer.timeout.emit)
+    _drain_qt_events()
+    assert tracker.current_state is state
+    now[0] = 130.0
+    QTimer.singleShot(0, tracker._event_timer.timeout.emit)
+    _drain_qt_events()
+    assert tracker.current_state is DshState.WORKING
 
 
 def test_offline_when_dsh_down(tmp_path, monkeypatch, caplog):

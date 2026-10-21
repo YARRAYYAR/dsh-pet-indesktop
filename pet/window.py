@@ -360,6 +360,21 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
     def __init__(self, lib: MovieLibrary, config: Config, collision_session=None,
                  broker_facade=None, *, clock=None, single_process_spawn: bool = False, agent_link_manager=None, proactive_watcher=None) -> None:
         super().__init__()
+        try:
+            self._initialize(lib, config, collision_session, broker_facade,
+                             clock=clock, single_process_spawn=single_process_spawn,
+                             agent_link_manager=agent_link_manager, proactive_watcher=proactive_watcher)
+        except Exception:
+            try:
+                self.release_resources()
+            except Exception:
+                logging.exception('构造失败后的窗口资源清理失败')
+            QWidget.hide(self)
+            self.deleteLater()
+            raise
+
+    def _initialize(self, lib, config, collision_session, broker_facade, *, clock,
+                    single_process_spawn, agent_link_manager, proactive_watcher) -> None:
         self.lib = lib
         self.cfg = config
         # 批5.2 N-1（复审阻塞项）：进程级 flag 快照必须在 __init__ 早期就位——
@@ -518,6 +533,8 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
         # ——共享语义必须构造期注入，不能等懒创建（懒创建会各窗自建、断共享）。
         self.proactive_watcher = proactive_watcher
         self.agent_link_manager = agent_link_manager
+        self.owns_proactive_watcher = proactive_watcher is None
+        self.owns_agent_link_manager = agent_link_manager is None
 
         # ---- 全屏应用自动隐藏（Windows）----
         # 前台窗口覆盖整个屏幕几何（含任务栏区域）时自动隐藏桌宠，
@@ -3543,6 +3560,8 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
             self.look_done.emit(str(exc), "", True)
 
     def _on_look_done(self, text: str, user_text: str, is_error: bool) -> None:
+        if getattr(self, '_closing', False):
+            return
         self._look_busy = False
         if is_error:
             self.show_bubble(f"看不清啊…{text[:60]}", 5000)
@@ -4529,16 +4548,16 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
             except Exception:
                 logging.exception("\u684c\u5ba0\u4f4d\u7f6e\u76d1\u542c\u5668\u6267\u884c\u5931\u8d25")
 
-    def closeEvent(self, event) -> None:  # noqa: N802
-        if getattr(self, '_close_event_done', False):
-            event.accept()
+    def release_resources(self) -> None:
+        """Permanently retire this window, including replacement without close()."""
+        if getattr(self, '_resources_released', False):
             return
-        self._close_event_done = True
+        self._resources_released = True
+        self._closing = True  # Block queued animation/thumbnail results before cleanup.
         if self._top_flip is not None:
             self._top_flip.cancel('close')
         if self._codex_link is not None:
             self._codex_link.stop()
-        self._closing = True  # 关闭后丢弃迟到的动画事件（生命周期守卫）
         self._clear_animation_icon_cache()
         bubble = getattr(self, '_speech_bubble', None)
         if bubble is not None:
@@ -4572,23 +4591,36 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
         self._disarm_dpr_change_watch()
         # 停掉 Agent 监视器 worker 线程：worker 经引用链持有本窗口，
         # 不主动停会让旧窗口在 deleteLater 之后仍被轮询线程保活（B9）
-        if getattr(self, 'agent_link_manager', None) is not None:
+        if (getattr(self, 'owns_agent_link_manager', True)
+                and getattr(self, 'agent_link_manager', None) is not None):
             self.agent_link_manager.shutdown()
+        if (getattr(self, 'owns_proactive_watcher', True)
+                and getattr(self, 'proactive_watcher', None) is not None):
+            self.proactive_watcher.pause()
+        self.agent_link_manager = None
+        self.proactive_watcher = None
         # 歌词控制器同持轮询 timer，关闭路径一并收口（close 只隐藏不销毁窗口）
         self.shutdown_music_lyric()
         if getattr(self, "_interaction_state", IDLE) == SLINGSHOT_AIMING:
             self._cancel_slingshot_to_anchor()
-        self._disarm_screen_restore_retry()  # 窗口销毁前摘掉 screenAdded 监听/超时回调
-        self._stop_fs_watch()
-        self.detach_collision_session()
-        if self._input_controller is not None:
+        if hasattr(self, '_screen_restore_armed'):
+            self._disarm_screen_restore_retry()
+        if hasattr(self, '_fs_stop'):
+            self._stop_fs_watch()
+        if hasattr(self, '_collision_client'):
+            self.detach_collision_session()
+        if getattr(self, '_input_controller', None) is not None:
             self._input_controller.stop()
             self._input_controller = None
         # 不在这里覆盖记忆位置：避免自动移动/抛掷后的随机终点被存下来。
         # 关闭即停掉全部活动定时器（含待重试被拒动画、移动/挤压/物理/唱歌），
         # 否则 win.close() 只隐藏不销毁窗口，残留单次 timeout 会在后续测试的
         # processEvents 触发悬空指针（全量套件崩溃点漂移、exit 139 的来源之一）。
-        self._stop_all_timers()
+        if hasattr(self, '_screen_retry_timer'):
+            self._stop_all_timers()
+        # 构造中途失败也须停掉已经创建的 timer。
+        for timer in self.findChildren(QTimer):
+            timer.stop()
         self._position_sync_pending = False  # 丢弃 moveEvent 同帧合并的在途去抖
         # 关闭即销毁：暂停预热并对称释放交互让路闸门，避免库侧计数泄漏。
         lib = getattr(self, 'lib', None)
@@ -4612,9 +4644,16 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
                 self._broker_unregister(getattr(self, 'anim', None), movie,
                                         natural=False)
             except Exception:
-                pass  # 关闭期 facade 可能已 shutdown，尽力而为
+                logging.debug('关闭窗口时解绑解码订阅失败', exc_info=True)
         self._lock_press_active = False
         self._click_hold = False
         self._context_menu_open = False
-        self._set_interaction_hold(False)
+        if getattr(self, '_interaction_hold_active', False):
+            self._set_interaction_hold(False)
+        getattr(self, '_connected_movie_refs', {}).clear()
+        self._link_next_provider = None
+
+    def closeEvent(self, event) -> None:  # noqa: N802
+        self._close_event_done = True
+        self.release_resources()
         super().closeEvent(event)

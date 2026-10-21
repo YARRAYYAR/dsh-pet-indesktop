@@ -34,7 +34,7 @@ from pathlib import Path
 from threading import Thread
 from typing import Optional
 
-from PySide6.QtCore import QObject, QTimer, Signal
+from PySide6.QtCore import QObject, QTimer, Signal, Slot
 
 from . import harness_launcher
 from .agent_link import DirGlobTailer
@@ -143,8 +143,8 @@ class DshStateTracker(QObject):
     # 旧版桥接记录无 sourceKind 字段：按真人消息兼容处理，绝不静默丢事件。
     user_message = Signal(str, str)
 
-    # 后台线程完成在线探测后回主线程的结果（跨线程 emit，AutoConnection 队列投递）
-    _online_checked = Signal(bool)
+    # 代次必须随结果入队：stop() 后再 start()，旧队列也不能覆盖新状态。
+    _online_checked = Signal(int, bool)
 
     def __init__(
         self,
@@ -199,12 +199,22 @@ class DshStateTracker(QObject):
             return
         self._started = True
         self._tailer.reset()
+        # 只在启动时把已有桥文件定位到 EOF。此后发现的新 PID 文件必须从
+        # 首行读起；否则 DirGlobTailer 会把离线期间的首批事件当历史跳过。
+        self._tailer._initial_backfill_done = False
+        try:
+            self._tailer.read_new_lines()
+        except Exception:
+            log.exception("DSH 桥接事件初始化书签失败")
+        else:
+            self._tailer._initial_backfill_done = True
+        self._online = None
         # 首次在线探测立即执行并落第一个状态（offline / idle）
         self._poll_online()
+        if not self._started:
+            return  # 状态订阅者可在同步通知中 stop()，不得随后重新启动 timer。
         if not self._online_timer.isActive():
             self._online_timer.start()
-        if not self._event_timer.isActive():
-            self._event_timer.start()
         log.debug("DSH 状态跟踪器已启动（bridge=%s, port=%s）", self._bridge_file, self.port)
 
     def stop(self) -> None:
@@ -335,8 +345,11 @@ class DshStateTracker(QObject):
 
     def _apply_online(self, online: bool) -> None:
         """把在线探测结果落到状态机：离线 → offline（清审批锁存），在线且无活动 → idle。"""
+        was_online = self._online
+        generation = self._probe_generation
         self._online = online
         if not online:
+            self._event_timer.stop()
             # DSH 未运行：审批/问题锁存一并清除，切 offline
             self._release_approval()
             self._release_question()
@@ -345,6 +358,12 @@ class DshStateTracker(QObject):
             # DSH 在线但没有任何活跃 Agent/事件：基线 idle（含从 None / offline 恢复）
             if self.current_state in (None, DshState.OFFLINE):
                 self._transition(DshState.IDLE)
+            if self._started and generation == self._probe_generation and was_online is not True:
+                # 先补读离线期间新增事件，再恢复周期轮询；重复 online 不额外读盘。
+                self._poll_events()
+                if (self._started and generation == self._probe_generation
+                        and self._online is True):
+                    self._event_timer.start()
 
     def _poll_online(self) -> None:
         """同步在线探测 → offline / idle 基线（启动首查与测试直接调用）。"""
@@ -393,17 +412,22 @@ class DshStateTracker(QObject):
         if generation != self._probe_generation or not self._started:
             return  # 探测期间被 stop()：结果作废，不 emit
         try:
-            self._online_checked.emit(online)
+            self._online_checked.emit(generation, online)
         except Exception:
             log.debug("DSH 在线探测结果投递失败", exc_info=True)
 
-    def _on_online_checked(self, online: bool) -> None:
+    @Slot(int, bool)
+    def _on_online_checked(self, generation: int, online: bool) -> None:
         """主线程收到后台探测结果：应用并清在途标记。"""
+        if not self._started or generation != self._probe_generation:
+            return  # worker emit 后才 stop() 的已排队结果同样作废。
         self._probe_inflight = False
         self._apply_online(online)
 
     def _poll_events(self) -> None:
         """tail 桥接事件并推进状态；阻塞型交互锁存超时兜底。"""
+        was_started = self._started
+        generation = self._probe_generation
         # 审批锁存超时兜底：DSH 漏发 approval/decided 时强制回到 working
         if self._pending_approval and self._approval_since is not None:
             if self._clock() - self._approval_since >= _APPROVAL_LATCH_TIMEOUT_S:
@@ -418,6 +442,8 @@ class DshStateTracker(QObject):
                 self._release_question()
                 self._transition(DshState.WORKING)
 
+        if was_started and (not self._started or generation != self._probe_generation):
+            return
         if self._online is False:
             # DSH 离线时不消费事件（离线态优先）
             return
@@ -428,6 +454,8 @@ class DshStateTracker(QObject):
             log.exception("DSH 桥接事件读取异常")
             return
         for line in lines:
+            if was_started and (not self._started or generation != self._probe_generation):
+                return  # 状态通知中发生 stop()/restart()，不再应用旧代剩余事件。
             try:
                 record = json.loads(line)
                 if not isinstance(record, dict):
