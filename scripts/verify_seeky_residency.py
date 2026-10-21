@@ -356,12 +356,15 @@ def main():
                 elif name == 'character_switch':
                     old, old_lib = current, current.lib
                     target = 'residency-fixture' if cfg.get('character') == 'shenshen' else 'shenshen'
+                    switch_started = time.monotonic()
                     shell.instance.switch_character(target)
+                    switch_call_ms = round((time.monotonic() - switch_started) * 1000, 3)
                     if shell.win is old:
                         raise AssertionError('character switch retained old window')
                     checked = retirement(old, old_lib)
                     lifecycle.append({'at': round(time.monotonic() - start, 3),
-                                      'event': 'retired_character', 'target': target, **checked})
+                                      'event': 'retired_character', 'target': target,
+                                      'switch_call_ms': switch_call_ms, **checked})
                     if not all((checked['closing'], checked['library_shutdown'], checked['cleaned_clips'])) or checked['thumbnail_bytes']:
                         errors.append('old character resources not fully released: ' + str(checked))
                     exercise['retired'].append((old, old_lib))

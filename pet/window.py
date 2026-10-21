@@ -4548,7 +4548,7 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
             except Exception:
                 logging.exception("\u684c\u5ba0\u4f4d\u7f6e\u76d1\u542c\u5668\u6267\u884c\u5931\u8d25")
 
-    def release_resources(self) -> None:
+    def release_resources(self, *, wait_for_readers: bool = True) -> None:
         """Permanently retire this window, including replacement without close()."""
         if getattr(self, '_resources_released', False):
             return
@@ -4627,7 +4627,10 @@ class PetWindow(QWidget, WindowFeatureGateMixin):
         if lib is not None and hasattr(lib, 'pause_warm'):
             lib.pause_warm()
         if lib is not None and hasattr(lib, 'shutdown'):
-            lib.shutdown()
+            if not wait_for_readers and isinstance(lib, MovieLibrary):
+                lib.shutdown(wait_for_readers=False)
+            else:
+                lib.shutdown()
         # 显式停掉当前动画 reader（Fix D）：窗口关闭不再依赖 GC + destroyed
         # （已实证会失效的路径），关闭即 stop()——reader 收到停止信号、底层
         # ffmpeg 被 terminate、线程退役登记。_closing 已置位，迟到的动画事件

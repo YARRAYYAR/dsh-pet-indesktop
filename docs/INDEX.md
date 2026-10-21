@@ -131,6 +131,7 @@
 
 | 文档 | 一句话内容 | 何时必读 |
 |---|---|---|
+| [`PR-REPORT-SEEKY-SWITCH-RETIREMENT-2026-10-21.md`](PR-REPORT-SEEKY-SWITCH-RETIREMENT-2026-10-21.md) | 角色切换延后 reader 等待、退出回收及真实 Cocoa 前后对照。 | 修改 WebM 清理、QObject 销毁或切换退出时序时。 |
 | [`PR-REPORT-SEEKY-RESIDENCY-2026-10-21.md`](PR-REPORT-SEEKY-RESIDENCY-2026-10-21.md) | 窗口退役、预热调度、离线唤醒优化与同机短/620秒长测证据。 | 修改窗口/素材库/DSH生命周期或复跑单宠占用时。 |
 | [`PR-REPORT-DSR-PET-2026-10-02.md`](PR-REPORT-DSR-PET-2026-10-02.md) | dsr · pet 内存、透明边缘、两级设置导航与 macOS 图标交付证据。 | 运行、复测或继续本地桌宠优化时。 |
 | [`PR-REPORT-SEEKY8-MEMORY-2026-10-08.md`](PR-REPORT-SEEKY8-MEMORY-2026-10-08.md) | seeky.8 无损内存优化：共享首帧延迟复制、缩略图隔离/线程参数、缓存就绪与原生对照证据。 | 修改图像缓存/预热、复测内存或回退seeky.8时。 |

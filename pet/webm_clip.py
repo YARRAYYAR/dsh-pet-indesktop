@@ -400,7 +400,7 @@ class _OrphanClipRegistry:
             self._timer.timeout.connect(self.reap)
         return self._timer
 
-    def reap(self) -> None:
+    def reap(self, *, join_timeout: float = _SWEEP_JOIN_TIMEOUT) -> None:
         """对注册的 clip 做有界回收；退役池清空者移出注册表。
 
         R3（R2 复审「sweep 锁内串行补杀的累计阻塞」闭合）：补杀的
@@ -422,7 +422,7 @@ class _OrphanClipRegistry:
         try:
             for clip in holders:
                 try:
-                    clip._reap_retired(join_timeout=_SWEEP_JOIN_TIMEOUT)
+                    clip._reap_retired(join_timeout=join_timeout)
                 except Exception:
                     pass  # clip 已销毁等：交由 GC 兜底
                 try:
@@ -460,6 +460,17 @@ def _register_orphan(clip: "WebMClip") -> None:
 
 def _unregister_orphan(clip: "WebMClip") -> None:
     _ORPHAN_REGISTRY.unregister(clip)
+
+
+def finish_pending_cleanups() -> None:
+    """Drain readers from replaced windows before the GUI event loop exits."""
+    _ORPHAN_REGISTRY.reap(join_timeout=_RECLAIM_JOIN_TIMEOUT)
+    for clip in _ORPHAN_REGISTRY.holders():
+        if clip._retired:
+            clip._retire_grace_wait()
+    _ORPHAN_REGISTRY.reap(join_timeout=0)
+    if _ORPHAN_REGISTRY.holders():
+        logger.warning('退出时仍有解码资源未确认回收，保留注册表追踪')
 
 
 # ---- 首帧缓存总预算（内存瘦身批，2026-09-03）----
@@ -1087,15 +1098,15 @@ class WebMClip(QObject):
     @staticmethod
     def _destroyed_cleanup(clip: "WebMClip") -> None:
         """C++ 对象销毁时经 destroyed 信号回调（无 receiver callable）。"""
-        clip.cleanup()
+        clip.cleanup(wait_for_readers=False)
 
     def __del__(self) -> None:
         try:
-            self.cleanup()
+            self.cleanup(wait_for_readers=False)
         except RuntimeError:
             pass  # 解释器退出期 Qt C++ 对象可能已先销毁，此时无需清理
 
-    def cleanup(self) -> None:
+    def cleanup(self, *, wait_for_readers: bool = True) -> None:
         """销毁/清理：terminate active reader 的 ffmpeg，退役并回收。
 
         对仍存活的退役 reader 保留追踪（绝不静默丢弃）：clip 及其 _Reader
@@ -1103,6 +1114,9 @@ class WebMClip(QObject):
         线程退出——绝不随 clip GC 丢弃追踪，也不与 reader 线程的收尾竞态
         （Windows 原生崩溃的根因，见模块头注释）。cleanup 后 clip 终结
         （_cleaned），自身不再安排任何 sweep/timer。
+
+        Window replacement and QObject destruction inspect readers without
+        waiting; the registry retains them until its sweep or application exit.
         """
         # 断开 destroyed 的 lambda 连接（Fix A1）：lambda 捕获 self 形成
         # 引用环，显式断开让 Python GC 可回收；C++ 已删场景直接跳过——
@@ -1133,8 +1147,8 @@ class WebMClip(QObject):
             self._hard_stop()
         except RuntimeError:
             pass  # QTimer 等 Qt 子对象已随 C++ 侧销毁
-        self._reap_retired(join_timeout=_RECLAIM_JOIN_TIMEOUT)
-        if self._retired:
+        self._reap_retired(join_timeout=_RECLAIM_JOIN_TIMEOUT if wait_for_readers else 0)
+        if wait_for_readers and self._retired:
             # 终端短宽限：吸收「进程已 terminate、线程收尾仅差调度」的尾差，
             # 降低 cleanup 后仍有存活退役 reader 的偶发概率（满载 CI/macOS）。
             self._retire_grace_wait()

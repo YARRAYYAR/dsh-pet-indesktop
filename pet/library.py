@@ -535,7 +535,7 @@ class MovieLibrary(QObject):
                 except Exception:
                     logging.exception('取消动画首帧预热失败: %s', getattr(clip, 'path', clip))
 
-    def shutdown(self) -> None:
+    def shutdown(self, *, wait_for_readers: bool = True) -> None:
         """关闭素材库并收口所有已创建的 WebM reader。"""
         if self._shutdown:
             return
@@ -545,7 +545,10 @@ class MovieLibrary(QObject):
             try:
                 cleanup = getattr(clip, 'cleanup', None)
                 if callable(cleanup):
-                    cleanup()
+                    if not wait_for_readers and isinstance(clip, WebMClip):
+                        cleanup(wait_for_readers=False)
+                    else:
+                        cleanup()
                 else:
                     stop = getattr(clip, 'stop', None)
                     if callable(stop):

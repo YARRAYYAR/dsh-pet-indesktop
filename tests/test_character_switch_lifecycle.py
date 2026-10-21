@@ -10,7 +10,7 @@ from unittest.mock import Mock
 
 import pytest
 import shiboken6
-from PySide6.QtCore import QEventLoop, QTimer
+from PySide6.QtCore import QCoreApplication, QEvent, QEventLoop, QTimer
 from PySide6.QtWidgets import QApplication
 
 from pet import catalog
@@ -260,3 +260,67 @@ def test_queued_look_result_after_release_does_not_write_new_character_session(r
         assert persisted.messages == [], '旧窗排队的识屏结果不得写入新角色会话'
     finally:
         shell.enable_chat = False
+
+
+@pytest.mark.parametrize('drain_at_exit', [False, True])
+def test_replacement_does_not_join_reader_until_exit(residency, drain_at_exit):
+    """Inject a held reader because a real stuck pipe cannot be forced safely.
+
+    The public switch and real QObject destruction must perform zero waiting
+    joins, retain the reader identity, and drain it explicitly at application
+    exit. An instrumented join records requests without depending on wall time.
+    """
+    import threading
+    from pet import webm_clip
+
+    _, shell, _ = residency
+    old = shell.win
+    clip = old.movie
+    released = threading.Event()
+    entered = threading.Event()
+    calls = []
+    draining = False
+
+    def reader():
+        entered.set()
+        released.wait()
+
+    thread = threading.Thread(target=reader, name='held-retirement-fixture')
+    thread.start()
+    assert entered.wait(5)
+    original_join = thread.join
+
+    def join(timeout=None):
+        calls.append((draining, timeout))
+        if draining and timeout and timeout > 0:
+            released.set()
+            return original_join(timeout)
+        return original_join(0)
+
+    thread.join = join
+    record = webm_clip._Reader(thread=thread, proc=None)
+    clip._retired.append(record)
+    try:
+        shell.instance.switch_character('fixture-b')
+        assert shell.win is not old and old._resources_released
+        _turn()
+        QCoreApplication.sendPostedEvents(None, QEvent.Type.DeferredDelete)
+        assert not shiboken6.isValid(old)  # Destruction must not add a GUI join.
+        assert record in clip._retired
+        assert clip in webm_clip._ORPHAN_REGISTRY.holders()
+        assert all(timeout == 0 for _, timeout in calls), calls
+        if drain_at_exit:
+            draining = True
+            shell._on_about_to_quit()
+            assert any(timeout and timeout > 0 for _, timeout in calls if _)
+            assert not thread.is_alive()
+            assert record not in clip._retired
+            assert clip not in webm_clip._ORPHAN_REGISTRY.holders(), {
+                'retired': [(r.thread.name, r.thread.is_alive()) for r in clip._retired],
+                'unconfirmed': len(clip._unconfirmed_procs),
+            }
+    finally:
+        released.set()
+        original_join(5)
+        clip._reap_retired(join_timeout=0)
+        webm_clip._unregister_orphan(clip)

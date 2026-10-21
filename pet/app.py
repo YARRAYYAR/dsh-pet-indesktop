@@ -575,7 +575,7 @@ class PetInstance:
         if old_win is not None:
             # Permanent release precedes hide: hide must not pause shared services
             # after they have already been wired to the replacement.
-            old_win.release_resources()
+            old_win.release_resources(wait_for_readers=False)
             old_win.hide(notify=False)
             QTimer.singleShot(0, old_win.deleteLater)
             # 仅主窗（build_tray=True）换托盘；非主窗绝不 hide/deleteLater 共享托盘。
@@ -2036,6 +2036,13 @@ class AppShell:
             self._decode_hub.stop_all()
         except Exception:
             logging.exception("退出时关闭共享解码 hub 失败")
+        # Replaced windows may still own retired readers after their QObjects
+        # were deleted. Drain their module registry before event-loop shutdown.
+        try:
+            from .webm_clip import finish_pending_cleanups
+            finish_pending_cleanups()
+        except Exception:
+            logging.exception("退出时回收旧窗口解码 reader 失败")
         # 设置页进程隔离：释放 config 目录 watcher 与两个定时器（无主 QTimer 的
         # timeout 连接会从 Qt C++ 侧强引用住本对象图，不停则阻碍回收）。
         self._teardown_config_watcher()
