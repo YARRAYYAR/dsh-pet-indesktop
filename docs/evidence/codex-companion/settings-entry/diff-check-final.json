@@ -1,0 +1,20 @@
+{
+  "command": [
+    "git",
+    "diff",
+    "--check"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen"
+  },
+  "setup": "Use isolated test configuration; no real sessions or credentials.",
+  "inputs": [],
+  "assertions": [
+    "Command exits zero."
+  ],
+  "started_unix": 1792594074.2102542,
+  "elapsed_seconds": 0.11636781692504883,
+  "exit_code": 0,
+  "output_file": "diff-check-final.log"
+}

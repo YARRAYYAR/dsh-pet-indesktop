@@ -1,0 +1,45 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "/Users/ray/Documents/New project/dsr-pet/docs/evidence/codex-companion/bubble/verify_exit.py"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "python": "3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]",
+    "PySide6": "6.11.2",
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O"
+  },
+  "setup": "Temporary CODEX_HOME, actual QProcess peer and active turn. No private sessions, credentials or model.",
+  "inputs": [
+    "explicit stop",
+    "parent QObject destruction",
+    "application aboutToQuit"
+  ],
+  "assertions": [
+    "child starts with active turn",
+    "same child PID/create-time identity is absent after close"
+  ],
+  "limits": "Direct transport process only; real model command descendants and SIGKILL/crash shutdown are unverified.",
+  "exit_status": 0,
+  "results": [
+    {
+      "mode": "explicit-stop",
+      "pid": 39895,
+      "same_identity_alive": false,
+      "close_ms": 2.5897499872371554
+    },
+    {
+      "mode": "parent-destruction",
+      "pid": 39896,
+      "same_identity_alive": false,
+      "close_ms": 2.7790419990196824
+    },
+    {
+      "mode": "application-quit",
+      "pid": 39897,
+      "same_identity_alive": false,
+      "close_ms": 2.3450000007869676
+    }
+  ]
+}

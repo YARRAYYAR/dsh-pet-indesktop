@@ -1,0 +1,25 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_architecture.py::test_window_private_surface_frozen"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen"
+  },
+  "setup": "Use public PetWindow seams provided by window_optional_services; preserve all unrelated worktree changes.",
+  "inputs": [
+    "pet/app.py",
+    "pet/window_optional_services.py"
+  ],
+  "assertions": [
+    "Window private surface architecture constraint passes."
+  ],
+  "started_unix": 1792594038.0785348,
+  "elapsed_seconds": 0.6650490760803223,
+  "exit_code": 0,
+  "output_file": "architecture-public-green.log"
+}

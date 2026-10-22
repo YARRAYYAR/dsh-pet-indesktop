@@ -1,0 +1,3365 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "/Users/ray/Documents/New project/dsr-pet/scripts/capture_settings_pages.py",
+    "/Users/ray/Documents/New project/dsr-pet/docs/evidence/codex-companion/settings-native/visuals/original-1100-font-1.0",
+    "--width",
+    "1100",
+    "--height",
+    "760",
+    "--font-scale",
+    "1.0",
+    "--dark",
+    "--interaction-details",
+    "--menu-details"
+  ],
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "qt_platform": "cocoa",
+  "mode": "original",
+  "requested_size": [
+    1100,
+    760
+  ],
+  "font_scale": 1.0,
+  "screens": [
+    {
+      "file": "01-常规.png",
+      "sidebar": [
+        "常规",
+        "桌宠",
+        "互动",
+        "菜单",
+        "连接",
+        "AI 与对话",
+        "自动化与联动",
+        "语音",
+        "文件识别"
+      ],
+      "selected_domain": "常规",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "sidebar_width": 175,
+      "dpr": 2.0,
+      "tabs": [],
+      "active_tab": null,
+      "running_animations": 0,
+      "horizontal_scroll_maxima": [
+        0
+      ],
+      "visible_rows": [
+        {
+          "id": "autostart",
+          "title": "开机自启",
+          "geometry": [
+            231,
+            133,
+            840,
+            53
+          ],
+          "control_geometry": [
+            786,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "harness_autostart",
+          "title": "随桌宠启动 dsh 服务",
+          "geometry": [
+            231,
+            187,
+            840,
+            68
+          ],
+          "control_geometry": [
+            786,
+            23,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "dock_icon",
+          "title": "显示 Dock 图标",
+          "geometry": [
+            231,
+            298,
+            840,
+            53
+          ],
+          "control_geometry": [
+            786,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "on_top",
+          "title": "窗口置顶",
+          "geometry": [
+            231,
+            352,
+            840,
+            53
+          ],
+          "control_geometry": [
+            786,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        }
+      ]
+    },
+    {
+      "file": "02-桌宠.png",
+      "sidebar": [
+        "常规",
+        "桌宠",
+        "互动",
+        "菜单",
+        "连接",
+        "AI 与对话",
+        "自动化与联动",
+        "语音",
+        "文件识别"
+      ],
+      "selected_domain": "桌宠",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "sidebar_width": 175,
+      "dpr": 2.0,
+      "tabs": [
+        "常用控制",
+        "动作库"
+      ],
+      "active_tab": "controls",
+      "running_animations": 0,
+      "horizontal_scroll_maxima": [
+        0
+      ],
+      "visible_rows": [
+        {
+          "id": "scale",
+          "title": "桌宠大小",
+          "geometry": [
+            231,
+            133,
+            832,
+            53
+          ],
+          "control_geometry": [
+            684,
+            10,
+            132,
+            32
+          ],
+          "stacked": false
+        },
+        {
+          "id": "bubble_text_scale",
+          "title": "气泡文字大小",
+          "geometry": [
+            231,
+            187,
+            832,
+            68
+          ],
+          "control_geometry": [
+            724,
+            19,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "pet_opacity",
+          "title": "不透明度",
+          "geometry": [
+            231,
+            256,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "playback_speed",
+          "title": "播放速率",
+          "geometry": [
+            231,
+            352,
+            832,
+            53
+          ],
+          "control_geometry": [
+            704,
+            10,
+            112,
+            32
+          ],
+          "stacked": false
+        },
+        {
+          "id": "animation_gap",
+          "title": "动作等待间隔",
+          "geometry": [
+            231,
+            406,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "idle_low_fps",
+          "title": "省电模式",
+          "geometry": [
+            231,
+            460,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "no_move",
+          "title": "不移动",
+          "geometry": [
+            231,
+            514,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "music_sing",
+          "title": "音乐自动唱歌",
+          "geometry": [
+            231,
+            610,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "music_lyric",
+          "title": "显示歌词",
+          "geometry": [
+            231,
+            664,
+            832,
+            68
+          ],
+          "control_geometry": [
+            778,
+            23,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "music_lyric_lead",
+          "title": "歌词提前量",
+          "geometry": [
+            231,
+            733,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "music_player_netease",
+          "title": "网易云音乐程序",
+          "geometry": [
+            231,
+            787,
+            832,
+            103
+          ],
+          "control_geometry": [
+            16,
+            63,
+            800,
+            30
+          ],
+          "stacked": true
+        },
+        {
+          "id": "music_player_qqmusic",
+          "title": "QQ音乐程序",
+          "geometry": [
+            231,
+            891,
+            832,
+            103
+          ],
+          "control_geometry": [
+            16,
+            63,
+            800,
+            30
+          ],
+          "stacked": true
+        },
+        {
+          "id": "music_player_detect",
+          "title": "自动检测播放器",
+          "geometry": [
+            231,
+            995,
+            832,
+            53
+          ],
+          "control_geometry": [
+            737,
+            11,
+            79,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "drag_physics",
+          "title": "拖动物理",
+          "geometry": [
+            231,
+            1091,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "throw_strength",
+          "title": "甩出力度",
+          "geometry": [
+            231,
+            1145,
+            832,
+            53
+          ],
+          "control_geometry": [
+            684,
+            10,
+            132,
+            32
+          ],
+          "stacked": false
+        },
+        {
+          "id": "slingshot_enabled",
+          "title": "弹弓弹射",
+          "geometry": [
+            231,
+            1199,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "lock_position",
+          "title": "锁定位置",
+          "geometry": [
+            231,
+            1253,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "shift_drag",
+          "title": "SHIFT+左键拖动",
+          "geometry": [
+            231,
+            1307,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "edge_probe",
+          "title": "边缘探头",
+          "geometry": [
+            231,
+            1403,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "top_flip_enabled",
+          "title": "贴顶吸附与倒立",
+          "geometry": [
+            231,
+            1457,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "top_flip_exposure",
+          "title": "倒立时藏入顶部",
+          "geometry": [
+            231,
+            1511,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "spawn_inherit_size",
+          "title": "生小肥鱼继承大小",
+          "geometry": [
+            231,
+            1607,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "clear_spawned_pets",
+          "title": "一键退出子肥鱼",
+          "geometry": [
+            231,
+            1661,
+            832,
+            53
+          ],
+          "control_geometry": [
+            726,
+            11,
+            90,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "collision_enabled",
+          "title": "碰撞开关",
+          "geometry": [
+            231,
+            1757,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "collision_sound_enabled",
+          "title": "碰撞音效",
+          "geometry": [
+            231,
+            1811,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        }
+      ]
+    },
+    {
+      "file": "03-互动.png",
+      "sidebar": [
+        "常规",
+        "桌宠",
+        "互动",
+        "菜单",
+        "连接",
+        "AI 与对话",
+        "自动化与联动",
+        "语音",
+        "文件识别"
+      ],
+      "selected_domain": "互动",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "sidebar_width": 175,
+      "dpr": 2.0,
+      "tabs": [
+        "点击与音效",
+        "自言自语"
+      ],
+      "active_tab": "click",
+      "running_animations": 0,
+      "horizontal_scroll_maxima": [
+        0
+      ],
+      "visible_rows": [
+        {
+          "id": "mouse_through",
+          "title": "鼠标穿透",
+          "geometry": [
+            231,
+            133,
+            840,
+            53
+          ],
+          "control_geometry": [
+            786,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "click_sound",
+          "title": "点击音效",
+          "geometry": [
+            231,
+            229,
+            840,
+            53
+          ],
+          "control_geometry": [
+            786,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "click_sound_pack",
+          "title": "音效音源",
+          "geometry": [
+            231,
+            283,
+            840,
+            90
+          ],
+          "control_geometry": [
+            16,
+            48,
+            808,
+            32
+          ],
+          "stacked": true
+        },
+        {
+          "id": "click_sound_volume",
+          "title": "音效音量",
+          "geometry": [
+            231,
+            374,
+            840,
+            53
+          ],
+          "control_geometry": [
+            732,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "click_sound_preview",
+          "title": "试听音效",
+          "geometry": [
+            231,
+            428,
+            840,
+            53
+          ],
+          "control_geometry": [
+            752,
+            11,
+            72,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "click_balance",
+          "title": "点击显示余额",
+          "geometry": [
+            231,
+            482,
+            840,
+            53
+          ],
+          "control_geometry": [
+            786,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "click_self_talk",
+          "title": "点击触发自言自语",
+          "geometry": [
+            231,
+            536,
+            840,
+            53
+          ],
+          "control_geometry": [
+            786,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "golden_spin_click",
+          "title": "点击触发黄金回旋",
+          "geometry": [
+            231,
+            590,
+            840,
+            53
+          ],
+          "control_geometry": [
+            786,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        }
+      ]
+    },
+    {
+      "file": "04-菜单.png",
+      "sidebar": [
+        "常规",
+        "桌宠",
+        "互动",
+        "菜单",
+        "连接",
+        "AI 与对话",
+        "自动化与联动",
+        "语音",
+        "文件识别"
+      ],
+      "selected_domain": "菜单",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "sidebar_width": 175,
+      "dpr": 2.0,
+      "tabs": [
+        "菜单编排",
+        "快捷启动",
+        "外观"
+      ],
+      "active_tab": "layout",
+      "running_animations": 0,
+      "horizontal_scroll_maxima": [
+        0
+      ],
+      "visible_rows": [
+        {
+          "id": "menu_template",
+          "title": "菜单模式",
+          "geometry": [
+            231,
+            133,
+            840,
+            53
+          ],
+          "control_geometry": [
+            668,
+            10,
+            156,
+            32
+          ],
+          "stacked": false
+        },
+        {
+          "id": "context_menu_layout",
+          "title": "菜单编排",
+          "geometry": [
+            231,
+            187,
+            840,
+            458
+          ],
+          "control_geometry": [
+            16,
+            48,
+            808,
+            400
+          ],
+          "stacked": true
+        }
+      ]
+    },
+    {
+      "file": "05-连接.png",
+      "sidebar": [
+        "常规",
+        "桌宠",
+        "互动",
+        "菜单",
+        "连接",
+        "AI 与对话",
+        "自动化与联动",
+        "语音",
+        "文件识别"
+      ],
+      "selected_domain": "连接",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "sidebar_width": 175,
+      "dpr": 2.0,
+      "tabs": [],
+      "active_tab": null,
+      "running_animations": 0,
+      "horizontal_scroll_maxima": [
+        0
+      ],
+      "visible_rows": [
+        {
+          "id": "codex_link",
+          "title": "Codex 连接",
+          "geometry": [
+            231,
+            133,
+            832,
+            55
+          ],
+          "control_geometry": [
+            778,
+            16,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "codex_status",
+          "title": "连接状态",
+          "geometry": [
+            231,
+            189,
+            832,
+            130
+          ],
+          "control_geometry": [
+            16,
+            48,
+            800,
+            72
+          ],
+          "stacked": true
+        },
+        {
+          "id": "codex_session",
+          "title": "当前对话",
+          "geometry": [
+            231,
+            360,
+            832,
+            53
+          ],
+          "control_geometry": [
+            536,
+            10,
+            280,
+            32
+          ],
+          "stacked": false
+        },
+        {
+          "id": "codex_usage",
+          "title": "Token",
+          "geometry": [
+            231,
+            454,
+            832,
+            53
+          ],
+          "control_geometry": [
+            722,
+            18,
+            94,
+            16
+          ],
+          "stacked": false
+        },
+        {
+          "id": "codex_quota",
+          "title": "额度窗口",
+          "geometry": [
+            231,
+            508,
+            832,
+            53
+          ],
+          "control_geometry": [
+            737,
+            18,
+            79,
+            16
+          ],
+          "stacked": false
+        },
+        {
+          "id": "codex_workspace",
+          "title": "项目目录",
+          "geometry": [
+            231,
+            602,
+            832,
+            53
+          ],
+          "control_geometry": [
+            579,
+            11,
+            237,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "codex_task_message",
+          "title": "任务消息",
+          "geometry": [
+            231,
+            656,
+            832,
+            178
+          ],
+          "control_geometry": [
+            16,
+            48,
+            800,
+            120
+          ],
+          "stacked": true
+        },
+        {
+          "id": "codex_task_actions",
+          "title": "操作",
+          "geometry": [
+            231,
+            835,
+            832,
+            158
+          ],
+          "control_geometry": [
+            694,
+            10,
+            122,
+            138
+          ],
+          "stacked": false
+        }
+      ]
+    },
+    {
+      "file": "06-AI-与对话.png",
+      "sidebar": [
+        "常规",
+        "桌宠",
+        "互动",
+        "菜单",
+        "连接",
+        "AI 与对话",
+        "自动化与联动",
+        "语音",
+        "文件识别"
+      ],
+      "selected_domain": "AI 与对话",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "sidebar_width": 175,
+      "dpr": 2.0,
+      "tabs": [],
+      "active_tab": null,
+      "running_animations": 0,
+      "horizontal_scroll_maxima": [
+        0
+      ],
+      "visible_rows": [
+        {
+          "id": "provider_list",
+          "title": "API 列表",
+          "geometry": [
+            231,
+            133,
+            832,
+            53
+          ],
+          "control_geometry": [
+            468,
+            10,
+            348,
+            32
+          ],
+          "stacked": false
+        },
+        {
+          "id": "provider_name",
+          "title": "Provider 名称",
+          "geometry": [
+            231,
+            229,
+            832,
+            53
+          ],
+          "control_geometry": [
+            576,
+            11,
+            240,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "api_url",
+          "title": "API 地址",
+          "geometry": [
+            231,
+            283,
+            832,
+            53
+          ],
+          "control_geometry": [
+            576,
+            11,
+            240,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "model",
+          "title": "模型",
+          "geometry": [
+            231,
+            337,
+            832,
+            53
+          ],
+          "control_geometry": [
+            576,
+            11,
+            240,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "api_key",
+          "title": "API Key",
+          "geometry": [
+            231,
+            391,
+            832,
+            53
+          ],
+          "control_geometry": [
+            576,
+            11,
+            240,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "system_prompt",
+          "title": "System Prompt",
+          "geometry": [
+            231,
+            445,
+            832,
+            250
+          ],
+          "control_geometry": [
+            16,
+            48,
+            800,
+            192
+          ],
+          "stacked": true
+        },
+        {
+          "id": "connection_test",
+          "title": "连接测试",
+          "geometry": [
+            231,
+            696,
+            832,
+            53
+          ],
+          "control_geometry": [
+            737,
+            11,
+            79,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "system_notifications_enabled",
+          "title": "系统通知",
+          "geometry": [
+            231,
+            792,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "vision_same",
+          "title": "视觉模型复用聊天模型",
+          "geometry": [
+            231,
+            888,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "chat_ui_style",
+          "title": "对话窗口",
+          "geometry": [
+            231,
+            1044,
+            832,
+            53
+          ],
+          "control_geometry": [
+            626,
+            10,
+            190,
+            32
+          ],
+          "stacked": false
+        },
+        {
+          "id": "chat_background",
+          "title": "对话背景",
+          "geometry": [
+            231,
+            1098,
+            832,
+            53
+          ],
+          "control_geometry": [
+            636,
+            10,
+            180,
+            32
+          ],
+          "stacked": false
+        },
+        {
+          "id": "modern_chat_card_opacity",
+          "title": "消息卡片不透明度",
+          "geometry": [
+            231,
+            1152,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "balance_refresh",
+          "title": "余额自动刷新",
+          "geometry": [
+            231,
+            1248,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "balance_tier_mode",
+          "title": "峰谷提示文案",
+          "geometry": [
+            231,
+            1302,
+            832,
+            53
+          ],
+          "control_geometry": [
+            636,
+            10,
+            180,
+            32
+          ],
+          "stacked": false
+        },
+        {
+          "id": "balance_tier_peak",
+          "title": "高峰自定义文本",
+          "geometry": [
+            231,
+            1356,
+            832,
+            88
+          ],
+          "control_geometry": [
+            16,
+            48,
+            800,
+            30
+          ],
+          "stacked": true
+        },
+        {
+          "id": "balance_tier_idle",
+          "title": "空闲自定义文本",
+          "geometry": [
+            231,
+            1445,
+            832,
+            88
+          ],
+          "control_geometry": [
+            16,
+            48,
+            800,
+            30
+          ],
+          "stacked": true
+        },
+        {
+          "id": "balance_tier_color",
+          "title": "峰谷提示颜色",
+          "geometry": [
+            231,
+            1534,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        }
+      ]
+    },
+    {
+      "file": "07-自动化与联动.png",
+      "sidebar": [
+        "常规",
+        "桌宠",
+        "互动",
+        "菜单",
+        "连接",
+        "AI 与对话",
+        "自动化与联动",
+        "语音",
+        "文件识别"
+      ],
+      "selected_domain": "自动化与联动",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "sidebar_width": 175,
+      "dpr": 2.0,
+      "tabs": [],
+      "active_tab": null,
+      "running_animations": 0,
+      "horizontal_scroll_maxima": [
+        0
+      ],
+      "visible_rows": [
+        {
+          "id": "todo_reminder_enabled",
+          "title": "待办提醒",
+          "geometry": [
+            231,
+            2105,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "todo_reminder_lead_minutes",
+          "title": "提前提醒",
+          "geometry": [
+            231,
+            2159,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "watchdog_enabled",
+          "title": "启用循环检测",
+          "geometry": [
+            231,
+            2255,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "warning_threshold",
+          "title": "Warning 阈值",
+          "geometry": [
+            231,
+            2309,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "control_threshold",
+          "title": "Control 阈值",
+          "geometry": [
+            231,
+            2363,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "cooldown_steps",
+          "title": "评估冷却步数",
+          "geometry": [
+            231,
+            2417,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "early_grace_minutes",
+          "title": "启动宽限期",
+          "geometry": [
+            231,
+            2471,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "long_run_minutes",
+          "title": "长运行降阈值",
+          "geometry": [
+            231,
+            2525,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "long_think_seconds",
+          "title": "单次超长 Think",
+          "geometry": [
+            231,
+            2579,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "stuck_detect",
+          "title": "启用卡住检测",
+          "geometry": [
+            231,
+            2675,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "stuck_worried_threshold",
+          "title": "担忧动画阈值",
+          "geometry": [
+            231,
+            2729,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "stuck_intervene_threshold",
+          "title": "介入提醒阈值",
+          "geometry": [
+            231,
+            2783,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "stuck_window_seconds",
+          "title": "滑动窗口",
+          "geometry": [
+            231,
+            2837,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "stuck_cooldown_seconds",
+          "title": "提醒冷却",
+          "geometry": [
+            231,
+            2891,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "stuck_reminder_text",
+          "title": "自定义提醒文案",
+          "geometry": [
+            231,
+            2945,
+            832,
+            88
+          ],
+          "control_geometry": [
+            16,
+            48,
+            800,
+            30
+          ],
+          "stacked": true
+        },
+        {
+          "id": "pattern_detect",
+          "title": "启用行为重复检测",
+          "geometry": [
+            231,
+            3076,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "pattern_w6_control",
+          "title": "W6 同类重复（控制）",
+          "geometry": [
+            231,
+            3130,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "pattern_w10_warn",
+          "title": "W10 同类重复（警告）",
+          "geometry": [
+            231,
+            3184,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "pattern_w10_control",
+          "title": "W10 同类重复（控制）",
+          "geometry": [
+            231,
+            3238,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "pattern_macro_w6_explore",
+          "title": "W6 大类探索步数",
+          "geometry": [
+            231,
+            3292,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "pattern_macro_w6_action",
+          "title": "W6 大类行动步数上限",
+          "geometry": [
+            231,
+            3346,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "pattern_macro_w10_explore",
+          "title": "W10 大类探索步数",
+          "geometry": [
+            231,
+            3400,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "pattern_macro_w10_action",
+          "title": "W10 大类行动步数上限",
+          "geometry": [
+            231,
+            3454,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "pattern_min_steps_between",
+          "title": "最小触发步数间隔",
+          "geometry": [
+            231,
+            3508,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "pattern_cooldown_seconds",
+          "title": "提醒冷却",
+          "geometry": [
+            231,
+            3562,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "report_gate_state",
+          "title": "汇报概率",
+          "geometry": [
+            231,
+            945,
+            832,
+            98
+          ],
+          "control_geometry": [
+            16,
+            63,
+            800,
+            25
+          ],
+          "stacked": true
+        },
+        {
+          "id": "report_gate_activity",
+          "title": "汇报概率",
+          "geometry": [
+            231,
+            1082,
+            832,
+            98
+          ],
+          "control_geometry": [
+            16,
+            63,
+            800,
+            25
+          ],
+          "stacked": true
+        },
+        {
+          "id": "report_gate_approval",
+          "title": "汇报概率",
+          "geometry": [
+            231,
+            1219,
+            832,
+            98
+          ],
+          "control_geometry": [
+            16,
+            63,
+            800,
+            25
+          ],
+          "stacked": true
+        },
+        {
+          "id": "report_gate_done",
+          "title": "汇报概率",
+          "geometry": [
+            231,
+            1356,
+            832,
+            98
+          ],
+          "control_geometry": [
+            16,
+            63,
+            800,
+            25
+          ],
+          "stacked": true
+        },
+        {
+          "id": "report_gate_exec_failed",
+          "title": "汇报概率",
+          "geometry": [
+            231,
+            1493,
+            832,
+            98
+          ],
+          "control_geometry": [
+            16,
+            63,
+            800,
+            25
+          ],
+          "stacked": true
+        },
+        {
+          "id": "report_gate_model_access",
+          "title": "汇报概率",
+          "geometry": [
+            231,
+            1630,
+            832,
+            98
+          ],
+          "control_geometry": [
+            16,
+            63,
+            800,
+            25
+          ],
+          "stacked": true
+        },
+        {
+          "id": "report_gate_stuck",
+          "title": "汇报概率",
+          "geometry": [
+            231,
+            1767,
+            832,
+            98
+          ],
+          "control_geometry": [
+            16,
+            63,
+            800,
+            25
+          ],
+          "stacked": true
+        },
+        {
+          "id": "report_gate_bridge",
+          "title": "汇报概率",
+          "geometry": [
+            231,
+            1904,
+            832,
+            98
+          ],
+          "control_geometry": [
+            16,
+            63,
+            800,
+            25
+          ],
+          "stacked": true
+        },
+        {
+          "id": "agent_sound_enabled",
+          "title": "Agent 音效联动",
+          "geometry": [
+            231,
+            293,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "dialogue_mode",
+          "title": "表达风格",
+          "geometry": [
+            231,
+            389,
+            832,
+            83
+          ],
+          "control_geometry": [
+            626,
+            25,
+            190,
+            32
+          ],
+          "stacked": false
+        },
+        {
+          "id": "dialogue_scope",
+          "title": "专属文案对象(仅在自定义模式生效)",
+          "geometry": [
+            231,
+            473,
+            832,
+            90
+          ],
+          "control_geometry": [
+            16,
+            48,
+            190,
+            32
+          ],
+          "stacked": true
+        },
+        {
+          "id": "dialogue_template_actions",
+          "title": "弹窗文案模板（JSON）",
+          "geometry": [
+            231,
+            564,
+            832,
+            289
+          ],
+          "control_geometry": [
+            16,
+            63,
+            800,
+            216
+          ],
+          "stacked": true
+        },
+        {
+          "id": "agent_cost",
+          "title": "显示本轮消费",
+          "geometry": [
+            231,
+            133,
+            832,
+            68
+          ],
+          "control_geometry": [
+            778,
+            23,
+            38,
+            22
+          ],
+          "stacked": false
+        }
+      ]
+    },
+    {
+      "file": "08-语音.png",
+      "sidebar": [
+        "常规",
+        "桌宠",
+        "互动",
+        "菜单",
+        "连接",
+        "AI 与对话",
+        "自动化与联动",
+        "语音",
+        "文件识别"
+      ],
+      "selected_domain": "语音",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "sidebar_width": 175,
+      "dpr": 2.0,
+      "tabs": [],
+      "active_tab": null,
+      "running_animations": 0,
+      "horizontal_scroll_maxima": [
+        0
+      ],
+      "visible_rows": [
+        {
+          "id": "voice_chime_enabled",
+          "title": "启用语音报时",
+          "geometry": [
+            231,
+            133,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "voice_chime_schedule",
+          "title": "报时频率",
+          "geometry": [
+            231,
+            187,
+            832,
+            53
+          ],
+          "control_geometry": [
+            646,
+            10,
+            170,
+            32
+          ],
+          "stacked": false
+        },
+        {
+          "id": "voice_chime_custom_times",
+          "title": "自定义时间点",
+          "geometry": [
+            231,
+            241,
+            832,
+            53
+          ],
+          "control_geometry": [
+            675,
+            11,
+            141,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "voice_chime_voice",
+          "title": "音色",
+          "geometry": [
+            231,
+            295,
+            832,
+            68
+          ],
+          "control_geometry": [
+            586,
+            18,
+            230,
+            32
+          ],
+          "stacked": false
+        },
+        {
+          "id": "voice_chime_rate",
+          "title": "语速",
+          "geometry": [
+            231,
+            364,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "voice_chime_pitch",
+          "title": "音调",
+          "geometry": [
+            231,
+            418,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "voice_chime_volume",
+          "title": "音量",
+          "geometry": [
+            231,
+            472,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "voice_chime_show_bubble",
+          "title": "报时气泡",
+          "geometry": [
+            231,
+            526,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "voice_chime_show_quote",
+          "title": "台词/歌词",
+          "geometry": [
+            231,
+            580,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "voice_chime_preview",
+          "title": "立即试听",
+          "geometry": [
+            231,
+            634,
+            832,
+            53
+          ],
+          "control_geometry": [
+            737,
+            11,
+            79,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "voice_chime_custom_quotes_zh",
+          "title": "自定义台词/歌词（中文）",
+          "geometry": [
+            231,
+            688,
+            832,
+            253
+          ],
+          "control_geometry": [
+            16,
+            63,
+            800,
+            180
+          ],
+          "stacked": true
+        },
+        {
+          "id": "voice_chime_custom_quotes_en",
+          "title": "自定义台词/歌词（英文）",
+          "geometry": [
+            231,
+            942,
+            832,
+            253
+          ],
+          "control_geometry": [
+            16,
+            63,
+            800,
+            180
+          ],
+          "stacked": true
+        },
+        {
+          "id": "festival_reminder_enabled",
+          "title": "启用节日提醒",
+          "geometry": [
+            231,
+            1238,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "festival_reminder_cn",
+          "title": "中国节日",
+          "geometry": [
+            231,
+            1292,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "festival_reminder_solar_terms",
+          "title": "24 节气",
+          "geometry": [
+            231,
+            1346,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "festival_reminder_west",
+          "title": "西方节日",
+          "geometry": [
+            231,
+            1400,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "festival_reminder_speak",
+          "title": "语音播报",
+          "geometry": [
+            231,
+            1454,
+            832,
+            68
+          ],
+          "control_geometry": [
+            778,
+            23,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "festival_reminder_mode",
+          "title": "提醒方式",
+          "geometry": [
+            231,
+            1523,
+            832,
+            53
+          ],
+          "control_geometry": [
+            646,
+            10,
+            170,
+            32
+          ],
+          "stacked": false
+        },
+        {
+          "id": "festival_reminder_count",
+          "title": "提醒次数",
+          "geometry": [
+            231,
+            1577,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "festival_reminder_times",
+          "title": "自定义提醒时间",
+          "geometry": [
+            231,
+            1631,
+            832,
+            53
+          ],
+          "control_geometry": [
+            675,
+            11,
+            141,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "festival_reminder_show_quote",
+          "title": "附带文案",
+          "geometry": [
+            231,
+            1685,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "festival_custom_quotes_cn",
+          "title": "自定义中文文案",
+          "geometry": [
+            231,
+            1739,
+            832,
+            238
+          ],
+          "control_geometry": [
+            16,
+            48,
+            800,
+            180
+          ],
+          "stacked": true
+        },
+        {
+          "id": "festival_custom_quotes_west",
+          "title": "自定义西文文案",
+          "geometry": [
+            231,
+            1978,
+            832,
+            253
+          ],
+          "control_geometry": [
+            16,
+            63,
+            800,
+            180
+          ],
+          "stacked": true
+        },
+        {
+          "id": "festival_preview",
+          "title": "立即试听",
+          "geometry": [
+            231,
+            2232,
+            832,
+            68
+          ],
+          "control_geometry": [
+            737,
+            19,
+            79,
+            30
+          ],
+          "stacked": false
+        }
+      ]
+    },
+    {
+      "file": "09-文件识别.png",
+      "sidebar": [
+        "常规",
+        "桌宠",
+        "互动",
+        "菜单",
+        "连接",
+        "AI 与对话",
+        "自动化与联动",
+        "语音",
+        "文件识别"
+      ],
+      "selected_domain": "文件识别",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "sidebar_width": 175,
+      "dpr": 2.0,
+      "tabs": [],
+      "active_tab": null,
+      "running_animations": 0,
+      "horizontal_scroll_maxima": [
+        0
+      ],
+      "visible_rows": [
+        {
+          "id": "file_interpret_enabled",
+          "title": "拖文件后询问解读",
+          "geometry": [
+            231,
+            133,
+            840,
+            53
+          ],
+          "control_geometry": [
+            786,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "file_interpret_progress_interval",
+          "title": "进度汇报间隔",
+          "geometry": [
+            231,
+            187,
+            840,
+            53
+          ],
+          "control_geometry": [
+            732,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        }
+      ]
+    },
+    {
+      "file": "04-菜单-菜单编排.png",
+      "sidebar": [
+        "常规",
+        "桌宠",
+        "互动",
+        "菜单",
+        "连接",
+        "AI 与对话",
+        "自动化与联动",
+        "语音",
+        "文件识别"
+      ],
+      "selected_domain": "菜单",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "sidebar_width": 175,
+      "dpr": 2.0,
+      "tabs": [
+        "菜单编排",
+        "快捷启动",
+        "外观"
+      ],
+      "active_tab": "layout",
+      "running_animations": 0,
+      "horizontal_scroll_maxima": [
+        0
+      ],
+      "visible_rows": [
+        {
+          "id": "menu_template",
+          "title": "菜单模式",
+          "geometry": [
+            231,
+            133,
+            840,
+            53
+          ],
+          "control_geometry": [
+            668,
+            10,
+            156,
+            32
+          ],
+          "stacked": false
+        },
+        {
+          "id": "context_menu_layout",
+          "title": "菜单编排",
+          "geometry": [
+            231,
+            187,
+            840,
+            458
+          ],
+          "control_geometry": [
+            16,
+            48,
+            808,
+            400
+          ],
+          "stacked": true
+        }
+      ]
+    },
+    {
+      "file": "04-菜单-快捷启动.png",
+      "sidebar": [
+        "常规",
+        "桌宠",
+        "互动",
+        "菜单",
+        "连接",
+        "AI 与对话",
+        "自动化与联动",
+        "语音",
+        "文件识别"
+      ],
+      "selected_domain": "菜单",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "sidebar_width": 175,
+      "dpr": 2.0,
+      "tabs": [
+        "菜单编排",
+        "快捷启动",
+        "外观"
+      ],
+      "active_tab": "launcher",
+      "running_animations": 0,
+      "horizontal_scroll_maxima": [
+        0
+      ],
+      "visible_rows": [
+        {
+          "id": "quick_launch_apps",
+          "title": "应用快捷启动",
+          "geometry": [
+            231,
+            133,
+            840,
+            162
+          ],
+          "control_geometry": [
+            16,
+            48,
+            808,
+            104
+          ],
+          "stacked": true
+        }
+      ]
+    },
+    {
+      "file": "04-菜单-外观.png",
+      "sidebar": [
+        "常规",
+        "桌宠",
+        "互动",
+        "菜单",
+        "连接",
+        "AI 与对话",
+        "自动化与联动",
+        "语音",
+        "文件识别"
+      ],
+      "selected_domain": "菜单",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "sidebar_width": 175,
+      "dpr": 2.0,
+      "tabs": [
+        "菜单编排",
+        "快捷启动",
+        "外观"
+      ],
+      "active_tab": "appearance",
+      "running_animations": 0,
+      "horizontal_scroll_maxima": [
+        0
+      ],
+      "visible_rows": [
+        {
+          "id": "menu_theme",
+          "title": "颜色主题",
+          "geometry": [
+            231,
+            133,
+            832,
+            53
+          ],
+          "control_geometry": [
+            684,
+            10,
+            132,
+            32
+          ],
+          "stacked": false
+        },
+        {
+          "id": "menu_density",
+          "title": "菜单密度",
+          "geometry": [
+            231,
+            187,
+            832,
+            53
+          ],
+          "control_geometry": [
+            684,
+            10,
+            132,
+            32
+          ],
+          "stacked": false
+        },
+        {
+          "id": "menu_radius",
+          "title": "圆角大小",
+          "geometry": [
+            231,
+            241,
+            832,
+            53
+          ],
+          "control_geometry": [
+            704,
+            10,
+            112,
+            32
+          ],
+          "stacked": false
+        },
+        {
+          "id": "menu_font",
+          "title": "UI 字体",
+          "geometry": [
+            231,
+            295,
+            832,
+            53
+          ],
+          "control_geometry": [
+            644,
+            10,
+            172,
+            32
+          ],
+          "stacked": false
+        },
+        {
+          "id": "menu_font_size",
+          "title": "UI 字号",
+          "geometry": [
+            231,
+            349,
+            832,
+            53
+          ],
+          "control_geometry": [
+            704,
+            10,
+            112,
+            32
+          ],
+          "stacked": false
+        },
+        {
+          "id": "menu_translucent",
+          "title": "半透明菜单",
+          "geometry": [
+            231,
+            403,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "menu_opacity",
+          "title": "表面不透明度",
+          "geometry": [
+            231,
+            457,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "egg_enabled",
+          "title": "显示彩蛋",
+          "geometry": [
+            231,
+            613,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "egg_title",
+          "title": "入口标题",
+          "geometry": [
+            231,
+            667,
+            832,
+            53
+          ],
+          "control_geometry": [
+            576,
+            11,
+            240,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "egg_hint",
+          "title": "右侧提示",
+          "geometry": [
+            231,
+            721,
+            832,
+            53
+          ],
+          "control_geometry": [
+            656,
+            11,
+            160,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "egg_avatar",
+          "title": "头像图片",
+          "geometry": [
+            231,
+            775,
+            832,
+            53
+          ],
+          "control_geometry": [
+            494,
+            11,
+            322,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "egg_image_dir",
+          "title": "弹窗图片目录",
+          "geometry": [
+            231,
+            829,
+            832,
+            53
+          ],
+          "control_geometry": [
+            415,
+            11,
+            401,
+            30
+          ],
+          "stacked": false
+        }
+      ]
+    },
+    {
+      "file": "04-菜单-停用状态.png",
+      "sidebar": [
+        "常规",
+        "桌宠",
+        "互动",
+        "菜单",
+        "连接",
+        "AI 与对话",
+        "自动化与联动",
+        "语音",
+        "文件识别"
+      ],
+      "selected_domain": "菜单",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "sidebar_width": 175,
+      "dpr": 2.0,
+      "tabs": [
+        "菜单编排",
+        "快捷启动",
+        "外观"
+      ],
+      "active_tab": "layout",
+      "running_animations": 0,
+      "horizontal_scroll_maxima": [
+        0
+      ],
+      "visible_rows": [
+        {
+          "id": "menu_template",
+          "title": "菜单模式",
+          "geometry": [
+            231,
+            133,
+            840,
+            53
+          ],
+          "control_geometry": [
+            668,
+            10,
+            156,
+            32
+          ],
+          "stacked": false
+        },
+        {
+          "id": "context_menu_layout",
+          "title": "菜单编排",
+          "geometry": [
+            231,
+            187,
+            840,
+            458
+          ],
+          "control_geometry": [
+            16,
+            48,
+            808,
+            400
+          ],
+          "stacked": true
+        }
+      ]
+    },
+    {
+      "file": "04-菜单-别名保留原名.png",
+      "sidebar": [
+        "常规",
+        "桌宠",
+        "互动",
+        "菜单",
+        "连接",
+        "AI 与对话",
+        "自动化与联动",
+        "语音",
+        "文件识别"
+      ],
+      "selected_domain": "菜单",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "sidebar_width": 175,
+      "dpr": 2.0,
+      "tabs": [
+        "菜单编排",
+        "快捷启动",
+        "外观"
+      ],
+      "active_tab": "layout",
+      "running_animations": 0,
+      "horizontal_scroll_maxima": [
+        0
+      ],
+      "visible_rows": [
+        {
+          "id": "menu_template",
+          "title": "菜单模式",
+          "geometry": [
+            231,
+            133,
+            840,
+            53
+          ],
+          "control_geometry": [
+            668,
+            10,
+            156,
+            32
+          ],
+          "stacked": false
+        },
+        {
+          "id": "context_menu_layout",
+          "title": "菜单编排",
+          "geometry": [
+            231,
+            187,
+            840,
+            458
+          ],
+          "control_geometry": [
+            16,
+            48,
+            808,
+            400
+          ],
+          "stacked": true
+        }
+      ]
+    },
+    {
+      "file": "03-互动-点击与音效.png",
+      "sidebar": [
+        "常规",
+        "桌宠",
+        "互动",
+        "菜单",
+        "连接",
+        "AI 与对话",
+        "自动化与联动",
+        "语音",
+        "文件识别"
+      ],
+      "selected_domain": "互动",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "sidebar_width": 175,
+      "dpr": 2.0,
+      "tabs": [
+        "点击与音效",
+        "自言自语"
+      ],
+      "active_tab": "click",
+      "running_animations": 0,
+      "horizontal_scroll_maxima": [
+        0
+      ],
+      "visible_rows": [
+        {
+          "id": "mouse_through",
+          "title": "鼠标穿透",
+          "geometry": [
+            231,
+            133,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "click_sound",
+          "title": "点击音效",
+          "geometry": [
+            231,
+            229,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "click_sound_pack",
+          "title": "音效音源",
+          "geometry": [
+            231,
+            283,
+            832,
+            90
+          ],
+          "control_geometry": [
+            16,
+            48,
+            800,
+            32
+          ],
+          "stacked": true
+        },
+        {
+          "id": "click_sound_volume",
+          "title": "音效音量",
+          "geometry": [
+            231,
+            374,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "click_sound_preview",
+          "title": "试听音效",
+          "geometry": [
+            231,
+            428,
+            832,
+            53
+          ],
+          "control_geometry": [
+            744,
+            11,
+            72,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "click_balance",
+          "title": "点击显示余额",
+          "geometry": [
+            231,
+            482,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "click_self_talk",
+          "title": "点击触发自言自语",
+          "geometry": [
+            231,
+            536,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "click_self_talk_speak",
+          "title": "点击台词朗读",
+          "geometry": [
+            231,
+            590,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "click_self_talk_precache",
+          "title": "台词自动预缓存",
+          "geometry": [
+            231,
+            644,
+            832,
+            68
+          ],
+          "control_geometry": [
+            778,
+            23,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "click_talk_bindings",
+          "title": "点击动画台词绑定",
+          "geometry": [
+            231,
+            713,
+            832,
+            53
+          ],
+          "control_geometry": [
+            752,
+            11,
+            64,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "golden_spin_click",
+          "title": "点击触发黄金回旋",
+          "geometry": [
+            231,
+            767,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        }
+      ]
+    },
+    {
+      "file": "03-互动-自言自语.png",
+      "sidebar": [
+        "常规",
+        "桌宠",
+        "互动",
+        "菜单",
+        "连接",
+        "AI 与对话",
+        "自动化与联动",
+        "语音",
+        "文件识别"
+      ],
+      "selected_domain": "互动",
+      "logical_size": [
+        1100,
+        760
+      ],
+      "sidebar_width": 175,
+      "dpr": 2.0,
+      "tabs": [
+        "点击与音效",
+        "自言自语"
+      ],
+      "active_tab": "self_talk",
+      "running_animations": 0,
+      "horizontal_scroll_maxima": [
+        0
+      ],
+      "visible_rows": [
+        {
+          "id": "self_talk_bubble_style",
+          "title": "气泡方案",
+          "geometry": [
+            231,
+            133,
+            832,
+            53
+          ],
+          "control_geometry": [
+            644,
+            10,
+            172,
+            32
+          ],
+          "stacked": false
+        },
+        {
+          "id": "self_talk",
+          "title": "气泡自言自语",
+          "geometry": [
+            231,
+            187,
+            832,
+            53
+          ],
+          "control_geometry": [
+            778,
+            15,
+            38,
+            22
+          ],
+          "stacked": false
+        },
+        {
+          "id": "self_talk_duration",
+          "title": "显示时间",
+          "geometry": [
+            231,
+            241,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "self_talk_min",
+          "title": "最短间隔",
+          "geometry": [
+            231,
+            295,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "self_talk_max",
+          "title": "最长间隔",
+          "geometry": [
+            231,
+            349,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "self_talk_texts",
+          "title": "候选内容",
+          "geometry": [
+            231,
+            403,
+            832,
+            228
+          ],
+          "control_geometry": [
+            16,
+            48,
+            800,
+            170
+          ],
+          "stacked": true
+        },
+        {
+          "id": "self_talk_images",
+          "title": "图片目录",
+          "geometry": [
+            231,
+            632,
+            832,
+            88
+          ],
+          "control_geometry": [
+            16,
+            48,
+            800,
+            30
+          ],
+          "stacked": true
+        },
+        {
+          "id": "self_talk_image_scale",
+          "title": "配图大小",
+          "geometry": [
+            231,
+            721,
+            832,
+            53
+          ],
+          "control_geometry": [
+            724,
+            11,
+            92,
+            30
+          ],
+          "stacked": false
+        },
+        {
+          "id": "self_talk_image_chance",
+          "title": "配图概率",
+          "geometry": [
+            231,
+            775,
+            832,
+            68
+          ],
+          "control_geometry": [
+            724,
+            19,
+            92,
+            30
+          ],
+          "stacked": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+warning: No `requires-python` value found in the workspace. Defaulting to `>=3.13`.
+F                                                                        [100%]
+=================================== FAILURES ===================================
+________ test_question_submission_exact_identity_failure_and_resolution ________
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x1107aae40>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-130/test_question_submission_exact0')
+snapshot = {'enabled': True, 'state': 'question', 'session_id': 'owned', 'turn_id': 'turn-2', ...}
+
+    def test_question_submission_exact_identity_failure_and_resolution(qtbot, tmp_path, snapshot):
+        snapshot['questions'] = questions()
+        snapshot['state'] = 'question'
+        widget, peer = page(qtbot, tmp_path, snapshot)
+        option = widget.findChild(QPushButton, 'codexOption_color_0')
+        assert option is not None
+        qtbot.mouseClick(option, Qt.MouseButton.LeftButton)
+>       assert option.isChecked(), {
+            'option_geometry': option.geometry().getRect(),
+            'option_visible': option.isVisible(),
+            'option_enabled': option.isEnabled(),
+            'option_visible_region': option.visibleRegion().boundingRect().getRect(),
+            'page_geometry': widget.geometry().getRect(),
+        }
+E       AssertionError: {'option_geometry': (16, 19, 68, 0), 'option_visible': True, 'option_enabled': True, 'option_visible_region': (0, 0, 0, 0), ...}
+E       assert False
+E        +  where False = <built-in method isChecked of PySide6.QtWidgets.QPushButton object at 0x111797cc0>()
+E        +    where <built-in method isChecked of PySide6.QtWidgets.QPushButton object at 0x111797cc0> = <PySide6.QtWidgets.QPushButton(0xae213c8c0, name="codexOption_color_0") at 0x111797cc0>.isChecked
+
+tests/test_codex_companion_ui.py:121: AssertionError
+----------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: Populating font family aliases took 88 ms. Replace uses of missing font family "Sans Serif" with one that exists to avoid this cost. 
+QtWarningMsg: This plugin does not support propagateSizeHints()
+--------------------------- Captured stderr teardown ---------------------------
+This plugin does not support propagateSizeHints()
+=========================== short test summary info ============================
+FAILED tests/test_codex_companion_ui.py::test_question_submission_exact_identity_failure_and_resolution
+1 failed, 17 deselected in 1.35s

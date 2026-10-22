@@ -20,8 +20,10 @@ import time
 from pathlib import Path
 from unittest import mock
 
+import pytest
+
 from PySide6.QtCore import QLockFile, QRect, QTimer
-from PySide6.QtWidgets import QApplication, QDialog
+from PySide6.QtWidgets import QApplication, QDialog, QListWidget, QStackedWidget, QWidget
 
 from pet import config as config_mod
 from pet import slot_manager as slot_manager_mod
@@ -69,6 +71,23 @@ def test_settings_instance_id_parsing():
     assert entry._settings_instance_id(["pet", "--settings", "--instance"]) == ""
 
 
+def test_settings_page_key_parsing():
+    """独立设置进程接收语义 page key，而非依赖 sidebar 文案。"""
+    import pet.__main__ as entry
+
+    assert entry._settings_page_key(["pet", "--settings"]) == ""
+    assert entry._settings_page_key(["pet", "--settings", "--settings-page", "codex"]) == "codex"
+    assert entry._settings_page_key(["pet", "--settings", "--settings-page"]) == ""
+
+
+def test_codex_tasks_menu_passes_semantic_page_key():
+    owner = PetInstance.__new__(PetInstance)
+    owner.modern_settings_dialog = None
+    owner.open_modern_settings = mock.Mock()
+    owner.open_codex_tasks()
+    owner.open_modern_settings.assert_called_once_with(page_key="codex")
+
+
 class _AutoCloseDialog(QDialog):
     """假对话框：show() 后立刻让事件循环退出（避免测试真阻塞）。"""
 
@@ -90,6 +109,42 @@ class _AutoCloseDialog(QDialog):
             QTimer.singleShot(0, app.quit)
 
 
+class _CompanionAutoCloseDialog(_AutoCloseDialog):
+    def __init__(self, config, parent=None, *, include_ai=True, standalone=False, companion_mode=False):
+        super().__init__(config, parent, include_ai=include_ai, standalone=standalone)
+        type(self).captured["companion_mode"] = companion_mode
+
+
+def test_exec_settings_passes_companion_mode_to_dialog(tmp_path, monkeypatch):
+    import pet.__main__ as entry
+    import pet.modern_settings_dialog as settings_mod
+
+    app = _qapp()
+    monkeypatch.setattr(settings_mod, "ModernSettingsDialog", _CompanionAutoCloseDialog)
+    previous = app.quitOnLastWindowClosed()
+    try:
+        assert entry._exec_settings(app, Config(base=tmp_path), companion_mode=True) == 0
+    finally:
+        app.setQuitOnLastWindowClosed(previous)
+    assert _CompanionAutoCloseDialog.captured["companion_mode"] is True
+    assert _CompanionAutoCloseDialog.captured["standalone"] is True
+
+
+def test_run_settings_passes_companion_flag_to_dialog(tmp_path, monkeypatch):
+    import pet.__main__ as entry
+    import pet.modern_settings_dialog as settings_mod
+
+    app = _qapp()
+    monkeypatch.setattr(settings_mod, "ModernSettingsDialog", _CompanionAutoCloseDialog)
+    monkeypatch.setattr(sys, "argv", ["pet", "--settings", "--companion"])
+    previous = app.quitOnLastWindowClosed()
+    try:
+        assert entry._run_settings(Config(base=tmp_path)) == 0
+    finally:
+        app.setQuitOnLastWindowClosed(previous)
+    assert _CompanionAutoCloseDialog.captured["companion_mode"] is True
+
+
 def test_exec_settings_builds_standalone_dialog(tmp_path, monkeypatch):
     """--settings 主体：parent=None + standalone=True，退出时释放 settings.lock。"""
     import pet.__main__ as entry
@@ -109,6 +164,98 @@ def test_exec_settings_builds_standalone_dialog(tmp_path, monkeypatch):
     assert _AutoCloseDialog.captured["include_ai"] is False
     # 锁文件用完即释放（QLockFile 解锁会删文件），主进程据此判定设置页已关闭
     assert not (config.dir / "settings.lock").exists()
+
+
+class _RouteAwareDialog(QDialog):
+    """最小设置窗：page label 与语义目标无关，并可真实跑 Qt event loop。"""
+
+    last_instance = None
+
+    def __init__(self, config, parent=None, *, include_ai=True, standalone=False):
+        super().__init__(parent)
+        type(self).last_instance = self
+        self.sidebar = QListWidget(self)
+        self.pages = QStackedWidget(self)
+        self.codex_page = QWidget(self.pages)
+        self.sidebar.addItems(["General", "Codex connection label may change"])
+        self.pages.addWidget(QWidget(self.pages))
+        wrapper = QWidget(self.pages)
+        self.codex_page.setParent(wrapper)
+        self.pages.addWidget(wrapper)
+        self.sidebar.currentRowChanged.connect(self.pages.setCurrentIndex)
+        self.raised = 0
+        self.activated = 0
+
+    def raise_(self):
+        self.raised += 1
+        super().raise_()
+
+    def activateWindow(self):
+        self.activated += 1
+        super().activateWindow()
+
+
+def test_exec_settings_routes_codex_page_key_in_real_event_loop(tmp_path, monkeypatch):
+    """隔离设置窗在真实 Qt 事件循环启动前按 page key 选择 Codex 页。"""
+    import pet.modern_settings_dialog as settings_mod
+    import pet.__main__ as entry
+
+    app = _qapp()
+    monkeypatch.setattr(settings_mod, "ModernSettingsDialog", _RouteAwareDialog)
+    config = Config(base=tmp_path)
+    previous = app.quitOnLastWindowClosed()
+    try:
+        QTimer.singleShot(0, app.quit)
+        assert entry._exec_settings(app, config, page_key="codex") == 0
+    finally:
+        app.setQuitOnLastWindowClosed(previous)
+    dialog = _RouteAwareDialog.last_instance
+    assert dialog is not None
+    assert dialog.sidebar.currentRow() == 1
+    assert dialog.pages.currentIndex() == 1
+    assert dialog.raised >= 1
+    assert dialog.activated >= 1
+    dialog.close()
+
+
+def test_existing_settings_process_routes_repeated_codex_request_over_qt_ipc(tmp_path):
+    """已有设置进程收到重复请求后切到 Codex 页并激活窗口。"""
+    from pet.settings_process_navigation import SettingsProcessNavigationServer
+
+    app = _qapp()
+    config = Config(base=tmp_path)
+    config.dir.mkdir(parents=True, exist_ok=True)
+    held = QLockFile(str(config.dir / "settings.lock"))
+    assert held.tryLock(0)
+    dialog = _RouteAwareDialog(config)
+    server = SettingsProcessNavigationServer(config, dialog)
+    shell = _bare_shell(config)
+    shell._install_config_watcher = lambda: None
+    shell._mark_settings_child = lambda active: None
+    launched = []
+    shell._launch_settings_process = lambda *args, **kwargs: launched.append(1) or True
+    try:
+        assert shell.open_settings_process(object(), page_key="codex") is True
+        # QApplication.exec() 会留下线程级 quit 状态；直接启动嵌套 QEventLoop
+        # 会立即退出。按页面状态等待真实 socket 事件，避免测试顺序影响。
+        deadline = time.monotonic() + 10.0
+        while time.monotonic() < deadline and dialog.sidebar.currentRow() != 1:
+            app.processEvents()
+            time.sleep(0.02)
+        assert dialog.sidebar.currentRow() == 1
+        assert dialog.pages.currentIndex() == 1
+        assert dialog.isVisible()
+        assert dialog.raised >= 1
+        assert dialog.activated >= 1
+        assert launched == []
+    finally:
+        client = getattr(shell, "_settings_navigation_client", None)
+        if client is not None:
+            client.close()
+        server.close()
+        held.unlock()
+        dialog.close()
+        app.processEvents()
 
 
 def test_exec_settings_exits_when_another_settings_process_holds_lock(tmp_path, monkeypatch):
@@ -318,6 +465,30 @@ def test_open_modern_settings_falls_back_when_launch_fails(tmp_path, monkeypatch
     assert kwargs.get("include_ai") is True
 
 
+def test_open_modern_settings_passes_companion_mode_in_process(tmp_path, monkeypatch):
+    """关闭进程隔离或启动失败时，精简模式仍须传给真实设置入口。"""
+    import pet.modern_settings_dialog as settings_mod
+
+    _qapp()
+    owner = PetInstance.__new__(PetInstance)
+    owner.config = Config(base=tmp_path)
+    owner.shell = _bare_shell(owner.config)
+    owner.shell.companion_mode = True
+    owner.shell.enable_chat = False
+    owner.shell.open_settings_process = lambda instance: False
+    owner.win = mock.Mock()
+    owner.modern_settings_dialog = None
+    owner.chat_settings_dialog = None
+    created = []
+    monkeypatch.setattr(
+        settings_mod, "ModernSettingsDialog",
+        lambda *a, **k: created.append((a, k)) or mock.Mock(),
+    )
+    owner._present_dialog = lambda dialog, before_present=None: None
+    owner.open_modern_settings()
+    assert created[0][1].get("companion_mode") is True
+
+
 def test_open_modern_settings_does_not_build_inprocess_dialog_when_launched(tmp_path, monkeypatch):
     """拉起成功 → 不再构造进程内对话框。"""
     import pet.modern_settings_dialog as settings_mod
@@ -356,6 +527,27 @@ def test_launch_settings_process_uses_source_command(tmp_path, monkeypatch):
     assert program == sys.executable
     assert arguments == ["-m", "pet", "--settings"]
     assert Path(workdir) == Path(app_mod.__file__).resolve().parent.parent
+
+
+@pytest.mark.parametrize("frozen", [False, True])
+def test_launch_settings_process_preserves_companion_mode(tmp_path, monkeypatch, frozen):
+    """源码与冻结包均显式传 companion 模式和语义页面；不依赖用户配置。"""
+    import pet.app as app_mod
+    from PySide6.QtCore import QProcess
+
+    shell = _bare_shell(Config(base=tmp_path))
+    shell.companion_mode = True
+    calls = []
+    monkeypatch.setattr(app_mod.sys, "frozen", frozen, raising=False)
+    monkeypatch.setattr(
+        QProcess, "startDetached",
+        staticmethod(lambda program, arguments, workdir: calls.append((program, arguments, workdir)) or (True, 4242)),
+    )
+    assert shell._launch_settings_process(page_key="codex") is True
+    arguments = calls[0][1]
+    assert "--companion" in arguments
+    assert arguments[arguments.index("--settings-page") + 1] == "codex"
+    assert arguments[:1] == (["--settings"] if frozen else ["-m"])
 
 
 def test_launch_settings_process_failure_is_reported(tmp_path, monkeypatch):

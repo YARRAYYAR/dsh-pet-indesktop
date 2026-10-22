@@ -1,0 +1,21 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_settings_process_isolation.py",
+    "-k",
+    "existing_settings_process_routes_repeated_codex_request_over_qt_ipc or run_settings_disables_ai_page_without_chat_module"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen"
+  },
+  "setup": "Temporary configs and real Qt local socket; explicitly close the client before server teardown.",
+  "inputs": "Real IPC navigation followed by a fresh settings event loop.",
+  "assertions": "Both flow and following application loop exit cleanly.",
+  "duration_seconds": 1.3187846250002622,
+  "exit_status": -11,
+  "result_log": "cleanup-pair.log"
+}

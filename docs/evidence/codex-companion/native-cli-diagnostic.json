@@ -1,0 +1,14 @@
+{
+  "program": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex",
+  "exit_status": 0,
+  "command": [
+    "/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex",
+    "app-server",
+    "--listen",
+    "stdio://"
+  ],
+  "setup": "Fresh empty home and Codex home; no credentials or user tasks",
+  "stdout": "{\"id\": 1, \"result\": {\"userAgent\": \"seeky_probe/0.163.0-alpha.10.2 (Mac OS 26.6.2; arm64) unknown (seeky_probe; 1.0)\", \"codexHome\": \"/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/seeky-cli-diagnostic-_wqiov2x/codex\", \"platformFamily\": \"unix\", \"platformOs\": \"macos\"}}\n",
+  "stderr": "",
+  "redaction": "Unrelated remoteControl status notification omitted (machine name and fresh installation ID). Handshake retained."
+}

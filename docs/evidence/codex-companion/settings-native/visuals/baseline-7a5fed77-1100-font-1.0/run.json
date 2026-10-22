@@ -1,0 +1,40 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "-c",
+    "import os,runpy,sys; from pathlib import Path; Path.home=classmethod(lambda cls:Path(os.environ[\"SEEKY_TEST_HOME\"])); from PySide6.QtCore import QStandardPaths; QStandardPaths.setTestModeEnabled(True); script=sys.argv.pop(1); runpy.run_path(script,run_name=\"__main__\")",
+    "/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/seeky-original-ui-source-5r1p6p_5/scripts/capture_settings_pages.py",
+    "/Users/ray/Documents/New project/dsr-pet/docs/evidence/codex-companion/settings-native/visuals/baseline-7a5fed77-1100-font-1.0",
+    "--width",
+    "1100",
+    "--height",
+    "760",
+    "--font-scale",
+    "1.0",
+    "--dark"
+  ],
+  "cwd": "/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/seeky-original-ui-source-5r1p6p_5",
+  "environment": {
+    "QT_QPA_PLATFORM": "cocoa",
+    "PYTHON_KEYRING_BACKEND": "keyring.backends.null.Keyring",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "setup": "Temporary Python home, DSH_HOME, CODEX_HOME, Config and Qt test paths; no real sessions or credentials.",
+  "inputs": {
+    "source": "baseline",
+    "width": 1100,
+    "height": 760,
+    "font_scale": 1.0,
+    "companion": false,
+    "details": false
+  },
+  "assertions": {
+    "process_exit_zero": true,
+    "native_cocoa": true,
+    "screens_saved": true,
+    "no_horizontal_page_scroll": true
+  },
+  "duration_seconds": 6.209894416999305,
+  "exit_status": 0,
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O"
+}

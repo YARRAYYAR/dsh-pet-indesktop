@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
+import platform
 import sys
 import tempfile
 from pathlib import Path
@@ -11,7 +13,7 @@ from pathlib import Path
 os.environ.setdefault("PYTHON_KEYRING_BACKEND", "keyring.backends.null.Keyring")
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from PySide6.QtCore import QPoint, Qt  # noqa: E402
+from PySide6.QtCore import QAbstractAnimation, QEventLoop, QPoint, Qt, QTimer  # noqa: E402
 from PySide6.QtGui import QColor, QPalette  # noqa: E402
 from PySide6.QtWidgets import QApplication, QScrollArea, QWidget  # noqa: E402
 
@@ -93,8 +95,83 @@ def capture(args: argparse.Namespace) -> None:
     settings_mod.autostart_mod.is_enabled = lambda: False
     destination = Path(args.destination).resolve()
     destination.mkdir(parents=True, exist_ok=True)
+    evidence = {
+        'command': [sys.executable, *sys.argv],
+        'platform': platform.platform(),
+        'qt_platform': app.platformName(),
+        'mode': 'companion' if args.companion else 'original',
+        'requested_size': [args.width, args.height],
+        'font_scale': args.font_scale,
+        'screens': [],
+    }
+
+    def save_screen(dialog, target):
+        app.processEvents()
+        pending = [animation for animation in dialog.findChildren(QAbstractAnimation)
+                   if animation.state() == QAbstractAnimation.State.Running]
+        if pending:
+            loop = QEventLoop()
+            deadline = QTimer()
+            deadline.setSingleShot(True)
+            deadline.timeout.connect(loop.quit)
+
+            def completed():
+                if all(animation.state() != QAbstractAnimation.State.Running
+                       for animation in dialog.findChildren(QAbstractAnimation)):
+                    loop.quit()
+
+            for animation in dialog.findChildren(QAbstractAnimation):
+                animation.finished.connect(completed)
+            deadline.start(5000)
+            loop.exec()
+            for animation in dialog.findChildren(QAbstractAnimation):
+                animation.finished.disconnect(completed)
+            if not deadline.isActive():
+                raise RuntimeError('settings animations did not reach their final state')
+            deadline.stop()
+            app.processEvents()
+        if not dialog.grab().save(str(target)):
+            raise RuntimeError(f'failed to save screenshot: {target}')
+        page = dialog.pages.currentWidget()
+        tabs = page.findChild(SettingsTabContainer, 'settingsTaskTabs')
+        rows = []
+        for row in page.findChildren(SettingRow):
+            if not row.isVisible():
+                continue
+            origin = row.mapTo(dialog, QPoint(0, 0))
+            control_origin = row.control.mapTo(row, QPoint(0, 0))
+            rows.append({
+                'id': row.objectName().removeprefix('settingRow_'),
+                'title': row.label.text(),
+                'geometry': [origin.x(), origin.y(), row.width(), row.height()],
+                'control_geometry': [control_origin.x(), control_origin.y(),
+                                     row.control.width(), row.control.height()],
+                'stacked': bool(row.property('responsiveStacked')),
+            })
+        evidence['screens'].append({
+            'file': target.name,
+            'sidebar': [dialog.sidebar.item(i).text() for i in range(dialog.sidebar.count())],
+            'selected_domain': dialog.sidebar.currentItem().text(),
+            'logical_size': [dialog.width(), dialog.height()],
+            'sidebar_width': dialog.sidebar.width(),
+            'dpr': dialog.devicePixelRatioF(),
+            'tabs': list(tabs.labels()) if tabs else [],
+            'active_tab': tabs.currentKey() if tabs else None,
+            'running_animations': sum(animation.state() == QAbstractAnimation.State.Running
+                                      for animation in dialog.findChildren(QAbstractAnimation)),
+            'horizontal_scroll_maxima': [scroll.horizontalScrollBar().maximum()
+                                          for scroll in page.findChildren(QScrollArea)
+                                          if scroll.isVisible()],
+            'visible_rows': rows,
+        })
+        (destination / 'layout.json').write_text(
+            json.dumps(evidence, ensure_ascii=False, indent=2), encoding='utf-8'
+        )
     with tempfile.TemporaryDirectory(prefix="desktop-pet-settings-capture-") as data_dir:
-        dialog = ModernSettingsDialog(Config(Path(data_dir)), include_ai=True)
+        dialog = ModernSettingsDialog(
+            Config(Path(data_dir)), include_ai=not args.companion,
+            companion_mode=args.companion,
+        )
         dialog.resize(args.width, args.height)
         dialog.show()
         app.processEvents()
@@ -118,8 +195,7 @@ def capture(args: argparse.Namespace) -> None:
             app.processEvents()
             label = dialog.sidebar.item(page_index).text()
             target = destination / f"{page_index + 1:02d}-{_safe_filename(label)}.png"
-            if not dialog.grab().save(str(target)):
-                raise RuntimeError(f"failed to save screenshot: {target}")
+            save_screen(dialog, target)
 
         if args.expanded_ai:
             ai_index = next(
@@ -142,8 +218,7 @@ def capture(args: argparse.Namespace) -> None:
                 scroll.verticalScrollBar().setValue(max(0, header_y - 48))
             app.processEvents()
             target = destination / "08-AI 与对话-高级展开.png"
-            if not dialog.grab().save(str(target)):
-                raise RuntimeError(f"failed to save screenshot: {target}")
+            save_screen(dialog, target)
         if args.menu_details:
             menu_index = next(
                 index
@@ -162,33 +237,33 @@ def capture(args: argparse.Namespace) -> None:
                     scroll.horizontalScrollBar().setValue(0)
                 app.processEvents()
                 target = destination / f"04-菜单-{_safe_filename(label)}.png"
-                if not dialog.grab().save(str(target)):
-                    raise RuntimeError(f"failed to save screenshot: {target}")
+                save_screen(dialog, target)
             dialog.egg_enabled_check.setChecked(False)
             dialog.quick_launch_editor.list.clear()
             dialog.quick_launch_editor._sync_content_height()
             tabs.setCurrentKey("layout")
             app.processEvents()
             target = destination / "04-菜单-停用状态.png"
-            if not dialog.grab().save(str(target)):
-                raise RuntimeError(f"failed to save screenshot: {target}")
+            save_screen(dialog, target)
             tabs.setCurrentKey("layout")
-            dialog.menu_layout_editor.set_item_alias("chat", "和鲸鱼聊聊")
-            chat_item = dialog.menu_layout_editor.item_for_action("chat")
+            action_id = "codex_tasks" if args.companion else "chat"
+            dialog.menu_layout_editor.set_item_alias(action_id, "Codex 任务" if args.companion else "和鲸鱼聊聊")
+            chat_item = dialog.menu_layout_editor.item_for_action(action_id)
             dialog.menu_layout_editor.tree.setCurrentItem(chat_item)
             dialog.menu_layout_editor.set_item_file_icon(
-                "chat", Path(__file__).resolve().parents[1] / "assets" / "icon-preview.png",
+                action_id, Path(__file__).resolve().parents[1] / "assets" / "icon-preview.png",
             )
             app.processEvents()
             target = destination / "04-菜单-别名保留原名.png"
-            if not dialog.grab().save(str(target)):
-                raise RuntimeError(f"failed to save screenshot: {target}")
-            for button, menu, filename in (
+            save_screen(dialog, target)
+            popup_actions = [
                 (dialog.menu_layout_editor.order_button, dialog.menu_layout_editor.order_menu, "04-菜单-排序下拉.png"),
                 (dialog.menu_layout_editor.move_button, dialog.menu_layout_editor.move_menu, "04-菜单-移动下拉.png"),
                 (dialog.menu_layout_editor.customize_button, dialog.menu_layout_editor.customize_menu, "04-菜单-自定义下拉.png"),
-                (dialog.quick_launch_editor.add_button, dialog.quick_launch_editor.add_menu, "04-菜单-快捷启动下拉.png"),
-            ):
+            ]
+            if not args.companion:
+                popup_actions.append((dialog.quick_launch_editor.add_button, dialog.quick_launch_editor.add_menu, "04-菜单-快捷启动下拉.png"))
+            for button, menu, filename in popup_actions:
                 button.showPopup()
                 app.processEvents()
                 target = destination / filename
@@ -238,8 +313,7 @@ def capture(args: argparse.Namespace) -> None:
                     scroll.horizontalScrollBar().setValue(0)
                 app.processEvents()
                 target = destination / f"03-互动-{_safe_filename(label)}.png"
-                if not dialog.grab().save(str(target)):
-                    raise RuntimeError(f"failed to save screenshot: {target}")
+                save_screen(dialog, target)
         if args.image_previews:
             interaction_index = next(
                 index
@@ -262,8 +336,8 @@ def capture(args: argparse.Namespace) -> None:
                 preview_button.click()
             app.processEvents()
             target = destination / "03-互动-图片目录抽屉.png"
-            if not dialog.grab().save(str(target)):
-                raise RuntimeError(f"failed to save screenshot: {target}")
+            save_screen(dialog, target)
+        dialog.command_client.close()
         dialog.close()
         app.processEvents()
 
@@ -274,6 +348,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--width", type=int, default=1100)
     parser.add_argument("--height", type=int, default=760)
     parser.add_argument("--dark", action="store_true")
+    parser.add_argument("--companion", action="store_true")
     parser.add_argument("--expanded-ai", action="store_true")
     parser.add_argument("--font-scale", type=float, default=1.0)
     parser.add_argument("--extreme-copy", action="store_true")

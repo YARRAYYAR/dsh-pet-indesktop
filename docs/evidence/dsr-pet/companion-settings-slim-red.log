@@ -1,0 +1,64 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_ test_companion_settings_slim_search_and_preserve_retired_configuration[False] _
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x110792f90>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-99/test_companion_settings_slim_s0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x110011940>
+external_update = False
+
+    @pytest.mark.parametrize('external_update', [False, True])
+    def test_companion_settings_slim_search_and_preserve_retired_configuration(qtbot, tmp_path, monkeypatch, external_update):
+        from pet import autostart
+        from pet.modern_settings_dialog import ModernSettingsDialog
+        monkeypatch.setattr(autostart, 'is_enabled', lambda: False)
+        config = Config(tmp_path)
+        config.data.update({'music_sing_enabled': True, 'music_lyric_enabled': True,
+                            'music_player_paths': {'netease': '/before/player', 'custom': '/keep/unknown'},
+                            'agent_link': {**config.get('agent_link'), 'dsh': True, 'unknown': {'keep': [1]}},
+                            'voice_chime_enabled': True, 'todo_reminder_enabled': True,
+                            'harness_autostart': True, 'self_talk_texts': ['旧台词']})
+        assert config.save()
+        before = deepcopy(Config(tmp_path).data)
+>       dialog = ModernSettingsDialog(
+            config,
+            include_ai=False,
+            standalone=True,
+            companion_mode=True,
+        )
+E       TypeError: ModernSettingsDialog.__init__() got an unexpected keyword argument 'companion_mode'
+
+tests/test_codex_companion_ui.py:216: TypeError
+_ test_companion_settings_slim_search_and_preserve_retired_configuration[True] _
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x112028690>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-99/test_companion_settings_slim_s1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106ee10f0>
+external_update = True
+
+    @pytest.mark.parametrize('external_update', [False, True])
+    def test_companion_settings_slim_search_and_preserve_retired_configuration(qtbot, tmp_path, monkeypatch, external_update):
+        from pet import autostart
+        from pet.modern_settings_dialog import ModernSettingsDialog
+        monkeypatch.setattr(autostart, 'is_enabled', lambda: False)
+        config = Config(tmp_path)
+        config.data.update({'music_sing_enabled': True, 'music_lyric_enabled': True,
+                            'music_player_paths': {'netease': '/before/player', 'custom': '/keep/unknown'},
+                            'agent_link': {**config.get('agent_link'), 'dsh': True, 'unknown': {'keep': [1]}},
+                            'voice_chime_enabled': True, 'todo_reminder_enabled': True,
+                            'harness_autostart': True, 'self_talk_texts': ['旧台词']})
+        assert config.save()
+        before = deepcopy(Config(tmp_path).data)
+>       dialog = ModernSettingsDialog(
+            config,
+            include_ai=False,
+            standalone=True,
+            companion_mode=True,
+        )
+E       TypeError: ModernSettingsDialog.__init__() got an unexpected keyword argument 'companion_mode'
+
+tests/test_codex_companion_ui.py:216: TypeError
+=========================== short test summary info ============================
+FAILED tests/test_codex_companion_ui.py::test_companion_settings_slim_search_and_preserve_retired_configuration[False]
+FAILED tests/test_codex_companion_ui.py::test_companion_settings_slim_search_and_preserve_retired_configuration[True]
+2 failed, 8 deselected in 0.37s

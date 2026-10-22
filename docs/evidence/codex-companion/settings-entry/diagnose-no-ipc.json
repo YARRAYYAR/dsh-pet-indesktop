@@ -1,0 +1,24 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_settings_process_isolation.py",
+    "-k",
+    "not existing_settings_process_routes_repeated_codex_request_over_qt_ipc"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen"
+  },
+  "setup": "Same isolated fixtures as family run; test-order isolation to diagnose native Qt crash.",
+  "inputs": [
+    "-k",
+    "not existing_settings_process_routes_repeated_codex_request_over_qt_ipc"
+  ],
+  "assertions": "Determine whether preceding real IPC flow leaves events affecting the next QApplication.exec call.",
+  "duration_seconds": 4.558427167001355,
+  "exit_status": 1,
+  "result_log": "diagnose-no-ipc.log"
+}

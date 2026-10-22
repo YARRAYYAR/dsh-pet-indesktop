@@ -1,0 +1,22 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_settings_process_isolation.py"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen"
+  },
+  "setup": "Use isolated test configuration; no real sessions or credentials.",
+  "inputs": [],
+  "assertions": [
+    "Command exits zero."
+  ],
+  "started_unix": 1792594068.500823,
+  "elapsed_seconds": 5.545417070388794,
+  "exit_code": 0,
+  "output_file": "green-family-public-final.log"
+}

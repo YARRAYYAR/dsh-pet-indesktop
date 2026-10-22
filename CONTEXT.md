@@ -3,6 +3,26 @@
 The user-facing desktop-pet experience shared by settings, menus, overlays, and
 their platform-specific presentations.
 
+The source entry point now uses the Codex companion profile. It preserves the
+original widgets, QSS, spacing and interaction motion while filtering retired
+settings and menu actions. Visible domains are 常规、桌宠、互动、菜单、连接.
+Hidden preferences retain their latest on-disk values, including unknown nested
+fields; saving this profile must not replay hidden-control writes. The full
+settings composition remains available to existing embedding callers.
+
+`AppShell` owns one `CodexCompanion`: `CodexMonitor` observes existing Desktop
+rollouts read-only, while `CodexClient` owns a separate stdio app-server for
+tasks explicitly created by the pet. Window replacement only detaches this
+application service. Qt process/socket/timer objects stay on their owning GUI
+thread; the standalone settings process uses local IPC commands and semantic
+page navigation. Desktop sessions cannot be resumed or answered through this
+transport. Pending responses bind to session, turn, connection generation and
+the typed JSON-RPC request ID; stale or duplicate answers are rejected.
+
+Usage snapshots keep cumulative and last-response counters separate. Missing
+data stays unknown; account usage, rate limits and session tokens are distinct,
+and a pet task never borrows a Desktop session's counters.
+
 ## Language
 
 **Shared UX Contract**:

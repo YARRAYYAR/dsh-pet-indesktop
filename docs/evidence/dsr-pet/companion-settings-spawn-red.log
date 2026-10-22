@@ -1,0 +1,92 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_ test_companion_settings_slim_search_and_preserve_retired_configuration[False] _
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x11487af90>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-110/test_companion_settings_slim_s0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1146f1a70>
+external_update = False
+
+    @pytest.mark.parametrize('external_update', [False, True])
+    def test_companion_settings_slim_search_and_preserve_retired_configuration(qtbot, tmp_path, monkeypatch, external_update):
+        from pet import autostart
+        from pet.modern_settings_dialog import ModernSettingsDialog
+        monkeypatch.setattr(autostart, 'is_enabled', lambda: False)
+        config = Config(tmp_path)
+        config.data.update({'music_sing_enabled': True, 'music_lyric_enabled': True,
+                            'music_player_paths': {'netease': '/before/player', 'custom': '/keep/unknown'},
+                            'agent_link': {**config.get('agent_link'), 'dsh': True, 'unknown': {'keep': [1]}},
+                            'voice_chime_enabled': True, 'todo_reminder_enabled': True,
+                            'harness_autostart': True, 'self_talk_texts': ['旧台词'],
+                            'spawn_inherit_size': False, 'spawn_scale': .7})
+        assert config.save()
+        before = deepcopy(Config(tmp_path).data)
+        dialog = ModernSettingsDialog(
+            config,
+            include_ai=False,
+            standalone=True,
+            companion_mode=True,
+        )
+        qtbot.addWidget(dialog)
+        assert [dialog.sidebar.item(i).text() for i in range(dialog.sidebar.count())] == [
+            '常规', '桌宠', '互动', '菜单', '连接',
+        ]
+        assert dialog.pet_tabs.labels() == ('常用控制', '动作库')
+        for retired_term in ('音乐', '唱歌', '歌词', '报时', '节日', '待办', '识屏', 'Agent 联动'):
+            dialog.search_edit.setText(retired_term)
+>           assert dialog._search_matches == [], retired_term
+E           AssertionError: 待办
+E           assert [<pet.setting... 0x115d18140>] == []
+E             
+E             Left contains one more item: <pet.settings_widgets.SettingRow(0xba3fc5a40, name="settingRow_clear_spawned_pets") at 0x115d18140>
+E             Use -v to get more diff
+
+tests/test_codex_companion_ui.py:230: AssertionError
+----------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: Populating font family aliases took 68 ms. Replace uses of missing font family "Sans Serif" with one that exists to avoid this cost. 
+_ test_companion_settings_slim_search_and_preserve_retired_configuration[True] _
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x131847750>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-110/test_companion_settings_slim_s1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b2150f0>
+external_update = True
+
+    @pytest.mark.parametrize('external_update', [False, True])
+    def test_companion_settings_slim_search_and_preserve_retired_configuration(qtbot, tmp_path, monkeypatch, external_update):
+        from pet import autostart
+        from pet.modern_settings_dialog import ModernSettingsDialog
+        monkeypatch.setattr(autostart, 'is_enabled', lambda: False)
+        config = Config(tmp_path)
+        config.data.update({'music_sing_enabled': True, 'music_lyric_enabled': True,
+                            'music_player_paths': {'netease': '/before/player', 'custom': '/keep/unknown'},
+                            'agent_link': {**config.get('agent_link'), 'dsh': True, 'unknown': {'keep': [1]}},
+                            'voice_chime_enabled': True, 'todo_reminder_enabled': True,
+                            'harness_autostart': True, 'self_talk_texts': ['旧台词'],
+                            'spawn_inherit_size': False, 'spawn_scale': .7})
+        assert config.save()
+        before = deepcopy(Config(tmp_path).data)
+        dialog = ModernSettingsDialog(
+            config,
+            include_ai=False,
+            standalone=True,
+            companion_mode=True,
+        )
+        qtbot.addWidget(dialog)
+        assert [dialog.sidebar.item(i).text() for i in range(dialog.sidebar.count())] == [
+            '常规', '桌宠', '互动', '菜单', '连接',
+        ]
+        assert dialog.pet_tabs.labels() == ('常用控制', '动作库')
+        for retired_term in ('音乐', '唱歌', '歌词', '报时', '节日', '待办', '识屏', 'Agent 联动'):
+            dialog.search_edit.setText(retired_term)
+>           assert dialog._search_matches == [], retired_term
+E           AssertionError: 待办
+E           assert [<pet.setting... 0x12c45a500>] == []
+E             
+E             Left contains one more item: <pet.settings_widgets.SettingRow(0xba358bb80, name="settingRow_clear_spawned_pets") at 0x12c45a500>
+E             Use -v to get more diff
+
+tests/test_codex_companion_ui.py:230: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_codex_companion_ui.py::test_companion_settings_slim_search_and_preserve_retired_configuration[False]
+FAILED tests/test_codex_companion_ui.py::test_companion_settings_slim_search_and_preserve_retired_configuration[True]
+2 failed, 8 deselected in 1.43s

@@ -26,6 +26,7 @@ from __future__ import annotations
 from PySide6.QtWidgets import QVBoxLayout, QWidget
 
 from .settings_widgets import SettingRow, SettingsSection, SettingsTabContainer
+from .settings_companion import visible_rows
 
 TAB_KEYS = ("click", "self_talk")
 TAB_LABELS = ("点击与音效", "自言自语")
@@ -63,7 +64,7 @@ def build_click_rows(dialog) -> list[SettingRow]:
         )
     rows.extend(
         [
-            SettingRow("click_self_talk", "点击触发自言自语", "点击时随机显示一条自言自语内容；打开后可用下方两项把同一句读出来。", dialog.click_self_talk_check),
+            SettingRow("click_self_talk", "点击触发自言自语", "点击时随机显示一条自言自语内容。" if dialog.companion_mode else "点击时随机显示一条自言自语内容；打开后可用下方两项把同一句读出来。", dialog.click_self_talk_check),
             SettingRow(
                 "click_self_talk_speak",
                 "点击台词朗读",
@@ -94,7 +95,7 @@ def build_click_rows(dialog) -> list[SettingRow]:
             ),
         ]
     )
-    return rows
+    return visible_rows(dialog, rows)
 
 
 def build_self_talk_rows(dialog) -> list[SettingRow]:

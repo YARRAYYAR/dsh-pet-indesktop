@@ -52,7 +52,14 @@ from .shared import (
 )
 
 
+COMPANION_ACTION_IDS = frozenset({
+    'codex_tasks', 'animations_hub', 'character', 'playback_speed', 'size',
+    'drag_physics', 'no_move', 'mouse_through', 'on_top', 'autostart',
+    'return_corner', 'hide_pet', 'modern_settings', 'quit', 'check_update', 'github_project',
+})
+
 ACTION_LABELS = {
+    'codex_tasks': 'Codex 任务与用量',
     "ojingjing": "厉害了我的鲸", "chat": "AI 对话", "look_screen": "看看屏幕",
     "animations_hub": "播放动画", "character": "切换角色", "playback_speed": "播放速率",
     "size": "大小", "drag_physics": "拖动物理", "no_move": "不移动",
@@ -81,6 +88,7 @@ Enablement = Callable[[object], bool]
 
 
 ACTION_ICONS = {
+    'codex_tasks': 'harness',
     "ojingjing": "pet", "chat": "chat", "look_screen": "screen",
     "animations_hub": "play", "character": "character", "playback_speed": "speed",
     "size": "size", "drag_physics": "physics", "no_move": "pause",
@@ -234,6 +242,10 @@ class MenuActionRegistry:
 
     def __init__(self) -> None:
         self._specs = {
+            'codex_tasks': MenuActionSpec(
+                lambda menu, pet: add_action(menu, 'Codex 任务与用量', 'harness', pet.on_open_codex_tasks, close_on_trigger=True),
+                lambda pet: getattr(pet, '_companion_mode', False) is True and callable(getattr(pet, 'on_open_codex_tasks', None)),
+            ),
             "ojingjing": MenuActionSpec(
                 lambda menu, pet: add_ojingjing_entry(
                     menu, pet.cfg.get("menu_easter_egg", DEFAULT_MENU_EASTER_EGG)
@@ -325,14 +337,14 @@ class MenuActionRegistry:
         return frozenset(
             action_id
             for action_id, spec in self._specs.items()
-            if spec.available(pet)
+            if spec.available(pet) and (getattr(pet, "_companion_mode", False) is not True or action_id in COMPANION_ACTION_IDS)
         )
 
     def enabled_ids(self, pet) -> frozenset[str]:
         return frozenset(
             action_id
             for action_id, spec in self._specs.items()
-            if spec.available(pet) and spec.enabled(pet)
+            if action_id in self.available_ids(pet) and spec.enabled(pet)
         )
 
     def disabled_reason(self, action_id: str) -> str:

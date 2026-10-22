@@ -1,0 +1,50 @@
+{
+  "command": [
+    "/Users/ray/Documents/New project/dsr-pet/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_codex_client.py",
+    "tests/test_codex_companion_flow.py",
+    "tests/test_codex_companion_ui.py",
+    "tests/test_codex_discovery.py",
+    "tests/test_codex_usage.py",
+    "tests/test_settings_process_isolation.py",
+    "tests/test_companion_menu_editor.py",
+    "tests/test_dsr_codex_and_ceiling.py",
+    "tests/test_webm_reader_lifecycle.py",
+    "tests/test_webm_clip_lifecycle.py",
+    "tests/test_webm_first_frame_lock.py",
+    "tests/test_low_priority_warm_interaction_yield.py",
+    "tests/test_prewarm_scheduler.py",
+    "tests/test_dsh_state.py",
+    "tests/test_character_switch_lifecycle.py",
+    "tests/test_predictive_prewarm.py",
+    "tests/test_library_priority_warm.py",
+    "tests/test_library_warm_priority.py",
+    "tests/test_session_end_ffmpeg_guard.py"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "PYTHON_KEYRING_BACKEND": "keyring.backends.null.Keyring",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "setup": "Existing isolated test fixtures; temporary sessions/configuration and deterministic protocol peer. Original media unchanged.",
+  "inputs": "Complete suite or listed related public Qt/IPC/lifecycle paths.",
+  "assertions": "All collected assertions pass and process exits zero.",
+  "started_unix": 1792628301.215433,
+  "exit_status": 1,
+  "elapsed_seconds": 102.49129509925842,
+  "load": {
+    "cpu_burners": 8,
+    "command": [
+      "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+      "-c",
+      "while True: pass"
+    ],
+    "stopped_all": true
+  },
+  "result_tail": "   entered = threading.Event()\n        calls = []\n        draining = False\n    \n        def reader():\n            entered.set()\n            released.wait()\n    \n        thread = threading.Thread(target=reader, name='held-retirement-fixture')\n        thread.start()\n        assert entered.wait(5)\n        original_join = thread.join\n    \n        def join(timeout=None):\n            calls.append((draining, timeout))\n            if draining and timeout and timeout > 0:\n                released.set()\n                return original_join(timeout)\n            return original_join(0)\n    \n        thread.join = join\n        record = webm_clip._Reader(thread=thread, proc=None)\n        clip._retired.append(record)\n        try:\n            shell.instance.switch_character('fixture-b')\n            assert shell.win is not old and old._resources_released\n            _turn()\n            QCoreApplication.sendPostedEvents(None, QEvent.Type.DeferredDelete)\n>           assert not shiboken6.isValid(old)  # Destruction must not add a GUI join.\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           assert not True\nE            +  where True = <built-in function isValid>(<pet.window.PetWindow(0x8bcbbef40) at 0x13175c500>)\nE            +    where <built-in function isValid> = shiboken6.isValid\n\ntests/test_character_switch_lifecycle.py:308: AssertionError\n----------------------------- Captured Qt messages -----------------------------\nQtWarningMsg: This plugin does not support raise()\nQtWarningMsg: QSystemTrayIcon::setVisible: No Icon set\nQtWarningMsg: This plugin does not support raise()\nQtWarningMsg: QSystemTrayIcon::setVisible: No Icon set\n____________ test_control_group_spawns_normally_without_session_end ____________\n\ntmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-147/test_control_group_spawns_norm0')\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x131b135b0>\n\n    def test_control_group_spawns_normally_without_session_end(tmp_path, monkeypatch):\n        \"\"\"对照组：未收到会话结束通知时，同一路径照常拉起（证明门是唯一差异）。\n    \n        与 test_webm_reader_lifecycle 同款：reader 线程会经 `_ensure_ffmpeg_exe`\n        跑真实的 `ffmpeg -version` 探测，测试里替换为空操作（探测不是本用例的\n        被测对象，且受限沙箱下子进程 STDIO 捕获可能不稳定）。\n        \"\"\"\n        spy = _SpawnSpy()\n        spy.install(monkeypatch)\n        monkeypatch.setattr(webm_clip_mod, \"_ensure_ffmpeg_exe\", lambda: None)\n        clip = _make_clip(tmp_path, frame_count=0)\n        clip._duration = 0.0\n    \n        assert webm_clip_mod.session_ending() is False\n    \n        assert clip.start() is True\n        assert spy.read_frames_calls, \"正常运行期必须照常拉起 reader（对照组）\"\n        clip._ensure_meta()\n>       assert spy.count_calls, \"正常运行期元数据探测照常（对照组）\"\nE       AssertionError: 正常运行期元数据探测照常（对照组）\nE       assert []\nE        +  where [] = <tests.test_session_end_ffmpeg_guard._SpawnSpy object at 0x1141f0f50>.count_calls\n\ntests/test_session_end_ffmpeg_guard.py:186: AssertionError\n=============================== warnings summary ===============================\ntests/test_character_switch_lifecycle.py::test_mid_constructor_failure_releases_real_candidate_widgets[_read_self_talk_texts]\n  /Users/ray/Documents/New project/dsr-pet/pet/window.py:4574: RuntimeWarning: libpyside: Failed to disconnect (<bound method PetWindow._on_speech_bubble_hidden of <pet.window.PetWindow(0x8bcbbf640) at 0x131a945c0>>) from signal \"hidden_signal()\".\n    bubble.hidden_signal.disconnect(self._on_speech_bubble_hidden)\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n=========================== short test summary info ============================\nFAILED tests/test_prewarm_scheduler.py::test_last_holder_release_from_worker_resumes_on_gui_thread\nFAILED tests/test_prewarm_scheduler.py::test_high_priority_burst_shares_one_inflight_batch\nFAILED tests/test_prewarm_scheduler.py::test_high_batch_captures_generation_before_worker_starts\nFAILED tests/test_prewarm_scheduler.py::test_stale_release_cannot_resume_new_hold\nFAILED tests/test_prewarm_scheduler.py::test_start_failure_releases_claim_for_next_request[high]\nFAILED tests/test_prewarm_scheduler.py::test_bulk_frame_claim_merges_predictions_only_when_it_warms_frames[True-high]\nFAILED tests/test_prewarm_scheduler.py::test_bulk_frame_claim_merges_predictions_only_when_it_warms_frames[True-low]\nFAILED tests/test_prewarm_scheduler.py::test_bulk_frame_claim_merges_predictions_only_when_it_warms_frames[False-high]\nFAILED tests/test_prewarm_scheduler.py::test_bulk_frame_claim_merges_predictions_only_when_it_warms_frames[False-low]\nFAILED tests/test_prewarm_scheduler.py::test_prediction_inflight_is_not_repeated_by_high_batch\nFAILED tests/test_prewarm_scheduler.py::test_cancelled_batch_completion_rearms_timer_on_gui_thread\nFAILED tests/test_prewarm_scheduler.py::test_full_low_batch_retries_an_unfinished_shared_prediction[decode_failure]\nFAILED tests/test_prewarm_scheduler.py::test_full_low_batch_retries_an_unfinished_shared_prediction[pause]\nFAILED tests/test_dsh_state.py::test_online_edge_immediately_reads_events_and_resumes_timer\nFAILED tests/test_dsh_state.py::test_online_recovery_reads_first_events_from_new_bridge_file[False]\nFAILED tests/test_dsh_state.py::test_online_recovery_reads_first_events_from_new_bridge_file[True]\nFAILED tests/test_dsh_state.py::test_stop_during_online_transition_does_not_restart_timers\nFAILED tests/test_dsh_state.py::test_stop_while_resuming_drops_remaining_event_batch\nFAILED tests/test_dsh_state.py::test_resumed_event_timer_preserves_latch_timeout[waiting_approval]\nFAILED tests/test_dsh_state.py::test_resumed_event_timer_preserves_latch_timeout[waiting_question]\nFAILED tests/test_character_switch_lifecycle.py::test_replacement_does_not_join_reader_until_exit[False]\nFAILED tests/test_character_switch_lifecycle.py::test_replacement_does_not_join_reader_until_exit[True]\nFAILED tests/test_session_end_ffmpeg_guard.py::test_control_group_spawns_normally_without_session_end\n23 failed, 285 passed, 1 warning in 101.81s (0:01:41)\n"
+}

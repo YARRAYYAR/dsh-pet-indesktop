@@ -1,0 +1,115 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+_ test_owned_request_event_has_visible_body[question-\u9009\u62e9\u989c\u8272\uff1f] _
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x1121c6cf0>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-125/test_owned_request_event_has_v0')
+scenario = 'question', expected = '选择颜色？'
+
+    @pytest.mark.parametrize('scenario,expected', [
+        ('question', '选择颜色？'),
+        ('command', 'echo hello'),
+        ('file', '需要批准'),
+    ])
+    def test_owned_request_event_has_visible_body(qtbot, tmp_path, scenario, expected):
+        from pet.codex_companion import CodexCompanion
+        from pet.codex_client import CodexClient
+        from pet.codex_link import CodexMonitor
+        from pet.config import Config
+    
+        peer = Path(__file__).parent / 'fixtures/codex_peer.py'
+        transport = CodexClient(program=sys.executable, arguments=[
+            str(peer), scenario, str(tmp_path / 'wire.jsonl'),
+        ], home=tmp_path / 'codex')
+        owner = CodexCompanion(Config(tmp_path / 'config'),
+                               monitor=CodexMonitor(tmp_path, date_dirs=[]), client=transport)
+        events = []
+        owner.event.connect(events.append)
+        owner.set_enabled(True)
+        try:
+            owner.dispatch('codex_connect', {})
+            qtbot.waitUntil(lambda: owner.snapshot()['connection'] == 'ready', timeout=10000)
+            owner.dispatch('codex_new_task', {'text': 'isolated fixture', 'cwd': str(tmp_path)})
+            qtbot.waitUntil(lambda: any(e['state'] == 'question' for e in events), timeout=10000)
+            event = next(e for e in events if e['state'] == 'question')
+>           assert expected in event['text']
+E           AssertionError: assert '选择颜色？' in ''
+
+tests/test_codex_companion_flow.py:254: AssertionError
+________ test_owned_request_event_has_visible_body[command-echo hello] _________
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x11355d310>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-125/test_owned_request_event_has_v1')
+scenario = 'command', expected = 'echo hello'
+
+    @pytest.mark.parametrize('scenario,expected', [
+        ('question', '选择颜色？'),
+        ('command', 'echo hello'),
+        ('file', '需要批准'),
+    ])
+    def test_owned_request_event_has_visible_body(qtbot, tmp_path, scenario, expected):
+        from pet.codex_companion import CodexCompanion
+        from pet.codex_client import CodexClient
+        from pet.codex_link import CodexMonitor
+        from pet.config import Config
+    
+        peer = Path(__file__).parent / 'fixtures/codex_peer.py'
+        transport = CodexClient(program=sys.executable, arguments=[
+            str(peer), scenario, str(tmp_path / 'wire.jsonl'),
+        ], home=tmp_path / 'codex')
+        owner = CodexCompanion(Config(tmp_path / 'config'),
+                               monitor=CodexMonitor(tmp_path, date_dirs=[]), client=transport)
+        events = []
+        owner.event.connect(events.append)
+        owner.set_enabled(True)
+        try:
+            owner.dispatch('codex_connect', {})
+            qtbot.waitUntil(lambda: owner.snapshot()['connection'] == 'ready', timeout=10000)
+            owner.dispatch('codex_new_task', {'text': 'isolated fixture', 'cwd': str(tmp_path)})
+            qtbot.waitUntil(lambda: any(e['state'] == 'question' for e in events), timeout=10000)
+            event = next(e for e in events if e['state'] == 'question')
+>           assert expected in event['text']
+E           AssertionError: assert 'echo hello' in ''
+
+tests/test_codex_companion_flow.py:254: AssertionError
+___ test_owned_request_event_has_visible_body[file-\u9700\u8981\u6279\u51c6] ___
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x11355de50>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-125/test_owned_request_event_has_v2')
+scenario = 'file', expected = '需要批准'
+
+    @pytest.mark.parametrize('scenario,expected', [
+        ('question', '选择颜色？'),
+        ('command', 'echo hello'),
+        ('file', '需要批准'),
+    ])
+    def test_owned_request_event_has_visible_body(qtbot, tmp_path, scenario, expected):
+        from pet.codex_companion import CodexCompanion
+        from pet.codex_client import CodexClient
+        from pet.codex_link import CodexMonitor
+        from pet.config import Config
+    
+        peer = Path(__file__).parent / 'fixtures/codex_peer.py'
+        transport = CodexClient(program=sys.executable, arguments=[
+            str(peer), scenario, str(tmp_path / 'wire.jsonl'),
+        ], home=tmp_path / 'codex')
+        owner = CodexCompanion(Config(tmp_path / 'config'),
+                               monitor=CodexMonitor(tmp_path, date_dirs=[]), client=transport)
+        events = []
+        owner.event.connect(events.append)
+        owner.set_enabled(True)
+        try:
+            owner.dispatch('codex_connect', {})
+            qtbot.waitUntil(lambda: owner.snapshot()['connection'] == 'ready', timeout=10000)
+            owner.dispatch('codex_new_task', {'text': 'isolated fixture', 'cwd': str(tmp_path)})
+            qtbot.waitUntil(lambda: any(e['state'] == 'question' for e in events), timeout=10000)
+            event = next(e for e in events if e['state'] == 'question')
+>           assert expected in event['text']
+E           AssertionError: assert '需要批准' in ''
+
+tests/test_codex_companion_flow.py:254: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_codex_companion_flow.py::test_owned_request_event_has_visible_body[question-\u9009\u62e9\u989c\u8272\uff1f]
+FAILED tests/test_codex_companion_flow.py::test_owned_request_event_has_visible_body[command-echo hello]
+FAILED tests/test_codex_companion_flow.py::test_owned_request_event_has_visible_body[file-\u9700\u8981\u6279\u51c6]
+3 failed, 6 deselected in 0.47s

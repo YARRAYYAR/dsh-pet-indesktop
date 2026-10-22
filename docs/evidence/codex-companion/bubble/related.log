@@ -1,0 +1,32 @@
+.............................F...............                            [100%]
+=================================== FAILURES ===================================
+________ test_question_submission_exact_identity_failure_and_resolution ________
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x1140e4470>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-127/test_question_submission_exact0')
+snapshot = {'enabled': True, 'state': 'question', 'session_id': 'owned', 'turn_id': 'turn-2', ...}
+
+    def test_question_submission_exact_identity_failure_and_resolution(qtbot, tmp_path, snapshot):
+        snapshot['questions'] = questions()
+        snapshot['state'] = 'question'
+        widget, peer = page(qtbot, tmp_path, snapshot)
+        option = widget.findChild(QPushButton, 'codexOption_color_0')
+        assert option is not None
+        qtbot.mouseClick(option, Qt.MouseButton.LeftButton)
+        answer = widget.findChild(QLineEdit, 'codexAnswer_secret')
+        assert answer.echoMode() == QLineEdit.EchoMode.Password
+        answer.setText('fixture-name')
+        submit = widget.findChild(QPushButton, 'codexSubmit_9')
+        peer.failure = '问题已过期'
+        submit.click()
+>       command, args = [item for item in peer.commands if item[0] == 'codex_answer'][-1]
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_codex_companion_ui.py:127: IndexError
+----------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: This plugin does not support propagateSizeHints()
+QtWarningMsg: This plugin does not support propagateSizeHints()
+=========================== short test summary info ============================
+FAILED tests/test_codex_companion_ui.py::test_question_submission_exact_identity_failure_and_resolution
+1 failed, 44 passed in 5.62s

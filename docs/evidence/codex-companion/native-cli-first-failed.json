@@ -1,0 +1,46 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "docs/evidence/codex-companion/verify_native_cli.py"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "exit_status": 1,
+  "setup": "Fresh HOME/CODEX_HOME/DSH_HOME, whitelist environment, null keyring; no real sessions, credentials or model requests.",
+  "inputs": "Installed codex binary; initialize + initialized + account reads only. No thread/start, resume or turn/start.",
+  "assertions": "Installed CLI handshakes, exposes unauthenticated account error, stops and reaps owned process.",
+  "program": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex",
+  "version": "codex-cli 0.163.0-alpha.10.2",
+  "version_exit_status": 0,
+  "pyside_version": "6.11.2",
+  "states": [
+    {
+      "connection": "connecting",
+      "state": "idle",
+      "error": ""
+    },
+    {
+      "connection": "error",
+      "state": "error",
+      "error": "Codex 连接已退出，请重新连接"
+    },
+    {
+      "connection": "disconnected",
+      "state": "idle",
+      "error": ""
+    },
+    {
+      "connection": "disconnected",
+      "state": "idle",
+      "error": ""
+    },
+    {
+      "connection": "disconnected",
+      "state": "idle",
+      "error": ""
+    }
+  ],
+  "ready": false,
+  "account_error": "Codex 连接已退出，请重新连接",
+  "process_stopped": true
+}

@@ -1,0 +1,1188 @@
+........................................................................ [ 23%]
+........................................................................ [ 46%]
+.................................F.FFF.F.FFFFFFFF..FFF...F.F.FF......... [ 70%]
+......................FF..............................................F. [ 93%]
+....................                                                     [100%]
+=================================== FAILURES ===================================
+__________ test_last_holder_release_from_worker_resumes_on_gui_thread __________
+
+library = <pet.library.MovieLibrary(0x8b9f06d50) at 0x1317d5fc0>
+
+    def test_last_holder_release_from_worker_resumes_on_gui_thread(library):
+        first = library.begin_interaction()
+        last = library.begin_interaction()
+        library._warm_low_priority_background()
+        library.end_interaction(first)
+        drain_window()
+        assert "写代码" not in library._movies
+        finished = threading.Event()
+    
+        def release():
+            library.end_interaction(last)
+            finished.set()
+    
+        worker = threading.Thread(target=release, daemon=True)
+        worker.start()
+>       spin_until(lambda: finished.is_set() and library._low_first_frames_done)
+
+tests/test_prewarm_scheduler.py:109: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+predicate = <function test_last_holder_release_from_worker_resumes_on_gui_thread.<locals>.<lambda> at 0x1316391c0>
+timeout_ms = 10000
+
+    def spin_until(predicate, *, timeout_ms=10000):
+        """Pump Qt until an observed event, with a generous bounded deadline."""
+        loop = QEventLoop()
+        check = QTimer()
+        check.setInterval(5)
+        check.timeout.connect(lambda: loop.quit() if predicate() else None)
+        deadline = QTimer()
+        deadline.setSingleShot(True)
+        deadline.timeout.connect(loop.quit)
+        check.start()
+        deadline.start(timeout_ms)
+        if not predicate():
+            loop.exec()
+        check.stop()
+        deadline.stop()
+>       assert predicate(), "Qt flow did not reach the expected state"
+E       AssertionError: Qt flow did not reach the expected state
+E       assert False
+E        +  where False = <function test_last_holder_release_from_worker_resumes_on_gui_thread.<locals>.<lambda> at 0x1316391c0>()
+
+tests/test_prewarm_scheduler.py:68: AssertionError
+______________ test_high_priority_burst_shares_one_inflight_batch ______________
+
+library = <pet.library.MovieLibrary(0x8b9f06ee0) at 0x109df0c40>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1093c34d0>
+
+    def test_high_priority_burst_shares_one_inflight_batch(library, monkeypatch):
+        entered = threading.Event()
+        release = threading.Event()
+        starts = []
+        real_start = threading.Thread.start
+    
+        def warm(*args, **kwargs):
+            entered.set()
+            assert release.wait(10)
+    
+        def record_start(thread, *args, **kwargs):
+            if is_scheduler_thread(thread):
+                starts.append(thread)
+            return real_start(thread, *args, **kwargs)
+    
+        monkeypatch.setattr(library, "_warm_clips", warm)
+        monkeypatch.setattr(threading.Thread, "start", record_start)
+        try:
+            library.schedule_high_priority_warm()
+>           spin_until(entered.is_set)
+
+tests/test_prewarm_scheduler.py:155: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+predicate = <bound method Event.is_set of <threading.Event at 0x1315cfdd0: set>>
+timeout_ms = 10000
+
+    def spin_until(predicate, *, timeout_ms=10000):
+        """Pump Qt until an observed event, with a generous bounded deadline."""
+        loop = QEventLoop()
+        check = QTimer()
+        check.setInterval(5)
+        check.timeout.connect(lambda: loop.quit() if predicate() else None)
+        deadline = QTimer()
+        deadline.setSingleShot(True)
+        deadline.timeout.connect(loop.quit)
+        check.start()
+        deadline.start(timeout_ms)
+        if not predicate():
+            loop.exec()
+        check.stop()
+        deadline.stop()
+>       assert predicate(), "Qt flow did not reach the expected state"
+E       AssertionError: Qt flow did not reach the expected state
+E       assert False
+E        +  where False = is_set()
+
+tests/test_prewarm_scheduler.py:68: AssertionError
+___________ test_high_batch_captures_generation_before_worker_starts ___________
+
+library = <pet.library.MovieLibrary(0x8b9f06cb0) at 0x1160a9880>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109575c50>
+
+    def test_high_batch_captures_generation_before_worker_starts(library, monkeypatch):
+        entered = threading.Event()
+        release = threading.Event()
+        finished = threading.Event()
+        warmed = []
+        real_run = threading.Thread.run
+    
+        def gated_run(thread):
+            if not is_scheduler_thread(thread):
+                return real_run(thread)
+            entered.set()
+            try:
+                assert release.wait(10)
+                return real_run(thread)
+            finally:
+                finished.set()
+    
+        monkeypatch.setattr(threading.Thread, "run", gated_run)
+        monkeypatch.setattr(library, "_warm_clips", lambda *a, **kw: warmed.append(kw))
+        try:
+            library.schedule_high_priority_warm()
+            spin_until(entered.is_set)
+            library.pause_warm()
+            library.resume_warm()
+        finally:
+            release.set()
+>       spin_until(finished.is_set)
+
+tests/test_prewarm_scheduler.py:191: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+predicate = <bound method Event.is_set of <threading.Event at 0x13162e0f0: set>>
+timeout_ms = 10000
+
+    def spin_until(predicate, *, timeout_ms=10000):
+        """Pump Qt until an observed event, with a generous bounded deadline."""
+        loop = QEventLoop()
+        check = QTimer()
+        check.setInterval(5)
+        check.timeout.connect(lambda: loop.quit() if predicate() else None)
+        deadline = QTimer()
+        deadline.setSingleShot(True)
+        deadline.timeout.connect(loop.quit)
+        check.start()
+        deadline.start(timeout_ms)
+        if not predicate():
+            loop.exec()
+        check.stop()
+        deadline.stop()
+>       assert predicate(), "Qt flow did not reach the expected state"
+E       AssertionError: Qt flow did not reach the expected state
+E       assert False
+E        +  where False = is_set()
+
+tests/test_prewarm_scheduler.py:68: AssertionError
+__________________ test_stale_release_cannot_resume_new_hold ___________________
+
+library = <pet.library.MovieLibrary(0x8b9f06fd0) at 0x1317098c0>
+
+    def test_stale_release_cannot_resume_new_hold(library):
+        old = library.begin_interaction()
+        library._warm_low_priority_background()
+        library.pause_warm()
+        library.resume_warm()
+        current = library.begin_interaction()
+        library._low_warm_timer.stop()
+        library._warm_low_priority_background()
+        library.end_interaction(old)
+        drain_window()
+        assert "写代码" not in library._movies
+        library.end_interaction(current)
+>       spin_until(lambda: library._low_first_frames_done)
+
+tests/test_prewarm_scheduler.py:207: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+predicate = <function test_stale_release_cannot_resume_new_hold.<locals>.<lambda> at 0x13164b100>
+timeout_ms = 10000
+
+    def spin_until(predicate, *, timeout_ms=10000):
+        """Pump Qt until an observed event, with a generous bounded deadline."""
+        loop = QEventLoop()
+        check = QTimer()
+        check.setInterval(5)
+        check.timeout.connect(lambda: loop.quit() if predicate() else None)
+        deadline = QTimer()
+        deadline.setSingleShot(True)
+        deadline.timeout.connect(loop.quit)
+        check.start()
+        deadline.start(timeout_ms)
+        if not predicate():
+            loop.exec()
+        check.stop()
+        deadline.stop()
+>       assert predicate(), "Qt flow did not reach the expected state"
+E       AssertionError: Qt flow did not reach the expected state
+E       assert False
+E        +  where False = <function test_stale_release_cannot_resume_new_hold.<locals>.<lambda> at 0x13164b100>()
+
+tests/test_prewarm_scheduler.py:68: AssertionError
+___________ test_start_failure_releases_claim_for_next_request[high] ___________
+
+library = <pet.library.MovieLibrary(0x8b9f07110) at 0x1317d4d40>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1160a5710>
+caplog = <_pytest.logging.LogCaptureFixture object at 0x114296900>
+kind = 'high'
+
+    @pytest.mark.parametrize("kind", ["high", "predicted"])
+    def test_start_failure_releases_claim_for_next_request(library, monkeypatch, caplog, kind):
+        real_start = threading.Thread.start
+        calls = 0
+    
+        def fail_once(thread, *args, **kwargs):
+            nonlocal calls
+            if is_scheduler_thread(thread):
+                calls += 1
+                if calls == 1:
+                    raise RuntimeError("injected thread start failure")
+            return real_start(thread, *args, **kwargs)
+    
+        monkeypatch.setattr(threading.Thread, "start", fail_once)
+        request = (library.schedule_high_priority_warm if kind == "high"
+                   else lambda: library.warm_predicted("写代码"))
+        request()
+        assert "injected thread start failure" in caplog.text
+        request()
+        clip = library.movie(catalog.CLICKS[0] if kind == "high" else "写代码")
+>       spin_until(lambda: clip.frame_calls == 1)
+
+tests/test_prewarm_scheduler.py:244: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+predicate = <function test_start_failure_releases_claim_for_next_request.<locals>.<lambda> at 0x109d28180>
+timeout_ms = 10000
+
+    def spin_until(predicate, *, timeout_ms=10000):
+        """Pump Qt until an observed event, with a generous bounded deadline."""
+        loop = QEventLoop()
+        check = QTimer()
+        check.setInterval(5)
+        check.timeout.connect(lambda: loop.quit() if predicate() else None)
+        deadline = QTimer()
+        deadline.setSingleShot(True)
+        deadline.timeout.connect(loop.quit)
+        check.start()
+        deadline.start(timeout_ms)
+        if not predicate():
+            loop.exec()
+        check.stop()
+        deadline.stop()
+>       assert predicate(), "Qt flow did not reach the expected state"
+E       AssertionError: Qt flow did not reach the expected state
+E       assert False
+E        +  where False = <function test_start_failure_releases_claim_for_next_request.<locals>.<lambda> at 0x109d28180>()
+
+tests/test_prewarm_scheduler.py:68: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    root:prewarm_scheduler.py:92 启动动画预热线程失败: high
+Traceback (most recent call last):
+  File "/Users/ray/Documents/New project/dsr-pet/pet/prewarm_scheduler.py", line 89, in start
+    threading.Thread(target=worker, daemon=True).start()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/ray/Documents/New project/dsr-pet/tests/test_prewarm_scheduler.py", line 234, in fail_once
+    raise RuntimeError("injected thread start failure")
+RuntimeError: injected thread start failure
+_ test_bulk_frame_claim_merges_predictions_only_when_it_warms_frames[True-high] _
+
+library = <pet.library.MovieLibrary(0x8b9f070c0) at 0x131708ac0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1160a60b0>
+source = 'high', include_frames = True
+
+    @pytest.mark.parametrize("source", ["high", "low"])
+    @pytest.mark.parametrize("include_frames", [True, False])
+    def test_bulk_frame_claim_merges_predictions_only_when_it_warms_frames(
+        library, monkeypatch, source, include_frames,
+    ):
+        """Share action work across sources without changing metadata-only policies."""
+        library._prewarm_policy = (
+            "full" if include_frames else "minimal" if source == "high" else "balanced"
+        )
+        name = catalog.CLICKS[0] if source == "high" else "写代码"
+        clip = library.movie(name)
+        entered = threading.Event()
+        release = threading.Event()
+        starts = []
+        real_start = threading.Thread.start
+    
+        def blocking_meta():
+            clip.meta_calls += 1
+            entered.set()
+            assert release.wait(10)
+    
+        def record_start(thread, *args, **kwargs):
+            if is_scheduler_thread(thread):
+                starts.append(thread)
+            return real_start(thread, *args, **kwargs)
+    
+        monkeypatch.setattr(clip, "warm_meta", blocking_meta)
+        monkeypatch.setattr(threading.Thread, "start", record_start)
+        try:
+            if source == "high":
+                library.schedule_high_priority_warm()
+            else:
+                library._warm_low_priority_background()
+>           spin_until(entered.is_set)
+
+tests/test_prewarm_scheduler.py:280: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+predicate = <bound method Event.is_set of <threading.Event at 0x13162ef30: set>>
+timeout_ms = 10000
+
+    def spin_until(predicate, *, timeout_ms=10000):
+        """Pump Qt until an observed event, with a generous bounded deadline."""
+        loop = QEventLoop()
+        check = QTimer()
+        check.setInterval(5)
+        check.timeout.connect(lambda: loop.quit() if predicate() else None)
+        deadline = QTimer()
+        deadline.setSingleShot(True)
+        deadline.timeout.connect(loop.quit)
+        check.start()
+        deadline.start(timeout_ms)
+        if not predicate():
+            loop.exec()
+        check.stop()
+        deadline.stop()
+>       assert predicate(), "Qt flow did not reach the expected state"
+E       AssertionError: Qt flow did not reach the expected state
+E       assert False
+E        +  where False = is_set()
+
+tests/test_prewarm_scheduler.py:68: AssertionError
+_ test_bulk_frame_claim_merges_predictions_only_when_it_warms_frames[True-low] _
+
+library = <pet.library.MovieLibrary(0x8b9f071b0) at 0x1316634c0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1160a6e40>
+source = 'low', include_frames = True
+
+    @pytest.mark.parametrize("source", ["high", "low"])
+    @pytest.mark.parametrize("include_frames", [True, False])
+    def test_bulk_frame_claim_merges_predictions_only_when_it_warms_frames(
+        library, monkeypatch, source, include_frames,
+    ):
+        """Share action work across sources without changing metadata-only policies."""
+        library._prewarm_policy = (
+            "full" if include_frames else "minimal" if source == "high" else "balanced"
+        )
+        name = catalog.CLICKS[0] if source == "high" else "写代码"
+        clip = library.movie(name)
+        entered = threading.Event()
+        release = threading.Event()
+        starts = []
+        real_start = threading.Thread.start
+    
+        def blocking_meta():
+            clip.meta_calls += 1
+            entered.set()
+            assert release.wait(10)
+    
+        def record_start(thread, *args, **kwargs):
+            if is_scheduler_thread(thread):
+                starts.append(thread)
+            return real_start(thread, *args, **kwargs)
+    
+        monkeypatch.setattr(clip, "warm_meta", blocking_meta)
+        monkeypatch.setattr(threading.Thread, "start", record_start)
+        try:
+            if source == "high":
+                library.schedule_high_priority_warm()
+            else:
+                library._warm_low_priority_background()
+>           spin_until(entered.is_set)
+
+tests/test_prewarm_scheduler.py:280: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+predicate = <bound method Event.is_set of <threading.Event at 0x13162f5f0: set>>
+timeout_ms = 10000
+
+    def spin_until(predicate, *, timeout_ms=10000):
+        """Pump Qt until an observed event, with a generous bounded deadline."""
+        loop = QEventLoop()
+        check = QTimer()
+        check.setInterval(5)
+        check.timeout.connect(lambda: loop.quit() if predicate() else None)
+        deadline = QTimer()
+        deadline.setSingleShot(True)
+        deadline.timeout.connect(loop.quit)
+        check.start()
+        deadline.start(timeout_ms)
+        if not predicate():
+            loop.exec()
+        check.stop()
+        deadline.stop()
+>       assert predicate(), "Qt flow did not reach the expected state"
+E       AssertionError: Qt flow did not reach the expected state
+E       assert False
+E        +  where False = is_set()
+
+tests/test_prewarm_scheduler.py:68: AssertionError
+_ test_bulk_frame_claim_merges_predictions_only_when_it_warms_frames[False-high] _
+
+library = <pet.library.MovieLibrary(0x8b9f07340) at 0x131a4a2c0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1160a7310>
+source = 'high', include_frames = False
+
+    @pytest.mark.parametrize("source", ["high", "low"])
+    @pytest.mark.parametrize("include_frames", [True, False])
+    def test_bulk_frame_claim_merges_predictions_only_when_it_warms_frames(
+        library, monkeypatch, source, include_frames,
+    ):
+        """Share action work across sources without changing metadata-only policies."""
+        library._prewarm_policy = (
+            "full" if include_frames else "minimal" if source == "high" else "balanced"
+        )
+        name = catalog.CLICKS[0] if source == "high" else "写代码"
+        clip = library.movie(name)
+        entered = threading.Event()
+        release = threading.Event()
+        starts = []
+        real_start = threading.Thread.start
+    
+        def blocking_meta():
+            clip.meta_calls += 1
+            entered.set()
+            assert release.wait(10)
+    
+        def record_start(thread, *args, **kwargs):
+            if is_scheduler_thread(thread):
+                starts.append(thread)
+            return real_start(thread, *args, **kwargs)
+    
+        monkeypatch.setattr(clip, "warm_meta", blocking_meta)
+        monkeypatch.setattr(threading.Thread, "start", record_start)
+        try:
+            if source == "high":
+                library.schedule_high_priority_warm()
+            else:
+                library._warm_low_priority_background()
+>           spin_until(entered.is_set)
+
+tests/test_prewarm_scheduler.py:280: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+predicate = <bound method Event.is_set of <threading.Event at 0x13162e7b0: set>>
+timeout_ms = 10000
+
+    def spin_until(predicate, *, timeout_ms=10000):
+        """Pump Qt until an observed event, with a generous bounded deadline."""
+        loop = QEventLoop()
+        check = QTimer()
+        check.setInterval(5)
+        check.timeout.connect(lambda: loop.quit() if predicate() else None)
+        deadline = QTimer()
+        deadline.setSingleShot(True)
+        deadline.timeout.connect(loop.quit)
+        check.start()
+        deadline.start(timeout_ms)
+        if not predicate():
+            loop.exec()
+        check.stop()
+        deadline.stop()
+>       assert predicate(), "Qt flow did not reach the expected state"
+E       AssertionError: Qt flow did not reach the expected state
+E       assert False
+E        +  where False = is_set()
+
+tests/test_prewarm_scheduler.py:68: AssertionError
+_ test_bulk_frame_claim_merges_predictions_only_when_it_warms_frames[False-low] _
+
+library = <pet.library.MovieLibrary(0x8b9f07200) at 0x131a4b380>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1160a7af0>
+source = 'low', include_frames = False
+
+    @pytest.mark.parametrize("source", ["high", "low"])
+    @pytest.mark.parametrize("include_frames", [True, False])
+    def test_bulk_frame_claim_merges_predictions_only_when_it_warms_frames(
+        library, monkeypatch, source, include_frames,
+    ):
+        """Share action work across sources without changing metadata-only policies."""
+        library._prewarm_policy = (
+            "full" if include_frames else "minimal" if source == "high" else "balanced"
+        )
+        name = catalog.CLICKS[0] if source == "high" else "写代码"
+        clip = library.movie(name)
+        entered = threading.Event()
+        release = threading.Event()
+        starts = []
+        real_start = threading.Thread.start
+    
+        def blocking_meta():
+            clip.meta_calls += 1
+            entered.set()
+            assert release.wait(10)
+    
+        def record_start(thread, *args, **kwargs):
+            if is_scheduler_thread(thread):
+                starts.append(thread)
+            return real_start(thread, *args, **kwargs)
+    
+        monkeypatch.setattr(clip, "warm_meta", blocking_meta)
+        monkeypatch.setattr(threading.Thread, "start", record_start)
+        try:
+            if source == "high":
+                library.schedule_high_priority_warm()
+            else:
+                library._warm_low_priority_background()
+>           spin_until(entered.is_set)
+
+tests/test_prewarm_scheduler.py:280: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+predicate = <bound method Event.is_set of <threading.Event at 0x13162ca10: set>>
+timeout_ms = 10000
+
+    def spin_until(predicate, *, timeout_ms=10000):
+        """Pump Qt until an observed event, with a generous bounded deadline."""
+        loop = QEventLoop()
+        check = QTimer()
+        check.setInterval(5)
+        check.timeout.connect(lambda: loop.quit() if predicate() else None)
+        deadline = QTimer()
+        deadline.setSingleShot(True)
+        deadline.timeout.connect(loop.quit)
+        check.start()
+        deadline.start(timeout_ms)
+        if not predicate():
+            loop.exec()
+        check.stop()
+        deadline.stop()
+>       assert predicate(), "Qt flow did not reach the expected state"
+E       AssertionError: Qt flow did not reach the expected state
+E       assert False
+E        +  where False = is_set()
+
+tests/test_prewarm_scheduler.py:68: AssertionError
+____________ test_prediction_inflight_is_not_repeated_by_high_batch ____________
+
+library = <pet.library.MovieLibrary(0x8b9f074d0) at 0x1142cb880>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1160a6580>
+
+    def test_prediction_inflight_is_not_repeated_by_high_batch(library, monkeypatch):
+        name = catalog.CLICKS[0]
+        clip = library.movie(name)
+        entered = threading.Event()
+        release = threading.Event()
+        batch_finished = threading.Event()
+        starts = []
+        real_start = threading.Thread.start
+        real_high = library._warm_all_meta_background
+    
+        def blocking_frame():
+            clip.frame_calls += 1
+            if clip.frame_calls == 1:
+                entered.set()
+                assert release.wait(10)
+    
+        def high(*args, **kwargs):
+            try:
+                return real_high(*args, **kwargs)
+            finally:
+                batch_finished.set()
+    
+        def record_start(thread, *args, **kwargs):
+            if is_scheduler_thread(thread):
+                starts.append(thread)
+            return real_start(thread, *args, **kwargs)
+    
+        # A frame is not ready until the decoder returns; the test boundary must
+        # model that rather than treating entry into decode as a populated cache.
+        monkeypatch.setattr(clip, "first_frame_ready", lambda: False)
+        monkeypatch.setattr(clip, "warm_first_frame", blocking_frame)
+        monkeypatch.setattr(library, "_warm_all_meta_background", high)
+        monkeypatch.setattr(threading.Thread, "start", record_start)
+        try:
+            library.warm_predicted(name)
+            spin_until(entered.is_set)
+            library.schedule_high_priority_warm()
+>           spin_until(batch_finished.is_set)
+
+tests/test_prewarm_scheduler.py:335: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+predicate = <bound method Event.is_set of <threading.Event at 0x13162e8d0: set>>
+timeout_ms = 10000
+
+    def spin_until(predicate, *, timeout_ms=10000):
+        """Pump Qt until an observed event, with a generous bounded deadline."""
+        loop = QEventLoop()
+        check = QTimer()
+        check.setInterval(5)
+        check.timeout.connect(lambda: loop.quit() if predicate() else None)
+        deadline = QTimer()
+        deadline.setSingleShot(True)
+        deadline.timeout.connect(loop.quit)
+        check.start()
+        deadline.start(timeout_ms)
+        if not predicate():
+            loop.exec()
+        check.stop()
+        deadline.stop()
+>       assert predicate(), "Qt flow did not reach the expected state"
+E       AssertionError: Qt flow did not reach the expected state
+E       assert False
+E        +  where False = is_set()
+
+tests/test_prewarm_scheduler.py:68: AssertionError
+__________ test_cancelled_batch_completion_rearms_timer_on_gui_thread __________
+
+library = <pet.library.MovieLibrary(0x8b9f07200) at 0x1315eb900>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1160a7cb0>
+
+    def test_cancelled_batch_completion_rearms_timer_on_gui_thread(library, monkeypatch):
+        """The worker completion receiver must own every QTimer operation it makes."""
+        entered = threading.Event()
+        release = threading.Event()
+        timer_threads = []
+        gui_thread = threading.get_ident()
+        real_start = library._low_warm_timer.start
+    
+        def blocked_objects(*args, **kwargs):
+            entered.set()
+            assert release.wait(10)
+    
+        def record_timer_start(*args):
+            timer_threads.append(threading.get_ident())
+            return real_start(*args)
+    
+        monkeypatch.setattr(library, "_warm_objects", blocked_objects)
+        monkeypatch.setattr(library._low_warm_timer, "start", record_timer_start)
+        try:
+            library._warm_low_priority_background()
+            spin_until(entered.is_set)
+            library.pause_warm()
+            library.resume_warm()
+            library._low_warm_timer.stop()
+            timer_threads.clear()  # Ignore the synchronous resume on the GUI thread.
+            release.set()
+>           spin_until(lambda: bool(timer_threads))
+
+tests/test_prewarm_scheduler.py:369: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+predicate = <function test_cancelled_batch_completion_rearms_timer_on_gui_thread.<locals>.<lambda> at 0x13164a480>
+timeout_ms = 10000
+
+    def spin_until(predicate, *, timeout_ms=10000):
+        """Pump Qt until an observed event, with a generous bounded deadline."""
+        loop = QEventLoop()
+        check = QTimer()
+        check.setInterval(5)
+        check.timeout.connect(lambda: loop.quit() if predicate() else None)
+        deadline = QTimer()
+        deadline.setSingleShot(True)
+        deadline.timeout.connect(loop.quit)
+        check.start()
+        deadline.start(timeout_ms)
+        if not predicate():
+            loop.exec()
+        check.stop()
+        deadline.stop()
+>       assert predicate(), "Qt flow did not reach the expected state"
+E       AssertionError: Qt flow did not reach the expected state
+E       assert False
+E        +  where False = <function test_cancelled_batch_completion_rearms_timer_on_gui_thread.<locals>.<lambda> at 0x13164a480>()
+
+tests/test_prewarm_scheduler.py:68: AssertionError
+_ test_full_low_batch_retries_an_unfinished_shared_prediction[decode_failure] __
+
+library = <pet.library.MovieLibrary(0x8b9f07480) at 0x1315885c0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1160a59b0>
+resolution = 'decode_failure'
+
+    @pytest.mark.parametrize("resolution", ["decode_failure", "pause"])
+    def test_full_low_batch_retries_an_unfinished_shared_prediction(
+        library, monkeypatch, resolution,
+    ):
+        """A pending delegated frame is not a completed full-policy warm batch."""
+        clip = library.movie("写代码")
+        prediction_waiting = threading.Event()
+        release_prediction = threading.Event()
+        prediction_finished = threading.Event()
+        gate_lock = threading.Lock()
+        first_gate = True
+        attempts = 0
+        real_gate = library._await_interaction_clear
+    
+        def controlled_gate(generation):
+            nonlocal first_gate
+            with gate_lock:
+                hold_prediction = first_gate
+                first_gate = False
+            if hold_prediction:
+                prediction_waiting.set()
+                assert release_prediction.wait(10)
+            return real_gate(generation)
+    
+        def fail_first_decode():
+            nonlocal attempts
+            attempts += 1
+            if attempts == 1 and resolution == "decode_failure":
+                prediction_finished.set()
+                raise RuntimeError("injected shared prediction decode failure")
+            clip.frame_calls += 1
+    
+        monkeypatch.setattr(library, "_await_interaction_clear", controlled_gate)
+        monkeypatch.setattr(clip, "warm_first_frame", fail_first_decode)
+        try:
+            library.warm_predicted("写代码")
+            spin_until(prediction_waiting.is_set)
+            library._warm_low_priority_background()
+>           spin_until(lambda: clip.meta_calls > 0 and not library._low_warm_in_flight)
+
+tests/test_prewarm_scheduler.py:413: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+predicate = <function test_full_low_batch_retries_an_unfinished_shared_prediction.<locals>.<lambda> at 0x109d2a160>
+timeout_ms = 10000
+
+    def spin_until(predicate, *, timeout_ms=10000):
+        """Pump Qt until an observed event, with a generous bounded deadline."""
+        loop = QEventLoop()
+        check = QTimer()
+        check.setInterval(5)
+        check.timeout.connect(lambda: loop.quit() if predicate() else None)
+        deadline = QTimer()
+        deadline.setSingleShot(True)
+        deadline.timeout.connect(loop.quit)
+        check.start()
+        deadline.start(timeout_ms)
+        if not predicate():
+            loop.exec()
+        check.stop()
+        deadline.stop()
+>       assert predicate(), "Qt flow did not reach the expected state"
+E       AssertionError: Qt flow did not reach the expected state
+E       assert False
+E        +  where False = <function test_full_low_batch_retries_an_unfinished_shared_prediction.<locals>.<lambda> at 0x109d2a160>()
+
+tests/test_prewarm_scheduler.py:68: AssertionError
+______ test_full_low_batch_retries_an_unfinished_shared_prediction[pause] ______
+
+library = <pet.library.MovieLibrary(0x8b9f073e0) at 0x1160fa400>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1160a6040>
+resolution = 'pause'
+
+    @pytest.mark.parametrize("resolution", ["decode_failure", "pause"])
+    def test_full_low_batch_retries_an_unfinished_shared_prediction(
+        library, monkeypatch, resolution,
+    ):
+        """A pending delegated frame is not a completed full-policy warm batch."""
+        clip = library.movie("写代码")
+        prediction_waiting = threading.Event()
+        release_prediction = threading.Event()
+        prediction_finished = threading.Event()
+        gate_lock = threading.Lock()
+        first_gate = True
+        attempts = 0
+        real_gate = library._await_interaction_clear
+    
+        def controlled_gate(generation):
+            nonlocal first_gate
+            with gate_lock:
+                hold_prediction = first_gate
+                first_gate = False
+            if hold_prediction:
+                prediction_waiting.set()
+                assert release_prediction.wait(10)
+            return real_gate(generation)
+    
+        def fail_first_decode():
+            nonlocal attempts
+            attempts += 1
+            if attempts == 1 and resolution == "decode_failure":
+                prediction_finished.set()
+                raise RuntimeError("injected shared prediction decode failure")
+            clip.frame_calls += 1
+    
+        monkeypatch.setattr(library, "_await_interaction_clear", controlled_gate)
+        monkeypatch.setattr(clip, "warm_first_frame", fail_first_decode)
+        try:
+            library.warm_predicted("写代码")
+            spin_until(prediction_waiting.is_set)
+            library._warm_low_priority_background()
+>           spin_until(lambda: clip.meta_calls > 0 and not library._low_warm_in_flight)
+
+tests/test_prewarm_scheduler.py:413: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+predicate = <function test_full_low_batch_retries_an_unfinished_shared_prediction.<locals>.<lambda> at 0x109d29440>
+timeout_ms = 10000
+
+    def spin_until(predicate, *, timeout_ms=10000):
+        """Pump Qt until an observed event, with a generous bounded deadline."""
+        loop = QEventLoop()
+        check = QTimer()
+        check.setInterval(5)
+        check.timeout.connect(lambda: loop.quit() if predicate() else None)
+        deadline = QTimer()
+        deadline.setSingleShot(True)
+        deadline.timeout.connect(loop.quit)
+        check.start()
+        deadline.start(timeout_ms)
+        if not predicate():
+            loop.exec()
+        check.stop()
+        deadline.stop()
+>       assert predicate(), "Qt flow did not reach the expected state"
+E       AssertionError: Qt flow did not reach the expected state
+E       assert False
+E        +  where False = <function test_full_low_batch_retries_an_unfinished_shared_prediction.<locals>.<lambda> at 0x109d29440>()
+
+tests/test_prewarm_scheduler.py:68: AssertionError
+_________ test_online_edge_immediately_reads_events_and_resumes_timer __________
+
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-147/test_online_edge_immediately_r0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1160a60b0>
+
+    def test_online_edge_immediately_reads_events_and_resumes_timer(tmp_path, monkeypatch):
+        tracker, bridge_dir = _make_tracker(tmp_path, monkeypatch, online=False)
+        tracker.start()
+        _write(bridge_dir, *_records_for("working"))
+        _queue_probe_result(tracker, monkeypatch, True)
+        assert tracker.current_state is DshState.OFFLINE
+        _drain_qt_events()
+    
+>       assert tracker.current_state is DshState.WORKING, "上线结果在 GUI 线程立即补读事件"
+E       AssertionError: 上线结果在 GUI 线程立即补读事件
+E       assert <DshState.OFFLINE: 'offline'> is <DshState.WORKING: 'working'>
+E        +  where <DshState.OFFLINE: 'offline'> = <pet.dsh_state.DshStateTracker(0x8b9f07070) at 0x1316533c0>.current_state
+E        +  and   <DshState.WORKING: 'working'> = DshState.WORKING
+
+tests/test_dsh_state.py:112: AssertionError
+_____ test_online_recovery_reads_first_events_from_new_bridge_file[False] ______
+
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-147/test_online_recovery_reads_fir0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109d86c80>
+online_at_start = False
+
+    @pytest.mark.parametrize('online_at_start', [False, True])
+    def test_online_recovery_reads_first_events_from_new_bridge_file(
+            tmp_path, monkeypatch, online_at_start):
+        """使用生产默认 scan/backfill 设置；只忽略启动前历史，不漏离线期新 PID 文件。"""
+        _qapp()
+        config_dir = tmp_path / 'cfg'
+        config_dir.mkdir()
+        bridge_dir = tmp_path / 'dsh-pet-bridge'
+        bridge_dir.mkdir()
+        (bridge_dir / 'dsh-100.jsonl').write_text(
+            json.dumps({'event': 'AgentStatus', 'state': 'success'}) + '\n',
+            encoding='utf-8',
+        )
+        monkeypatch.setattr(harness_launcher, 'is_running', lambda port: online_at_start)
+        tracker = DshStateTracker(config_dir)
+        tracker.start()
+        initial_state = DshState.IDLE if online_at_start else DshState.OFFLINE
+        assert tracker.current_state is initial_state, '启动前历史仍不得重放'
+    
+        _queue_probe_result(tracker, monkeypatch, False)
+        _drain_qt_events()
+        assert tracker.current_state is DshState.OFFLINE
+        assert not tracker._event_timer.isActive()
+        (bridge_dir / 'dsh-200.jsonl').write_text(
+            json.dumps({'event': 'AgentStatus', 'state': 'working'}) + '\n',
+            encoding='utf-8',
+        )
+        _queue_probe_result(tracker, monkeypatch, True)
+        _drain_qt_events()
+    
+>       assert tracker.current_state is DshState.WORKING, '恢复在线必须消费新桥文件的首批事件'
+E       AssertionError: 恢复在线必须消费新桥文件的首批事件
+E       assert <DshState.OFFLINE: 'offline'> is <DshState.WORKING: 'working'>
+E        +  where <DshState.OFFLINE: 'offline'> = <pet.dsh_state.DshStateTracker(0x8b9f071b0) at 0x1316531c0>.current_state
+E        +  and   <DshState.WORKING: 'working'> = DshState.WORKING
+
+tests/test_dsh_state.py:161: AssertionError
+______ test_online_recovery_reads_first_events_from_new_bridge_file[True] ______
+
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-147/test_online_recovery_reads_fir1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109d872a0>
+online_at_start = True
+
+    @pytest.mark.parametrize('online_at_start', [False, True])
+    def test_online_recovery_reads_first_events_from_new_bridge_file(
+            tmp_path, monkeypatch, online_at_start):
+        """使用生产默认 scan/backfill 设置；只忽略启动前历史，不漏离线期新 PID 文件。"""
+        _qapp()
+        config_dir = tmp_path / 'cfg'
+        config_dir.mkdir()
+        bridge_dir = tmp_path / 'dsh-pet-bridge'
+        bridge_dir.mkdir()
+        (bridge_dir / 'dsh-100.jsonl').write_text(
+            json.dumps({'event': 'AgentStatus', 'state': 'success'}) + '\n',
+            encoding='utf-8',
+        )
+        monkeypatch.setattr(harness_launcher, 'is_running', lambda port: online_at_start)
+        tracker = DshStateTracker(config_dir)
+        tracker.start()
+        initial_state = DshState.IDLE if online_at_start else DshState.OFFLINE
+        assert tracker.current_state is initial_state, '启动前历史仍不得重放'
+    
+        _queue_probe_result(tracker, monkeypatch, False)
+        _drain_qt_events()
+>       assert tracker.current_state is DshState.OFFLINE
+E       AssertionError: assert <DshState.IDLE: 'idle'> is <DshState.OFFLINE: 'offline'>
+E        +  where <DshState.IDLE: 'idle'> = <pet.dsh_state.DshStateTracker(0x8b9f072f0) at 0x1315c9a80>.current_state
+E        +  and   <DshState.OFFLINE: 'offline'> = DshState.OFFLINE
+
+tests/test_dsh_state.py:152: AssertionError
+__________ test_stop_during_online_transition_does_not_restart_timers __________
+
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-147/test_stop_during_online_transi0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109d87700>
+
+    def test_stop_during_online_transition_does_not_restart_timers(tmp_path, monkeypatch):
+        tracker, bridge_dir = _make_tracker(tmp_path, monkeypatch, online=False)
+        tracker.start()
+        _write(bridge_dir, *_records_for("working"))
+    
+        def stop_on_idle(_previous, current):
+            if current == "idle":
+                tracker.stop()
+    
+        tracker.state_changed.connect(stop_on_idle)
+        _queue_probe_result(tracker, monkeypatch, True)
+        _drain_qt_events()
+    
+>       assert tracker.current_state is DshState.IDLE
+E       AssertionError: assert <DshState.OFFLINE: 'offline'> is <DshState.IDLE: 'idle'>
+E        +  where <DshState.OFFLINE: 'offline'> = <pet.dsh_state.DshStateTracker(0x8b9f070c0) at 0x131796ac0>.current_state
+E        +  and   <DshState.IDLE: 'idle'> = DshState.IDLE
+
+tests/test_dsh_state.py:227: AssertionError
+_____________ test_stop_while_resuming_drops_remaining_event_batch _____________
+
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-147/test_stop_while_resuming_drops0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109d87cb0>
+
+    def test_stop_while_resuming_drops_remaining_event_batch(tmp_path, monkeypatch):
+        tracker, bridge_dir = _make_tracker(tmp_path, monkeypatch, online=False)
+        tracker.start()
+        _write(bridge_dir, *_records_for("working", "success"))
+    
+        def stop_on_working(_previous, current):
+            if current == "working":
+                tracker.stop()
+    
+        tracker.state_changed.connect(stop_on_working)
+        _queue_probe_result(tracker, monkeypatch, True)
+        _drain_qt_events()
+    
+>       assert tracker.current_state is DshState.WORKING
+E       AssertionError: assert <DshState.OFFLINE: 'offline'> is <DshState.WORKING: 'working'>
+E        +  where <DshState.OFFLINE: 'offline'> = <pet.dsh_state.DshStateTracker(0x8b9f072a0) at 0x131a831c0>.current_state
+E        +  and   <DshState.WORKING: 'working'> = DshState.WORKING
+
+tests/test_dsh_state.py:257: AssertionError
+______ test_resumed_event_timer_preserves_latch_timeout[waiting_approval] ______
+
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-147/test_resumed_event_timer_prese0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109d858d0>
+state = <DshState.WAITING_APPROVAL: 'waiting_approval'>
+
+    @pytest.mark.parametrize("state", [DshState.WAITING_APPROVAL, DshState.WAITING_QUESTION])
+    def test_resumed_event_timer_preserves_latch_timeout(tmp_path, monkeypatch, state):
+        now = [10.0]
+        tracker, bridge_dir = _make_tracker(tmp_path, monkeypatch, clock=lambda: now[0])
+        tracker.start()
+        _write(bridge_dir, *_records_for(state.value, "working"))
+        _queue_probe_result(tracker, monkeypatch, True)
+        _drain_qt_events()
+>       assert tracker.current_state is state
+E       AssertionError: assert <DshState.OFFLINE: 'offline'> is <DshState.WAITING_APPROVAL: 'waiting_approval'>
+E        +  where <DshState.OFFLINE: 'offline'> = <pet.dsh_state.DshStateTracker(0x8b9f07110) at 0x1316060c0>.current_state
+
+tests/test_dsh_state.py:293: AssertionError
+______ test_resumed_event_timer_preserves_latch_timeout[waiting_question] ______
+
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-147/test_resumed_event_timer_prese1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109d85d30>
+state = <DshState.WAITING_QUESTION: 'waiting_question'>
+
+    @pytest.mark.parametrize("state", [DshState.WAITING_APPROVAL, DshState.WAITING_QUESTION])
+    def test_resumed_event_timer_preserves_latch_timeout(tmp_path, monkeypatch, state):
+        now = [10.0]
+        tracker, bridge_dir = _make_tracker(tmp_path, monkeypatch, clock=lambda: now[0])
+        tracker.start()
+        _write(bridge_dir, *_records_for(state.value, "working"))
+        _queue_probe_result(tracker, monkeypatch, True)
+        _drain_qt_events()
+>       assert tracker.current_state is state
+E       AssertionError: assert <DshState.OFFLINE: 'offline'> is <DshState.WAITING_QUESTION: 'waiting_question'>
+E        +  where <DshState.OFFLINE: 'offline'> = <pet.dsh_state.DshStateTracker(0x8b9f07160) at 0x131a97c00>.current_state
+
+tests/test_dsh_state.py:293: AssertionError
+___________ test_replacement_does_not_join_reader_until_exit[False] ____________
+
+residency = (<PySide6.QtWidgets.QApplication(0x8ba4272a0) at 0x1093b8f40>, <pet.app.AppShell object at 0x11402fd90>, [<pet.library.MovieLibrary(0x8b876f980) at 0x1142c8280>, <pet.library.MovieLibrary(0x8b876fc50) at 0x131a58240>])
+drain_at_exit = False
+
+    @pytest.mark.parametrize('drain_at_exit', [False, True])
+    def test_replacement_does_not_join_reader_until_exit(residency, drain_at_exit):
+        """Inject a held reader because a real stuck pipe cannot be forced safely.
+    
+        The public switch and real QObject destruction must perform zero waiting
+        joins, retain the reader identity, and drain it explicitly at application
+        exit. An instrumented join records requests without depending on wall time.
+        """
+        import threading
+        from pet import webm_clip
+    
+        _, shell, _ = residency
+        old = shell.win
+        clip = old.movie
+        released = threading.Event()
+        entered = threading.Event()
+        calls = []
+        draining = False
+    
+        def reader():
+            entered.set()
+            released.wait()
+    
+        thread = threading.Thread(target=reader, name='held-retirement-fixture')
+        thread.start()
+        assert entered.wait(5)
+        original_join = thread.join
+    
+        def join(timeout=None):
+            calls.append((draining, timeout))
+            if draining and timeout and timeout > 0:
+                released.set()
+                return original_join(timeout)
+            return original_join(0)
+    
+        thread.join = join
+        record = webm_clip._Reader(thread=thread, proc=None)
+        clip._retired.append(record)
+        try:
+            shell.instance.switch_character('fixture-b')
+            assert shell.win is not old and old._resources_released
+            _turn()
+            QCoreApplication.sendPostedEvents(None, QEvent.Type.DeferredDelete)
+>           assert not shiboken6.isValid(old)  # Destruction must not add a GUI join.
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           assert not True
+E            +  where True = <built-in function isValid>(<pet.window.PetWindow(0x8bcbbf800) at 0x131a59400>)
+E            +    where <built-in function isValid> = shiboken6.isValid
+
+tests/test_character_switch_lifecycle.py:308: AssertionError
+----------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: This plugin does not support raise()
+QtWarningMsg: QSystemTrayIcon::setVisible: No Icon set
+QtWarningMsg: This plugin does not support raise()
+QtWarningMsg: QSystemTrayIcon::setVisible: No Icon set
+____________ test_replacement_does_not_join_reader_until_exit[True] ____________
+
+residency = (<PySide6.QtWidgets.QApplication(0x8ba4272a0) at 0x1093b8f40>, <pet.app.AppShell object at 0x1141f07d0>, [<pet.library.MovieLibrary(0x8b876fa70) at 0x131b1cb80>, <pet.library.MovieLibrary(0x8b9f07e30) at 0x131b24c40>])
+drain_at_exit = True
+
+    @pytest.mark.parametrize('drain_at_exit', [False, True])
+    def test_replacement_does_not_join_reader_until_exit(residency, drain_at_exit):
+        """Inject a held reader because a real stuck pipe cannot be forced safely.
+    
+        The public switch and real QObject destruction must perform zero waiting
+        joins, retain the reader identity, and drain it explicitly at application
+        exit. An instrumented join records requests without depending on wall time.
+        """
+        import threading
+        from pet import webm_clip
+    
+        _, shell, _ = residency
+        old = shell.win
+        clip = old.movie
+        released = threading.Event()
+        entered = threading.Event()
+        calls = []
+        draining = False
+    
+        def reader():
+            entered.set()
+            released.wait()
+    
+        thread = threading.Thread(target=reader, name='held-retirement-fixture')
+        thread.start()
+        assert entered.wait(5)
+        original_join = thread.join
+    
+        def join(timeout=None):
+            calls.append((draining, timeout))
+            if draining and timeout and timeout > 0:
+                released.set()
+                return original_join(timeout)
+            return original_join(0)
+    
+        thread.join = join
+        record = webm_clip._Reader(thread=thread, proc=None)
+        clip._retired.append(record)
+        try:
+            shell.instance.switch_character('fixture-b')
+            assert shell.win is not old and old._resources_released
+            _turn()
+            QCoreApplication.sendPostedEvents(None, QEvent.Type.DeferredDelete)
+>           assert not shiboken6.isValid(old)  # Destruction must not add a GUI join.
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           assert not True
+E            +  where True = <built-in function isValid>(<pet.window.PetWindow(0x8bcbbef40) at 0x13175c500>)
+E            +    where <built-in function isValid> = shiboken6.isValid
+
+tests/test_character_switch_lifecycle.py:308: AssertionError
+----------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: This plugin does not support raise()
+QtWarningMsg: QSystemTrayIcon::setVisible: No Icon set
+QtWarningMsg: This plugin does not support raise()
+QtWarningMsg: QSystemTrayIcon::setVisible: No Icon set
+____________ test_control_group_spawns_normally_without_session_end ____________
+
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-147/test_control_group_spawns_norm0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x131b135b0>
+
+    def test_control_group_spawns_normally_without_session_end(tmp_path, monkeypatch):
+        """对照组：未收到会话结束通知时，同一路径照常拉起（证明门是唯一差异）。
+    
+        与 test_webm_reader_lifecycle 同款：reader 线程会经 `_ensure_ffmpeg_exe`
+        跑真实的 `ffmpeg -version` 探测，测试里替换为空操作（探测不是本用例的
+        被测对象，且受限沙箱下子进程 STDIO 捕获可能不稳定）。
+        """
+        spy = _SpawnSpy()
+        spy.install(monkeypatch)
+        monkeypatch.setattr(webm_clip_mod, "_ensure_ffmpeg_exe", lambda: None)
+        clip = _make_clip(tmp_path, frame_count=0)
+        clip._duration = 0.0
+    
+        assert webm_clip_mod.session_ending() is False
+    
+        assert clip.start() is True
+        assert spy.read_frames_calls, "正常运行期必须照常拉起 reader（对照组）"
+        clip._ensure_meta()
+>       assert spy.count_calls, "正常运行期元数据探测照常（对照组）"
+E       AssertionError: 正常运行期元数据探测照常（对照组）
+E       assert []
+E        +  where [] = <tests.test_session_end_ffmpeg_guard._SpawnSpy object at 0x1141f0f50>.count_calls
+
+tests/test_session_end_ffmpeg_guard.py:186: AssertionError
+=============================== warnings summary ===============================
+tests/test_character_switch_lifecycle.py::test_mid_constructor_failure_releases_real_candidate_widgets[_read_self_talk_texts]
+  /Users/ray/Documents/New project/dsr-pet/pet/window.py:4574: RuntimeWarning: libpyside: Failed to disconnect (<bound method PetWindow._on_speech_bubble_hidden of <pet.window.PetWindow(0x8bcbbf640) at 0x131a945c0>>) from signal "hidden_signal()".
+    bubble.hidden_signal.disconnect(self._on_speech_bubble_hidden)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_prewarm_scheduler.py::test_last_holder_release_from_worker_resumes_on_gui_thread
+FAILED tests/test_prewarm_scheduler.py::test_high_priority_burst_shares_one_inflight_batch
+FAILED tests/test_prewarm_scheduler.py::test_high_batch_captures_generation_before_worker_starts
+FAILED tests/test_prewarm_scheduler.py::test_stale_release_cannot_resume_new_hold
+FAILED tests/test_prewarm_scheduler.py::test_start_failure_releases_claim_for_next_request[high]
+FAILED tests/test_prewarm_scheduler.py::test_bulk_frame_claim_merges_predictions_only_when_it_warms_frames[True-high]
+FAILED tests/test_prewarm_scheduler.py::test_bulk_frame_claim_merges_predictions_only_when_it_warms_frames[True-low]
+FAILED tests/test_prewarm_scheduler.py::test_bulk_frame_claim_merges_predictions_only_when_it_warms_frames[False-high]
+FAILED tests/test_prewarm_scheduler.py::test_bulk_frame_claim_merges_predictions_only_when_it_warms_frames[False-low]
+FAILED tests/test_prewarm_scheduler.py::test_prediction_inflight_is_not_repeated_by_high_batch
+FAILED tests/test_prewarm_scheduler.py::test_cancelled_batch_completion_rearms_timer_on_gui_thread
+FAILED tests/test_prewarm_scheduler.py::test_full_low_batch_retries_an_unfinished_shared_prediction[decode_failure]
+FAILED tests/test_prewarm_scheduler.py::test_full_low_batch_retries_an_unfinished_shared_prediction[pause]
+FAILED tests/test_dsh_state.py::test_online_edge_immediately_reads_events_and_resumes_timer
+FAILED tests/test_dsh_state.py::test_online_recovery_reads_first_events_from_new_bridge_file[False]
+FAILED tests/test_dsh_state.py::test_online_recovery_reads_first_events_from_new_bridge_file[True]
+FAILED tests/test_dsh_state.py::test_stop_during_online_transition_does_not_restart_timers
+FAILED tests/test_dsh_state.py::test_stop_while_resuming_drops_remaining_event_batch
+FAILED tests/test_dsh_state.py::test_resumed_event_timer_preserves_latch_timeout[waiting_approval]
+FAILED tests/test_dsh_state.py::test_resumed_event_timer_preserves_latch_timeout[waiting_question]
+FAILED tests/test_character_switch_lifecycle.py::test_replacement_does_not_join_reader_until_exit[False]
+FAILED tests/test_character_switch_lifecycle.py::test_replacement_does_not_join_reader_until_exit[True]
+FAILED tests/test_session_end_ffmpeg_guard.py::test_control_group_spawns_normally_without_session_end
+23 failed, 285 passed, 1 warning in 101.81s (0:01:41)

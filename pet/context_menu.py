@@ -86,7 +86,7 @@ def populate_context_menu(menu: QMenu, pet) -> None:
         cfg.get("context_menu_template", "modern") if cfg is not None else "modern"
     )
     template = load_menu_template(template_id)
-    if template_id == "legacy":
+    if template_id == "legacy" and getattr(pet, "_companion_mode", False) is not True:
         build_legacy_menu(menu, pet, template)
         install_responsive_menu_style(menu)
         install_stay_open_interaction(menu)

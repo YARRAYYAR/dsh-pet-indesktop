@@ -9,7 +9,8 @@ def _chat_available() -> bool:
     return False
 
 
-def _exec_settings(app, config, *, include_ai: bool = True) -> int:
+def _exec_settings(app, config, *, include_ai: bool = True, page_key: str = "",
+                   companion_mode: bool = False) -> int:
     """独立设置进程主体：锁 + 独立对话框 + 事件循环。
 
     单独拆一层是为了让测试能注入最小 QApplication/临时 Config，不必真的跑
@@ -19,6 +20,14 @@ def _exec_settings(app, config, *, include_ai: bool = True) -> int:
 
     from PySide6.QtCore import QLockFile
 
+    from .settings_process_navigation import SettingsProcessNavigationServer, select_settings_page
+
+    try:
+        config.dir.mkdir(parents=True, exist_ok=True)
+    except OSError:
+        logging.exception("创建设置进程配置目录失败: %s", config.dir)
+        return 1
+
     # 单实例：设置进程自己持有 settings.lock 直到退出（QLockFile 在解锁/析构时
     # 删除锁文件；崩溃残留的锁由 QLockFile 按 pid 存活判定为陈旧后接管）。
     # 主进程经同一把锁判断"是否已有设置页开着"，已持有则不再拉起。
@@ -27,16 +36,29 @@ def _exec_settings(app, config, *, include_ai: bool = True) -> int:
     if not lock.tryLock(0):
         logging.getLogger(__name__).info("已有设置进程持有 settings.lock，本次退出")
         return 0
-    from .modern_settings_dialog import ModernSettingsDialog
-
-    # parent=None + standalone=True：没有桌宠窗口可依附，试听/避让由
-    # pet.settings_standalone 提供进程内最小宿主。
-    dialog = ModernSettingsDialog(config, parent=None, include_ai=include_ai, standalone=True)
-    dialog.finished.connect(lambda _result: app.quit())
-    dialog.show()
+    navigation_server = None
     try:
+        navigation_server = SettingsProcessNavigationServer(config)
+        from .modern_settings_dialog import ModernSettingsDialog
+
+        # parent=None + standalone=True：没有桌宠窗口可依附，试听/避让由
+        # pet.settings_standalone 提供进程内最小宿主。
+        dialog = ModernSettingsDialog(
+            config, parent=None, include_ai=include_ai, standalone=True,
+            **({"companion_mode": True} if companion_mode else {}),
+        )
+        navigation_server.set_dialog(dialog)
+        if page_key:
+            select_settings_page(dialog, page_key, activate=False)
+        dialog.finished.connect(lambda _result: app.quit())
+        dialog.show()
+        if page_key:
+            dialog.raise_()
+            dialog.activateWindow()
         return app.exec()
     finally:
+        if navigation_server is not None:
+            navigation_server.close()
         lock.unlock()
 
 
@@ -54,6 +76,13 @@ def _settings_instance_id(argv) -> str:
     if index + 1 >= len(argv):
         return ""
     return str(argv[index + 1] or "").strip()
+
+
+def _settings_page_key(argv) -> str:
+    """从 --settings-page 解析语义页面标识。"""
+    from .settings_process_navigation import page_key_from_argv
+
+    return page_key_from_argv(argv)
 
 
 def _run_settings(config=None) -> int:
@@ -80,7 +109,13 @@ def _run_settings(config=None) -> int:
         config.dir.mkdir(parents=True, exist_ok=True)
     except OSError:
         pass
-    return _exec_settings(app, config, include_ai=_chat_available())
+    return _exec_settings(
+        app,
+        config,
+        include_ai=_chat_available(),
+        page_key=_settings_page_key(sys.argv),
+        companion_mode="--companion" in sys.argv,
+    )
 
 
 def _main() -> int:
@@ -95,7 +130,7 @@ def _main() -> int:
     if "--settings" in sys.argv:
         return _run_settings()
     from .app import main as app_main
-    return app_main(enable_chat=False)
+    return app_main(enable_chat=False, companion_mode=True)
 
 
 if __name__ == "__main__":

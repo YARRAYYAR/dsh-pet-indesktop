@@ -1,0 +1,34 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_codex_companion_flow.py",
+    "-k",
+    "owned_request_event"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "python": "3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]",
+    "PySide6": "6.11.2",
+    "Qt": "6.11.2",
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O"
+  },
+  "setup": "Actual QProcess and owner event signal, temporary Codex home, deterministic stdio peer; no private sessions/model.",
+  "inputs": [
+    "structured questions",
+    "command approval",
+    "file approval",
+    "existing client and UI boundaries"
+  ],
+  "assertions": [
+    "request event has visible body",
+    "structured requests remain answerable",
+    "completion preserves original agent text",
+    "unrelated pending/lifecycle identities remain valid"
+  ],
+  "result": "...                                                                      [100%]\n3 passed, 6 deselected in 1.07s\n",
+  "exit_status": 0
+}

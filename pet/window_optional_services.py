@@ -179,16 +179,29 @@ class WindowFeatureGateMixin:
     _edge_probe: Any = None
     _top_flip: Any = None
     _codex_link: Any = None
+    _codex_owner: Any = None
     _throw_egg: Any = None
     _music_lyric: Any = None
     _cursor_facing_timer: Any = None
 
     # ------------------------------------------------------------ 判定
+    @property
+    def companion_mode(self) -> bool:
+        return getattr(self, '_companion_mode', False)
+
+    def set_codex_owner(self, owner) -> None:
+        """Bind the application-owned connection without transferring ownership."""
+        self._codex_owner = owner
+
     def _proactive_wanted(self) -> bool:
+        if getattr(self, "_companion_mode", False):
+            return False
         raw = self.cfg.get("proactive_screen", {})
         return bool((raw or {}).get("enabled", False))
 
     def _agent_link_wanted(self) -> bool:
+        if getattr(self, "_companion_mode", False):
+            return False
         raw = self.cfg.get("agent_link", {})
         if not isinstance(raw, dict):
             return False
@@ -316,7 +329,7 @@ class WindowFeatureGateMixin:
         自行检查可见性并空转。放在这里判断反而会漏掉"配置写入时窗口恰好隐藏"
         的情况，导致功能再也起不来。
         """
-        enabled = bool(self.cfg.get("music_lyric_enabled", False))
+        enabled = not getattr(self, "_companion_mode", False) and bool(self.cfg.get("music_lyric_enabled", False))
         if not enabled and self._music_lyric is None:
             return  # 从未启用过：不为一个关着的功能白养一个定时器
         controller = self.install_music_lyric()
@@ -583,11 +596,16 @@ class WindowFeatureGateMixin:
         refresh = getattr(bubble, 'refresh_task_appearance', None)
         if callable(refresh):
             refresh()
+        if getattr(self, '_companion_mode', False):
+            owner = self._codex_owner
+            if owner is not None:
+                owner.set_enabled(bool(self.cfg.get('codex_link_enabled', False)))
+            return
         enabled = bool(self.cfg.get('codex_link_enabled', False)) and not self.cfg.instance_id
         if enabled and self._codex_link is None:
             from .codex_link import CodexMonitor
             self._codex_link = CodexMonitor(parent=self)
-            self._codex_link.event.connect(self._on_codex_event)
+            self._codex_link.event.connect(self.on_codex_event)
         monitor = self._codex_link
         if monitor is not None:
             if enabled and not monitor.timer.isActive():
@@ -597,18 +615,23 @@ class WindowFeatureGateMixin:
                 self.resolve_alert('dsr-codex')
 
     def codex_status(self) -> dict:
+        if self._codex_owner is not None:
+            return self._codex_owner.snapshot()
         monitor = self._codex_link
         if monitor is not None:
             return monitor.snapshot()
         return {'enabled': False, 'state': 'disconnected', 'session_id': '', 'text': '', 'project': ''}
 
-    def _on_codex_event(self, event: dict) -> None:
+    def on_codex_event(self, event: dict) -> None:
         from .codex_link import open_codex
         state = event['state']
+        callback = getattr(self, 'on_open_codex_tasks', None)
+        interactive = event.get('source') == 'pet_session' and callable(callback)
+        buttons = [('处理任务', callback)] if interactive else [('打开 Codex', lambda: open_codex(event['session_id']))]
         self.resolve_alert('dsr-codex')
         if state in {'question', 'complete'}:
             self.show_alert(event['text'], subtitle='Codex · 需要你回答' if state == 'question' else 'Codex · 本轮完成',
-                            buttons=[('打开 Codex', lambda: open_codex(event['session_id']))],
+                            buttons=buttons,
                             sticky=state == 'question', duration_ms=0 if state == 'question' else 8000,
                             alert_id='dsr-codex', priority=1 if state == 'question' else 3,
                             alert_type='question' if state == 'question' else 'task_complete')

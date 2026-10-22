@@ -1,0 +1,56 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "docs/evidence/codex-companion/verify_native_cli.py"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "exit_status": 0,
+  "setup": "Fresh HOME/CODEX_HOME/DSH_HOME, whitelist environment, null keyring; no real sessions, credentials or model requests.",
+  "inputs": "Installed codex binary; initialize + initialized + account reads only. No thread/start, resume or turn/start.",
+  "assertions": "Installed CLI handshakes, exposes unauthenticated account error, stops and reaps owned process.",
+  "program": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex",
+  "version": "codex-cli 0.163.0-alpha.10.2",
+  "version_exit_status": 0,
+  "pyside_version": "6.11.2",
+  "states": [
+    {
+      "connection": "connecting",
+      "state": "idle",
+      "error": ""
+    },
+    {
+      "connection": "ready",
+      "state": "idle",
+      "error": ""
+    },
+    {
+      "connection": "ready",
+      "state": "idle",
+      "error": "account/usage/read: codex account authentication required to read token usage"
+    },
+    {
+      "connection": "ready",
+      "state": "idle",
+      "error": "account/rateLimits/read: codex account authentication required to read rate limits"
+    },
+    {
+      "connection": "disconnected",
+      "state": "idle",
+      "error": ""
+    },
+    {
+      "connection": "disconnected",
+      "state": "idle",
+      "error": ""
+    },
+    {
+      "connection": "disconnected",
+      "state": "idle",
+      "error": ""
+    }
+  ],
+  "ready": true,
+  "account_error": "account/rateLimits/read: codex account authentication required to read rate limits",
+  "process_stopped": true
+}

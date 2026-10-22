@@ -1,0 +1,26 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______________________ test_window_private_surface_frozen ______________________
+
+    def test_window_private_surface_frozen():
+        """S2 收口成果：window 私有成员跨模块访问在以下文件中必须保持零命中。"""
+        pattern = re.compile(r"(?:win|pet|window)\._[a-z]")
+        offenders = []
+        for rel in ("app.py", "agent_link.py"):
+            for lineno, line in enumerate(_read(rel).splitlines(), 1):
+                if pattern.search(line):
+                    offenders.append(f"{rel}:{lineno}: {line.strip()}")
+        for path in sorted((PET_DIR / "context_menus").glob("*.py")):
+            for lineno, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+                if pattern.search(line):
+                    offenders.append(f"context_menus/{path.name}:{lineno}: {line.strip()}")
+>       assert not offenders, "window 私有面回潮：\n" + "\n".join(offenders)
+E       AssertionError: window 私有面回潮：
+E         app.py:454: win._codex_owner = getattr(self.shell, 'codex_companion', None)
+E         app.py:1808: win._on_codex_event(event)
+E       assert not ["app.py:454: win._codex_owner = getattr(self.shell, 'codex_companion', None)", 'app.py:1808: win._on_codex_event(event)']
+
+tests/test_architecture.py:237: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_architecture.py::test_window_private_surface_frozen - Asser...
+1 failed in 0.26s

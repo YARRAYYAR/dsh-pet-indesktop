@@ -1,0 +1,26 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "ruff",
+    "check",
+    "pet/__main__.py",
+    "pet/app.py",
+    "pet/settings_process_navigation.py",
+    "tests/test_settings_process_isolation.py",
+    "docs/evidence/codex-companion/settings-entry/verify_process_navigation.py"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen"
+  },
+  "setup": "Use isolated test configuration; no real sessions or credentials.",
+  "inputs": [],
+  "assertions": [
+    "Command exits zero."
+  ],
+  "started_unix": 1792594074.046474,
+  "elapsed_seconds": 0.16365694999694824,
+  "exit_code": 0,
+  "output_file": "ruff-final.log"
+}

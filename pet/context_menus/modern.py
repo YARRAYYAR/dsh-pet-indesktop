@@ -16,6 +16,12 @@ def build_modern_menu(menu: QMenu, pet, template: dict) -> None:
         registered_actions=MENU_ACTIONS.ids,
         available_actions=MENU_ACTIONS.available_ids(pet),
     )
+    nodes = result.nodes
+    if getattr(pet, '_companion_mode', False) is True:
+        def has_codex(items):
+            return any(node.get('id') == 'codex_tasks' or has_codex(node.get('children', ())) for node in items)
+        if not has_codex(nodes):
+            nodes = ({'type': 'action', 'id': 'codex_tasks', 'visible': True}, *nodes)
     MENU_ACTIONS.populate(
-        menu, pet, result.nodes, enabled_actions=MENU_ACTIONS.enabled_ids(pet)
+        menu, pet, nodes, enabled_actions=MENU_ACTIONS.enabled_ids(pet)
     )

@@ -1,0 +1,22 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_settings_process_isolation.py"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "python": "3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]",
+    "PySide6": "6.11.2",
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O"
+  },
+  "setup": "pytest tmp_path Config isolation; real Qt event loops and QLocal server/socket; OS process launch mocked only at boundary.",
+  "inputs": "Entire settings process isolation regression family.",
+  "assertions": "Mode propagation, page activation, IPC redirection without duplicate settings launch, lock lifecycle, config merging, fallback and preview compatibility.",
+  "duration_seconds": 5.318598249999923,
+  "exit_status": 0,
+  "result_log": "green-family-final.log"
+}

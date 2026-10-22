@@ -1,0 +1,144 @@
+{
+  "scope": "CodexConnectionPage behavior review; preserve existing UI layout and animation",
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "environment": {
+    "system": "Darwin 25.6.0 arm64",
+    "python": "3.13.2",
+    "PySide6": "6.11.2",
+    "configuration": "temporary pytest Config directories; real Qt widgets and event loop",
+    "external_boundary": "isolated IPC peer and QProcess stdio peer; no model, login, network, real session or key used"
+  },
+  "inputs": [
+    "numeric and string JSON-RPC request IDs, including identical printed values",
+    "late command reply after switching to a readonly or disabled snapshot",
+    "reused request ID after session, turn and generation change",
+    "sending request while another command completes",
+    "readonly desktop question shape without kind",
+    "normalized reset timestamps 9223372036854775807 and 253402300800"
+  ],
+  "assertions": [
+    "preserve exact request ID type and bind answers to original session, turn and generation",
+    "keep readonly, disabled and already-sending controls disabled after callbacks",
+    "replace stale question cards and discard old answer controls on identity change",
+    "show desktop questions without offering write controls",
+    "retain quota window and percentage if reset time cannot be rendered",
+    "preserve draft on command failure and stop hidden page timer"
+  ],
+  "runs": [
+    {
+      "command": "env QT_QPA_PLATFORM=offscreen uv run pytest -q tests/test_codex_companion_ui.py -k question_submission",
+      "phase": "diagnostic before waiting for visible click geometry",
+      "log": "companion-ui-offscreen-click-diagnostic-red.log",
+      "result": "1 failed, 17 deselected; visible and enabled option has geometry (16,19,68,0) and empty visible region immediately after show",
+      "exit_status": 1
+    },
+    {
+      "command": "env QT_QPA_PLATFORM=offscreen uv run pytest -q tests/test_codex_companion_ui.py -k question_submission",
+      "phase": "after event-driven visible-center wait; real mouse click and checked assertion retained",
+      "log": "companion-ui-offscreen-click-green.log",
+      "result": "1 passed, 17 deselected in 0.94s",
+      "exit_status": 0
+    },
+    {
+      "command": "env QT_QPA_PLATFORM=offscreen uv run pytest -q tests/test_codex_client.py tests/test_codex_companion_flow.py tests/test_codex_companion_ui.py tests/test_codex_usage.py tests/test_dsr_codex_and_ceiling.py",
+      "phase": "related verification after click readiness fix",
+      "log": "companion-ui-offscreen-click-related-green.log",
+      "result": "68 passed in 7.05s",
+      "exit_status": 0
+    },
+    {
+      "command": "uv run pytest -q tests/test_codex_companion_ui.py",
+      "phase": "native macOS Qt verification after click readiness fix",
+      "log": "companion-ui-native-click-green.log",
+      "result": "18 passed in 12.36s",
+      "exit_status": 0
+    },
+    {
+      "command": "uv run ruff check pet/settings_codex.py tests/test_codex_companion_ui.py",
+      "phase": "lint after click readiness fix",
+      "log": "companion-ui-offscreen-click-ruff.log",
+      "result": "All checks passed",
+      "exit_status": 0
+    },
+    {
+      "command": "uv run pytest -q tests/test_codex_companion_ui.py -k default_constructor",
+      "phase": "before companion default-constructor fix",
+      "log": "companion-ui-default-constructor-red.log",
+      "result": "1 failed, 17 deselected; companion default constructor creates retired AI page",
+      "exit_status": 1
+    },
+    {
+      "command": "uv run pytest -q tests/test_codex_companion_ui.py",
+      "phase": "final verification after default-constructor fix",
+      "log": "companion-ui-review-final2-focused.log",
+      "result": "18 passed in 5.29s",
+      "exit_status": 0
+    },
+    {
+      "command": "uv run pytest -q tests/test_codex_client.py tests/test_codex_companion_flow.py tests/test_codex_companion_ui.py tests/test_codex_usage.py tests/test_dsr_codex_and_ceiling.py",
+      "phase": "final related verification after default-constructor fix",
+      "log": "companion-ui-review-final2-related.log",
+      "result": "65 passed in 9.67s",
+      "exit_status": 0
+    },
+    {
+      "command": "uv run ruff check pet/settings_codex.py tests/test_codex_companion_ui.py",
+      "phase": "final lint after default-constructor fix",
+      "log": "companion-ui-review-final2-ruff.log",
+      "result": "All checks passed",
+      "exit_status": 0
+    },
+    {
+      "command": "uv run pytest -q tests/test_codex_companion_ui.py",
+      "phase": "before UI identity and capability fixes",
+      "log": "companion-ui-review-red.log",
+      "result": "8 failed, 7 passed; six reviewed behavior failures plus two concurrently pending settings-slimming failures",
+      "exit_status": 1
+    },
+    {
+      "command": "uv run pytest -q tests/test_codex_companion_ui.py",
+      "phase": "after UI identity and capability fixes, before quota regression",
+      "log": "companion-ui-review-green.log",
+      "result": "15 passed in 3.17s",
+      "exit_status": 0
+    },
+    {
+      "command": "uv run pytest -q tests/test_codex_companion_ui.py -k unrenderable",
+      "phase": "before quota timestamp fix",
+      "log": "companion-ui-quota-red.log",
+      "result": "2 failed, 15 deselected; timestamp conversion raises OverflowError or ValueError",
+      "exit_status": 1
+    },
+    {
+      "command": "uv run pytest -q tests/test_codex_companion_ui.py",
+      "phase": "final focused verification",
+      "log": "companion-ui-review-final-focused.log",
+      "result": "17 passed in 4.66s",
+      "exit_status": 0
+    },
+    {
+      "command": "uv run pytest -q tests/test_codex_client.py tests/test_codex_companion_flow.py tests/test_codex_companion_ui.py tests/test_codex_usage.py tests/test_dsr_codex_and_ceiling.py",
+      "phase": "final related verification",
+      "log": "companion-ui-review-final-related.log",
+      "result": "64 passed in 11.58s",
+      "exit_status": 0
+    },
+    {
+      "command": "uv run ruff check pet/settings_codex.py tests/test_codex_companion_ui.py",
+      "phase": "final lint",
+      "log": "companion-ui-review-final-ruff.log",
+      "result": "All checks passed",
+      "exit_status": 0
+    },
+    {
+      "command": "git diff --check -- pet/settings_codex.py tests/test_codex_companion_ui.py",
+      "phase": "final whitespace review",
+      "result": "no output",
+      "exit_status": 0
+    }
+  ],
+  "limits": [
+    "Full suite, high-load timing reruns, native visual review, resource measurements and publication remain with the main integration task.",
+    "These checks establish real Qt behavior with deterministic external peers; they do not claim live model or Desktop transport write access."
+  ]
+}

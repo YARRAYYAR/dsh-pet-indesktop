@@ -1,0 +1,76 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_______ test_latest_rollout_beyond_candidate_budget_is_discovered[False] _______
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x1137fe660>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-119/test_latest_rollout_beyond_can0')
+split_dates = False
+
+    @pytest.mark.parametrize('split_dates', [False, True])
+    def test_latest_rollout_beyond_candidate_budget_is_discovered(qtbot, tmp_path, split_dates):
+        from pet.codex_link import CodexMonitor, MAX_DISCOVERY_FILES
+    
+        today = tmp_path / 'today'
+        previous = tmp_path / 'previous'
+        today.mkdir()
+        previous.mkdir()
+        for index in range(MAX_DISCOVERY_FILES + 1):
+            directory = previous if split_dates and index == MAX_DISCOVERY_FILES else today
+            path = directory / f'rollout-{index:04d}.jsonl'
+            path.write_text(json.dumps({
+                'type': 'session_meta',
+                'payload': {'id': f'session-{index}', 'cwd': '/isolated/project'},
+            }) + '\n')
+            os.utime(path, (1000 + index, 1000 + index))
+        # The actual filesystem enumeration, rather than a guessed filename order,
+        # identifies the entry excluded by the old early-islice implementation.
+        paths = [*today.glob('rollout-*.jsonl'), *previous.glob('rollout-*.jsonl')]
+        newest = paths[MAX_DISCOVERY_FILES]
+        os.utime(newest, (100000, 100000))
+        expected = json.loads(newest.read_text())['payload']['id']
+        monitor = CodexMonitor(tmp_path, date_dirs=[today, previous])
+        try:
+            monitor.start()
+>           qtbot.waitUntil(lambda: monitor.snapshot()['session_id'] == expected, timeout=1000)
+E           pytestqt.exceptions.TimeoutError: waitUntil timed out in 1000 milliseconds
+
+tests/test_codex_discovery.py:39: TimeoutError
+_______ test_latest_rollout_beyond_candidate_budget_is_discovered[True] ________
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x1153b4190>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-119/test_latest_rollout_beyond_can1')
+split_dates = True
+
+    @pytest.mark.parametrize('split_dates', [False, True])
+    def test_latest_rollout_beyond_candidate_budget_is_discovered(qtbot, tmp_path, split_dates):
+        from pet.codex_link import CodexMonitor, MAX_DISCOVERY_FILES
+    
+        today = tmp_path / 'today'
+        previous = tmp_path / 'previous'
+        today.mkdir()
+        previous.mkdir()
+        for index in range(MAX_DISCOVERY_FILES + 1):
+            directory = previous if split_dates and index == MAX_DISCOVERY_FILES else today
+            path = directory / f'rollout-{index:04d}.jsonl'
+            path.write_text(json.dumps({
+                'type': 'session_meta',
+                'payload': {'id': f'session-{index}', 'cwd': '/isolated/project'},
+            }) + '\n')
+            os.utime(path, (1000 + index, 1000 + index))
+        # The actual filesystem enumeration, rather than a guessed filename order,
+        # identifies the entry excluded by the old early-islice implementation.
+        paths = [*today.glob('rollout-*.jsonl'), *previous.glob('rollout-*.jsonl')]
+        newest = paths[MAX_DISCOVERY_FILES]
+        os.utime(newest, (100000, 100000))
+        expected = json.loads(newest.read_text())['payload']['id']
+        monitor = CodexMonitor(tmp_path, date_dirs=[today, previous])
+        try:
+            monitor.start()
+>           qtbot.waitUntil(lambda: monitor.snapshot()['session_id'] == expected, timeout=1000)
+E           pytestqt.exceptions.TimeoutError: waitUntil timed out in 1000 milliseconds
+
+tests/test_codex_discovery.py:39: TimeoutError
+=========================== short test summary info ============================
+FAILED tests/test_codex_discovery.py::test_latest_rollout_beyond_candidate_budget_is_discovered[False]
+FAILED tests/test_codex_discovery.py::test_latest_rollout_beyond_candidate_budget_is_discovered[True]
+2 failed in 3.70s

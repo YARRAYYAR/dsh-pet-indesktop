@@ -1,0 +1,221 @@
+warning: No `requires-python` value found in the workspace. Defaulting to `>=3.13`.
+..F....FFFFF.FF                                                          [100%]
+=================================== FAILURES ===================================
+________ test_question_submission_exact_identity_failure_and_resolution ________
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x139ce1f90>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-111/test_question_submission_exact0')
+snapshot = {'enabled': True, 'state': 'question', 'session_id': 'owned', 'turn_id': 'turn-2', ...}
+
+    def test_question_submission_exact_identity_failure_and_resolution(qtbot, tmp_path, snapshot):
+        snapshot['questions'] = questions()
+        snapshot['state'] = 'question'
+        widget, peer = page(qtbot, tmp_path, snapshot)
+        option = widget.findChild(QPushButton, 'codexOption_color_0')
+        assert option is not None
+        qtbot.mouseClick(option, Qt.MouseButton.LeftButton)
+        answer = widget.findChild(QLineEdit, 'codexAnswer_secret')
+        assert answer.echoMode() == QLineEdit.EchoMode.Password
+        answer.setText('fixture-name')
+        submit = widget.findChild(QPushButton, 'codexSubmit_9')
+        peer.failure = '问题已过期'
+        submit.click()
+        command, args = [item for item in peer.commands if item[0] == 'codex_answer'][-1]
+>       assert args == {'session_id': 'owned', 'turn_id': 'turn-2', 'request_id': 9,
+                        'generation': 4, 'answers': {'color': {'answers': ['蓝色']}, 'secret': {'answers': ['fixture-name']}}}
+E       AssertionError: assert {'session_id'...tion': 4, ...} == {'session_id'...tion': 4, ...}
+E         
+E         Omitting 4 identical items, use -vv to show
+E         Differing items:
+E         {'request_id': '9'} != {'request_id': 9}
+E         Use -v to get more diff
+
+tests/test_codex_companion_ui.py:124: AssertionError
+_______ test_late_command_reply_preserves_current_snapshot_capabilities ________
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x13b8c0050>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-111/test_late_command_reply_preser0')
+snapshot = {'enabled': True, 'state': 'working', 'session_id': 'owned', 'turn_id': 'turn-2', ...}
+
+    def test_late_command_reply_preserves_current_snapshot_capabilities(qtbot, tmp_path, snapshot):
+        widget, peer = page(qtbot, tmp_path, snapshot)
+        peer.hold = True
+        widget.sessions.setCurrentData('desktop')
+        peer.data.update(source='desktop_readonly', can_reply=False, can_send=False, can_interrupt=False)
+        widget.refresh()
+        peer.pending({'ok': True, 'data': {'accepted': True}})
+>       assert not widget.send_button.isEnabled()
+E       assert not True
+E        +  where True = <built-in method isEnabled of PySide6.QtWidgets.QPushButton object at 0x13b8d6680>()
+E        +    where <built-in method isEnabled of PySide6.QtWidgets.QPushButton object at 0x13b8d6680> = <PySide6.QtWidgets.QPushButton(0xbbfb932c0) at 0x13b8d6680>.isEnabled
+E        +      where <PySide6.QtWidgets.QPushButton(0xbbfb932c0) at 0x13b8d6680> = <pet.settings_codex.CodexConnectionPage(0xbbf9de300) at 0x13b869800>.send_button
+
+tests/test_codex_companion_ui.py:189: AssertionError
+__________________ test_request_cards_keep_typed_ids_separate __________________
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x139d55a50>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-111/test_request_cards_keep_typed_0')
+snapshot = {'enabled': True, 'state': 'working', 'session_id': 'owned', 'turn_id': 'turn-2', ...}
+
+    def test_request_cards_keep_typed_ids_separate(qtbot, tmp_path, snapshot):
+        first = questions()[0]
+        second = deepcopy(first)
+        second['request_id'] = '9'
+        snapshot['questions'] = [first, second]
+        widget, _peer = page(qtbot, tmp_path, snapshot)
+>       assert len(widget.findChildren(QPushButton, 'codexSubmit_9')) == 2
+E       assert 1 == 2
+E        +  where 1 = len([<PySide6.QtWidgets.QPushButton(0xbbfb92680, name="codexSubmit_9") at 0x12164b8c0>])
+E        +    where [<PySide6.QtWidgets.QPushButton(0xbbfb92680, name="codexSubmit_9") at 0x12164b8c0>] = <built-in method findChildren of CodexConnectionPage object at 0x13a7c65c0>(QPushButton, 'codexSubmit_9')
+E        +      where <built-in method findChildren of CodexConnectionPage object at 0x13a7c65c0> = <pet.settings_codex.CodexConnectionPage(0xbbf95d500) at 0x13a7c65c0>.findChildren
+
+tests/test_codex_companion_ui.py:205: AssertionError
+__________ test_reused_request_id_rebuilds_card_for_new_task_identity __________
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x139d56150>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-111/test_reused_request_id_rebuild0')
+snapshot = {'enabled': True, 'state': 'working', 'session_id': 'owned', 'turn_id': 'turn-2', ...}
+
+    def test_reused_request_id_rebuilds_card_for_new_task_identity(qtbot, tmp_path, snapshot):
+        snapshot['questions'] = questions()
+        widget, peer = page(qtbot, tmp_path, snapshot)
+        widget.findChild(QLineEdit, 'codexAnswer_secret').setText('old-answer')
+        replacement = deepcopy(questions()[0])
+        replacement.update(session_id='owned-new', turn_id='turn-new', generation=5)
+        replacement['questions'] = [{'id': 'replacement', 'question': '新的问题', 'isSecret': False}]
+        peer.data.update(session_id='owned-new', turn_id='turn-new', generation=5, questions=[replacement])
+        widget.refresh()
+        answer = widget.findChild(QLineEdit, 'codexAnswer_replacement')
+>       assert answer is not None and answer.text() == ''
+E       assert (None is not None)
+
+tests/test_codex_companion_ui.py:218: AssertionError
+_______ test_sending_request_stays_disabled_after_another_command_reply ________
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x13b8a1400>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-111/test_sending_request_stays_dis0')
+snapshot = {'enabled': True, 'state': 'working', 'session_id': 'owned', 'turn_id': 'turn-2', ...}
+
+    def test_sending_request_stays_disabled_after_another_command_reply(qtbot, tmp_path, snapshot):
+        snapshot['questions'] = questions()
+        snapshot['questions'][0]['sending'] = True
+        widget, _peer = page(qtbot, tmp_path, snapshot)
+        submit = widget.findChild(QPushButton, 'codexSubmit_9')
+        assert not submit.isEnabled()
+        widget.sessions.setCurrentData('desktop')
+>       assert not submit.isEnabled()
+E       assert not True
+E        +  where True = <built-in method isEnabled of PySide6.QtWidgets.QPushButton object at 0x13b92ba00>()
+E        +    where <built-in method isEnabled of PySide6.QtWidgets.QPushButton object at 0x13b92ba00> = <PySide6.QtWidgets.QPushButton(0xbbfb932c0, name="codexSubmit_9") at 0x13b92ba00>.isEnabled
+
+tests/test_codex_companion_ui.py:233: AssertionError
+_________ test_desktop_monitor_question_shape_remains_visible_readonly _________
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x13b8a1c70>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-111/test_desktop_monitor_question_0')
+snapshot = {'enabled': True, 'state': 'working', 'session_id': 'owned', 'turn_id': 'turn-2', ...}
+
+    def test_desktop_monitor_question_shape_remains_visible_readonly(qtbot, tmp_path, snapshot):
+        question = questions()[0]
+        question.pop('kind')
+        snapshot.update(source='desktop_readonly', can_reply=False, questions=[question])
+        widget, _peer = page(qtbot, tmp_path, snapshot)
+        prompts = [label.text() for label in widget.findChildren(QLabel, 'codexQuestionText')]
+>       assert '选哪个？' in prompts
+E       AssertionError: assert '选哪个？' in []
+
+tests/test_codex_companion_ui.py:242: AssertionError
+_ test_companion_settings_slim_search_and_preserve_retired_configuration[False] _
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x13b8ff150>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-111/test_companion_settings_slim_s0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x13b8b8590>
+external_update = False
+
+    @pytest.mark.parametrize('external_update', [False, True])
+    def test_companion_settings_slim_search_and_preserve_retired_configuration(qtbot, tmp_path, monkeypatch, external_update):
+        from pet import autostart
+        from pet.modern_settings_dialog import ModernSettingsDialog
+        monkeypatch.setattr(autostart, 'is_enabled', lambda: False)
+        config = Config(tmp_path)
+        config.data.update({'music_sing_enabled': True, 'music_lyric_enabled': True,
+                            'music_player_paths': {'netease': '/before/player', 'custom': '/keep/unknown'},
+                            'agent_link': {**config.get('agent_link'), 'dsh': True, 'unknown': {'keep': [1]}},
+                            'voice_chime_enabled': True, 'todo_reminder_enabled': True,
+                            'harness_autostart': True, 'self_talk_texts': ['旧台词'],
+                            'spawn_inherit_size': False, 'spawn_scale': .7})
+        assert config.save()
+        before = deepcopy(Config(tmp_path).data)
+        dialog = ModernSettingsDialog(
+            config,
+            include_ai=False,
+            standalone=True,
+            companion_mode=True,
+        )
+        qtbot.addWidget(dialog)
+        assert [dialog.sidebar.item(i).text() for i in range(dialog.sidebar.count())] == [
+            '常规', '桌宠', '互动', '菜单', '连接',
+        ]
+        assert dialog.pet_tabs.labels() == ('常用控制', '动作库')
+        for retired_term in ('音乐', '唱歌', '歌词', '报时', '节日', '待办', '识屏', 'Agent 联动'):
+            dialog.search_edit.setText(retired_term)
+>           assert dialog._search_matches == [], retired_term
+E           AssertionError: 待办
+E           assert [<pet.setting... 0x13aaec1c0>] == []
+E             
+E             Left contains one more item: <pet.settings_widgets.SettingRow(0xbbea02d80, name="settingRow_clear_spawned_pets") at 0x13aaec1c0>
+E             Use -v to get more diff
+
+tests/test_codex_companion_ui.py:294: AssertionError
+_ test_companion_settings_slim_search_and_preserve_retired_configuration[True] _
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x13ac9fba0>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-111/test_companion_settings_slim_s1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x13abfd910>
+external_update = True
+
+    @pytest.mark.parametrize('external_update', [False, True])
+    def test_companion_settings_slim_search_and_preserve_retired_configuration(qtbot, tmp_path, monkeypatch, external_update):
+        from pet import autostart
+        from pet.modern_settings_dialog import ModernSettingsDialog
+        monkeypatch.setattr(autostart, 'is_enabled', lambda: False)
+        config = Config(tmp_path)
+        config.data.update({'music_sing_enabled': True, 'music_lyric_enabled': True,
+                            'music_player_paths': {'netease': '/before/player', 'custom': '/keep/unknown'},
+                            'agent_link': {**config.get('agent_link'), 'dsh': True, 'unknown': {'keep': [1]}},
+                            'voice_chime_enabled': True, 'todo_reminder_enabled': True,
+                            'harness_autostart': True, 'self_talk_texts': ['旧台词'],
+                            'spawn_inherit_size': False, 'spawn_scale': .7})
+        assert config.save()
+        before = deepcopy(Config(tmp_path).data)
+        dialog = ModernSettingsDialog(
+            config,
+            include_ai=False,
+            standalone=True,
+            companion_mode=True,
+        )
+        qtbot.addWidget(dialog)
+        assert [dialog.sidebar.item(i).text() for i in range(dialog.sidebar.count())] == [
+            '常规', '桌宠', '互动', '菜单', '连接',
+        ]
+        assert dialog.pet_tabs.labels() == ('常用控制', '动作库')
+        for retired_term in ('音乐', '唱歌', '歌词', '报时', '节日', '待办', '识屏', 'Agent 联动'):
+            dialog.search_edit.setText(retired_term)
+>           assert dialog._search_matches == [], retired_term
+E           AssertionError: 待办
+E           assert [<pet.setting... 0x13aca5780>] == []
+E             
+E             Left contains one more item: <pet.settings_widgets.SettingRow(0xbbea74000, name="settingRow_clear_spawned_pets") at 0x13aca5780>
+E             Use -v to get more diff
+
+tests/test_codex_companion_ui.py:294: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_codex_companion_ui.py::test_question_submission_exact_identity_failure_and_resolution
+FAILED tests/test_codex_companion_ui.py::test_late_command_reply_preserves_current_snapshot_capabilities
+FAILED tests/test_codex_companion_ui.py::test_request_cards_keep_typed_ids_separate
+FAILED tests/test_codex_companion_ui.py::test_reused_request_id_rebuilds_card_for_new_task_identity
+FAILED tests/test_codex_companion_ui.py::test_sending_request_stays_disabled_after_another_command_reply
+FAILED tests/test_codex_companion_ui.py::test_desktop_monitor_question_shape_remains_visible_readonly
+FAILED tests/test_codex_companion_ui.py::test_companion_settings_slim_search_and_preserve_retired_configuration[False]
+FAILED tests/test_codex_companion_ui.py::test_companion_settings_slim_search_and_preserve_retired_configuration[True]
+8 failed, 7 passed in 5.31s

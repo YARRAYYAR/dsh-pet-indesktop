@@ -54,9 +54,14 @@ class MenuLayoutEditor(QWidget):
 
     def __init__(
         self, layout: dict | None, parent=None, *,
-        available_actions=None, enabled_actions=None,
+        available_actions=None, enabled_actions=None, visible_actions=None,
     ):
         super().__init__(parent)
+        # Keep filtered nodes in the model so saving companion edits also keeps
+        # the original mode's aliases, visibility, order, and submenu ownership.
+        self.visible_actions = (
+            None if visible_actions is None else frozenset(visible_actions)
+        )
         self.available_actions = frozenset(available_actions or MENU_ACTIONS.ids)
         self.enabled_actions = frozenset(
             enabled_actions if enabled_actions is not None else self.available_actions
@@ -277,10 +282,14 @@ class MenuLayoutEditor(QWidget):
         item = current or self.tree.currentItem()
         parent = item.parent() if item is not None else None
         sibling_parent = parent or self.tree.invisibleRootItem()
-        index = sibling_parent.indexOfChild(item) if item is not None else -1
+        siblings = [
+            sibling_parent.child(index) for index in range(sibling_parent.childCount())
+            if not sibling_parent.child(index).isHidden()
+        ]
+        index = siblings.index(item) if item in siblings else -1
         self.move_up_action.setEnabled(index > 0)
         self.move_down_action.setEnabled(
-            item is not None and index < sibling_parent.childCount() - 1
+            index >= 0 and index < len(siblings) - 1
         )
         data = item.data(0, Qt.ItemDataRole.UserRole) if item is not None else {}
         node_type = data.get("type") if data else ""
@@ -309,7 +318,7 @@ class MenuLayoutEditor(QWidget):
         for index in range(root.childCount()):
             item = root.child(index)
             data = item.data(0, Qt.ItemDataRole.UserRole) or {}
-            if data.get("type") != "submenu":
+            if data.get("type") != "submenu" or item.isHidden():
                 continue
             target_id = str(data.get("id") or "")
             action = self.move_menu.addAction(item.text(0))
@@ -638,6 +647,8 @@ class MenuLayoutEditor(QWidget):
         parent = item.parent() or self.tree.invisibleRootItem()
         index = parent.indexOfChild(item)
         target = index + offset
+        while 0 <= target < parent.childCount() and parent.child(target).isHidden():
+            target += offset
         if 0 <= target < parent.childCount():
             parent.takeChild(index)
             parent.insertChild(target, item)
@@ -748,8 +759,43 @@ class MenuLayoutEditor(QWidget):
             self.tree.setCurrentItem(root.child(min(index, root.childCount() - 1)))
         self._on_changed()
 
+    def _apply_visibility_filter(self, parent: QTreeWidgetItem) -> None:
+        """Filter the view without turning retired settings into unavailable rows."""
+        if self.visible_actions is None:
+            return
+        for index in range(parent.childCount()):
+            item = parent.child(index)
+            data = item.data(0, Qt.ItemDataRole.UserRole) or {}
+            node_type = data.get("type")
+            if node_type == "action":
+                item.setHidden(data.get("id") not in self.visible_actions)
+            elif node_type == "submenu":
+                self._apply_visibility_filter(item)
+                # An empty new submenu remains a usable editing destination.
+                item.setHidden(item.childCount() > 0 and all(
+                    item.child(child).isHidden() for child in range(item.childCount())
+                ))
+
+        # Filtering whole groups must not leave leading, trailing, or duplicate
+        # divider rows. The original dividers still serialize unchanged.
+        has_content = False
+        pending_separator = None
+        for index in range(parent.childCount()):
+            item = parent.child(index)
+            data = item.data(0, Qt.ItemDataRole.UserRole) or {}
+            if data.get("type") == "separator":
+                item.setHidden(True)
+                if has_content and pending_separator is None:
+                    pending_separator = item
+            elif not item.isHidden():
+                if pending_separator is not None:
+                    pending_separator.setHidden(False)
+                    pending_separator = None
+                has_content = True
+
     def _on_changed(self, *_args) -> None:
         self.tree.blockSignals(True)
+        self._apply_visibility_filter(self.tree.invisibleRootItem())
         self.preview.clear()
         def refresh_positions(source):
             for index in range(source.childCount()):
@@ -776,7 +822,10 @@ class MenuLayoutEditor(QWidget):
         resolved = resolve_menu_layout(
             self.value(),
             registered_actions=MENU_ACTIONS.ids,
-            available_actions=self.available_actions,
+            available_actions=(
+                self.available_actions if self.visible_actions is None
+                else self.available_actions & self.visible_actions
+            ),
         )
         def add_preview(nodes, target):
             for node in nodes:
@@ -798,4 +847,5 @@ class MenuLayoutEditor(QWidget):
         add_preview(resolved.nodes, self.preview.invisibleRootItem())
         self.preview.expandAll()
         self.tree.blockSignals(False)
+        self._sync_command_state()
         self.changed.emit()

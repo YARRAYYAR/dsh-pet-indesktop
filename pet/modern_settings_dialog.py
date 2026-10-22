@@ -87,8 +87,9 @@ from .context_menus.icons import (
     vector_widget_icon,
 )
 from .context_menus.quick_launch import fitted_application_icon
-from .context_menus.registry import CUSTOM_ICON_CHOICES, MENU_ACTIONS
-from .fun_image_popup import oijingjing_image_path, resolve_fun_asset, store_fun_asset
+from .context_menus.registry import COMPANION_ACTION_IDS, CUSTOM_ICON_CHOICES, MENU_ACTIONS
+from .fun_image_popup import oijingjing_image_path, resolve_fun_asset
+from .settings_companion import visible_rows
 from .menu_layout import (
     load_default_menu_layout,
     materialize_implicit_separators,
@@ -241,10 +242,11 @@ class ModernSettingsDialog(QDialog):
     """Settings window matching Modern's sidebar and rounded-card hierarchy."""
 
     def __init__(self, config, parent=None, *, include_ai: bool = True,
-                 standalone: bool = False):
+                 standalone: bool = False, companion_mode: bool = False):
         super().__init__(parent)
         self.config = config
-        self.include_ai = bool(include_ai)
+        self.companion_mode = bool(companion_mode)
+        self.include_ai = bool(include_ai) and not self.companion_mode
         # standalone=True：本对话框跑在独立设置进程（python -m pet --settings）里，
         # 没有桌宠窗口/AppShell 可依附。只影响下面几处显式分支，默认 False 时
         # 全部行为与改动前逐位一致。
@@ -325,7 +327,8 @@ class ModernSettingsDialog(QDialog):
         if self.include_ai:
             self._build_file_interpret_controls()
         # 「音乐播放器路径」控件同样在本模块构建（行数预算原因），见 settings_music。
-        settings_music.create_music_player_controls(self)
+        if not self.companion_mode:
+            settings_music.create_music_player_controls(self)
         # 「随桌宠启动 dsh 服务」开关（origin/main #80 合入带回）：构建留在
         # 对话框本体（upstream 代码所在宿主），供下方 launch_rows 引用。
         self.harness_autostart_check = ToggleSwitch(self)
@@ -335,7 +338,7 @@ class ModernSettingsDialog(QDialog):
             self.harness_autostart_check.setEnabled(False)
             self.harness_autostart_check.setToolTip("仅主桌宠可设置")
 
-        if include_ai:
+        if self.include_ai:
             # 延迟 import：no-chat 打包变体 excludes=['pet.chat']，顶层导入会在
             # 产物运行时抛 ModuleNotFoundError，导致设置界面整体打不开。
             from .chat.ai_settings_page import _AiSettingsPage
@@ -708,6 +711,8 @@ class ModernSettingsDialog(QDialog):
             menu_available_actions.discard("proactive_screen")
         if not self.include_ai:
             menu_available_actions.difference_update({"chat", "look_screen", "balance", "proactive_screen"})
+        if self.companion_mode:
+            menu_available_actions.intersection_update(COMPANION_ACTION_IDS)
         self.menu_available_actions = frozenset(menu_available_actions)
         menu_enabled_actions = set(menu_available_actions)
         if not self.config.get("quick_launch_apps", DEFAULT_QUICK_LAUNCH_APPS):
@@ -719,6 +724,7 @@ class ModernSettingsDialog(QDialog):
             menu_content,
             available_actions=menu_available_actions,
             enabled_actions=menu_enabled_actions,
+            visible_actions=COMPANION_ACTION_IDS if self.companion_mode else None,
         )
         menu_page_layout.addWidget(
             SettingsSection(
@@ -788,7 +794,7 @@ class ModernSettingsDialog(QDialog):
         self.sidebar.currentRowChanged.connect(self.pages.setCurrentIndex)
         self.sidebar.currentRowChanged.connect(lambda row: expand_domain_navigation(self, row))
         self.sidebar.setCurrentRow(0)
-        self._search_rows = self.findChildren(SettingRow)
+        self._search_rows = [row for i in range(self.pages.count()) for row in self.pages.widget(i).findChildren(SettingRow)]
         self._search_matches: list[SettingRow] = []
         self._search_index = -1
         self.search_edit.textChanged.connect(self._search_settings)
@@ -1472,12 +1478,12 @@ class ModernSettingsDialog(QDialog):
                 if row is not None and row not in claimed:
                     claimed.add(row)
                     rows.append(row)
-            return rows
+            return visible_rows(self, rows)
 
         def claim_prefix(prefix: str) -> list[SettingRow]:
             rows = [row for row in all_rows if row.objectName().startswith(f"settingRow_{prefix}") and row not in claimed]
             claimed.update(rows)
-            return rows
+            return visible_rows(self, rows)
 
         def page_content(sections) -> QWidget:
             content = QWidget(self)
@@ -1521,7 +1527,7 @@ class ModernSettingsDialog(QDialog):
                 ("显示", claim("scale", "bubble_text_scale", "pet_opacity")),
                 ("动画与移动", claim("playback_speed", "animation_gap", "idle_low_fps", "no_move")),
                 ("音乐关联", claim("music_sing", "music_lyric", "music_lyric_lead")
-                 + settings_music.build_music_player_rows(self)),
+                 + (settings_music.build_music_player_rows(self) if not self.companion_mode else [])),
                 ("拖拽与弹射", claim("drag_physics", "throw_strength", "slingshot_enabled", "lock_position", "shift_drag")),
                 ("屏幕边缘", claim("edge_probe", "top_flip_enabled", "top_flip_exposure")),
                 ("生小肥鱼", claim("spawn_inherit_size", "spawn_scale", "clear_spawned_pets")),
@@ -1551,15 +1557,16 @@ class ModernSettingsDialog(QDialog):
                 ]
             ),
         )
-        menu.addTab(
-            "launcher",
-            "快捷启动",
-            page_content(
-                [
-                    ("已配置应用", claim("quick_launch_apps")),
-                ]
-            ),
-        )
+        if not self.companion_mode:
+            menu.addTab(
+                "launcher",
+                "快捷启动",
+                page_content(
+                    [
+                        ("已配置应用", claim("quick_launch_apps")),
+                    ]
+                ),
+            )
         menu.addTab(
             "appearance",
             "外观",
@@ -1762,6 +1769,9 @@ class ModernSettingsDialog(QDialog):
         from .settings_codex import CodexConnectionPage
         self.codex_page = CodexConnectionPage(self.config, self.command_client, self)
         domain_content['连接'] = self.codex_page
+        if self.companion_mode:
+            from .settings_companion import slim_domains
+            slim_domains(domain_content)
         for label, icon in SETTINGS_DOMAIN_NAV:
             content = domain_content.get(label)
             if content is None:
@@ -1894,8 +1904,6 @@ class ModernSettingsDialog(QDialog):
         maximum = max(self.min_spin.value(), self.max_spin.value())
         texts = [line.strip()[:120] for line in self.texts_edit.toPlainText().splitlines() if line.strip()]
         self.config.set("scale", float(self.scale_combo.currentData()))
-        self.config.set("spawn_inherit_size", self.spawn_inherit_size_check.isChecked())
-        self.config.set("spawn_scale", float(self.spawn_scale_combo.currentData()))
         self.config.set("on_top", self.on_top_check.isChecked())
         if self.dock_icon_check is not None:
             self.config.set("show_dock_icon", self.dock_icon_check.isChecked())
@@ -1930,22 +1938,7 @@ class ModernSettingsDialog(QDialog):
                 click_sound_pack,
                 data_dir=self.config.dir,
             )
-        self.config.set("dynamic_island", {**self.config.get("dynamic_island"), "enabled": False})
-        if self.click_balance_check is not None:
-            self.config.set("click_show_balance", self.click_balance_check.isChecked())
         self.config.set("click_show_self_talk", self.click_self_talk_check.isChecked())
-        self.config.set("self_talk_speak_enabled", self.click_self_talk_speak_check.isChecked())
-        self.config.set("self_talk_voice_precache_enabled",
-                        self.self_talk_voice_precache_check.isChecked())
-        self.config.set("music_sing_enabled", self.music_sing_check.isChecked())
-        if getattr(self, "music_lyric_check", None) is not None:
-            self.config.set("music_lyric_enabled", self.music_lyric_check.isChecked())
-        if getattr(self, "agent_cost_check", None) is not None:
-            self.config.set("agent_cost_enabled", self.agent_cost_check.isChecked())
-        if getattr(self, "music_lyric_lead_spin", None) is not None:
-            self.config.set(
-                "music_lyric_lead_seconds", float(self.music_lyric_lead_spin.value())
-            )
         self.config.set("golden_spin_on_click", self.golden_spin_click_check.isChecked())
         self.config.set("golden_spin_direct", self.golden_spin_direct_check.isChecked())
         self.config.set("edge_probe_enabled", self.edge_probe_check.isChecked())
@@ -1981,57 +1974,6 @@ class ModernSettingsDialog(QDialog):
         self.config.set("self_talk_image_scale", self.self_talk_image_scale_spin.value())
         self.config.set("self_talk_image_chance", self.self_talk_image_chance_spin.value())
         self.config.set("bubble_text_scale", self.bubble_text_scale_spin.value())
-        # Agent 联动：自定义 thinking 文案与音效（合并写回，不覆盖 agent_link 其他开关）
-        self.config.set("dialogue_mode", str(self.dialogue_mode_select.currentData() or "legacy"))
-        # 统一预设：编辑区当前层 flush 后，global 层 + agents delta 分层写回
-        self._dialogue_flush_scope()
-        new_global = self._dialogue_scope_values("")
-        agents_delta: dict[str, dict[str, list[str]]] = {}
-        for scope in self._dialogue_scope_buffer:
-            if scope == "":
-                continue
-            values = self._dialogue_scope_values(str(scope))
-            if values:
-                agents_delta[str(scope)] = values
-        # 兼容旧扁平存储：双层仅当存在 agents delta 或原配置已是双层时启用
-        current_phrases = self.config.get("dialogue_phrases", {})
-        was_preset = isinstance(current_phrases, dict) and ("global" in current_phrases or "agents" in current_phrases)
-        if agents_delta or was_preset:
-            self.config.set("dialogue_phrases", {"global": new_global, "agents": agents_delta})
-        else:
-            self.config.set("dialogue_phrases", new_global)
-        # 记住上次编辑层：下次打开设置直接回到该 Agent 专属层（未知值回落全局）
-        self.config.set("dialogue_last_scope", str(getattr(self, "_dialogue_scope", "") or ""))
-        agent_cfg = dict(self.config.get("agent_link", {}))
-        # 循环检测设置页（合并写回，不覆盖 agent_link 其他字段）
-        if self.watchdog_page is not None:
-            agent_cfg = self.watchdog_page.apply_to_config(agent_cfg)
-
-        # Agent 联动音效写回
-        agent_cfg["sound_enabled"] = self.agent_sound_check.isChecked()
-        agent_cfg["sound_start_enabled"] = self.agent_sound_start_check.isChecked()
-        agent_cfg["sound_start_path"] = self.agent_sound_start_picker.text().strip() or "builtin:agent-start"
-        agent_cfg["sound_done_enabled"] = self.agent_sound_done_check.isChecked()
-        agent_cfg["sound_done_path"] = self.agent_sound_done_picker.text().strip() or "builtin:agent-done"
-        agent_cfg["sound_error_enabled"] = self.agent_sound_error_check.isChecked()
-        agent_cfg["sound_error_path"] = self.agent_sound_error_picker.text().strip() or "builtin:agent-error"
-        agent_cfg["sound_volume"] = float(self.agent_sound_volume_spin.value()) / 100.0
-        agent_cfg["sound_cooldown_seconds"] = float(self.agent_sound_cooldown_spin.value())
-        # 事件汇报概率门：滑块值即通过概率（0.00–1.00，步长 0.05），逐类写回。
-        report_gates = dict(agent_cfg.get("report_gates") or {})
-        for gate, slider in self.report_gate_sliders.items():
-            report_gates[gate] = round(float(slider.value()), 2)
-        agent_cfg["report_gates"] = report_gates
-
-        self.config.set("agent_link", agent_cfg)
-        self.config.set("todo_reminder_enabled", self.todo_reminder_check.isChecked())
-        self.config.set("todo_reminder_lead_minutes", int(self.todo_reminder_lead_spin.value()))
-        # 语音报时设置页写回（仅写 voice_chime_* 11 键）
-        if self.voice_chime_page is not None:
-            self.voice_chime_page.apply_to_config()
-        # 节日提醒设置页写回（仅写 festival_reminder_* / festival_custom_* 10 键）
-        if self.festival_page is not None:
-            self.festival_page.apply_to_config()
         self.config.set(
             "context_menu_appearance",
             {
@@ -2056,22 +1998,9 @@ class ModernSettingsDialog(QDialog):
             "context_menu_layout",
             None if menu_layout_value.get("nodes") == default_menu_nodes else menu_layout_value,
         )
-        self.config.set(
-            "menu_easter_egg",
-            {
-                "enabled": self.egg_enabled_check.isChecked(),
-                "title": self.egg_title_edit.text(),
-                "hint": self.egg_hint_edit.text(),
-                # 内置 assets 内的路径归一化回相对值，保持 portable（目录移动/自更新后仍可用）
-                "avatar": store_fun_asset(self.egg_avatar_picker.text(), oijingjing_image_path()),
-                "image_dir": store_fun_asset(self.egg_image_dir_picker.text(), oijingjing_image_path().parent),
-            },
-        )
-        self.config.set("quick_launch_apps", self.quick_launch_editor.apps())
         if self.ai_page is not None:
             self.ai_page.save()
         settings_file_interpret.save_file_interpret_settings(self)
-        settings_music.save_music_player_settings(self)
         if sys.platform == "win32" and self.include_ai and hasattr(self, "pro_enabled_check"):
             from .proactive import PRESET_DEFAULTS
 
@@ -2105,11 +2034,13 @@ class ModernSettingsDialog(QDialog):
             )
             self.config.set("proactive_screen", pro_data)
         self.config.set("autostart_wanted", self.autostart_check.isChecked())
-        self.config.set("harness_autostart", self.harness_autostart_check.isChecked())
         # 批 C：落种占位语义——仅当用户在该子肥鱼自己的设置界面保存过才置真；
         # 位置自动保存等一切后台写盘不得置位。主配置（slot 0/主肥鱼）保存不置位。
         if self.config.instance_id:
             self.config.set("user_customized", True)
+        if not self.companion_mode:
+            from .settings_legacy import save_legacy_settings
+            save_legacy_settings(self)
         ok = self.config.save()
         if not ok:
             QMessageBox.warning(

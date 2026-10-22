@@ -1,0 +1,40 @@
+.Fatal Python error: Segmentation fault
+
+Current thread 0x00000001fcd02180 (most recent call first):
+  File "/Users/ray/Documents/New project/dsr-pet/pet/__main__.py", line 58 in _exec_settings
+  File "/Users/ray/Documents/New project/dsr-pet/pet/__main__.py", line 112 in _run_settings
+  File "/Users/ray/Documents/New project/dsr-pet/tests/test_settings_process_isolation.py", line 287 in test_run_settings_disables_ai_page_without_chat_module
+  File "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/_pytest/python.py", line 167 in pytest_pyfunc_call
+  File "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/pluggy/_callers.py", line 121 in _multicall
+  File "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/pluggy/_manager.py", line 120 in _hookexec
+  File "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/pluggy/_hooks.py", line 512 in __call__
+  File "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/_pytest/python.py", line 1707 in runtest
+  File "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/_pytest/runner.py", line 184 in pytest_runtest_call
+  File "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/pluggy/_callers.py", line 121 in _multicall
+  File "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/pluggy/_manager.py", line 120 in _hookexec
+  File "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/pluggy/_hooks.py", line 512 in __call__
+  File "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/_pytest/runner.py", line 250 in <lambda>
+  File "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/_pytest/runner.py", line 361 in from_call
+  File "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/_pytest/runner.py", line 249 in call_and_report
+  File "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/_pytest/runner.py", line 139 in runtestprotocol
+  File "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/_pytest/runner.py", line 118 in pytest_runtest_protocol
+  File "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/pluggy/_callers.py", line 121 in _multicall
+  File "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/pluggy/_manager.py", line 120 in _hookexec
+  File "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/pluggy/_hooks.py", line 512 in __call__
+  File "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/_pytest/main.py", line 408 in pytest_runtestloop
+  File "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/pluggy/_callers.py", line 121 in _multicall
+  File "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/pluggy/_manager.py", line 120 in _hookexec
+  File "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/pluggy/_hooks.py", line 512 in __call__
+  File "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/_pytest/main.py", line 384 in _main
+  File "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/_pytest/main.py", line 330 in wrap_session
+  File "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/_pytest/main.py", line 377 in pytest_cmdline_main
+  File "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/pluggy/_callers.py", line 121 in _multicall
+  File "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/pluggy/_manager.py", line 120 in _hookexec
+  File "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/pluggy/_hooks.py", line 512 in __call__
+  File "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/_pytest/config/__init__.py", line 229 in _main
+  File "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/_pytest/config/__init__.py", line 253 in _console_main
+  File "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/lib/python3.13/site-packages/pytest/__main__.py", line 9 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 198 in _run_module_as_main
+
+Extension modules: shiboken6.Shiboken, PySide6.QtCore, PySide6.QtGui, PySide6.QtWidgets, PySide6.QtTest, PySide6.QtNetwork, PySide6.QtMultimedia (total: 7)

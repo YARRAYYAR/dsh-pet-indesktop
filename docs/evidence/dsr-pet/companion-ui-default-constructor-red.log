@@ -1,0 +1,24 @@
+warning: No `requires-python` value found in the workspace. Defaulting to `>=3.13`.
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______ test_companion_default_constructor_does_not_create_retired_ai_page ______
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x114c16e40>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-122/test_companion_default_constru0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1148fa8b0>
+
+    def test_companion_default_constructor_does_not_create_retired_ai_page(qtbot, tmp_path, monkeypatch):
+        from pet import autostart
+        from pet.modern_settings_dialog import ModernSettingsDialog
+    
+        monkeypatch.setattr(autostart, 'is_enabled', lambda: False)
+        dialog = ModernSettingsDialog(Config(tmp_path), standalone=True, companion_mode=True)
+        qtbot.addWidget(dialog)
+>       assert dialog.ai_page is None
+E       assert <pet.chat.ai_settings_page._AiSettingsPage(0x91148ed80, name="aiSettingsContent") at 0x121f42800> is None
+E        +  where <pet.chat.ai_settings_page._AiSettingsPage(0x91148ed80, name="aiSettingsContent") at 0x121f42800> = <pet.modern_settings_dialog.ModernSettingsDialog(0x911864600) at 0x121e66ac0>.ai_page
+
+tests/test_codex_companion_ui.py:293: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_codex_companion_ui.py::test_companion_default_constructor_does_not_create_retired_ai_page
+1 failed, 17 deselected in 2.80s

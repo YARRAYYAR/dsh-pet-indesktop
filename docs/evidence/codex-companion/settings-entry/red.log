@@ -1,0 +1,196 @@
+FFFFFFF                                                                  [100%]
+=================================== FAILURES ===================================
+______________ test_exec_settings_passes_companion_mode_to_dialog ______________
+
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-97/test_exec_settings_passes_comp0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1118dc050>
+
+    def test_exec_settings_passes_companion_mode_to_dialog(tmp_path, monkeypatch):
+        import pet.__main__ as entry
+        import pet.modern_settings_dialog as settings_mod
+    
+        app = _qapp()
+        monkeypatch.setattr(settings_mod, "ModernSettingsDialog", _CompanionAutoCloseDialog)
+        previous = app.quitOnLastWindowClosed()
+        try:
+>           assert entry._exec_settings(app, Config(base=tmp_path), companion_mode=True) == 0
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: _exec_settings() got an unexpected keyword argument 'companion_mode'
+
+tests/test_settings_process_isolation.py:126: TypeError
+______________ test_run_settings_passes_companion_flag_to_dialog _______________
+
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-97/test_run_settings_passes_compa0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106d110f0>
+
+    def test_run_settings_passes_companion_flag_to_dialog(tmp_path, monkeypatch):
+        import pet.__main__ as entry
+        import pet.modern_settings_dialog as settings_mod
+    
+        app = _qapp()
+        monkeypatch.setattr(settings_mod, "ModernSettingsDialog", _CompanionAutoCloseDialog)
+        monkeypatch.setattr(sys, "argv", ["pet", "--settings", "--companion"])
+        previous = app.quitOnLastWindowClosed()
+        try:
+            assert entry._run_settings(Config(base=tmp_path)) == 0
+        finally:
+            app.setQuitOnLastWindowClosed(previous)
+>       assert _CompanionAutoCloseDialog.captured["companion_mode"] is True
+E       assert False is True
+
+tests/test_settings_process_isolation.py:145: AssertionError
+_________ test_exec_settings_routes_codex_page_key_in_real_event_loop __________
+
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-97/test_exec_settings_routes_code0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1119715b0>
+
+    def test_exec_settings_routes_codex_page_key_in_real_event_loop(tmp_path, monkeypatch):
+        """隔离设置窗在真实 Qt 事件循环启动前按 page key 选择 Codex 页。"""
+        import pet.modern_settings_dialog as settings_mod
+        import pet.__main__ as entry
+    
+        app = _qapp()
+        monkeypatch.setattr(settings_mod, "ModernSettingsDialog", _RouteAwareDialog)
+        config = Config(base=tmp_path)
+        previous = app.quitOnLastWindowClosed()
+        try:
+            QTimer.singleShot(0, app.quit)
+            assert entry._exec_settings(app, config, page_key="codex") == 0
+        finally:
+            app.setQuitOnLastWindowClosed(previous)
+        dialog = _RouteAwareDialog.last_instance
+        assert dialog is not None
+        assert dialog.sidebar.currentRow() == 1
+        assert dialog.pages.currentIndex() == 1
+>       assert dialog.raised >= 1
+E       assert 0 >= 1
+E        +  where 0 = <tests.test_settings_process_isolation._RouteAwareDialog(0xca20e4600) at 0x111d150c0>.raised
+
+tests/test_settings_process_isolation.py:216: AssertionError
+----------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: Populating font family aliases took 47 ms. Replace uses of missing font family "Sans Serif" with one that exists to avoid this cost. 
+___ test_existing_settings_process_routes_repeated_codex_request_over_qt_ipc ___
+
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-97/test_existing_settings_process0')
+
+    def test_existing_settings_process_routes_repeated_codex_request_over_qt_ipc(tmp_path):
+        """已有设置进程收到重复请求后切到 Codex 页并激活窗口。"""
+        from pet.settings_process_navigation import SettingsProcessNavigationServer
+    
+        app = _qapp()
+        config = Config(base=tmp_path)
+        config.dir.mkdir(parents=True, exist_ok=True)
+        held = QLockFile(str(config.dir / "settings.lock"))
+        assert held.tryLock(0)
+        dialog = _RouteAwareDialog(config)
+        loop = QEventLoop()
+        server = SettingsProcessNavigationServer(config, dialog)
+        shell = _bare_shell(config)
+        shell._install_config_watcher = lambda: None
+        shell._mark_settings_child = lambda active: None
+        launched = []
+        shell._launch_settings_process = lambda *args, **kwargs: launched.append(1) or True
+        try:
+            assert shell.open_settings_process(object(), page_key="codex") is True
+            QTimer.singleShot(1500, loop.quit)
+            loop.exec()
+>           assert dialog.sidebar.currentRow() == 1
+E           assert -1 == 1
+E            +  where -1 = <built-in method currentRow of PySide6.QtWidgets.QListWidget object at 0x111e61040>()
+E            +    where <built-in method currentRow of PySide6.QtWidgets.QListWidget object at 0x111e61040> = <PySide6.QtWidgets.QListWidget(0xca3959500) at 0x111e61040>.currentRow
+E            +      where <PySide6.QtWidgets.QListWidget(0xca3959500) at 0x111e61040> = <tests.test_settings_process_isolation._RouteAwareDialog(0xca20e4600) at 0x111e62480>.sidebar
+
+tests/test_settings_process_isolation.py:242: AssertionError
+__________ test_open_modern_settings_passes_companion_mode_in_process __________
+
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-97/test_open_modern_settings_pass0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x111d03df0>
+
+    def test_open_modern_settings_passes_companion_mode_in_process(tmp_path, monkeypatch):
+        """关闭进程隔离或启动失败时，精简模式仍须传给真实设置入口。"""
+        import pet.modern_settings_dialog as settings_mod
+    
+        _qapp()
+        owner = PetInstance.__new__(PetInstance)
+        owner.config = Config(base=tmp_path)
+        owner.shell = _bare_shell(owner.config)
+        owner.shell.companion_mode = True
+        owner.shell.enable_chat = False
+        owner.shell.open_settings_process = lambda instance: False
+        owner.win = mock.Mock()
+        owner.modern_settings_dialog = None
+        owner.chat_settings_dialog = None
+        created = []
+        monkeypatch.setattr(
+            settings_mod, "ModernSettingsDialog",
+            lambda *a, **k: created.append((a, k)) or mock.Mock(),
+        )
+        owner._present_dialog = lambda dialog, before_present=None: None
+        owner.open_modern_settings()
+>       assert created[0][1].get("companion_mode") is True
+E       AssertionError: assert None is True
+E        +  where None = <built-in method get of dict object at 0x111e7cf80>('companion_mode')
+E        +    where <built-in method get of dict object at 0x111e7cf80> = {'include_ai': False}.get
+
+tests/test_settings_process_isolation.py:483: AssertionError
+_________ test_launch_settings_process_preserves_companion_mode[False] _________
+
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-97/test_launch_settings_process_p0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x111d89d50>
+frozen = False
+
+    @pytest.mark.parametrize("frozen", [False, True])
+    def test_launch_settings_process_preserves_companion_mode(tmp_path, monkeypatch, frozen):
+        """源码与冻结包均显式传 companion 模式和语义页面；不依赖用户配置。"""
+        import pet.app as app_mod
+        from PySide6.QtCore import QProcess
+    
+        shell = _bare_shell(Config(base=tmp_path))
+        shell.companion_mode = True
+        calls = []
+        monkeypatch.setattr(app_mod.sys, "frozen", frozen, raising=False)
+        monkeypatch.setattr(
+            QProcess, "startDetached",
+            staticmethod(lambda program, arguments, workdir: calls.append((program, arguments, workdir)) or (True, 4242)),
+        )
+        assert shell._launch_settings_process(page_key="codex") is True
+        arguments = calls[0][1]
+>       assert "--companion" in arguments
+E       AssertionError: assert '--companion' in ['-m', 'pet', '--settings', '--settings-page', 'codex']
+
+tests/test_settings_process_isolation.py:542: AssertionError
+_________ test_launch_settings_process_preserves_companion_mode[True] __________
+
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-97/test_launch_settings_process_p1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x111d8a050>
+frozen = True
+
+    @pytest.mark.parametrize("frozen", [False, True])
+    def test_launch_settings_process_preserves_companion_mode(tmp_path, monkeypatch, frozen):
+        """源码与冻结包均显式传 companion 模式和语义页面；不依赖用户配置。"""
+        import pet.app as app_mod
+        from PySide6.QtCore import QProcess
+    
+        shell = _bare_shell(Config(base=tmp_path))
+        shell.companion_mode = True
+        calls = []
+        monkeypatch.setattr(app_mod.sys, "frozen", frozen, raising=False)
+        monkeypatch.setattr(
+            QProcess, "startDetached",
+            staticmethod(lambda program, arguments, workdir: calls.append((program, arguments, workdir)) or (True, 4242)),
+        )
+        assert shell._launch_settings_process(page_key="codex") is True
+        arguments = calls[0][1]
+>       assert "--companion" in arguments
+E       AssertionError: assert '--companion' in ['--settings', '--settings-page', 'codex']
+
+tests/test_settings_process_isolation.py:542: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_settings_process_isolation.py::test_exec_settings_passes_companion_mode_to_dialog
+FAILED tests/test_settings_process_isolation.py::test_run_settings_passes_companion_flag_to_dialog
+FAILED tests/test_settings_process_isolation.py::test_exec_settings_routes_codex_page_key_in_real_event_loop
+FAILED tests/test_settings_process_isolation.py::test_existing_settings_process_routes_repeated_codex_request_over_qt_ipc
+FAILED tests/test_settings_process_isolation.py::test_open_modern_settings_passes_companion_mode_in_process
+FAILED tests/test_settings_process_isolation.py::test_launch_settings_process_preserves_companion_mode[False]
+FAILED tests/test_settings_process_isolation.py::test_launch_settings_process_preserves_companion_mode[True]
+7 failed, 29 deselected in 0.59s

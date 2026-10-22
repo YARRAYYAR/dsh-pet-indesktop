@@ -411,7 +411,8 @@ class PetInstance:
         lib.schedule_high_priority_warm()
         lib.schedule_low_priority_warm()
         # 同批低优先级预热：播放器路径缓存（右键菜单只读缓存，冷缓存时后台先扫）。
-        _schedule_music_player_warm()
+        if not getattr(self.shell, "companion_mode", False):
+            _schedule_music_player_warm()
         logging.info('素材加载完成：%s %d 段动画', character_id, len(lib.names()))
         return lib
 
@@ -450,6 +451,10 @@ class PetInstance:
         进程级操作（余额/更新/生小肥鱼/系统通知）经 ``self.shell`` 路由，
         其余均为本窗操作。批5.2 用 ``_slot_wrap`` 给每窗回调加日志槽位。
         """
+        set_codex_owner = getattr(win, "set_codex_owner", None)
+        if callable(set_codex_owner):
+            set_codex_owner(getattr(self.shell, "codex_companion", None))
+        win.on_open_codex_tasks = self._slot_wrap(self.open_codex_tasks)
         win.on_switch_character = self._slot_wrap(self.switch_character)
         win.on_open_chat = self._slot_wrap(self.open_chat) if self.enable_chat else None
         win.on_open_quick_chat = self._slot_wrap(self.open_quick_chat) if self.enable_chat else None
@@ -516,7 +521,8 @@ class PetInstance:
                             broker_facade=self.broker_facade,
                             single_process_spawn=self.shell._single_process_spawn,
                             agent_link_manager=shared.agent_link if shared else None,
-                            proactive_watcher=shared.proactive if shared else None)
+                            proactive_watcher=shared.proactive if shared else None,
+                            **({"companion_mode": True} if getattr(self.shell, "companion_mode", False) else {}))
             if isinstance(lib, MovieLibrary) and lib.parent() is None:
                 lib.setParent(win)
             # P1-2：窗级 runtime 标记版本化 / 日志前缀读进程级 flag 快照（不读每窗 config）。
@@ -524,9 +530,11 @@ class PetInstance:
             self._wire_window(win)
             # 文件投喂（拖文件模拟吃掉）：PR73 引入的接线在批5.2 重构时被丢，
             # 必须随每只窗的创建（启动/切角色/多窗）挂载，缺失则拖放无效。
-            win.install_file_eater()
+            if not getattr(self.shell, "companion_mode", False):
+                win.install_file_eater()
             # 拖文件解读（确认 → 新会话请求 → 进度冒泡 → 摘要），与投喂共用接缝。
-            win.install_file_interpreter()
+            if not getattr(self.shell, "companion_mode", False):
+                win.install_file_interpreter()
             # 预热点击音效：首次创建 QSoundEffect/QMediaPlayer 池并等待加载完成，
             # 在显示窗口前完成，避免窗口出现后主线程被音频初始化阻塞、
             # 首次点击 Q 弹卡顿。音效关闭时不预热，避免无谓拉起 QtMultimedia 池。
@@ -541,7 +549,9 @@ class PetInstance:
 
         except Exception:
             if win is not None:
-                win.release_resources()
+                release = getattr(win, "release_resources", None)
+                if callable(release):
+                    release()
                 win.hide(notify=False)
                 win.deleteLater()
             lib.shutdown()
@@ -852,22 +862,30 @@ class PetInstance:
         )
         self.win.set_bubble_suppressed(any_open)
 
-    def open_modern_settings(self) -> None:
+    def open_codex_tasks(self) -> None:
+        self.open_modern_settings(page_key="codex")
+
+    def open_modern_settings(self, *, page_key: str = "") -> None:
         # 默认路径：设置页拉到独立进程（关窗即进程退出，OS 回收首开留下的
         # 字体/样式/模块高水位）。只有开关关闭或 startDetached 失败时才回退
         # 下面的进程内路径——功能绝不丢。
-        if self._try_open_settings_process():
+        if self._try_open_settings_process(page_key=page_key):
             return
         from .modern_settings_dialog import ModernSettingsDialog
+        from .settings_process_navigation import select_settings_page
+
         if self.modern_settings_dialog is None:
             self._dock_icon_before_settings = bool(self.config.get("show_dock_icon", True))
             dialog = ModernSettingsDialog(
                 self.config,
                 self.win,
                 include_ai=self.enable_chat,
+                **({"companion_mode": True} if getattr(self.shell, "companion_mode", False) else {}),
             )
             dialog.finished.connect(self._modern_settings_finished)
             self.modern_settings_dialog = dialog
+        if page_key:
+            select_settings_page(self.modern_settings_dialog, page_key, activate=False)
         self._update_bubble_suppression_for_settings()
         # 在 show 之前定位，避免 Windows 上窗口先显示默认位置再跳走（闪现小窗）
         self._present_dialog(
@@ -889,8 +907,13 @@ class PetInstance:
                                 for name in sorted(win.lib.names())], "current": win.anim}
         if command == "watch_actions":
             return {"current": win.anim}
-        if command == 'codex_status':
-            return win.codex_status()
+        if isinstance(command, str) and command.startswith('codex_'):
+            owner = getattr(self.shell, 'codex_companion', None)
+            if owner is not None:
+                return owner.dispatch(command, args)
+            if command == 'codex_status':
+                return win.codex_status()
+            raise ValueError('当前桌宠未启用 Codex 任务连接')
         if command == "play_action":
             name = args.get("name")
             if name not in win.lib.names():
@@ -901,13 +924,15 @@ class PetInstance:
             return {"requested": name, "current": win.anim}
         raise ValueError("不支持的桌宠命令")
 
-    def _try_open_settings_process(self) -> bool:
+    def _try_open_settings_process(self, *, page_key: str = "") -> bool:
         """尝试走独立设置进程；True = 已交给独立进程（不要再开进程内对话框）。"""
         shell = getattr(self, "shell", None)
         opener = getattr(shell, "open_settings_process", None)
         if not callable(opener):
             return False
         try:
+            if page_key:
+                return bool(opener(self, page_key=page_key))
             return bool(opener(self))
         except Exception:
             logging.exception("独立设置进程链路异常，回退进程内设置页")
@@ -1083,7 +1108,9 @@ class AppShell:
 
     def __init__(self, app: QApplication, config: Config, enable_chat: bool = True,
                  slot_handle=None, slot_id: int | None = None,
-                 spawn_offset: int = 0) -> None:
+                 spawn_offset: int = 0, companion_mode: bool = False) -> None:
+        self.companion_mode = bool(companion_mode)
+        self.codex_companion = None
         self.app = app
         self.config = config
         self._enable_chat = bool(enable_chat)
@@ -1174,6 +1201,7 @@ class AppShell:
         #（懒安装，见 _install_config_watcher）。默认关的键下完全不用它们。
         self._settings_child_active = False
         self._settings_launch_at = 0.0
+        self._settings_navigation_client = None
         self._config_watcher = None
         self._config_reload_timer = None
         self._settings_watch_timer = None
@@ -1183,7 +1211,7 @@ class AppShell:
             slot_id=slot_id, spawn_offset=spawn_offset,
         )
         self._instances.append(self.instance)
-        if self._single_process_spawn:
+        if self._single_process_spawn and not self.companion_mode:
             from .multi_window_shared import SharedSubsystems
 
             self._shared = SharedSubsystems(self)
@@ -1238,7 +1266,7 @@ class AppShell:
 
     # ------------------------------------------------------------ 功能门控（待办提醒）
     def _todo_wanted(self) -> bool:
-        return bool(self.config.get("todo_reminder_enabled", True))
+        return not getattr(self, "companion_mode", False) and bool(self.config.get("todo_reminder_enabled", True))
 
     def _ensure_todo_service(self):
         """懒创建待办提醒服务（仅在使用待办/打开面板时创建）。"""
@@ -1269,7 +1297,8 @@ class AppShell:
     def _festival_speak_wanted(self) -> bool:
         """节日语音是否开启——它复用报时服务的音频通道，因此会连带影响通道生命周期。"""
         return bool(
-            self.config.get("festival_reminder_enabled", False)
+            not getattr(self, "companion_mode", False)
+            and self.config.get("festival_reminder_enabled", False)
             and self.config.get("festival_reminder_speak", False)
         )
 
@@ -1281,14 +1310,15 @@ class AppShell:
         音频通道。避免给用不到的场景常驻一条音频通道。
         """
         return bool(
-            self.config.get("self_talk_speak_enabled", True)
+            not getattr(self, "companion_mode", False)
+            and self.config.get("self_talk_speak_enabled", True)
             and self.config.get("click_show_self_talk", False)
         )
 
     def _chime_wanted(self) -> bool:
         # 报时自身开启，或节日语音 / 点击自言自语朗读需要这条音频通道（三者共用
         # 一套合成与播放，因此"通道是否存在"取决于其中之一是否需要）。
-        return (
+        return not getattr(self, "companion_mode", False) and (
             bool(self.config.get("voice_chime_enabled", False))
             or self._festival_speak_wanted()
             or self._self_talk_speak_wanted()
@@ -1419,7 +1449,7 @@ class AppShell:
     # ------------------------------------------------------------ 功能门控（节日提醒）
     def _festival_wanted(self) -> bool:
         # 总开关默认关闭：主动打扰型功能，升级后不应突然冒出来。
-        return bool(self.config.get("festival_reminder_enabled", False))
+        return not getattr(self, "companion_mode", False) and bool(self.config.get("festival_reminder_enabled", False))
 
     def _ensure_festival_service(self):
         """懒创建节日提醒服务（仅在开启提醒/手动触发时创建）。"""
@@ -1474,7 +1504,7 @@ class AppShell:
                 refresh()
         _mac_set_dock_icon_visible(bool(self.config.get("show_dock_icon", True)))
 
-    def open_settings_process(self, instance=None) -> bool:
+    def open_settings_process(self, instance=None, *, page_key: str = "") -> bool:
         """拉起独立设置进程；True = 已交给独立进程（不得再开进程内对话框）。
 
         False = 开关关闭或 startDetached 失败，由调用方回退进程内设置页。
@@ -1486,17 +1516,34 @@ class AppShell:
             # 单实例：已有设置进程在跑（可能不是本主进程拉起的）→ 不再拉起，
             # 但仍按"设置开着"抑制气泡并盯住它的锁文件。
             logging.info("独立设置进程已在运行，不重复拉起")
+            if page_key:
+                self._navigate_settings_process(page_key)
             self._mark_settings_child(True)
             return True
         if self._settings_launch_pending():
             # 刚拉起、子进程还没来得及建锁：连点场景视为已在启动，避免双开。
+            if page_key:
+                self._navigate_settings_process(page_key)
             self._mark_settings_child(True)
             return True
-        if not self._launch_settings_process(instance):
+        if page_key:
+            launched = self._launch_settings_process(instance, page_key=page_key)
+        else:
+            launched = self._launch_settings_process(instance)
+        if not launched:
             return False
         self._settings_launch_at = time.monotonic()
         self._mark_settings_child(True)
         return True
+
+    def _navigate_settings_process(self, page_key: str) -> None:
+        from .settings_process_navigation import SettingsProcessNavigationClient
+
+        client = getattr(self, "_settings_navigation_client", None)
+        if client is None:
+            client = SettingsProcessNavigationClient(self.config)
+            self._settings_navigation_client = client
+        client.navigate(page_key)
 
     def _settings_process_running(self) -> bool:
         """settings.lock 是否被活着的设置进程持有。
@@ -1528,7 +1575,7 @@ class AppShell:
         started = float(getattr(self, "_settings_launch_at", 0.0) or 0.0)
         return bool(started) and (time.monotonic() - started) <= 5.0
 
-    def _launch_settings_process(self, instance=None) -> bool:
+    def _launch_settings_process(self, instance=None, *, page_key: str = "") -> bool:
         """startDetached 独立设置进程；冻结包与源码运行分流。
 
         源码运行要走 `-m pet`（工作目录取仓库根），冻结包直接复用 exe 的参数
@@ -1544,6 +1591,10 @@ class AppShell:
             program = sys.executable
             arguments = ["-m", "pet", "--settings"]
             workdir = str(Path(__file__).resolve().parent.parent)
+        if getattr(self, "companion_mode", False):
+            arguments.append("--companion")
+        if page_key:
+            arguments += ["--settings-page", page_key]
         if not program:
             logging.warning("sys.executable 为空，无法拉起独立设置进程")
             return False
@@ -1717,7 +1768,13 @@ class AppShell:
             self.app.aboutToQuit.connect(self._on_about_to_quit)
             self._on_about_to_quit_connected = True
         self.instance.collision_ipc.start()
-        self._dsh_state_tracker.start()
+        if self.companion_mode:
+            from .codex_companion import CodexCompanion
+            self.codex_companion = CodexCompanion(self.config, self.app)
+            self.codex_companion.event.connect(self._on_codex_companion_event)
+            self.codex_companion.set_enabled(bool(self.config.get('codex_link_enabled', False)))
+        else:
+            self._dsh_state_tracker.start()
         character_id = str(self.config.get('character', catalog.DEFAULT_CHARACTER))
         logging.info('当前形象: %s', character_id)
         self._create_ui_with_character_fallback(character_id)
@@ -1738,14 +1795,21 @@ class AppShell:
         # 合并进运行期（开关关闭时不装，完全走旧路径）。
         self._install_config_watcher()
         QTimer.singleShot(3500, self.instance._check_autostart_wanted)
-        QTimer.singleShot(4000, self._maybe_autostart_harness)
+        if not self.companion_mode:
+            QTimer.singleShot(4000, self._maybe_autostart_harness)
         # 启动时补一次：点击动画绑定对话框不走设置页保存信号，改动要等下次启动才被
         # 发现（合成一句约 20 秒，放晚一点，别和首帧/动画预热抢资源）。
-        QTimer.singleShot(9000, self._precache_self_talk_voice_on_start)
+        if not self.companion_mode:
+            QTimer.singleShot(9000, self._precache_self_talk_voice_on_start)
         # issue #111：会话结束（Windows 关机/注销）探测器。必须在窗口就绪后安装
         # ——它要在关机窗口期到来**之前**就位，才能抢在会话拆除前关掉 ffmpeg
         # 派生（否则系统会弹 0xc0000142 阻塞关机）。
         self._install_session_watcher()
+
+    def _on_codex_companion_event(self, event) -> None:
+        win = self.win
+        if win is not None and shiboken6.isValid(win) and not getattr(win, '_closing', False):
+            win.on_codex_event(event)
 
     def _precache_self_talk_voice_on_start(self) -> None:
         """启动后补一次台词预缓存。
@@ -1918,6 +1982,8 @@ class AppShell:
         # issue #111：先关 ffmpeg spawn 闸门，再走正常退出收口——正常退出路径
         # （托盘退出/最后窗口关闭）同样落在关机前后，绝不能在里面再派生 reader。
         self._mark_session_ending()
+        if self.codex_companion is not None:
+            self.codex_companion.stop()
         # 窗级收口：逐窗保存位置、停本窗预热与 Agent、提交本窗会话、释放本窗 slot 锁
         for inst in self._instances:
             win = inst.win
@@ -2046,6 +2112,13 @@ class AppShell:
         # 设置页进程隔离：释放 config 目录 watcher 与两个定时器（无主 QTimer 的
         # timeout 连接会从 Qt C++ 侧强引用住本对象图，不停则阻碍回收）。
         self._teardown_config_watcher()
+        navigation_client = getattr(self, "_settings_navigation_client", None)
+        if navigation_client is not None:
+            try:
+                navigation_client.close()
+            except Exception:
+                logging.exception("退出时关闭设置页导航通道失败")
+            self._settings_navigation_client = None
 
     @classmethod
     def _shutdown_live_for_tests(cls) -> None:
@@ -2063,6 +2136,8 @@ class AppShell:
         """
         for shell in tuple(_LIVE_SHELLS):
             try:
+                if getattr(shell, 'codex_companion', None) is not None:
+                    shell.codex_companion.stop()
                 service = getattr(shell, "todo_service", None)
                 if service is not None:
                     try:
@@ -2405,7 +2480,7 @@ class AppShell:
     def _apply_balance_timer(self) -> None:
         self._balance_timer.stop()
         minutes = max(0, int(self.config.get("balance_refresh_minutes", 0) or 0))
-        if minutes:
+        if minutes and not getattr(self, "companion_mode", False):
             self._balance_timer.start(minutes * 60000)
 
     def _island_icon_pixmap(self):
@@ -3236,8 +3311,10 @@ class AppShell:
             menu.addAction('DeepSeek 余额', lambda: self.show_balance(win))
             menu.addAction('启动 DeepSeek Harness', lambda: launch_harness_gui(win))
         else:
-            # 纯桌宠版本不提供本地 DSH 启动入口，只保留网页版入口
-            menu.addAction('打开网页版 DeepSeek', open_deepseek_web)
+            if self.companion_mode:
+                menu.addAction('Codex 任务与用量', self.instance.open_codex_tasks)
+            else:
+                menu.addAction('打开网页版 DeepSeek', open_deepseek_web)
         menu.addAction('检查更新', lambda: self.check_update(win))
 
         # 批5.2a §③.3：多窗时单托盘 + 每窗一个子菜单（显示/隐藏、切换角色、退出这只），
@@ -3375,7 +3452,7 @@ def _configure_linux_fcitx_input_method() -> None:
 PetApp = AppShell
 
 
-def main(argv: list[str] | None = None, enable_chat: bool = True) -> int:
+def main(argv: list[str] | None = None, enable_chat: bool = True, *, companion_mode: bool = False) -> int:
     _default_xcb_platform_on_wayland()
     # 必须在 QApplication 构造前设置，Qt 才会按随包 Fcitx 插件创建输入法上下文。
     _configure_linux_fcitx_input_method()
@@ -3442,7 +3519,7 @@ def main(argv: list[str] | None = None, enable_chat: bool = True) -> int:
             logging.info("已清理 %d 个指向不存在路径的开机自启项", stale_removed)
 
         controller = AppShell(app, config, enable_chat=enable_chat, slot_handle=slot_handle, slot_id=slot_id,
-                              spawn_offset=_read_spawn_offset_env())
+                              spawn_offset=_read_spawn_offset_env(), companion_mode=companion_mode)
         try:
             controller.start()
         except Exception as exc:

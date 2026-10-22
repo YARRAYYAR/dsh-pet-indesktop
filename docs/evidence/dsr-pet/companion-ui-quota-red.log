@@ -1,0 +1,117 @@
+warning: No `requires-python` value found in the workspace. Defaulting to `>=3.13`.
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_ test_unrenderable_quota_reset_keeps_window_usage_visible[9223372036854775807] _
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x11207af90>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-115/test_unrenderable_quota_reset_0')
+snapshot = {'enabled': True, 'state': 'working', 'session_id': 'owned', 'turn_id': 'turn-2', ...}
+reset_at = 9223372036854775807
+
+    @pytest.mark.parametrize('reset_at', [2**63 - 1, 253402300800])
+    def test_unrenderable_quota_reset_keeps_window_usage_visible(qtbot, tmp_path, snapshot, reset_at):
+        from pet.codex_usage import normalize_limits
+    
+        widget, peer = page(qtbot, tmp_path, snapshot)
+        peer.data['limits'] = normalize_limits(
+            {'primary': {'windowDurationMins': 15, 'usedPercent': 42, 'resetsAt': reset_at}},
+            source='app_server',
+        )
+>       widget.refresh()
+
+tests/test_codex_companion_ui.py:259: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+pet/settings_codex.py:233: in refresh
+    self.client.request('codex_status', {}, self._receive)
+tests/test_codex_companion_ui.py:28: in request
+    callback({'ok': True, 'data': deepcopy(self.data)})
+pet/settings_codex.py:258: in _receive
+    self._update_usage(data)
+pet/settings_codex.py:308: in _update_usage
+    self.quota_text.setText(_quota_summary(data.get('limits')))
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+limits = {'source': 'app_server', 'observed_at': None, 'windows': [{'window_minutes': 15, 'used_percent': 42, 'reset_at': 9223372036854775807}]}
+
+    def _quota_summary(limits):
+        windows = limits.get('windows') if isinstance(limits, dict) else None
+        if not windows:
+            return '暂无额度数据'
+        summaries = []
+        for window in windows:
+            if not isinstance(window, dict):
+                continue
+            duration = window.get('window_minutes')
+            used = window.get('used_percent')
+            if type(duration) is not int or not isinstance(used, (int, float)):
+                continue
+            used_text = f'{used:.0f}%' if float(used).is_integer() else f'{used:.1f}%'
+            summary = f'{duration} 分钟 · 已用 {used_text}'
+            reset_at = window.get('reset_at')
+            if type(reset_at) is int:
+>               reset = datetime.fromtimestamp(reset_at, timezone.utc)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               OSError: [Errno 84] Value too large to be stored in data type
+
+pet/settings_codex.py:53: OSError
+____ test_unrenderable_quota_reset_keeps_window_usage_visible[253402300800] ____
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x137e460d0>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-115/test_unrenderable_quota_reset_1')
+snapshot = {'enabled': True, 'state': 'working', 'session_id': 'owned', 'turn_id': 'turn-2', ...}
+reset_at = 253402300800
+
+    @pytest.mark.parametrize('reset_at', [2**63 - 1, 253402300800])
+    def test_unrenderable_quota_reset_keeps_window_usage_visible(qtbot, tmp_path, snapshot, reset_at):
+        from pet.codex_usage import normalize_limits
+    
+        widget, peer = page(qtbot, tmp_path, snapshot)
+        peer.data['limits'] = normalize_limits(
+            {'primary': {'windowDurationMins': 15, 'usedPercent': 42, 'resetsAt': reset_at}},
+            source='app_server',
+        )
+>       widget.refresh()
+
+tests/test_codex_companion_ui.py:259: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+pet/settings_codex.py:233: in refresh
+    self.client.request('codex_status', {}, self._receive)
+tests/test_codex_companion_ui.py:28: in request
+    callback({'ok': True, 'data': deepcopy(self.data)})
+pet/settings_codex.py:258: in _receive
+    self._update_usage(data)
+pet/settings_codex.py:308: in _update_usage
+    self.quota_text.setText(_quota_summary(data.get('limits')))
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+limits = {'source': 'app_server', 'observed_at': None, 'windows': [{'window_minutes': 15, 'used_percent': 42, 'reset_at': 253402300800}]}
+
+    def _quota_summary(limits):
+        windows = limits.get('windows') if isinstance(limits, dict) else None
+        if not windows:
+            return '暂无额度数据'
+        summaries = []
+        for window in windows:
+            if not isinstance(window, dict):
+                continue
+            duration = window.get('window_minutes')
+            used = window.get('used_percent')
+            if type(duration) is not int or not isinstance(used, (int, float)):
+                continue
+            used_text = f'{used:.0f}%' if float(used).is_integer() else f'{used:.1f}%'
+            summary = f'{duration} 分钟 · 已用 {used_text}'
+            reset_at = window.get('reset_at')
+            if type(reset_at) is int:
+>               reset = datetime.fromtimestamp(reset_at, timezone.utc)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               ValueError: year 10000 is out of range
+
+pet/settings_codex.py:53: ValueError
+----------------------------- Captured stderr call -----------------------------
+2026-10-21 22:48:52.603 Python[17605:1237925] error messaging the mach port for IMKCFRunLoopWakeUpReliable
+=========================== short test summary info ============================
+FAILED tests/test_codex_companion_ui.py::test_unrenderable_quota_reset_keeps_window_usage_visible[9223372036854775807]
+FAILED tests/test_codex_companion_ui.py::test_unrenderable_quota_reset_keeps_window_usage_visible[253402300800]
+2 failed, 15 deselected in 2.80s

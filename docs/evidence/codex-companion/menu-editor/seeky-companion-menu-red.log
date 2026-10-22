@@ -1,0 +1,73 @@
+.FFF                                                                     [100%]
+=================================== FAILURES ===================================
+______________ test_companion_view_and_preview_hide_retired_nodes ______________
+
+menu_layout = {'schema_version': 1, 'layout_id': 'user', 'nodes': [{'type': 'action', 'id': 'chat', 'alias': '旧聊天', 'icon': 'chat', ......}, {'type': 'action', 'id': 'modern_settings', 'visible': True}, {'type': 'action', 'id': 'quit', 'visible': True}]}
+editors = (<PySide6.QtWidgets.QApplication(0x83fc32da0) at 0x114fbec40>, <function editors.<locals>.create at 0x12c10ccc0>)
+
+    def test_companion_view_and_preview_hide_retired_nodes(menu_layout, editors):
+        app, create = editors
+>       editor = create(menu_layout, visible_actions=COMPANION_ACTION_IDS)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_companion_menu_editor.py:99: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+layout = {'schema_version': 1, 'layout_id': 'user', 'nodes': [{'type': 'action', 'id': 'chat', 'alias': '旧聊天', 'icon': 'chat', ......}, {'type': 'action', 'id': 'modern_settings', 'visible': True}, {'type': 'action', 'id': 'quit', 'visible': True}]}
+kwargs = {'visible_actions': frozenset({'animations_hub', 'autostart', 'character', 'check_update', 'codex_tasks', 'drag_physics', ...})}
+
+    def create(layout, **kwargs):
+>       editor = MenuLayoutEditor(deepcopy(layout), **kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: MenuLayoutEditor.__init__() got an unexpected keyword argument 'visible_actions'. Did you mean 'available_actions'?
+
+tests/test_companion_menu_editor.py:43: TypeError
+____________ test_companion_commands_preserve_hidden_configuration _____________
+
+menu_layout = {'schema_version': 1, 'layout_id': 'user', 'nodes': [{'type': 'action', 'id': 'chat', 'alias': '旧聊天', 'icon': 'chat', ......}, {'type': 'action', 'id': 'modern_settings', 'visible': True}, {'type': 'action', 'id': 'quit', 'visible': True}]}
+editors = (<PySide6.QtWidgets.QApplication(0x83fc32da0) at 0x114fbec40>, <function editors.<locals>.create at 0x12c149940>)
+
+    def test_companion_commands_preserve_hidden_configuration(menu_layout, editors):
+        app, create = editors
+>       editor = create(menu_layout, visible_actions=COMPANION_ACTION_IDS)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_companion_menu_editor.py:113: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+layout = {'schema_version': 1, 'layout_id': 'user', 'nodes': [{'type': 'action', 'id': 'chat', 'alias': '旧聊天', 'icon': 'chat', ......}, {'type': 'action', 'id': 'modern_settings', 'visible': True}, {'type': 'action', 'id': 'quit', 'visible': True}]}
+kwargs = {'visible_actions': frozenset({'animations_hub', 'autostart', 'character', 'check_update', 'codex_tasks', 'drag_physics', ...})}
+
+    def create(layout, **kwargs):
+>       editor = MenuLayoutEditor(deepcopy(layout), **kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: MenuLayoutEditor.__init__() got an unexpected keyword argument 'visible_actions'. Did you mean 'available_actions'?
+
+tests/test_companion_menu_editor.py:43: TypeError
+______ test_empty_visible_actions_hides_all_actions_without_dropping_them ______
+
+menu_layout = {'schema_version': 1, 'layout_id': 'user', 'nodes': [{'type': 'action', 'id': 'chat', 'alias': '旧聊天', 'icon': 'chat', ......}, {'type': 'action', 'id': 'modern_settings', 'visible': True}, {'type': 'action', 'id': 'quit', 'visible': True}]}
+editors = (<PySide6.QtWidgets.QApplication(0x83fc32da0) at 0x114fbec40>, <function editors.<locals>.create at 0x12c149b20>)
+
+    def test_empty_visible_actions_hides_all_actions_without_dropping_them(menu_layout, editors):
+        app, create = editors
+>       editor = create(menu_layout, visible_actions=frozenset())
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_companion_menu_editor.py:152: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+layout = {'schema_version': 1, 'layout_id': 'user', 'nodes': [{'type': 'action', 'id': 'chat', 'alias': '旧聊天', 'icon': 'chat', ......}, {'type': 'action', 'id': 'modern_settings', 'visible': True}, {'type': 'action', 'id': 'quit', 'visible': True}]}
+kwargs = {'visible_actions': frozenset()}
+
+    def create(layout, **kwargs):
+>       editor = MenuLayoutEditor(deepcopy(layout), **kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: MenuLayoutEditor.__init__() got an unexpected keyword argument 'visible_actions'. Did you mean 'available_actions'?
+
+tests/test_companion_menu_editor.py:43: TypeError
+=========================== short test summary info ============================
+FAILED tests/test_companion_menu_editor.py::test_companion_view_and_preview_hide_retired_nodes
+FAILED tests/test_companion_menu_editor.py::test_companion_commands_preserve_hidden_configuration
+FAILED tests/test_companion_menu_editor.py::test_empty_visible_actions_hides_all_actions_without_dropping_them
+3 failed, 1 passed in 0.62s

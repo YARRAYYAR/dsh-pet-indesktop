@@ -1,0 +1,140 @@
+{
+  "command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "/Users/ray/Documents/New project/dsr-pet/docs/evidence/codex-companion/settings-entry/verify_process_navigation.py"
+  ],
+  "child_command": [
+    "/Users/ray/Library/Caches/dsr-pet-runtime-20261002/bin/python",
+    "-c",
+    "<CHILD source in runner>",
+    "<temporary config base>",
+    "<state file>"
+  ],
+  "cwd": "/Users/ray/Documents/New project/dsr-pet",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "python": "3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]",
+    "PySide6": "6.11.2",
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O"
+  },
+  "setup": "Three serial child processes with actual ModernSettingsDialog and temporary Config; Codex disabled.",
+  "inputs": "--settings --companion --settings-page codex, then real QLocalSocket navigation from another process after resetting to the first page.",
+  "assertions": "Mode reaches actual dialog; startup selects Codex; IPC selects Codex and requests raise/activation; child exits zero; settings.lock released.",
+  "rounds": [
+    {
+      "round": 1,
+      "navigation_ms": 101.33387500536628,
+      "state": {
+        "initial": {
+          "companion_mode": true,
+          "codex_selected": true,
+          "visible": true,
+          "raised": 1,
+          "activated": 1,
+          "sidebar": [
+            "常规",
+            "桌宠",
+            "互动",
+            "菜单",
+            "连接"
+          ]
+        },
+        "ready": true,
+        "after_ipc": {
+          "companion_mode": true,
+          "codex_selected": true,
+          "visible": true,
+          "raised": 2,
+          "activated": 2,
+          "sidebar": [
+            "常规",
+            "桌宠",
+            "互动",
+            "菜单",
+            "连接"
+          ]
+        }
+      },
+      "child_exit_status": 0,
+      "stdout": "",
+      "stderr": "qt.qpa.fonts: Populating font family aliases took 54 ms. Replace uses of missing font family \"Sans Serif\" with one that exists to avoid this cost. \nThis plugin does not support raise()\nThis plugin does not support raise()\n"
+    },
+    {
+      "round": 2,
+      "navigation_ms": 87.98395800113212,
+      "state": {
+        "initial": {
+          "companion_mode": true,
+          "codex_selected": true,
+          "visible": true,
+          "raised": 1,
+          "activated": 1,
+          "sidebar": [
+            "常规",
+            "桌宠",
+            "互动",
+            "菜单",
+            "连接"
+          ]
+        },
+        "ready": true,
+        "after_ipc": {
+          "companion_mode": true,
+          "codex_selected": true,
+          "visible": true,
+          "raised": 2,
+          "activated": 2,
+          "sidebar": [
+            "常规",
+            "桌宠",
+            "互动",
+            "菜单",
+            "连接"
+          ]
+        }
+      },
+      "child_exit_status": 0,
+      "stdout": "",
+      "stderr": "qt.qpa.fonts: Populating font family aliases took 47 ms. Replace uses of missing font family \"Sans Serif\" with one that exists to avoid this cost. \nThis plugin does not support raise()\nThis plugin does not support raise()\n"
+    },
+    {
+      "round": 3,
+      "navigation_ms": 101.16983300395077,
+      "state": {
+        "initial": {
+          "companion_mode": true,
+          "codex_selected": true,
+          "visible": true,
+          "raised": 1,
+          "activated": 1,
+          "sidebar": [
+            "常规",
+            "桌宠",
+            "互动",
+            "菜单",
+            "连接"
+          ]
+        },
+        "ready": true,
+        "after_ipc": {
+          "companion_mode": true,
+          "codex_selected": true,
+          "visible": true,
+          "raised": 2,
+          "activated": 2,
+          "sidebar": [
+            "常规",
+            "桌宠",
+            "互动",
+            "菜单",
+            "连接"
+          ]
+        }
+      },
+      "child_exit_status": 0,
+      "stdout": "",
+      "stderr": "qt.qpa.fonts: Populating font family aliases took 40 ms. Replace uses of missing font family \"Sans Serif\" with one that exists to avoid this cost. \nThis plugin does not support raise()\nThis plugin does not support raise()\n"
+    }
+  ],
+  "exit_status": 0
+}

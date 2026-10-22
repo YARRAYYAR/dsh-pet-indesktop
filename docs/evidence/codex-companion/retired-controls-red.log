@@ -1,0 +1,29 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+________________ test_companion_has_no_floating_music_controls _________________
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x11433e510>
+tmp_path = PosixPath('/private/var/folders/2f/bg66sqjn62xb9w4r4nd0d9mw0000gn/T/pytest-of-ray/pytest-131/test_companion_has_no_floating0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b0f9e00>
+
+    def test_companion_has_no_floating_music_controls(qtbot, tmp_path, monkeypatch):
+        from pet import autostart
+        from pet.config import Config
+        from pet.modern_settings_dialog import ModernSettingsDialog
+    
+        monkeypatch.setattr(autostart, 'is_enabled', lambda: False)
+        dialog = ModernSettingsDialog(Config(tmp_path), companion_mode=True, standalone=True)
+        qtbot.addWidget(dialog)
+        dialog.resize(1100, 760)
+        dialog.show()
+        qtbot.waitExposed(dialog)
+>       assert not any(button.isVisible() for button in dialog.findChildren(QPushButton, 'musicPlayerDetectButton'))
+E       assert not True
+E        +  where True = any(<generator object test_companion_has_no_floating_music_controls.<locals>.<genexpr> at 0x12c0fd8a0>)
+
+tests/test_companion_retired_controls.py:16: AssertionError
+----------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: Populating font family aliases took 57 ms. Replace uses of missing font family "Sans Serif" with one that exists to avoid this cost. 
+=========================== short test summary info ============================
+FAILED tests/test_companion_retired_controls.py::test_companion_has_no_floating_music_controls
+1 failed in 1.31s
